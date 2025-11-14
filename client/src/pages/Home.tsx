@@ -44,12 +44,20 @@ export default function Home() {
         setResults(prev => [...prev, data.result]);
       } else if (data.type === 'completed') {
         setProcessingState('completed');
+        if (wsRef.current) {
+          wsRef.current.close();
+          wsRef.current = null;
+        }
         toast({
           title: "Batch Processing Complete",
           description: "All files have been processed.",
         });
       } else if (data.type === 'cancelled') {
         setProcessingState('idle');
+        if (wsRef.current) {
+          wsRef.current.close();
+          wsRef.current = null;
+        }
         toast({
           title: "Processing Cancelled",
           description: "Batch processing was stopped.",
@@ -143,15 +151,9 @@ export default function Home() {
     if (!jobId) return;
 
     try {
-      const response = await fetch(`/api/batch/${jobId}/cancel`, {
+      await fetch(`/api/batch/${jobId}/cancel`, {
         method: 'POST',
       });
-
-      if (response.ok) {
-        if (wsRef.current) {
-          wsRef.current.close();
-        }
-      }
     } catch (error) {
       console.error('Cancel error:', error);
       toast({
