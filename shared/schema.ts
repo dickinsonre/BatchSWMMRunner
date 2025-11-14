@@ -1,18 +1,38 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+export const batchJobSchema = z.object({
+  id: z.string(),
+  files: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    path: z.string(),
+  })),
+  status: z.enum(['idle', 'processing', 'completed', 'cancelled']),
+  currentFile: z.number(),
+  results: z.array(z.object({
+    id: z.string(),
+    fileName: z.string(),
+    filePath: z.string(),
+    status: z.enum(['success', 'failed']),
+    error: z.string().optional(),
+  })),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export type BatchJob = z.infer<typeof batchJobSchema>;
+
+export const uploadFileSchema = z.object({
+  name: z.string(),
+  path: z.string(),
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type UploadFile = z.infer<typeof uploadFileSchema>;
+
+export const processResultSchema = z.object({
+  id: z.string(),
+  fileName: z.string(),
+  filePath: z.string(),
+  status: z.enum(['success', 'failed']),
+  error: z.string().optional(),
+});
+
+export type ProcessResult = z.infer<typeof processResultSchema>;
