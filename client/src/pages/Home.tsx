@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Activity, PlayCircle, StopCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 import FileUploadZone from "@/components/FileUploadZone";
 import FileListPanel, { type FileItem } from "@/components/FileListPanel";
 import ProgressSection from "@/components/ProgressSection";
@@ -14,13 +15,66 @@ export default function Home() {
   const [processingState, setProcessingState] = useState<ProcessingState>('idle');
   const [currentFile, setCurrentFile] = useState(0);
   const [results, setResults] = useState<ProcessResult[]>([]);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
+  }, []);
+
+  const connectWebSocket = (jobId: string) => {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const ws = new WebSocket(`${protocol}//${window.location.host}/api/ws?jobId=${jobId}`);
+
+    ws.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      
+      if (data.type === 'progress') {
+        setCurrentFile(data.currentFile);
+      } else if (data.type === 'result') {
+        setResults(prev => [...prev, data.result]);
+      } else if (data.type === 'completed') {
+        setProcessingState('completed');
+        toast({
+          title: "Batch Processing Complete",
+          description: "All files have been processed.",
+        });
+      } else if (data.type === 'cancelled') {
+        setProcessingState('idle');
+        toast({
+          title: "Processing Cancelled",
+          description: "Batch processing was stopped.",
+        });
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
+
+    wsRef.current = ws;
+  };
 
   const handleFilesSelected = (fileList: FileList) => {
     const newFiles: FileItem[] = Array.from(fileList).map((file, index) => ({
       id: `${Date.now()}-${index}`,
       name: file.name,
       path: file.webkitRelativePath || file.name,
-    }));
+      file,
+    })) as any;
     setFiles(prev => [...prev, ...newFiles]);
   };
 
@@ -33,47 +87,83 @@ export default function Home() {
     setResults([]);
     setProcessingState('idle');
     setCurrentFile(0);
+    setJobId(null);
   };
 
-  const handleStartProcessing = () => {
-    console.log('Starting batch processing...');
-    setProcessingState('processing');
-    setCurrentFile(0);
-    setResults([]);
-    
-    // Simulate processing
-    let current = 0;
-    const interval = setInterval(() => {
-      current++;
-      setCurrentFile(current);
-      
-      // Simulate random success/failure
-      const newResult: ProcessResult = {
-        id: files[current - 1].id,
-        fileName: files[current - 1].name,
-        filePath: files[current - 1].path,
-        status: Math.random() > 0.2 ? 'success' : 'failed',
-        error: Math.random() > 0.2 ? undefined : 'Error 110: cannot open rainfall data file',
-      };
-      
-      setResults(prev => [...prev, newResult]);
-      
-      if (current >= files.length) {
-        clearInterval(interval);
-        setProcessingState('completed');
+  const handleStartProcessing = async () => {
+    try {
+      const formData = new FormData();
+      files.forEach((file: any) => {
+        if (file.file) {
+          formData.append('files', file.file);
+        }
+      });
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload files');
       }
-    }, 1500);
+
+      const batchJob = await uploadResponse.json();
+      setJobId(batchJob.id);
+      setProcessingState('processing');
+      setCurrentFile(0);
+      setResults([]);
+
+      connectWebSocket(batchJob.id);
+
+      const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
+        method: 'POST',
+      });
+
+      if (!startResponse.ok) {
+        throw new Error('Failed to start processing');
+      }
+
+      toast({
+        title: "Processing Started",
+        description: `Processing ${files.length} file${files.length !== 1 ? 's' : ''}...`,
+      });
+    } catch (error) {
+      console.error('Processing error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start batch processing. Please try again.",
+        variant: "destructive",
+      });
+      setProcessingState('idle');
+    }
   };
 
-  const handleCancelProcessing = () => {
-    console.log('Cancelling processing...');
-    setProcessingState('idle');
-    setCurrentFile(0);
-    setResults([]);
+  const handleCancelProcessing = async () => {
+    if (!jobId) return;
+
+    try {
+      const response = await fetch(`/api/batch/${jobId}/cancel`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        if (wsRef.current) {
+          wsRef.current.close();
+        }
+      }
+    } catch (error) {
+      console.error('Cancel error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to cancel processing.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b">
         <div className="container max-w-6xl mx-auto px-8 py-6">
           <div className="flex items-center gap-3">
@@ -90,7 +180,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container max-w-6xl mx-auto px-8 py-8">
+      <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
         <div className="space-y-8">
           <section data-testid="section-upload">
             <FileUploadZone
@@ -156,7 +246,7 @@ export default function Home() {
                 <ProgressSection
                   current={currentFile}
                   total={files.length}
-                  currentFileName={files[currentFile]?.name}
+                  currentFileName={files[currentFile - 1]?.name}
                 />
               </section>
             </>
