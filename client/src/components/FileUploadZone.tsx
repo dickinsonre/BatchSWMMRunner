@@ -1,13 +1,24 @@
-import { Upload } from "lucide-react";
+import { Upload, FileCheck, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface FileUploadZoneProps {
   onFilesSelected: (files: FileList) => void;
   selectedCount: number;
+  totalSize?: number;
+  invalidFiles?: string[];
 }
 
-export default function FileUploadZone({ onFilesSelected, selectedCount }: FileUploadZoneProps) {
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+export default function FileUploadZone({ onFilesSelected, selectedCount, totalSize = 0, invalidFiles = [] }: FileUploadZoneProps) {
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       onFilesSelected(e.target.files);
@@ -63,9 +74,28 @@ export default function FileUploadZone({ onFilesSelected, selectedCount }: FileU
           />
         </div>
         {selectedCount > 0 && (
-          <p className="text-sm font-medium text-primary" data-testid="text-selected-count">
-            {selectedCount} file{selectedCount !== 1 ? 's' : ''} selected
-          </p>
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex items-center gap-2">
+              <FileCheck className="h-4 w-4 text-primary" />
+              <p className="text-sm font-medium text-primary" data-testid="text-selected-count">
+                {selectedCount} file{selectedCount !== 1 ? 's' : ''} selected
+              </p>
+              {totalSize > 0 && (
+                <Badge variant="secondary" data-testid="badge-total-size">
+                  {formatFileSize(totalSize)}
+                </Badge>
+              )}
+            </div>
+            {invalidFiles.length > 0 && (
+              <div className="flex items-center gap-2 text-destructive bg-destructive/10 px-3 py-2 rounded-md" data-testid="warning-invalid-files">
+                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                <div className="text-sm">
+                  <span className="font-medium">{invalidFiles.length} file{invalidFiles.length !== 1 ? 's' : ''} skipped</span>
+                  <span className="text-muted-foreground"> (only .inp files accepted)</span>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </Card>
