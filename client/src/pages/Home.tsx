@@ -9,6 +9,7 @@ import ProgressSection from "@/components/ProgressSection";
 import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
 import WorkflowSteps from "@/components/WorkflowSteps";
 import InstructionsPanel from "@/components/InstructionsPanel";
+import ExpectedOutputs from "@/components/ExpectedOutputs";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -227,9 +228,15 @@ export default function Home() {
             />
           </section>
 
-          <section data-testid="section-instructions">
-            <InstructionsPanel />
-          </section>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section data-testid="section-instructions">
+              <InstructionsPanel />
+            </section>
+
+            <section data-testid="section-expected-outputs">
+              <ExpectedOutputs />
+            </section>
+          </div>
 
           <Separator />
 
@@ -253,44 +260,51 @@ export default function Home() {
                   onClearAll={handleClearAll}
                 />
               </section>
-
-              <div className="flex gap-3">
-                {processingState === 'idle' && (
-                  <Button
-                    size="lg"
-                    onClick={handleStartProcessing}
-                    data-testid="button-start-processing"
-                  >
-                    <PlayCircle className="h-5 w-5 mr-2" />
-                    Start Batch Processing
-                  </Button>
-                )}
-                
-                {processingState === 'processing' && (
-                  <Button
-                    size="lg"
-                    variant="destructive"
-                    onClick={handleCancelProcessing}
-                    data-testid="button-cancel-processing"
-                  >
-                    <StopCircle className="h-5 w-5 mr-2" />
-                    Cancel Processing
-                  </Button>
-                )}
-                
-                {processingState === 'completed' && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={handleClearAll}
-                    data-testid="button-reset"
-                  >
-                    Process New Batch
-                  </Button>
-                )}
-              </div>
             </>
           )}
+
+          <div className="flex items-center gap-4 flex-wrap">
+            {processingState === 'idle' && (
+              <Button
+                size="lg"
+                onClick={handleStartProcessing}
+                disabled={files.length === 0}
+                data-testid="button-start-processing"
+              >
+                <PlayCircle className="h-5 w-5 mr-2" />
+                Start Batch Processing
+              </Button>
+            )}
+            
+            {processingState === 'processing' && (
+              <Button
+                size="lg"
+                variant="destructive"
+                onClick={handleCancelProcessing}
+                data-testid="button-cancel-processing"
+              >
+                <StopCircle className="h-5 w-5 mr-2" />
+                Cancel Processing
+              </Button>
+            )}
+            
+            {processingState === 'completed' && (
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={handleClearAll}
+                data-testid="button-reset"
+              >
+                Process New Batch
+              </Button>
+            )}
+
+            {processingState === 'idle' && files.length === 0 && (
+              <p className="text-sm text-muted-foreground" data-testid="text-upload-hint">
+                Upload .inp files to enable processing
+              </p>
+            )}
+          </div>
 
           {processingState === 'processing' && (
             <>
