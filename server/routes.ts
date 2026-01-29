@@ -166,6 +166,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   async function processSingleFile(file: { id: string; name: string; path: string }): Promise<ProcessResult> {
     return new Promise((resolve) => {
+      const startTime = Date.now();
       const runswmmPath = (process.env as any).RUNSWMM_PATH || 'runswmm.exe';
       const inputPath = file.path;
       const reportPath = inputPath.replace('.inp', '.rpt');
@@ -173,16 +174,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (!fs.existsSync(runswmmPath)) {
         console.warn(`runswmm.exe not found at ${runswmmPath}, simulating processing`);
+        const simulatedTime = 1000 + Math.random() * 2000;
         setTimeout(() => {
           const success = Math.random() > 0.2;
+          const processingTime = (Date.now() - startTime) / 1000;
           resolve({
             id: file.id,
             fileName: file.name,
             filePath: file.path,
             status: success ? 'success' : 'failed',
             error: success ? undefined : 'Error 110: cannot open rainfall data file',
+            processingTime,
+            results: success ? {
+              peakFlow: Math.random() * 100 + 10,
+              totalVolume: Math.random() * 50 + 5,
+            } : undefined,
           });
-        }, 1500);
+        }, simulatedTime);
         return;
       }
 
@@ -195,12 +203,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       childProcess.on('close', (code: number | null) => {
+        const processingTime = (Date.now() - startTime) / 1000;
         if (code === 0) {
           resolve({
             id: file.id,
             fileName: file.name,
             filePath: file.path,
             status: 'success',
+            processingTime,
+            results: {
+              peakFlow: undefined,
+              totalVolume: undefined,
+            },
           });
         } else {
           resolve({
@@ -209,17 +223,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             filePath: file.path,
             status: 'failed',
             error: errorOutput || `Process exited with code ${code}`,
+            processingTime,
           });
         }
       });
 
       childProcess.on('error', (err: Error) => {
+        const processingTime = (Date.now() - startTime) / 1000;
         resolve({
           id: file.id,
           fileName: file.name,
           filePath: file.path,
           status: 'failed',
           error: err.message,
+          processingTime,
         });
       });
     });

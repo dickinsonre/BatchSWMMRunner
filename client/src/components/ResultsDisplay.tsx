@@ -11,6 +11,11 @@ export interface ProcessResult {
   filePath: string;
   status: 'success' | 'failed';
   error?: string;
+  processingTime?: number;
+  results?: {
+    peakFlow?: number;
+    totalVolume?: number;
+  };
 }
 
 interface ResultsDisplayProps {
@@ -35,11 +40,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
   };
 
   const exportToCSV = () => {
-    const headers = ['File Name', 'File Path', 'Status', 'Error'];
+    const headers = ['File Name', 'File Path', 'Status', 'Peak Flow (CFS)', 'Total Volume (MG)', 'Processing Time (s)', 'Error'];
     const rows = results.map(r => [
       r.fileName,
       r.filePath,
       r.status,
+      r.results?.peakFlow?.toFixed(2) || 'N/A',
+      r.results?.totalVolume?.toFixed(2) || 'N/A',
+      r.processingTime?.toFixed(1) || 'N/A',
       r.error || ''
     ]);
     
@@ -96,6 +104,54 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
           Total processing time: {elapsedTime}
         </div>
       )}
+
+      <Card data-testid="card-summary-table">
+        <CardHeader>
+          <CardTitle className="text-lg" data-testid="text-summary-title">Summary Table</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="table-summary">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-2 px-3 font-medium">File Name</th>
+                  <th className="text-left py-2 px-3 font-medium">Status</th>
+                  <th className="text-right py-2 px-3 font-medium">Peak Flow</th>
+                  <th className="text-right py-2 px-3 font-medium">Total Volume</th>
+                  <th className="text-right py-2 px-3 font-medium">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((result) => (
+                  <tr key={result.id} className="border-b last:border-0" data-testid={`row-summary-${result.id}`}>
+                    <td className="py-2 px-3 font-mono text-xs">{result.fileName}</td>
+                    <td className="py-2 px-3">
+                      {result.status === 'success' ? (
+                        <span className="text-green-600 flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3" /> Success
+                        </span>
+                      ) : (
+                        <span className="text-destructive flex items-center gap-1">
+                          <XCircle className="h-3 w-3" /> Failed
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-2 px-3 text-right font-mono">
+                      {result.results?.peakFlow != null ? `${result.results.peakFlow.toFixed(2)} CFS` : 'N/A'}
+                    </td>
+                    <td className="py-2 px-3 text-right font-mono">
+                      {result.results?.totalVolume != null ? `${result.results.totalVolume.toFixed(2)} MG` : 'N/A'}
+                    </td>
+                    <td className="py-2 px-3 text-right font-mono">
+                      {result.processingTime != null ? `${result.processingTime.toFixed(1)}s` : 'N/A'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card data-testid="card-results-list">
         <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">

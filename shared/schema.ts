@@ -15,6 +15,11 @@ export const batchJobSchema = z.object({
     filePath: z.string(),
     status: z.enum(['success', 'failed']),
     error: z.string().optional(),
+    processingTime: z.number().optional(),
+    results: z.object({
+      peakFlow: z.number().optional(),
+      totalVolume: z.number().optional(),
+    }).optional(),
   })),
 });
 
@@ -33,6 +38,11 @@ export const processResultSchema = z.object({
   filePath: z.string(),
   status: z.enum(['success', 'failed']),
   error: z.string().optional(),
+  processingTime: z.number().optional(),
+  results: z.object({
+    peakFlow: z.number().optional(),
+    totalVolume: z.number().optional(),
+  }).optional(),
 });
 
 export type ProcessResult = z.infer<typeof processResultSchema>;
