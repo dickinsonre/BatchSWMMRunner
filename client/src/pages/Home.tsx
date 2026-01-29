@@ -33,6 +33,9 @@ export default function Home() {
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
   const [reportStep, setReportStep] = useState(15);
   const [routingMethod, setRoutingMethod] = useState("dynamic");
+  const [parallelProcessing, setParallelProcessing] = useState(false);
+  const [stopOnError, setStopOnError] = useState(false);
+  const [outputFormat, setOutputFormat] = useState("all");
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -276,8 +279,14 @@ export default function Home() {
             <SimulationSettings
               reportStep={reportStep}
               routingMethod={routingMethod}
+              parallelProcessing={parallelProcessing}
+              stopOnError={stopOnError}
+              outputFormat={outputFormat}
               onReportStepChange={setReportStep}
               onRoutingMethodChange={setRoutingMethod}
+              onParallelProcessingChange={setParallelProcessing}
+              onStopOnErrorChange={setStopOnError}
+              onOutputFormatChange={setOutputFormat}
               disabled={processingState === 'processing'}
             />
           </section>
