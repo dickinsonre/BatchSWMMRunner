@@ -4,6 +4,14 @@
 
 BatchSWMM is a local desktop application designed for batch processing EPA SWMM (Storm Water Management Model) `.inp` files. The application provides real-time progress tracking via WebSocket connections and displays comprehensive results summaries. Built as a full-stack TypeScript application, it uses React for the frontend and Express for the backend, with a focus on professional engineering/technical workflows.
 
+## Recent Changes
+
+- **Jan 2026**: Added workflow steps visualization (Upload → Process → Results)
+- **Jan 2026**: Added "How to Use" instructions panel with 3-step guide
+- **Jan 2026**: Enhanced file upload with file size display and validation warnings
+- **Jan 2026**: Improved progress dashboard with elapsed time, ETA, and success/failure counters
+- **Jan 2026**: Added CSV export functionality to results display
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
