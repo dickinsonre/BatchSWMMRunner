@@ -7,8 +7,17 @@ import FileUploadZone from "@/components/FileUploadZone";
 import FileListPanel, { type FileItem } from "@/components/FileListPanel";
 import ProgressSection from "@/components/ProgressSection";
 import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
+import WorkflowSteps from "@/components/WorkflowSteps";
+import InstructionsPanel from "@/components/InstructionsPanel";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
+
+function formatTime(seconds: number): string {
+  if (seconds < 60) return `${Math.round(seconds)}s`;
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.round(seconds % 60);
+  return `${mins}m ${secs}s`;
+}
 
 export default function Home() {
   const [files, setFiles] = useState<FileItem[]>([]);
@@ -16,8 +25,14 @@ export default function Home() {
   const [currentFile, setCurrentFile] = useState(0);
   const [results, setResults] = useState<ProcessResult[]>([]);
   const [jobId, setJobId] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<string>('');
+  const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
+  const startTimeRef = useRef<number | null>(null);
   const { toast } = useToast();
+
+  const totalSize = files.reduce((acc, f: any) => acc + (f.file?.size || 0), 0);
 
   useEffect(() => {
     return () => {
@@ -44,6 +59,10 @@ export default function Home() {
         setResults(prev => [...prev, data.result]);
       } else if (data.type === 'completed') {
         setProcessingState('completed');
+        if (startTimeRef.current) {
+          const elapsed = (Date.now() - startTimeRef.current) / 1000;
+          setElapsedTime(formatTime(elapsed));
+        }
         if (wsRef.current) {
           wsRef.current.close();
           wsRef.current = null;
@@ -54,6 +73,8 @@ export default function Home() {
         });
       } else if (data.type === 'cancelled') {
         setProcessingState('idle');
+        setStartTime(null);
+        startTimeRef.current = null;
         if (wsRef.current) {
           wsRef.current.close();
           wsRef.current = null;
@@ -77,7 +98,18 @@ export default function Home() {
   };
 
   const handleFilesSelected = (fileList: FileList) => {
-    const newFiles: FileItem[] = Array.from(fileList).map((file, index) => ({
+    const allFiles = Array.from(fileList);
+    const validFiles = allFiles.filter(f => f.name.toLowerCase().endsWith('.inp'));
+    const invalidFileNames = allFiles
+      .filter(f => !f.name.toLowerCase().endsWith('.inp'))
+      .map(f => f.name);
+    
+    if (invalidFileNames.length > 0) {
+      setInvalidFiles(invalidFileNames);
+      setTimeout(() => setInvalidFiles([]), 5000);
+    }
+    
+    const newFiles: FileItem[] = validFiles.map((file, index) => ({
       id: `${Date.now()}-${index}`,
       name: file.name,
       path: file.webkitRelativePath || file.name,
@@ -96,6 +128,9 @@ export default function Home() {
     setProcessingState('idle');
     setCurrentFile(0);
     setJobId(null);
+    setStartTime(null);
+    setElapsedTime('');
+    startTimeRef.current = null;
   };
 
   const handleStartProcessing = async () => {
@@ -121,6 +156,8 @@ export default function Home() {
       setProcessingState('processing');
       setCurrentFile(0);
       setResults([]);
+      setStartTime(Date.now());
+      startTimeRef.current = Date.now();
 
       connectWebSocket(batchJob.id);
 
@@ -184,10 +221,24 @@ export default function Home() {
 
       <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
         <div className="space-y-8">
+          <section data-testid="section-workflow-steps">
+            <WorkflowSteps 
+              currentStep={processingState === 'completed' ? 'results' : processingState === 'processing' ? 'process' : 'upload'} 
+            />
+          </section>
+
+          <section data-testid="section-instructions">
+            <InstructionsPanel />
+          </section>
+
+          <Separator />
+
           <section data-testid="section-upload">
             <FileUploadZone
               onFilesSelected={handleFilesSelected}
               selectedCount={files.length}
+              totalSize={totalSize}
+              invalidFiles={invalidFiles}
             />
           </section>
 
@@ -249,6 +300,9 @@ export default function Home() {
                   current={currentFile}
                   total={files.length}
                   currentFileName={files[currentFile - 1]?.name}
+                  startTime={startTime || undefined}
+                  successCount={results.filter(r => r.status === 'success').length}
+                  failedCount={results.filter(r => r.status === 'failed').length}
                 />
               </section>
             </>
@@ -258,7 +312,7 @@ export default function Home() {
             <>
               <Separator />
               <section data-testid="section-results">
-                <ResultsDisplay results={results} />
+                <ResultsDisplay results={results} elapsedTime={elapsedTime} />
               </section>
             </>
           )}

@@ -1,6 +1,7 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 
@@ -14,9 +15,10 @@ export interface ProcessResult {
 
 interface ResultsDisplayProps {
   results: ProcessResult[];
+  elapsedTime?: string;
 }
 
-export default function ResultsDisplay({ results }: ResultsDisplayProps) {
+export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayProps) {
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
   
   const successCount = results.filter(r => r.status === 'success').length;
@@ -30,6 +32,31 @@ export default function ResultsDisplay({ results }: ResultsDisplayProps) {
       newExpanded.add(id);
     }
     setExpandedErrors(newExpanded);
+  };
+
+  const exportToCSV = () => {
+    const headers = ['File Name', 'File Path', 'Status', 'Error'];
+    const rows = results.map(r => [
+      r.fileName,
+      r.filePath,
+      r.status,
+      r.error || ''
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `batch-swmm-results-${new Date().toISOString().slice(0,10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -63,9 +90,25 @@ export default function ResultsDisplay({ results }: ResultsDisplayProps) {
         </Card>
       </div>
 
+      {elapsedTime && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground" data-testid="text-total-time">
+          <Clock className="h-4 w-4" />
+          Total processing time: {elapsedTime}
+        </div>
+      )}
+
       <Card data-testid="card-results-list">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
           <CardTitle className="text-lg" data-testid="text-results-title">Processing Results</CardTitle>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={exportToCSV}
+            data-testid="button-export-csv"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
         </CardHeader>
         <CardContent>
           <ScrollArea className="max-h-96">
