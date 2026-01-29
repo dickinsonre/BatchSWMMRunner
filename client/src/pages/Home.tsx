@@ -11,6 +11,7 @@ import WorkflowSteps from "@/components/WorkflowSteps";
 import InstructionsPanel from "@/components/InstructionsPanel";
 import ExpectedOutputs from "@/components/ExpectedOutputs";
 import SimulationSettings from "@/components/SimulationSettings";
+import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -32,6 +33,7 @@ export default function Home() {
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
   const [reportStep, setReportStep] = useState(15);
   const [routingMethod, setRoutingMethod] = useState("dynamic");
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const { toast } = useToast();
@@ -57,16 +59,43 @@ export default function Home() {
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       
+      const getTimestamp = () => {
+        const now = new Date();
+        return now.toISOString().replace('T', ' ').substring(0, 19);
+      };
+
       if (data.type === 'progress') {
         setCurrentFile(data.currentFile);
+        setLogs(prev => [...prev, {
+          timestamp: getTimestamp(),
+          message: `Processing ${data.fileName}...`,
+          type: 'info'
+        }]);
       } else if (data.type === 'result') {
         setResults(prev => [...prev, data.result]);
+        const result = data.result;
+        setLogs(prev => [...prev, {
+          timestamp: getTimestamp(),
+          message: result.status === 'success' 
+            ? `Processing ${result.fileName}... Success`
+            : `Processing ${result.fileName}... Error: ${result.error || 'Unknown error'}`,
+          type: result.status === 'success' ? 'success' : 'error'
+        }]);
       } else if (data.type === 'completed') {
         setProcessingState('completed');
         if (startTimeRef.current) {
           const elapsed = (Date.now() - startTimeRef.current) / 1000;
           setElapsedTime(formatTime(elapsed));
         }
+        setLogs(prev => {
+          const successCount = prev.filter(l => l.type === 'success').length;
+          const totalCount = prev.filter(l => l.type === 'success' || l.type === 'error').length;
+          return [...prev, {
+            timestamp: getTimestamp(),
+            message: `Batch completed: ${successCount}/${totalCount} files successful`,
+            type: 'complete'
+          }];
+        });
         if (wsRef.current) {
           wsRef.current.close();
           wsRef.current = null;
@@ -134,6 +163,7 @@ export default function Home() {
     setJobId(null);
     setStartTime(null);
     setElapsedTime('');
+    setLogs([]);
     startTimeRef.current = null;
   };
 
@@ -160,6 +190,7 @@ export default function Home() {
       setProcessingState('processing');
       setCurrentFile(0);
       setResults([]);
+      setLogs([]);
       setStartTime(Date.now());
       startTimeRef.current = Date.now();
 
@@ -332,12 +363,18 @@ export default function Home() {
                   failedCount={results.filter(r => r.status === 'failed').length}
                 />
               </section>
+              <section data-testid="section-processing-log">
+                <ProcessingLog logs={logs} />
+              </section>
             </>
           )}
 
           {processingState === 'completed' && results.length > 0 && (
             <>
               <Separator />
+              <section data-testid="section-processing-log">
+                <ProcessingLog logs={logs} />
+              </section>
               <section data-testid="section-results">
                 <ResultsDisplay results={results} elapsedTime={elapsedTime} />
               </section>
