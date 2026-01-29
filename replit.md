@@ -6,6 +6,8 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Jan 2026**: Added "What You'll Get" expected outputs panel showing .rpt, .out files and results summary
+- **Jan 2026**: Made processing button always visible (disabled until files uploaded) for clearer UX
 - **Jan 2026**: Added workflow steps visualization (Upload → Process → Results)
 - **Jan 2026**: Added "How to Use" instructions panel with 3-step guide
 - **Jan 2026**: Enhanced file upload with file size display and validation warnings
