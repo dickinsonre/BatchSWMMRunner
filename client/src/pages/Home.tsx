@@ -10,6 +10,7 @@ import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay"
 import WorkflowSteps from "@/components/WorkflowSteps";
 import InstructionsPanel from "@/components/InstructionsPanel";
 import ExpectedOutputs from "@/components/ExpectedOutputs";
+import SimulationSettings from "@/components/SimulationSettings";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -29,6 +30,8 @@ export default function Home() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<string>('');
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
+  const [reportStep, setReportStep] = useState(15);
+  const [routingMethod, setRoutingMethod] = useState("dynamic");
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const { toast } = useToast();
@@ -237,6 +240,16 @@ export default function Home() {
               <ExpectedOutputs />
             </section>
           </div>
+
+          <section data-testid="section-simulation-settings">
+            <SimulationSettings
+              reportStep={reportStep}
+              routingMethod={routingMethod}
+              onReportStepChange={setReportStep}
+              onRoutingMethodChange={setRoutingMethod}
+              disabled={processingState === 'processing'}
+            />
+          </section>
 
           <Separator />
 
