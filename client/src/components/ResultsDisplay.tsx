@@ -67,6 +67,12 @@ function reportToHtml(content: string): string {
     if (/(JUNCTION|OUTFALL|CONDUIT)\s/.test(line)) {
       return `<div style="font-family:monospace;font-size:0.85em;">${line}</div>`;
     }
+    if (/^\s*\[[\w]+\]/.test(line)) {
+      return `<h3 style="color:hsl(210,95%,45%);margin:1em 0 0.3em;font-size:0.95em;font-weight:700;font-family:monospace;">${line.trim()}</h3>`;
+    }
+    if (/^\s*;;/.test(line)) {
+      return `<div style="font-family:monospace;font-size:0.8em;color:hsl(0,0%,50%);white-space:pre;">${line}</div>`;
+    }
     if (line.trim() === '') return '<div style="height:0.4em;"></div>';
     return `<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`;
   });
