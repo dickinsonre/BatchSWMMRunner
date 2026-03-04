@@ -1,8 +1,9 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
 export interface ProcessResult {
@@ -12,6 +13,7 @@ export interface ProcessResult {
   status: 'success' | 'failed';
   error?: string;
   processingTime?: number;
+  reportContent?: string;
   results?: {
     peakFlow?: number;
     totalVolume?: number;
@@ -23,8 +25,58 @@ interface ResultsDisplayProps {
   elapsedTime?: string;
 }
 
+function reportToHtml(content: string): string {
+  const escaped = content
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const lines = escaped.split('\n');
+  const htmlLines = lines.map(line => {
+    if (/^\s*\*{3,}/.test(line)) {
+      const title = line.replace(/\*/g, '').trim();
+      if (title) {
+        return `<h2 style="color:hsl(210,95%,45%);margin:1.2em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:1px solid hsl(210,20%,80%);padding-bottom:0.2em;">${title}</h2>`;
+      }
+      return '';
+    }
+    if (/^\s*-{5,}/.test(line)) {
+      return `<hr style="border:none;border-top:1px solid hsl(0,0%,80%);margin:0.3em 0;" />`;
+    }
+    if (/EPA STORM WATER MANAGEMENT MODEL/.test(line)) {
+      return `<h1 style="color:hsl(210,95%,35%);font-size:1.2em;font-weight:700;margin-bottom:0.2em;">${line.trim()}</h1>`;
+    }
+    if (/EPA SWMM/.test(line)) {
+      return `<div style="font-weight:700;font-size:1.1em;color:hsl(210,95%,40%);margin:0.5em 0;">${line.trim()}</div>`;
+    }
+    if (/^\s*(Input File|Report File|Output File|Analysis Date|Analysis Time|Elapsed Time):/.test(line)) {
+      const [label, ...rest] = line.split(':');
+      return `<div><strong>${label.trim()}:</strong> ${rest.join(':').trim()}</div>`;
+    }
+    if (/Continuity Error/.test(line)) {
+      const val = parseFloat(line.split(/\s+/).pop() || '0');
+      const color = Math.abs(val) > 0.1 ? 'hsl(0,84%,45%)' : 'hsl(142,60%,35%)';
+      return `<div style="color:${color};font-weight:600;">${line}</div>`;
+    }
+    if (/Flooding was detected/.test(line)) {
+      return `<div style="color:hsl(30,90%,45%);font-weight:600;">${line}</div>`;
+    }
+    if (/No nodes were flooded|No conduits were surcharged/.test(line)) {
+      return `<div style="color:hsl(142,60%,35%);font-weight:500;">${line}</div>`;
+    }
+    if (/(JUNCTION|OUTFALL|CONDUIT)\s/.test(line)) {
+      return `<div style="font-family:monospace;font-size:0.85em;">${line}</div>`;
+    }
+    if (line.trim() === '') return '<div style="height:0.4em;"></div>';
+    return `<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`;
+  });
+
+  return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}</div>`;
+}
+
 export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayProps) {
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
+  const [expandedReports, setExpandedReports] = useState<Set<string>>(new Set());
   
   const successCount = results.filter(r => r.status === 'success').length;
   const failedCount = results.filter(r => r.status === 'failed').length;
@@ -37,6 +89,28 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
       newExpanded.add(id);
     }
     setExpandedErrors(newExpanded);
+  };
+
+  const toggleReport = (id: string) => {
+    const newExpanded = new Set(expandedReports);
+    if (newExpanded.has(id)) {
+      newExpanded.delete(id);
+    } else {
+      newExpanded.add(id);
+    }
+    setExpandedReports(newExpanded);
+  };
+
+  const downloadReportAsText = (result: ProcessResult) => {
+    if (!result.reportContent) return;
+    const blob = new Blob([result.reportContent], { type: 'text/plain;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = result.fileName.replace('.inp', '.rpt');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const exportToCSV = () => {
@@ -214,6 +288,66 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                             <pre className="mt-2 text-xs bg-muted p-3 rounded font-mono overflow-x-auto" data-testid={`text-error-details-${result.id}`}>
                               {result.error}
                             </pre>
+                          )}
+                        </div>
+                      )}
+                      {result.reportContent && (
+                        <div className="mt-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <button
+                              onClick={() => toggleReport(result.id)}
+                              className="flex items-center gap-1 text-xs text-primary hover-elevate rounded px-2 py-1"
+                              data-testid={`button-toggle-report-${result.id}`}
+                            >
+                              {expandedReports.has(result.id) ? (
+                                <ChevronDown className="h-3 w-3" />
+                              ) : (
+                                <ChevronRight className="h-3 w-3" />
+                              )}
+                              <FileText className="h-3 w-3" />
+                              View Report
+                            </button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => downloadReportAsText(result)}
+                              data-testid={`button-download-report-${result.id}`}
+                            >
+                              <Download className="h-3 w-3 mr-1" />
+                              Download .rpt
+                            </Button>
+                          </div>
+                          {expandedReports.has(result.id) && (
+                            <div className="mt-2">
+                              <Tabs defaultValue="text" data-testid={`tabs-report-${result.id}`}>
+                                <TabsList>
+                                  <TabsTrigger value="text" data-testid={`tab-report-text-${result.id}`}>
+                                    <FileText className="h-3 w-3 mr-1" />
+                                    Text
+                                  </TabsTrigger>
+                                  <TabsTrigger value="html" data-testid={`tab-report-html-${result.id}`}>
+                                    <Globe className="h-3 w-3 mr-1" />
+                                    HTML
+                                  </TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="text">
+                                  <ScrollArea className="max-h-96 rounded border">
+                                    <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
+                                      {result.reportContent}
+                                    </pre>
+                                  </ScrollArea>
+                                </TabsContent>
+                                <TabsContent value="html">
+                                  <ScrollArea className="max-h-96 rounded border">
+                                    <div
+                                      className="text-sm p-4 bg-background"
+                                      dangerouslySetInnerHTML={{ __html: reportToHtml(result.reportContent) }}
+                                      data-testid={`html-report-content-${result.id}`}
+                                    />
+                                  </ScrollArea>
+                                </TabsContent>
+                              </Tabs>
+                            </div>
                           )}
                         </div>
                       )}

@@ -16,6 +16,7 @@ export const batchJobSchema = z.object({
     status: z.enum(['success', 'failed']),
     error: z.string().optional(),
     processingTime: z.number().optional(),
+    reportContent: z.string().optional(),
     results: z.object({
       peakFlow: z.number().optional(),
       totalVolume: z.number().optional(),
@@ -39,6 +40,7 @@ export const processResultSchema = z.object({
   status: z.enum(['success', 'failed']),
   error: z.string().optional(),
   processingTime: z.number().optional(),
+  reportContent: z.string().optional(),
   results: z.object({
     peakFlow: z.number().optional(),
     totalVolume: z.number().optional(),
