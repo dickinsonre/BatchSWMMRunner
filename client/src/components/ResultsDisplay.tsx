@@ -251,54 +251,83 @@ function reportToHtml(content: string): string {
     .replace(/>/g, '&gt;');
 
   const lines = escaped.split('\n');
-  const htmlLines = lines.map(line => {
+  const htmlLines: string[] = [];
+  let inTimeSeries = false;
+
+  for (let li = 0; li < lines.length; li++) {
+    const line = lines[li];
+
+    if (/^\s*\*{3,}\s*$/.test(line)) {
+      const nextLine = li + 1 < lines.length ? lines[li + 1].trim() : '';
+      if (/Time Series$/i.test(nextLine)) {
+        inTimeSeries = true;
+        continue;
+      }
+      if (inTimeSeries) {
+        inTimeSeries = false;
+      }
+    }
+
+    if (inTimeSeries) continue;
+
     if (/^\s*\*{3,}/.test(line)) {
       const title = line.replace(/\*/g, '').trim();
       if (title) {
-        return `<h2 style="color:hsl(210,95%,45%);margin:1.2em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:1px solid hsl(210,20%,80%);padding-bottom:0.2em;">${title}</h2>`;
+        htmlLines.push(`<h2 style="color:hsl(210,95%,45%);margin:1.2em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:1px solid hsl(210,20%,80%);padding-bottom:0.2em;">${title}</h2>`);
       }
-      return '';
+      continue;
     }
     if (/^\s*-{5,}/.test(line)) {
-      return `<hr style="border:none;border-top:1px solid hsl(0,0%,80%);margin:0.3em 0;" />`;
+      htmlLines.push(`<hr style="border:none;border-top:1px solid hsl(0,0%,80%);margin:0.3em 0;" />`);
+      continue;
     }
     if (/EPA STORM WATER MANAGEMENT MODEL/.test(line)) {
-      return `<h1 style="color:hsl(210,95%,35%);font-size:1.2em;font-weight:700;margin-bottom:0.2em;">${line.trim()}</h1>`;
+      htmlLines.push(`<h1 style="color:hsl(210,95%,35%);font-size:1.2em;font-weight:700;margin-bottom:0.2em;">${line.trim()}</h1>`);
+      continue;
     }
     if (/EPA SWMM/.test(line)) {
-      return `<div style="font-weight:700;font-size:1.1em;color:hsl(210,95%,40%);margin:0.5em 0;">${line.trim()}</div>`;
+      htmlLines.push(`<div style="font-weight:700;font-size:1.1em;color:hsl(210,95%,40%);margin:0.5em 0;">${line.trim()}</div>`);
+      continue;
     }
     if (/^\s*(Input File|Report File|Output File|Analysis Date|Analysis Time|Elapsed Time):/.test(line)) {
       const [label, ...rest] = line.split(':');
-      return `<div><strong>${label.trim()}:</strong> ${rest.join(':').trim()}</div>`;
+      htmlLines.push(`<div><strong>${label.trim()}:</strong> ${rest.join(':').trim()}</div>`);
+      continue;
     }
     if (/Continuity Error/.test(line)) {
       const val = parseFloat(line.split(/\s+/).pop() || '0');
       const color = Math.abs(val) > 0.1 ? 'hsl(0,84%,45%)' : 'hsl(142,60%,35%)';
-      return `<div style="color:${color};font-weight:600;">${line}</div>`;
+      htmlLines.push(`<div style="color:${color};font-weight:600;">${line}</div>`);
+      continue;
     }
     if (/Flooding was detected/.test(line)) {
-      return `<div style="color:hsl(30,90%,45%);font-weight:600;">${line}</div>`;
+      htmlLines.push(`<div style="color:hsl(30,90%,45%);font-weight:600;">${line}</div>`);
+      continue;
     }
     if (/No nodes were flooded|No conduits were surcharged/.test(line)) {
-      return `<div style="color:hsl(142,60%,35%);font-weight:500;">${line}</div>`;
+      htmlLines.push(`<div style="color:hsl(142,60%,35%);font-weight:500;">${line}</div>`);
+      continue;
     }
     if (/(JUNCTION|OUTFALL|CONDUIT)\s/.test(line)) {
-      return `<div style="font-family:monospace;font-size:0.85em;">${line}</div>`;
+      htmlLines.push(`<div style="font-family:monospace;font-size:0.85em;">${line}</div>`);
+      continue;
     }
     if (/&lt;&lt;&lt;/.test(line)) {
       const name = line.replace(/&lt;&lt;&lt;|&gt;&gt;&gt;/g, '').trim();
-      return `<div style="font-weight:600;color:hsl(210,60%,40%);margin:0.8em 0 0.3em;font-size:0.95em;">${name}</div>`;
+      htmlLines.push(`<div style="font-weight:600;color:hsl(210,60%,40%);margin:0.8em 0 0.3em;font-size:0.95em;">${name}</div>`);
+      continue;
     }
     if (/^\s*\[[\w]+\]/.test(line)) {
-      return `<h3 style="color:hsl(210,95%,45%);margin:1em 0 0.3em;font-size:0.95em;font-weight:700;font-family:monospace;">${line.trim()}</h3>`;
+      htmlLines.push(`<h3 style="color:hsl(210,95%,45%);margin:1em 0 0.3em;font-size:0.95em;font-weight:700;font-family:monospace;">${line.trim()}</h3>`);
+      continue;
     }
     if (/^\s*;;/.test(line)) {
-      return `<div style="font-family:monospace;font-size:0.8em;color:hsl(0,0%,50%);white-space:pre;">${line}</div>`;
+      htmlLines.push(`<div style="font-family:monospace;font-size:0.8em;color:hsl(0,0%,50%);white-space:pre;">${line}</div>`);
+      continue;
     }
-    if (line.trim() === '') return '<div style="height:0.4em;"></div>';
-    return `<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`;
-  });
+    if (line.trim() === '') { htmlLines.push('<div style="height:0.4em;"></div>'); continue; }
+    htmlLines.push(`<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`);
+  }
 
   const chartsHtml = generateChartsAndTablesHtml(allSeries);
 
