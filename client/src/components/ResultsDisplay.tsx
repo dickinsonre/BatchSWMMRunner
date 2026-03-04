@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -241,6 +241,58 @@ function generateChartsAndTablesHtml(allSeries: ParsedTimeSeries[]): string {
   }
   html += '</div>';
   return html;
+}
+
+function generateChartsOnlyHtml(allSeries: ParsedTimeSeries[]): string {
+  if (allSeries.length === 0) return '<p style="color:hsl(0,0%,50%);font-style:italic;">No time series data available for graphs.</p>';
+
+  const chartColors = [
+    'hsl(210,85%,50%)',
+    'hsl(340,75%,50%)',
+    'hsl(142,60%,40%)',
+    'hsl(35,90%,50%)',
+    'hsl(270,60%,55%)',
+    'hsl(180,55%,40%)',
+  ];
+
+  const sections: { [key: string]: string[] } = {};
+  for (const ts of allSeries) {
+    const chartW = 480;
+    const chartH = 220;
+    const charts: string[] = [];
+
+    const maxCols = Math.min(ts.columns.length, ts.data[0]?.values.length ?? 0);
+    for (let c = 0; c < maxCols; c++) {
+      const allZero = ts.data.every(d => (d.values[c] ?? 0) === 0);
+      if (allZero) continue;
+      charts.push(generateSvgChart(ts, c, chartColors[c % chartColors.length], chartW, chartH));
+    }
+
+    if (charts.length > 0) {
+      const escH = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      if (!sections[ts.title]) sections[ts.title] = [];
+      sections[ts.title].push(`
+        <div style="margin-bottom:20px;">
+          <div style="font-weight:600;font-size:0.95em;color:hsl(210,40%,35%);margin-bottom:8px;">${escH(ts.element)}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">${charts.join('')}</div>
+        </div>
+      `);
+    }
+  }
+
+  let html = '<div style="padding:8px 0;">';
+  html += '<h2 style="color:hsl(210,95%,45%);font-size:1.2em;font-weight:700;margin-bottom:1em;">Time Series Graphs</h2>';
+  for (const [sectionTitle, chartGroups] of Object.entries(sections)) {
+    html += `<h3 style="color:hsl(210,60%,40%);font-size:1.05em;font-weight:600;margin:1.2em 0 0.6em;border-bottom:1px solid hsl(210,20%,85%);padding-bottom:0.3em;">${sectionTitle}</h3>`;
+    html += chartGroups.join('');
+  }
+  html += '</div>';
+  return html;
+}
+
+function reportToGraphsHtml(content: string): string {
+  const allSeries = parseTimeSeries(content);
+  return generateChartsOnlyHtml(allSeries);
 }
 
 function reportToHtml(content: string): string {
@@ -606,6 +658,12 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                     </TabsTrigger>
                                   )}
                                   {result.reportContent && (
+                                    <TabsTrigger value="graphs" data-testid={`tab-report-graphs-${result.id}`}>
+                                      <BarChart3 className="h-3 w-3 mr-1" />
+                                      RPT Graphs
+                                    </TabsTrigger>
+                                  )}
+                                  {result.reportContent && (
                                     <TabsTrigger value="html" data-testid={`tab-report-html-${result.id}`}>
                                       <Globe className="h-3 w-3 mr-1" />
                                       RPT HTML
@@ -627,6 +685,17 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                       <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
                                         {result.reportContent}
                                       </pre>
+                                    </ScrollArea>
+                                  </TabsContent>
+                                )}
+                                {result.reportContent && (
+                                  <TabsContent value="graphs">
+                                    <ScrollArea className="h-[800px] rounded border">
+                                      <div
+                                        className="text-sm p-4 bg-background"
+                                        dangerouslySetInnerHTML={{ __html: reportToGraphsHtml(result.reportContent) }}
+                                        data-testid={`graphs-report-content-${result.id}`}
+                                      />
                                     </ScrollArea>
                                   </TabsContent>
                                 )}
