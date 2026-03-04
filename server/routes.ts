@@ -470,6 +470,13 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
 
       injectReportOptions(inputPath);
 
+      let inpContent: string | undefined;
+      try {
+        inpContent = fs.readFileSync(inputPath, 'utf-8');
+      } catch (e) {
+        console.warn(`Could not read inp file ${inputPath}:`, e);
+      }
+
       if (!fs.existsSync(runswmmPath)) {
         console.warn(`runswmm.exe not found at ${runswmmPath}, simulating processing`);
         const simulatedTime = 1000 + Math.random() * 2000;
@@ -486,6 +493,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
             error: success ? undefined : 'Error 110: cannot open rainfall data file',
             processingTime,
             reportContent: success ? generateSimulatedReport(file.name, peakFlow, totalVolume, processingTime) : undefined,
+            inpContent,
             results: success ? { peakFlow, totalVolume } : undefined,
           });
         }, simulatedTime);
@@ -518,6 +526,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
             status: 'success',
             processingTime,
             reportContent,
+            inpContent,
             results: {
               peakFlow: undefined,
               totalVolume: undefined,
@@ -531,6 +540,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
             status: 'failed',
             error: errorOutput || `Process exited with code ${code}`,
             processingTime,
+            inpContent,
           });
         }
       });
@@ -544,6 +554,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
           status: 'failed',
           error: err.message,
           processingTime,
+          inpContent,
         });
       });
     });

@@ -14,6 +14,7 @@ export interface ProcessResult {
   error?: string;
   processingTime?: number;
   reportContent?: string;
+  inpContent?: string;
   results?: {
     peakFlow?: number;
     totalVolume?: number;
@@ -560,7 +561,7 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                           )}
                         </div>
                       )}
-                      {result.reportContent && (
+                      {(result.reportContent || result.inpContent) && (
                         <div className="mt-2">
                           <div className="flex items-center gap-2 flex-wrap">
                             <button
@@ -574,47 +575,72 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                 <ChevronRight className="h-3 w-3" />
                               )}
                               <FileText className="h-3 w-3" />
-                              View Report
+                              View Files
                             </button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => downloadReportAsText(result)}
-                              data-testid={`button-download-report-${result.id}`}
-                            >
-                              <Download className="h-3 w-3 mr-1" />
-                              Download .rpt
-                            </Button>
+                            {result.reportContent && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => downloadReportAsText(result)}
+                                data-testid={`button-download-report-${result.id}`}
+                              >
+                                <Download className="h-3 w-3 mr-1" />
+                                Download .rpt
+                              </Button>
+                            )}
                           </div>
                           {expandedReports.has(result.id) && (
                             <div className="mt-2">
-                              <Tabs defaultValue="text" data-testid={`tabs-report-${result.id}`}>
+                              <Tabs defaultValue={result.inpContent ? "inp" : "text"} data-testid={`tabs-report-${result.id}`}>
                                 <TabsList>
-                                  <TabsTrigger value="text" data-testid={`tab-report-text-${result.id}`}>
-                                    <FileText className="h-3 w-3 mr-1" />
-                                    Text
-                                  </TabsTrigger>
-                                  <TabsTrigger value="html" data-testid={`tab-report-html-${result.id}`}>
-                                    <Globe className="h-3 w-3 mr-1" />
-                                    HTML
-                                  </TabsTrigger>
+                                  {result.inpContent && (
+                                    <TabsTrigger value="inp" data-testid={`tab-report-inp-${result.id}`}>
+                                      <FileText className="h-3 w-3 mr-1" />
+                                      INP
+                                    </TabsTrigger>
+                                  )}
+                                  {result.reportContent && (
+                                    <TabsTrigger value="text" data-testid={`tab-report-text-${result.id}`}>
+                                      <FileText className="h-3 w-3 mr-1" />
+                                      RPT Text
+                                    </TabsTrigger>
+                                  )}
+                                  {result.reportContent && (
+                                    <TabsTrigger value="html" data-testid={`tab-report-html-${result.id}`}>
+                                      <Globe className="h-3 w-3 mr-1" />
+                                      RPT HTML
+                                    </TabsTrigger>
+                                  )}
                                 </TabsList>
-                                <TabsContent value="text">
-                                  <ScrollArea className="h-[800px] rounded border">
-                                    <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
-                                      {result.reportContent}
-                                    </pre>
-                                  </ScrollArea>
-                                </TabsContent>
-                                <TabsContent value="html">
-                                  <ScrollArea className="h-[800px] rounded border">
-                                    <div
-                                      className="text-sm p-4 bg-background"
-                                      dangerouslySetInnerHTML={{ __html: reportToHtml(result.reportContent) }}
-                                      data-testid={`html-report-content-${result.id}`}
-                                    />
-                                  </ScrollArea>
-                                </TabsContent>
+                                {result.inpContent && (
+                                  <TabsContent value="inp">
+                                    <ScrollArea className="h-[800px] rounded border">
+                                      <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-inp-content-${result.id}`}>
+                                        {result.inpContent}
+                                      </pre>
+                                    </ScrollArea>
+                                  </TabsContent>
+                                )}
+                                {result.reportContent && (
+                                  <TabsContent value="text">
+                                    <ScrollArea className="h-[800px] rounded border">
+                                      <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
+                                        {result.reportContent}
+                                      </pre>
+                                    </ScrollArea>
+                                  </TabsContent>
+                                )}
+                                {result.reportContent && (
+                                  <TabsContent value="html">
+                                    <ScrollArea className="h-[800px] rounded border">
+                                      <div
+                                        className="text-sm p-4 bg-background"
+                                        dangerouslySetInnerHTML={{ __html: reportToHtml(result.reportContent) }}
+                                        data-testid={`html-report-content-${result.id}`}
+                                      />
+                                    </ScrollArea>
+                                  </TabsContent>
+                                )}
                               </Tabs>
                             </div>
                           )}
