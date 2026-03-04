@@ -636,8 +636,8 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
       const swmmStatus = cachedSwmmStatus || detectSwmmPath();
       const runswmmPath = swmmStatus.found ? swmmStatus.path! : 'runswmm.exe';
       const inputPath = file.path;
-      const reportPath = inputPath.replace('.inp', '.rpt');
-      const outputPath = inputPath.replace('.inp', '.out');
+      const reportPath = inputPath + '.rpt';
+      const outputPath = inputPath + '.out';
 
       injectReportOptions(inputPath);
 
@@ -700,6 +700,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         return;
       }
 
+      console.log(`Running SWMM: ${runswmmPath} "${inputPath}" "${reportPath}" "${outputPath}"`);
       const childProcess = spawn(runswmmPath, [inputPath, reportPath, outputPath]);
 
       let errorOutput = '';
@@ -753,6 +754,8 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
           message: code === 0 ? 'Complete' : 'Failed',
         });
 
+        console.log(`SWMM finished for ${file.name}: exit code ${code}, report exists: ${fs.existsSync(reportPath)}`);
+
         if (code === 0) {
           let reportContent: string | undefined;
           try {
@@ -761,6 +764,19 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
             }
           } catch (e) {
             console.warn(`Could not read report file: ${reportPath}`);
+          }
+
+          if (!reportContent) {
+            resolve({
+              id: file.id,
+              fileName: file.name,
+              filePath: file.path,
+              status: 'failed',
+              error: 'SWMM exited successfully but no report file was generated',
+              processingTime: (Date.now() - startTime) / 1000,
+              inpContent,
+            });
+            return;
           }
 
           const parsedMetrics = reportContent ? parseReportMetrics(reportContent) : undefined;
