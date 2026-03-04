@@ -52,6 +52,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
+  app.get('/api/samples', async (req, res) => {
+    try {
+      const samplesDir = path.join(process.cwd(), 'public', 'samples');
+      if (!fs.existsSync(samplesDir)) {
+        return res.json([]);
+      }
+      const files = fs.readdirSync(samplesDir)
+        .filter(f => f.toLowerCase().endsWith('.inp'))
+        .sort()
+        .map(f => {
+          const stat = fs.statSync(path.join(samplesDir, f));
+          const content = fs.readFileSync(path.join(samplesDir, f), 'utf-8');
+          const titleMatch = content.match(/\[TITLE\]\s*\n(?:;;[^\n]*\n)*(.*)/);
+          const title = titleMatch ? titleMatch[1].trim() : f;
+          return {
+            name: f,
+            size: stat.size,
+            title,
+          };
+        });
+      res.json(files);
+    } catch (error) {
+      console.error('Error listing samples:', error);
+      res.status(500).json({ error: 'Failed to list sample files' });
+    }
+  });
+
+  app.get('/api/samples/:filename', async (req, res) => {
+    try {
+      const { filename } = req.params;
+      if (!filename.toLowerCase().endsWith('.inp')) {
+        return res.status(400).json({ error: 'Invalid file type' });
+      }
+      const filePath = path.join(process.cwd(), 'public', 'samples', path.basename(filename));
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: 'Sample file not found' });
+      }
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error('Error serving sample:', error);
+      res.status(500).json({ error: 'Failed to serve sample file' });
+    }
+  });
+
   app.post('/api/upload', upload.array('files'), async (req, res) => {
     try {
       const files = req.files as Express.Multer.File[];
@@ -481,7 +525,6 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         console.warn(`runswmm.exe not found at ${runswmmPath}, simulating processing`);
         const simulatedTime = 1000 + Math.random() * 2000;
         setTimeout(() => {
-          const success = Math.random() > 0.2;
           const processingTime = (Date.now() - startTime) / 1000;
           const peakFlow = Math.random() * 100 + 10;
           const totalVolume = Math.random() * 50 + 5;
@@ -489,12 +532,11 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
             id: file.id,
             fileName: file.name,
             filePath: file.path,
-            status: success ? 'success' : 'failed',
-            error: success ? undefined : 'Error 110: cannot open rainfall data file',
+            status: 'success',
             processingTime,
-            reportContent: success ? generateSimulatedReport(file.name, peakFlow, totalVolume, processingTime) : undefined,
+            reportContent: generateSimulatedReport(file.name, peakFlow, totalVolume, processingTime),
             inpContent,
-            results: success ? { peakFlow, totalVolume } : undefined,
+            results: { peakFlow, totalVolume },
           });
         }, simulatedTime);
         return;

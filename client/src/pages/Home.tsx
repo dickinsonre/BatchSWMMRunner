@@ -15,6 +15,7 @@ import InstructionsPanel from "@/components/InstructionsPanel";
 import ExpectedOutputs from "@/components/ExpectedOutputs";
 import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
+import SampleModels from "@/components/SampleModels";
 import ThemeToggle from "@/components/ThemeToggle";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
@@ -153,6 +154,16 @@ export default function Home() {
       id: `${Date.now()}-${index}`,
       name: file.name,
       path: file.webkitRelativePath || file.name,
+      file,
+    })) as any;
+    setFiles(prev => [...prev, ...newFiles]);
+  };
+
+  const handleSamplesLoaded = (sampleFiles: File[]) => {
+    const newFiles: FileItem[] = sampleFiles.map((file, index) => ({
+      id: `sample-${Date.now()}-${index}`,
+      name: file.name,
+      path: file.name,
       file,
     })) as any;
     setFiles(prev => [...prev, ...newFiles]);
@@ -349,6 +360,13 @@ export default function Home() {
               selectedCount={files.length}
               totalSize={totalSize}
               invalidFiles={invalidFiles}
+            />
+          </section>
+
+          <section data-testid="section-sample-models">
+            <SampleModels
+              onSamplesLoaded={handleSamplesLoaded}
+              disabled={processingState === 'processing'}
             />
           </section>
 
