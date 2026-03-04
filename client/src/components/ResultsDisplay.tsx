@@ -331,14 +331,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                   </TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="text">
-                                  <ScrollArea className="max-h-96 rounded border">
+                                  <ScrollArea className="h-[600px] rounded border">
                                     <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
                                       {result.reportContent}
                                     </pre>
                                   </ScrollArea>
                                 </TabsContent>
                                 <TabsContent value="html">
-                                  <ScrollArea className="max-h-96 rounded border">
+                                  <ScrollArea className="h-[600px] rounded border">
                                     <div
                                       className="text-sm p-4 bg-background"
                                       dangerouslySetInnerHTML={{ __html: reportToHtml(result.reportContent) }}
