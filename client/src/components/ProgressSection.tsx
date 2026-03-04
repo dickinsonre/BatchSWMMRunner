@@ -1,7 +1,15 @@
-import { Loader2, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Loader2, Clock, CheckCircle, XCircle, FileText, CircleDot } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+
+export interface FileProgressInfo {
+  fileId: string;
+  fileName: string;
+  percentage: number;
+  message: string;
+  status: 'pending' | 'running' | 'success' | 'failed';
+}
 
 interface ProgressSectionProps {
   current: number;
@@ -10,6 +18,8 @@ interface ProgressSectionProps {
   startTime?: number;
   successCount?: number;
   failedCount?: number;
+  fileProgressMap?: Map<string, FileProgressInfo>;
+  fileNames?: string[];
 }
 
 function formatTime(seconds: number): string {
@@ -25,7 +35,9 @@ export default function ProgressSection({
   currentFileName, 
   startTime,
   successCount = 0,
-  failedCount = 0
+  failedCount = 0,
+  fileProgressMap,
+  fileNames = [],
 }: ProgressSectionProps) {
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
   const completedCount = successCount + failedCount;
@@ -44,6 +56,36 @@ export default function ProgressSection({
       eta = formatTime(etaSeconds);
     }
   }
+
+  const fileEntries = fileNames.map((name, index) => {
+    let matchedProgress: FileProgressInfo | undefined;
+    if (fileProgressMap) {
+      for (const entry of fileProgressMap.values()) {
+        if (entry.fileName === name) {
+          matchedProgress = entry;
+          break;
+        }
+      }
+    }
+
+    let status: 'pending' | 'running' | 'success' | 'failed' = 'pending';
+    let pct = 0;
+    let message = 'Waiting...';
+
+    if (matchedProgress) {
+      status = matchedProgress.status;
+      pct = matchedProgress.percentage;
+      message = matchedProgress.message;
+    } else if (index < current - 1) {
+      status = 'success';
+      pct = 100;
+      message = 'Complete';
+    } else if (index === current - 1) {
+      status = 'running';
+    }
+
+    return { name, status, pct, message };
+  });
 
   return (
     <Card data-testid="card-progress">
@@ -103,6 +145,57 @@ export default function ProgressSection({
               )}
             </div>
           </div>
+
+          {fileEntries.length > 0 && (
+            <div className="border-t pt-4 mt-4" data-testid="file-progress-list">
+              <p className="text-xs font-medium text-muted-foreground mb-3">Per-File Progress</p>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {fileEntries.map((entry, idx) => (
+                  <div 
+                    key={idx}
+                    className="flex items-center gap-3 text-xs"
+                    data-testid={`file-progress-${idx}`}
+                  >
+                    <div className="flex-shrink-0 w-4">
+                      {entry.status === 'running' && (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                      )}
+                      {entry.status === 'success' && (
+                        <CheckCircle className="h-3.5 w-3.5 text-green-600" />
+                      )}
+                      {entry.status === 'failed' && (
+                        <XCircle className="h-3.5 w-3.5 text-destructive" />
+                      )}
+                      {entry.status === 'pending' && (
+                        <CircleDot className="h-3.5 w-3.5 text-muted-foreground/40" />
+                      )}
+                    </div>
+                    <span className="font-mono truncate min-w-0 flex-shrink" style={{ maxWidth: '180px' }}>
+                      {entry.name}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <Progress 
+                        value={entry.pct} 
+                        className="h-1.5"
+                        data-testid={`file-progress-bar-${idx}`}
+                      />
+                    </div>
+                    <span className={`flex-shrink-0 w-10 text-right tabular-nums ${
+                      entry.status === 'success' ? 'text-green-600' :
+                      entry.status === 'failed' ? 'text-destructive' :
+                      entry.status === 'running' ? 'text-primary' :
+                      'text-muted-foreground'
+                    }`}>
+                      {entry.pct}%
+                    </span>
+                    <span className="flex-shrink-0 text-muted-foreground truncate" style={{ maxWidth: '140px' }}>
+                      {entry.message}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

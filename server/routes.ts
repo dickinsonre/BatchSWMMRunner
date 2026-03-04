@@ -4,9 +4,9 @@ import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { spawn } from "child_process";
+import { spawn, execSync } from "child_process";
 import { storage } from "./storage";
-import { uploadFileSchema, type ProcessResult } from "@shared/schema";
+import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus } from "@shared/schema";
 import { z } from "zod";
 
 const upload = multer({
@@ -20,6 +20,115 @@ const upload = multer({
   },
 });
 
+const COMMON_SWMM_PATHS = [
+  'C:\\Program Files (x86)\\EPA SWMM 5.2\\runswmm.exe',
+  'C:\\Program Files\\EPA SWMM 5.2\\runswmm.exe',
+  'C:\\Program Files (x86)\\EPA SWMM 5.1\\swmm5.exe',
+  'C:\\Program Files\\EPA SWMM 5.1\\swmm5.exe',
+  'C:\\EPA SWMM 5.2\\runswmm.exe',
+  'C:\\SWMM\\runswmm.exe',
+  '/usr/local/bin/runswmm',
+  '/usr/local/bin/swmm5',
+  '/usr/bin/runswmm',
+  '/usr/bin/swmm5',
+];
+
+function detectSwmmPath(): SwmmStatus {
+  const envPath = process.env.RUNSWMM_PATH;
+  const searchedPaths: string[] = [];
+
+  if (envPath) {
+    searchedPaths.push(envPath);
+    if (fs.existsSync(envPath)) {
+      return { found: true, path: envPath, mode: 'live', searchedPaths };
+    }
+  }
+
+  for (const p of COMMON_SWMM_PATHS) {
+    searchedPaths.push(p);
+    if (fs.existsSync(p)) {
+      return { found: true, path: p, mode: 'live', searchedPaths };
+    }
+  }
+
+  try {
+    const isWindows = process.platform === 'win32';
+    const cmd = isWindows ? 'where runswmm.exe 2>nul || where swmm5.exe 2>nul' : 'which runswmm 2>/dev/null || which swmm5 2>/dev/null';
+    const result = execSync(cmd, { encoding: 'utf-8', timeout: 5000 }).trim();
+    if (result) {
+      const foundPath = result.split('\n')[0].trim();
+      searchedPaths.push(`PATH lookup: ${foundPath}`);
+      return { found: true, path: foundPath, mode: 'live', searchedPaths };
+    }
+  } catch {
+    searchedPaths.push('PATH lookup (not found)');
+  }
+
+  return { found: false, mode: 'simulation', searchedPaths };
+}
+
+function parseReportMetrics(reportContent: string): ParsedMetrics {
+  const metrics: ParsedMetrics = {};
+
+  const runoffCE = reportContent.match(/Runoff Quantity Continuity[\s\S]*?Continuity Error \(%\)\s*\.+\s*([-\d.]+)/i);
+  if (runoffCE) {
+    metrics.runoffContinuityError = parseFloat(runoffCE[1]);
+  }
+
+  const routingCE = reportContent.match(/Flow Routing Continuity[\s\S]*?Continuity Error \(%\)\s*\.+\s*([-\d.]+)/i);
+  if (routingCE) {
+    metrics.routingContinuityError = parseFloat(routingCE[1]);
+  }
+
+  const precip = reportContent.match(/Total Precipitation\s*\.+\s*([\d.]+)/i);
+  if (precip) {
+    metrics.totalPrecipitation = parseFloat(precip[1]);
+  }
+
+  const runoff = reportContent.match(/Surface Runoff\s*\.+\s*([\d.]+)/i);
+  if (runoff) {
+    metrics.surfaceRunoff = parseFloat(runoff[1]);
+  }
+
+  const floodingMatch = reportContent.match(/Flooding was detected at (\d+) node/i);
+  if (floodingMatch) {
+    metrics.nodesFlooded = parseInt(floodingMatch[1], 10);
+    metrics.floodingSummary = `${floodingMatch[1]} node(s) flooded`;
+  } else if (/No nodes were flooded/i.test(reportContent)) {
+    metrics.nodesFlooded = 0;
+    metrics.floodingSummary = 'No flooding';
+  }
+
+  const routingMethod = reportContent.match(/Flow Routing Method\s*\.+\s*(\S+)/i);
+  if (routingMethod) {
+    metrics.flowRoutingMethod = routingMethod[1];
+  }
+
+  const infiltration = reportContent.match(/Infiltration Method\s*\.+\s*(\S+)/i);
+  if (infiltration) {
+    metrics.infiltrationMethod = infiltration[1];
+  }
+
+  const wetInflow = reportContent.match(/Wet Weather Inflow\s*\.+\s*([\d.]+)/i);
+  if (wetInflow) {
+    metrics.totalInflow = parseFloat(wetInflow[1]);
+  }
+
+  const extOutflow = reportContent.match(/External Outflow\s*\.+\s*([\d.]+)/i);
+  if (extOutflow) {
+    metrics.totalOutflow = parseFloat(extOutflow[1]);
+  }
+
+  const floodLoss = reportContent.match(/Flooding Loss\s*\.+\s*([\d.]+)/i);
+  if (floodLoss) {
+    metrics.floodingLoss = parseFloat(floodLoss[1]);
+  }
+
+  return metrics;
+}
+
+let cachedSwmmStatus: SwmmStatus | null = null;
+
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   const wss = new WebSocketServer({ 
@@ -28,6 +137,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const clients = new Map<string, WebSocket>();
+
+  cachedSwmmStatus = detectSwmmPath();
+  console.log(`SWMM detection: mode=${cachedSwmmStatus.mode}, path=${cachedSwmmStatus.path || 'N/A'}`);
 
   wss.on('connection', (ws, req) => {
     const url = new URL(req.url!, `http://${req.headers.host}`);
@@ -51,6 +163,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       client.send(JSON.stringify(data));
     }
   }
+
+  app.get('/api/swmm-status', async (_req, res) => {
+    if (!cachedSwmmStatus) {
+      cachedSwmmStatus = detectSwmmPath();
+    }
+    res.json(cachedSwmmStatus);
+  });
+
+  app.post('/api/swmm-status/refresh', async (_req, res) => {
+    cachedSwmmStatus = detectSwmmPath();
+    res.json(cachedSwmmStatus);
+  });
 
   app.get('/api/samples', async (req, res) => {
     try {
@@ -185,9 +309,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         currentFile: i + 1,
         total: files.length,
         fileName: file.name,
+        fileId: file.id,
       });
 
-      const result = await processSingleFile(file);
+      const result = await processSingleFile(jobId, file);
       
       const updatedJob = await storage.getBatchJob(jobId);
       if (updatedJob) {
@@ -504,10 +629,11 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
     }
   }
 
-  async function processSingleFile(file: { id: string; name: string; path: string }): Promise<ProcessResult> {
+  async function processSingleFile(jobId: string, file: { id: string; name: string; path: string }): Promise<ProcessResult> {
     return new Promise((resolve) => {
       const startTime = Date.now();
-      const runswmmPath = (process.env as any).RUNSWMM_PATH || 'runswmm.exe';
+      const swmmStatus = cachedSwmmStatus || detectSwmmPath();
+      const runswmmPath = swmmStatus.found ? swmmStatus.path! : 'runswmm.exe';
       const inputPath = file.path;
       const reportPath = inputPath.replace('.inp', '.rpt');
       const outputPath = inputPath.replace('.inp', '.out');
@@ -521,22 +647,53 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         console.warn(`Could not read inp file ${inputPath}:`, e);
       }
 
-      if (!fs.existsSync(runswmmPath)) {
-        console.warn(`runswmm.exe not found at ${runswmmPath}, simulating processing`);
+      if (!swmmStatus.found) {
+        console.warn(`runswmm.exe not found, simulating processing for ${file.name}`);
         const simulatedTime = 1000 + Math.random() * 2000;
+        const progressSteps = 10;
+        const stepInterval = simulatedTime / progressSteps;
+        let currentStep = 0;
+
+        const progressTimer = setInterval(() => {
+          currentStep++;
+          if (currentStep <= progressSteps) {
+            const pct = Math.round((currentStep / progressSteps) * 100);
+            sendProgressUpdate(jobId, {
+              type: 'file_progress',
+              fileId: file.id,
+              fileName: file.name,
+              percentage: pct,
+              message: pct < 30 ? 'Reading input data...' : pct < 60 ? 'Running simulation...' : pct < 90 ? 'Computing results...' : 'Writing output...',
+            });
+          }
+        }, stepInterval);
+
         setTimeout(() => {
+          clearInterval(progressTimer);
+          sendProgressUpdate(jobId, {
+            type: 'file_progress',
+            fileId: file.id,
+            fileName: file.name,
+            percentage: 100,
+            message: 'Complete',
+          });
+
           const processingTime = (Date.now() - startTime) / 1000;
           const peakFlow = Math.random() * 100 + 10;
           const totalVolume = Math.random() * 50 + 5;
+          const reportContent = generateSimulatedReport(file.name, peakFlow, totalVolume, processingTime);
+          const parsedMetrics = parseReportMetrics(reportContent);
+
           resolve({
             id: file.id,
             fileName: file.name,
             filePath: file.path,
             status: 'success',
             processingTime,
-            reportContent: generateSimulatedReport(file.name, peakFlow, totalVolume, processingTime),
+            reportContent,
             inpContent,
             results: { peakFlow, totalVolume },
+            parsedMetrics,
           });
         }, simulatedTime);
         return;
@@ -545,13 +702,56 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
       const childProcess = spawn(runswmmPath, [inputPath, reportPath, outputPath]);
 
       let errorOutput = '';
+      let stdoutBuffer = '';
+
+      childProcess.stdout.on('data', (data: Buffer) => {
+        const text = data.toString();
+        stdoutBuffer += text;
+
+        const pctMatch = text.match(/(\d+)\s*%/);
+        if (pctMatch) {
+          const pct = parseInt(pctMatch[1], 10);
+          sendProgressUpdate(jobId, {
+            type: 'file_progress',
+            fileId: file.id,
+            fileName: file.name,
+            percentage: pct,
+            message: `Running... ${pct}%`,
+          });
+        }
+
+        sendProgressUpdate(jobId, {
+          type: 'log',
+          fileId: file.id,
+          fileName: file.name,
+          text: text.trim(),
+          stream: 'stdout',
+        });
+      });
 
       childProcess.stderr.on('data', (data: Buffer) => {
-        errorOutput += data.toString();
+        const text = data.toString();
+        errorOutput += text;
+        sendProgressUpdate(jobId, {
+          type: 'log',
+          fileId: file.id,
+          fileName: file.name,
+          text: text.trim(),
+          stream: 'stderr',
+        });
       });
 
       childProcess.on('close', (code: number | null) => {
         const processingTime = (Date.now() - startTime) / 1000;
+
+        sendProgressUpdate(jobId, {
+          type: 'file_progress',
+          fileId: file.id,
+          fileName: file.name,
+          percentage: 100,
+          message: code === 0 ? 'Complete' : 'Failed',
+        });
+
         if (code === 0) {
           let reportContent: string | undefined;
           try {
@@ -561,6 +761,9 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
           } catch (e) {
             console.warn(`Could not read report file: ${reportPath}`);
           }
+
+          const parsedMetrics = reportContent ? parseReportMetrics(reportContent) : undefined;
+
           resolve({
             id: file.id,
             fileName: file.name,
@@ -573,6 +776,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
               peakFlow: undefined,
               totalVolume: undefined,
             },
+            parsedMetrics,
           });
         } else {
           resolve({

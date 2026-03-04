@@ -1,0 +1,176 @@
+# BatchSWMM — App Grading
+
+## Overall Grade: **B- / 78 out of 100**
+
+A solid, functional utility that nails the core workflow but stops short of being a complete professional tool. Here's the detailed breakdown:
+
+---
+
+## Category Grades
+
+| Category | Grade | Score | Weight |
+|---|---|---|---|
+| **Core Functionality** | B+ | 85 | 25% |
+| **User Interface / UX** | B | 82 | 20% |
+| **Setup & Onboarding** | C | 62 | 15% |
+| **Output & Post-Processing** | C+ | 68 | 15% |
+| **Configuration & Flexibility** | B- | 75 | 10% |
+| **Error Handling & Resilience** | C+ | 70 | 10% |
+| **Documentation & Help** | B | 80 | 5% |
+
+---
+
+## Detailed Breakdown
+
+### Core Functionality — **B+ (85)**
+**What it does well:**
+- The upload → process → download pipeline works cleanly
+- Supports batch processing of multiple`.inp` files (the whole point of the app)
+- Offers both sequential and parallel processing
+- Produces the expected`.rpt` and`.out` output files
+- Includes 5 built-in sample models for immediate testing
+- "Stop if any file fails" is a thoughtful option
+
+**What holds it back:**
+- No per-file parameter overrides
+- No input validation before running
+- No parameter sweep or scenario generation capability
+- Limited to one SWMM engine version at a time
+
+---
+
+### User Interface / UX — **B (82)**
+**What it does well:**
+- Clean, modern layout with a clear 3-step workflow (Upload → Process → Results)
+- Drag-and-drop file upload is intuitive
+- File sizes displayed for each sample model
+- Visual hierarchy is clear and uncluttered
+- Settings panel is compact and understandable
+
+**What holds it back:**
+- No per-file progress indication during processing
+- No real-time log/console output
+- No dark mode
+- No drag-to-reorder or sorting of files
+- No completion notification for long-running batches
+
+---
+
+### Setup & Onboarding — **C (62)**
+**This is the weakest area.**
+
+**What it does well:**
+- Clear instructions for where to find`runswmm.exe`
+- Direct download link to EPA SWMM
+- Simulation mode fallback when SWMM isn't installed
+
+**What holds it back:**
+- Requires users to manually set an environment variable via command line — a significant barrier for non-technical users
+- No auto-detection of common SWMM install paths
+- No bundled SWMM engine
+- No installer or setup wizard
+- The gap between "open the app" and "actually run a simulation" is too wide for the target audience (civil/environmental engineers, not developers)
+
+---
+
+### Output & Post-Processing — **C+ (68)**
+**What it does well:**
+- Generates standard`.rpt` and`.out` files
+- Provides a pass/fail results summary
+- ZIP archive option for convenient download
+
+**What holds it back:**
+- Results are essentially just raw files — no parsing or visualization
+- No summary table of key metrics (peak flows, volumes, continuity errors)
+- No cross-scenario comparison
+- No time-series viewer
+- No CSV/Excel export of results
+- No continuity error flagging
+- This is where the app misses the biggest opportunity to add value beyond just running SWMM from a command line
+
+---
+
+### Configuration & Flexibility — **B- (75)**
+**What it does well:**
+- Configurable report step
+- Routing method selection (Dynamic Wave)
+- Parallel processing toggle
+- Fail-fast option
+- Output format options (all files vs. ZIP)
+
+**What holds it back:**
+- Settings are global only — no per-file overrides
+- No option to select SWMM engine version
+- No pre/post-processing hooks
+- No dry-run/validation mode
+- No concurrency controls for parallel mode
+
+---
+
+### Error Handling & Resilience — **C+ (70)**
+**What it does well:**
+- "Stop if any file fails" option shows awareness of error scenarios
+- Pass/fail status per file in results
+- Graceful fallback to simulation mode without SWMM
+
+**What holds it back:**
+- No input validation before processing
+- No auto-retry option
+- No detailed error messages from SWMM stderr
+- No continuity error threshold warnings
+- No way to resume a partially completed batch
+
+---
+
+### Documentation & Help — **B (80)**
+**What it does well:**
+- In-app "How to Use" section is clear and concise
+-`runswmm.exe` location guidance is helpful
+- Step-by-step workflow is well-labeled
+- EPA SWMM download link provided
+
+**What holds it back:**
+- No FAQ or troubleshooting guide
+- No tooltips on settings (e.g., what routing method options mean)
+- No documentation on what "simulation mode" actually produces
+- No version history or changelog
+
+---
+
+## Competitive Context
+
+| Compared to... | Assessment |
+|---|---|
+| **Running SWMM manually one file at a time** | Significantly better — this is a real time-saver |
+| **A custom Python/batch script** | Comparable functionality, but much better UX |
+| **PCSWMM / XPSWMM commercial tools** | Far less capable, but also far simpler and free |
+| **What it could be with the suggested improvements** | About 60% of the way there |
+
+---
+
+## Summary Scorecard
+
+```
+Core Functionality      ████████░░  85
+UI / UX                 ████████░░  82
+Documentation           ████████░░  80
+Configuration           ███████░░░  75
+Error Handling          ███████░░░  70
+Output / Post-Process   ██████░░░░  68
+Setup / Onboarding      ██████░░░░  62
+                        ──────────
+OVERALL                 ███████░░░  78 (B-)
+```
+
+---
+
+## Bottom Line
+
+**BatchSWMM is a genuinely useful tool that solves a real pain point** — batch-running SWMM files is tedious without it. The UI is clean, the workflow is logical, and the sample models are a nice touch. It earns a solid B- because the core experience works.
+
+The path from **B- to A** requires:
+1. **Eliminating the setup friction** (auto-detect or bundle SWMM)
+2. **Adding result parsing and comparison** (turn raw files into insights)
+3. **Better progress visibility** (per-file progress bars + log console)
+
+Those three changes alone would likely push the grade to **A-/A**.
