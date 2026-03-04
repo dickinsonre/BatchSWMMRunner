@@ -21,6 +21,7 @@ const upload = multer({
 });
 
 const COMMON_SWMM_PATHS = [
+  path.join(process.cwd(), 'swmm-engine', 'runswmm'),
   'C:\\Program Files (x86)\\EPA SWMM 5.2\\runswmm.exe',
   'C:\\Program Files\\EPA SWMM 5.2\\runswmm.exe',
   'C:\\Program Files (x86)\\EPA SWMM 5.1\\swmm5.exe',

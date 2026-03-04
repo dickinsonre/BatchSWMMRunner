@@ -6,6 +6,9 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Mar 2026**: Compiled EPA SWMM 5.2.4 engine from source (C code from EPA GitHub) into `swmm-engine/runswmm` binary; app now runs in live mode with real SWMM simulations
+- **Mar 2026**: Added `LargeTextViewer` component to handle large report files (76K+ lines) with truncation and "Show All" toggle
+- **Mar 2026**: Added "Load Directory" button using `webkitdirectory` attribute to load all `.inp` files from a folder
 - **Mar 2026**: Added auto-detection of SWMM engine path (scans common install dirs + PATH), `/api/swmm-status` endpoint, and dynamic SWMM status card in UI
 - **Mar 2026**: Added `.rpt` report parsing (`parseReportMetrics()`) extracting continuity errors, flooding, volumes, routing method into `ParsedMetrics` type
 - **Mar 2026**: Enhanced results summary table with continuity error color-coding (green ≤1%, yellow 1-5%, red >5%), flooding badges, and enriched CSV export
