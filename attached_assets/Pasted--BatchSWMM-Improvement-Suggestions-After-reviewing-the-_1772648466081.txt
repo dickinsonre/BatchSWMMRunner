@@ -1,0 +1,72 @@
+# BatchSWMM — Improvement Suggestions
+
+After reviewing the app, here are suggestions organized by category:
+
+---
+
+## 1. **Input & File Management**
+- **Folder/recursive upload**: Allow users to select an entire folder of`.inp` files rather than picking them one-by-one — common in real batch workflows with dozens or hundreds of scenarios.
+- **File validation on upload**: Parse each`.inp` file on upload and flag obvious issues (missing`[OPTIONS]`, no rain gage, etc.) *before* the user hits "Start." This avoids wasting time on guaranteed failures.
+- **File preview/editor**: A lightweight in-browser viewer (or even a basic editor) for`.inp` files would let users do quick sanity checks or small parameter tweaks without leaving the app.
+- **Project/session persistence**: Let users save and reload a "batch session" so they can come back to it later without re-uploading everything.
+
+---
+
+## 2. **Simulation Configuration**
+- **Per-file overrides**: Right now settings (report step, routing method) appear to be global. Allow per-file overrides — e.g., run some files with Dynamic Wave and others with Kinematic Wave in the same batch.
+- **Parameter sweep / scenario generation**: A huge use case for batch SWMM is sensitivity analysis. Let users define a parameter (e.g., imperviousness, Manning's n, pipe diameter) and a range of values, then auto-generate and run the variants.
+- **Custom SWMM engine version**: Allow users to point to *multiple* SWMM executables (5.1 vs 5.2) and choose which version to use per batch or per file. Useful for version-comparison studies.
+- **Dry-run / validation mode**: A "check only" mode that calls SWMM's input-checking without running the full simulation.
+
+---
+
+## 3. **Processing & Performance**
+- **Parallel processing controls**: The "Process files in parallel" toggle exists, but add a concurrency slider (e.g., 2, 4, 8 threads) so users can tune it to their machine's resources.
+- **Priority queue / ordering**: Let users drag-to-reorder files or sort by file size so smaller/faster runs finish first.
+- **Estimated run time**: If you log historical runtimes per file size or node count, you can show an ETA for the full batch.
+- **Auto-retry on failure**: Offer an option to retry failed simulations (with a configurable retry count) — SWMM can occasionally fail for transient reasons.
+
+---
+
+## 4. **Results & Post-Processing**
+- **Results dashboard**: Go beyond pass/fail. Parse the`.rpt` files and surface key metrics (total runoff volume, peak flow, flooding summary, continuity errors) in a sortable comparison table.
+- **Continuity error flagging**: Automatically flag any simulation whose continuity error exceeds a user-defined threshold (e.g., >1%).
+- **Cross-scenario comparison charts**: Plot key outputs (peak flows, volumes, flood durations) across all files in a single chart for quick comparison.
+- **CSV/Excel export of summary**: Let users export the consolidated results table (not just the raw`.rpt`/`.out` files) as a spreadsheet.
+- **Time-series viewer**: A built-in chart to plot`.out` file time-series (node depths, link flows) without needing to open them in a separate tool.
+
+---
+
+## 5. **UX & Interface**
+- **Progress detail**: Show per-file progress (SWMM prints % complete to stdout) rather than just "running / done." A progress bar per file plus an overall progress bar would be ideal.
+- **Log console**: A collapsible real-time log panel showing SWMM's stdout/stderr for debugging.
+- **Dark mode**: Many engineers work late — a dark theme option is a small but appreciated touch.
+- **Keyboard shortcuts**:`Ctrl+O` to add files,`Ctrl+Enter` to start processing, etc.
+- **Notification on completion**: Desktop notification (or email, if web-hosted) when a long batch finishes.
+
+---
+
+## 6. **Deployment & Distribution**
+- **Bundled SWMM engine**: The current requirement to separately install SWMM and set an environment variable is the biggest friction point. Consider bundling`runswmm.exe` (it's public domain EPA software) or providing a one-click installer that handles it.
+- **Auto-detect SWMM path**: Scan common install directories and the system PATH automatically instead of requiring a manual`set` command.
+- **Cross-platform support**: If this is Electron/Tauri-based, ensure it works on macOS and Linux too (SWMM has been ported to both).
+- **CLI mode**: Offer a headless command-line interface (`batchswmm --input ./folder --output ./results`) for scripting and CI/CD integration.
+
+---
+
+## 7. **Advanced / Power-User Features**
+- **Pre/post-processing hooks**: Let users attach custom scripts (Python, etc.) that run before or after each simulation — e.g., auto-modifying`.inp` parameters, or extracting specific outputs.
+- **Template system**: Define a "base"`.inp` file and a CSV of parameter variations; the app generates and runs all combinations.
+- **Cloud/remote execution**: For very large batches, allow offloading to a remote server or cloud VM.
+
+---
+
+### Highest-Impact, Lowest-Effort Wins
+
+If I had to pick the top 3 to implement first:
+
+1. **Auto-detect`runswmm.exe`** — removes the #1 setup barrier
+2. **Parse`.rpt` results into a summary table** — transforms it from a file runner into an actual analysis tool
+3. **Per-file progress bars with a log console** — makes long batches much less anxiety-inducing
+
+The app already nails the core workflow (upload → run → download). These additions would take it from a utility to a genuinely indispensable tool for SWMM practitioners.
