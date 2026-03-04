@@ -300,7 +300,7 @@ function reportToHtml(content: string): string {
     return `<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`;
   });
 
-  const chartsHtml = generateChartsHtml(allSeries);
+  const chartsHtml = generateChartsAndTablesHtml(allSeries);
 
   return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}${chartsHtml}</div>`;
 }
