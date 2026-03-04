@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Activity, PlayCircle, StopCircle } from "lucide-react";
+import { Link } from "wouter";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
@@ -256,7 +258,14 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-2 flex-wrap">
+              <Link href="/docs" data-testid="link-documentation">
+                <Badge variant="outline" className="cursor-pointer">
+                  Docs
+                </Badge>
+              </Link>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
