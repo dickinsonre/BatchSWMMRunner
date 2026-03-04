@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Activity, PlayCircle, StopCircle } from "lucide-react";
+import { Activity, PlayCircle, StopCircle, Info, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import FileUploadZone from "@/components/FileUploadZone";
@@ -303,6 +304,42 @@ export default function Home() {
               disabled={processingState === 'processing'}
             />
           </section>
+
+          <Card className="border-primary/20 bg-primary/5" data-testid="card-runswmm-info">
+            <CardContent className="p-4">
+              <div className="flex gap-3">
+                <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="space-y-2 text-sm">
+                  <p className="font-medium">Where is runswmm.exe?</p>
+                  <p className="text-muted-foreground">
+                    BatchSWMM requires the EPA SWMM command-line executable to process .inp files.
+                    Common locations on Windows:
+                  </p>
+                  <ul className="text-xs font-mono text-muted-foreground space-y-1">
+                    <li>C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe</li>
+                    <li>C:\Program Files\EPA SWMM 5.2\runswmm.exe</li>
+                  </ul>
+                  <p className="text-muted-foreground">
+                    Set the path before starting the app:
+                  </p>
+                  <pre className="text-xs font-mono bg-muted p-2 rounded overflow-x-auto">set RUNSWMM_PATH=C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe</pre>
+                  <p className="text-muted-foreground text-xs">
+                    Without runswmm.exe, the app runs in <span className="font-medium text-foreground">simulation mode</span> with sample results.
+                    <a
+                      href="https://www.epa.gov/water-research/storm-water-management-model-swmm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-primary ml-1"
+                      data-testid="link-download-swmm"
+                    >
+                      Download EPA SWMM
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <Separator />
 
