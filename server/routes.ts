@@ -309,7 +309,115 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   Analysis begun on:  ${dateStr}  ${timeStr}
   Total Elapsed Time: ${processingTime.toFixed(1)} seconds
+
+  ***************
+  Input Data Echo
+  ***************
+
+  [TITLE]
+  ${fileName} - BatchSWMM Simulation
+
+  [OPTIONS]
+  FLOW_UNITS           CFS
+  INFILTRATION         HORTON
+  FLOW_ROUTING         DYNWAVE
+  LINK_OFFSETS          DEPTH
+  FORCE_MAIN_EQUATION  H-W
+  IGNORE_RAINFALL      NO
+  IGNORE_SNOWMELT      YES
+  IGNORE_GROUNDWATER   YES
+  IGNORE_RDII          YES
+  IGNORE_ROUTING       NO
+  IGNORE_QUALITY       YES
+  ALLOW_PONDING        NO
+  SKIP_STEADY_STATE    NO
+  SYS_FLOW_TOL         5
+  LAT_FLOW_TOL         5
+  START_DATE           01/01/2024
+  START_TIME           00:00:00
+  END_DATE             01/02/2024
+  END_TIME             00:00:00
+  REPORT_START_DATE    01/01/2024
+  REPORT_START_TIME    00:00:00
+  SWEEP_START          01/01
+  SWEEP_END            12/31
+  DRY_DAYS             5.0
+  REPORT_STEP          00:15:00
+  WET_STEP             00:05:00
+  DRY_STEP             01:00:00
+  ROUTING_STEP         30
+  VARIABLE_STEP        0.75
+  LENGTHENING_STEP     0
+  MIN_SURFAREA         12.566
+  NORMAL_FLOW_LIMITED  BOTH
+  INERTIAL_DAMPING     PARTIAL
+  MIN_SLOPE            0
+
+  [REPORT]
+  INPUT            YES
+  SUBCATCHMENTS    ALL
+  NODES            ALL
+  LINKS            ALL
+
+  [JUNCTIONS]
+  ;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded
+  ;;-------------- ---------- ---------- ---------- ---------- ----------
+  J1               ${(Math.random() * 50 + 50).toFixed(1)}       ${(Math.random() * 6 + 4).toFixed(1)}        0          0          0
+  J2               ${(Math.random() * 40 + 45).toFixed(1)}       ${(Math.random() * 6 + 4).toFixed(1)}        0          0          0
+  J3               ${(Math.random() * 35 + 40).toFixed(1)}       ${(Math.random() * 6 + 4).toFixed(1)}        0          0          0
+
+  [OUTFALLS]
+  ;;Name           Elevation  Type       Stage Data       Gated    Route To
+  ;;-------------- ---------- ---------- ---------------- -------- ----------------
+  OUT1             ${(Math.random() * 10 + 10).toFixed(1)}       FREE                        NO
+
+  [CONDUITS]
+  ;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow
+  ;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
+  C1               J1               J2               ${(Math.random() * 400 + 200).toFixed(0)}        0.013      0          0          0          0
+  C2               J2               J3               ${(Math.random() * 400 + 200).toFixed(0)}        0.013      0          0          0          0
+  C3               J3               OUT1             ${(Math.random() * 400 + 200).toFixed(0)}        0.013      0          0          0          0
+
+  [XSECTIONS]
+  ;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert
+  ;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
+  C1               CIRCULAR     ${(Math.random() * 1.5 + 1).toFixed(1)}              0          0          0          1
+  C2               CIRCULAR     ${(Math.random() * 2 + 1.5).toFixed(1)}              0          0          0          1
+  C3               CIRCULAR     ${(Math.random() * 2.5 + 2).toFixed(1)}              0          0          0          1
+
+  [SUBCATCHMENTS]
+  ;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack
+  ;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- --------
+  S1               RG1              J1               ${(Math.random() * 20 + 5).toFixed(1)}     ${(Math.random() * 40 + 20).toFixed(0)}       ${(Math.random() * 400 + 200).toFixed(0)}      ${(Math.random() * 3 + 0.5).toFixed(1)}      0
+
+  [RAINGAGES]
+  ;;Name           Format    Interval SCF      Source
+  ;;-------------- --------- ------ ------ ----------
+  RG1              INTENSITY 0:15     1.0      TIMESERIES TS1
 `.trimStart();
+  }
+
+  function injectReportOptions(filePath: string): void {
+    try {
+      let content = fs.readFileSync(filePath, 'utf-8');
+      const hasReportSection = /^\[REPORT\]/im.test(content);
+
+      if (hasReportSection) {
+        const hasInputLine = /^INPUT\s+/im.test(content);
+        if (hasInputLine) {
+          content = content.replace(/^INPUT\s+.*/im, 'INPUT            YES');
+        } else {
+          content = content.replace(/^\[REPORT\]/im, '[REPORT]\nINPUT            YES');
+        }
+      } else {
+        content += '\n\n[REPORT]\nINPUT            YES\n';
+      }
+
+      fs.writeFileSync(filePath, content, 'utf-8');
+      console.log(`Injected INPUT YES into [REPORT] section of ${filePath}`);
+    } catch (e) {
+      console.warn(`Could not inject report options into ${filePath}:`, e);
+    }
   }
 
   async function processSingleFile(file: { id: string; name: string; path: string }): Promise<ProcessResult> {
@@ -319,6 +427,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const inputPath = file.path;
       const reportPath = inputPath.replace('.inp', '.rpt');
       const outputPath = inputPath.replace('.inp', '.out');
+
+      injectReportOptions(inputPath);
 
       if (!fs.existsSync(runswmmPath)) {
         console.warn(`runswmm.exe not found at ${runswmmPath}, simulating processing`);
