@@ -12,6 +12,7 @@ import InstructionsPanel from "@/components/InstructionsPanel";
 import ExpectedOutputs from "@/components/ExpectedOutputs";
 import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -243,16 +244,19 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b">
         <div className="container max-w-6xl mx-auto px-8 py-6">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-primary p-2">
-              <Activity className="h-6 w-6 text-primary-foreground" data-testid="icon-app-logo" />
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-primary p-2">
+                <Activity className="h-6 w-6 text-primary-foreground" data-testid="icon-app-logo" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold" data-testid="text-app-title">BatchSWMM</h1>
+                <p className="text-sm text-muted-foreground" data-testid="text-app-subtitle">
+                  Batch EPA SWMM Processing Tool
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-semibold" data-testid="text-app-title">BatchSWMM</h1>
-              <p className="text-sm text-muted-foreground" data-testid="text-app-subtitle">
-                Batch EPA SWMM Processing Tool
-              </p>
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
