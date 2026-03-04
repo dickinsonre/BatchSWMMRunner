@@ -17,6 +17,7 @@ export const batchJobSchema = z.object({
     error: z.string().optional(),
     processingTime: z.number().optional(),
     reportContent: z.string().optional(),
+    inpContent: z.string().optional(),
     results: z.object({
       peakFlow: z.number().optional(),
       totalVolume: z.number().optional(),
@@ -41,6 +42,7 @@ export const processResultSchema = z.object({
   error: z.string().optional(),
   processingTime: z.number().optional(),
   reportContent: z.string().optional(),
+  inpContent: z.string().optional(),
   results: z.object({
     peakFlow: z.number().optional(),
     totalVolume: z.number().optional(),
