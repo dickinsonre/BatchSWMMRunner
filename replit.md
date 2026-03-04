@@ -6,6 +6,8 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Mar 2026**: Added time series data tables (subcatchment runoff, node results, link results) to simulated reports with SVG chart visualization in HTML view
+- **Mar 2026**: Enhanced `injectReportOptions()` to force `INPUT YES`, `SUBCATCHMENTS ALL`, `NODES ALL`, `LINKS ALL` in [REPORT] section
 - **Mar 2026**: Added report file viewer with Text and HTML tabs for each successful result
 - **Mar 2026**: Added dark mode toggle with localStorage persistence and system preference detection
 - **Mar 2026**: Added parallel processing, stop on error, and output format settings

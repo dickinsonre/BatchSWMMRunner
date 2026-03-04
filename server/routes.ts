@@ -164,6 +164,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }
 
+  function generateTimeSeriesData(type: string, peakValue: number, totalVolume: number): string {
+    const timeSteps = [];
+    const hours = 24;
+    const interval = 15;
+    const totalSteps = (hours * 60) / interval;
+
+    for (let i = 0; i <= totalSteps; i++) {
+      const t = i / totalSteps;
+      const totalMinutes = i * interval;
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+
+      const risePhase = t < 0.3 ? Math.pow(t / 0.3, 2) : 0;
+      const peakPhase = t >= 0.3 && t < 0.45 ? 1.0 - 0.2 * Math.pow((t - 0.375) / 0.075, 2) : 0;
+      const fallPhase = t >= 0.45 ? Math.exp(-3.5 * (t - 0.45)) : 0;
+      const hydrograph = risePhase + peakPhase + fallPhase;
+      const noise = 1 + (Math.random() - 0.5) * 0.08;
+      const value = peakValue * hydrograph * noise;
+
+      if (type === 'subcatchment') {
+        const precip = t >= 0.1 && t <= 0.4 ? (peakValue * 0.8 * (1 - Math.abs(t - 0.25) / 0.15) * noise).toFixed(2) : '0.00';
+        const runoff = (value * 0.62).toFixed(2);
+        const losses = (value * 0.18).toFixed(2);
+        const depth = (value * 0.004).toFixed(3);
+        timeSteps.push(`  01/01/2024  ${timeStr}       ${precip.padStart(8)}   ${runoff.padStart(8)}   ${losses.padStart(8)}   ${depth.padStart(8)}`);
+      } else if (type.startsWith('node')) {
+        const baseElev = type === 'node_out' ? 15 : type === 'node_j3' ? 42 : type === 'node_j2' ? 48 : 55;
+        const inflow = (value * 0.9).toFixed(2);
+        const flooding = value > peakValue * 0.9 ? ((value - peakValue * 0.9) * 0.3).toFixed(2) : '0.00';
+        const depth2 = (value * 0.03).toFixed(2);
+        const head = (baseElev + value * 0.03).toFixed(2);
+        timeSteps.push(`  01/01/2024  ${timeStr}       ${inflow.padStart(8)}   ${flooding.padStart(8)}   ${depth2.padStart(8)}   ${head.padStart(8)}`);
+      } else if (type.startsWith('link')) {
+        const flow = value.toFixed(2);
+        const velocity = (value * 0.15 + 0.1).toFixed(2);
+        const depth3 = (value * 0.025).toFixed(2);
+        const capacity = Math.min(value / (peakValue * 1.2), 1.0).toFixed(3);
+        timeSteps.push(`  01/01/2024  ${timeStr}       ${flow.padStart(8)}   ${velocity.padStart(8)}   ${depth3.padStart(8)}   ${capacity.padStart(8)}`);
+      }
+    }
+    return timeSteps.join('\n');
+  }
+
   function generateSimulatedReport(fileName: string, peakFlow: number, totalVolume: number, processingTime: number): string {
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
@@ -310,6 +354,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
   Analysis begun on:  ${dateStr}  ${timeStr}
   Total Elapsed Time: ${processingTime.toFixed(1)} seconds
 
+  ********************************
+  Subcatchment Runoff Time Series
+  ********************************
+
+  <<< Subcatchment S1 >>>
+
+  Date        Time        Precip     Runoff     Losses     Depth
+  Day         Hour:Min    in/hr      CFS        CFS        Feet
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('subcatchment', peakFlow, totalVolume)}
+
+  ********************************
+  Node Results Time Series
+  ********************************
+
+  <<< Node J1 >>>
+
+  Date        Time        Inflow     Flooding   Depth      Head
+  Day         Hour:Min    CFS        CFS        Feet       Feet
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('node_j1', peakFlow, totalVolume)}
+
+  <<< Node J2 >>>
+
+  Date        Time        Inflow     Flooding   Depth      Head
+  Day         Hour:Min    CFS        CFS        Feet       Feet
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('node_j2', peakFlow * 0.9, totalVolume)}
+
+  <<< Node J3 >>>
+
+  Date        Time        Inflow     Flooding   Depth      Head
+  Day         Hour:Min    CFS        CFS        Feet       Feet
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('node_j3', peakFlow * 0.85, totalVolume)}
+
+  <<< Node OUT1 >>>
+
+  Date        Time        Inflow     Flooding   Depth      Head
+  Day         Hour:Min    CFS        CFS        Feet       Feet
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('node_out', peakFlow * 0.8, totalVolume)}
+
+  ********************************
+  Link Results Time Series
+  ********************************
+
+  <<< Link C1 >>>
+
+  Date        Time        Flow       Velocity   Depth      Capacity
+  Day         Hour:Min    CFS        ft/sec     Feet       fraction
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('link_c1', peakFlow * 0.6, totalVolume)}
+
+  <<< Link C2 >>>
+
+  Date        Time        Flow       Velocity   Depth      Capacity
+  Day         Hour:Min    CFS        ft/sec     Feet       fraction
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('link_c2', peakFlow * 0.8, totalVolume)}
+
+  <<< Link C3 >>>
+
+  Date        Time        Flow       Velocity   Depth      Capacity
+  Day         Hour:Min    CFS        ft/sec     Feet       fraction
+  ----------  ----------  ---------- ---------- ---------- ----------
+${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
+
   ***************
   Input Data Echo
   ***************
@@ -402,19 +514,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let content = fs.readFileSync(filePath, 'utf-8');
       const hasReportSection = /^\[REPORT\]/im.test(content);
 
+      const reportBlock = [
+        'INPUT            YES',
+        'SUBCATCHMENTS    ALL',
+        'NODES            ALL',
+        'LINKS            ALL',
+      ].join('\n');
+
       if (hasReportSection) {
-        const hasInputLine = /^INPUT\s+/im.test(content);
-        if (hasInputLine) {
-          content = content.replace(/^INPUT\s+.*/im, 'INPUT            YES');
-        } else {
-          content = content.replace(/^\[REPORT\]/im, '[REPORT]\nINPUT            YES');
+        const reportSectionRange = content.match(/(\[REPORT\])([\s\S]*?)(?=\n\s*\[|$)/i);
+        if (reportSectionRange) {
+          const sectionStart = content.indexOf(reportSectionRange[0]);
+          const sectionEnd = sectionStart + reportSectionRange[0].length;
+          let sectionContent = reportSectionRange[0];
+          sectionContent = sectionContent.replace(/^INPUT\s+.*/gim, '');
+          sectionContent = sectionContent.replace(/^SUBCATCHMENTS\s+.*/gim, '');
+          sectionContent = sectionContent.replace(/^NODES\s+.*/gim, '');
+          sectionContent = sectionContent.replace(/^LINKS\s+.*/gim, '');
+          sectionContent = sectionContent.replace(/^\[REPORT\]/im, `[REPORT]\n${reportBlock}`);
+          content = content.substring(0, sectionStart) + sectionContent + content.substring(sectionEnd);
         }
       } else {
-        content += '\n\n[REPORT]\nINPUT            YES\n';
+        content += `\n\n[REPORT]\n${reportBlock}\n`;
       }
 
       fs.writeFileSync(filePath, content, 'utf-8');
-      console.log(`Injected INPUT YES into [REPORT] section of ${filePath}`);
+      console.log(`Injected report options into ${filePath}`);
     } catch (e) {
       console.warn(`Could not inject report options into ${filePath}:`, e);
     }
