@@ -252,23 +252,32 @@ function reportToHtml(content: string): string {
 
   const lines = escaped.split('\n');
   const htmlLines: string[] = [];
-  let inTimeSeries = false;
+
+  const tsStartIndices = new Set<number>();
+  for (let si = 0; si < lines.length; si++) {
+    if (/^\s*\*{3,}\s*$/.test(lines[si]) && si + 1 < lines.length && /Time Series$/i.test(lines[si + 1].trim())) {
+      tsStartIndices.add(si);
+    }
+  }
+
+  let tsSkipStart = -1;
+  let tsSkipEnd = -1;
+  if (tsStartIndices.size > 0) {
+    tsSkipStart = Math.min(...tsStartIndices);
+    const lastStart = Math.max(...tsStartIndices);
+    tsSkipEnd = lastStart + 2;
+    for (let si = tsSkipEnd; si < lines.length; si++) {
+      if (/^\s*\*{3,}/.test(lines[si]) && !/Time Series$/i.test(lines[si + 1]?.trim() || '')) {
+        break;
+      }
+      tsSkipEnd = si;
+    }
+  }
 
   for (let li = 0; li < lines.length; li++) {
     const line = lines[li];
 
-    if (/^\s*\*{3,}\s*$/.test(line)) {
-      const nextLine = li + 1 < lines.length ? lines[li + 1].trim() : '';
-      if (/Time Series$/i.test(nextLine)) {
-        inTimeSeries = true;
-        continue;
-      }
-      if (inTimeSeries) {
-        inTimeSeries = false;
-      }
-    }
-
-    if (inTimeSeries) continue;
+    if (tsSkipStart >= 0 && li >= tsSkipStart && li <= tsSkipEnd) continue;
 
     if (/^\s*\*{3,}/.test(line)) {
       const title = line.replace(/\*/g, '').trim();
