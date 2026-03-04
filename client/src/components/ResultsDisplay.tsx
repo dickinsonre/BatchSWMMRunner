@@ -25,7 +25,192 @@ interface ResultsDisplayProps {
   elapsedTime?: string;
 }
 
+interface TimeSeriesEntry {
+  time: string;
+  values: number[];
+}
+
+interface ParsedTimeSeries {
+  title: string;
+  element: string;
+  columns: string[];
+  units: string[];
+  data: TimeSeriesEntry[];
+}
+
+function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
+  const series: ParsedTimeSeries[] = [];
+  const lines = rawContent.split('\n');
+  let i = 0;
+
+  while (i < lines.length) {
+    if (/^\s*\*{3,}\s*$/.test(lines[i])) {
+      i++;
+      if (i < lines.length) {
+        const titleLine = lines[i].trim();
+        if (/Time Series$/i.test(titleLine)) {
+          const sectionTitle = titleLine;
+          i++;
+          while (i < lines.length && /^\s*\*{3,}\s*$/.test(lines[i])) i++;
+
+          while (i < lines.length) {
+            if (/^\s*\*{3,}\s*$/.test(lines[i])) {
+              const peekTitle = i + 1 < lines.length ? lines[i + 1].trim() : '';
+              if (!/Time Series$/i.test(peekTitle)) break;
+            }
+
+            const elemMatch = lines[i].match(/<<<\s*(.*?)\s*>>>/);
+            if (elemMatch) {
+              const elementName = elemMatch[1];
+              i++;
+              while (i < lines.length && lines[i].trim() === '') i++;
+              const colLine = lines[i] || '';
+              const columns = colLine.trim().split(/\s{2,}/).filter(c => c && c !== 'Date' && c !== 'Time');
+              i++;
+              const unitLine = lines[i] || '';
+              const units = unitLine.trim().split(/\s{2,}/).filter(u => u && u !== 'Day' && u !== 'Hour:Min');
+              i++;
+              while (i < lines.length && /^\s*-{3,}/.test(lines[i])) i++;
+
+              const data: TimeSeriesEntry[] = [];
+              while (i < lines.length) {
+                const dataLine = lines[i].trim();
+                if (!dataLine || /^\s*\*{3,}/.test(lines[i]) || /<<</.test(lines[i])) break;
+                const parts = dataLine.split(/\s+/);
+                if (parts.length >= 4 && /^\d{2}\/\d{2}\/\d{4}$/.test(parts[0])) {
+                  const time = parts[1];
+                  const values = parts.slice(2).map(v => parseFloat(v)).filter(v => !isNaN(v));
+                  if (values.length > 0) {
+                    data.push({ time, values });
+                  }
+                }
+                i++;
+              }
+
+              if (data.length > 0) {
+                series.push({
+                  title: sectionTitle,
+                  element: elementName,
+                  columns,
+                  units,
+                  data,
+                });
+              }
+              continue;
+            }
+            i++;
+          }
+          continue;
+        }
+      }
+    }
+    i++;
+  }
+  return series;
+}
+
+function generateSvgChart(ts: ParsedTimeSeries, colIndex: number, color: string, width: number, height: number): string {
+  const values = ts.data.map(d => d.values[colIndex] ?? 0);
+  const maxVal = Math.max(...values, 0.001);
+  const padTop = 30;
+  const padBottom = 40;
+  const padLeft = 55;
+  const padRight = 15;
+  const plotW = width - padLeft - padRight;
+  const plotH = height - padTop - padBottom;
+  const colName = ts.columns[colIndex] || `Col ${colIndex}`;
+  const unitName = ts.units[colIndex] || '';
+
+  const points = values.map((v, i) => {
+    const x = padLeft + (i / Math.max(values.length - 1, 1)) * plotW;
+    const y = padTop + plotH - (v / maxVal) * plotH;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+
+  const areaPoints = [
+    `${padLeft},${padTop + plotH}`,
+    ...points,
+    `${(padLeft + plotW).toFixed(1)},${padTop + plotH}`,
+  ].join(' ');
+
+  const gridLines = [];
+  for (let g = 0; g <= 4; g++) {
+    const gy = padTop + (g / 4) * plotH;
+    const gVal = (maxVal * (1 - g / 4)).toFixed(1);
+    gridLines.push(`<line x1="${padLeft}" y1="${gy}" x2="${padLeft + plotW}" y2="${gy}" stroke="hsl(0,0%,80%)" stroke-width="0.5" stroke-dasharray="3,3"/>`);
+    gridLines.push(`<text x="${padLeft - 5}" y="${gy + 4}" text-anchor="end" fill="hsl(0,0%,50%)" font-size="9">${gVal}</text>`);
+  }
+
+  const labelInterval = Math.max(Math.floor(values.length / 6), 1);
+  const timeLabels: string[] = [];
+  for (let li = 0; li < ts.data.length; li += labelInterval) {
+    const x = padLeft + (li / Math.max(values.length - 1, 1)) * plotW;
+    const escapedTime = ts.data[li].time.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    timeLabels.push(`<text x="${x}" y="${padTop + plotH + 18}" text-anchor="middle" fill="hsl(0,0%,50%)" font-size="9">${escapedTime}</text>`);
+  }
+
+  const escHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `<svg width="${width}" height="${height}" style="background:transparent;border:1px solid hsl(0,0%,85%);border-radius:6px;margin:4px;">
+    <text x="${width / 2}" y="16" text-anchor="middle" fill="hsl(210,40%,40%)" font-size="11" font-weight="600">${escHtml(ts.element)} - ${escHtml(colName)} (${escHtml(unitName)})</text>
+    ${gridLines.join('\n')}
+    <line x1="${padLeft}" y1="${padTop}" x2="${padLeft}" y2="${padTop + plotH}" stroke="hsl(0,0%,70%)" stroke-width="1"/>
+    <line x1="${padLeft}" y1="${padTop + plotH}" x2="${padLeft + plotW}" y2="${padTop + plotH}" stroke="hsl(0,0%,70%)" stroke-width="1"/>
+    <polygon points="${areaPoints}" fill="${color}" opacity="0.15"/>
+    <polyline points="${points.join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>
+    ${timeLabels.join('\n')}
+    <text x="${padLeft + plotW / 2}" y="${padTop + plotH + 34}" text-anchor="middle" fill="hsl(0,0%,40%)" font-size="9">Time (HH:MM)</text>
+  </svg>`;
+}
+
+function generateChartsHtml(allSeries: ParsedTimeSeries[]): string {
+  if (allSeries.length === 0) return '';
+
+  const chartColors = [
+    'hsl(210,85%,50%)',
+    'hsl(340,75%,50%)',
+    'hsl(142,60%,40%)',
+    'hsl(35,90%,50%)',
+    'hsl(270,60%,55%)',
+    'hsl(180,55%,40%)',
+  ];
+
+  const sections: { [key: string]: string[] } = {};
+  for (const ts of allSeries) {
+    const chartW = 420;
+    const chartH = 200;
+    const charts: string[] = [];
+
+    const maxCols = Math.min(ts.columns.length, ts.data[0]?.values.length ?? 0);
+    for (let c = 0; c < maxCols; c++) {
+      const allZero = ts.data.every(d => (d.values[c] ?? 0) === 0);
+      if (allZero) continue;
+      charts.push(generateSvgChart(ts, c, chartColors[c % chartColors.length], chartW, chartH));
+    }
+
+    if (charts.length > 0) {
+      if (!sections[ts.title]) sections[ts.title] = [];
+      sections[ts.title].push(`
+        <div style="margin-bottom:10px;">
+          <div style="font-weight:600;font-size:0.9em;color:hsl(210,40%,35%);margin-bottom:4px;">${ts.element}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">${charts.join('')}</div>
+        </div>
+      `);
+    }
+  }
+
+  let html = '<div style="margin-top:1.5em;border-top:2px solid hsl(210,20%,85%);padding-top:1em;">';
+  html += '<h2 style="color:hsl(210,95%,45%);font-size:1.15em;font-weight:700;margin-bottom:0.8em;">Time Series Charts</h2>';
+  for (const [sectionTitle, chartGroups] of Object.entries(sections)) {
+    html += `<h3 style="color:hsl(210,60%,40%);font-size:1em;font-weight:600;margin:1em 0 0.5em;border-bottom:1px solid hsl(210,20%,85%);padding-bottom:0.2em;">${sectionTitle}</h3>`;
+    html += chartGroups.join('');
+  }
+  html += '</div>';
+  return html;
+}
+
 function reportToHtml(content: string): string {
+  const allSeries = parseTimeSeries(content);
+
   const escaped = content
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -67,6 +252,10 @@ function reportToHtml(content: string): string {
     if (/(JUNCTION|OUTFALL|CONDUIT)\s/.test(line)) {
       return `<div style="font-family:monospace;font-size:0.85em;">${line}</div>`;
     }
+    if (/&lt;&lt;&lt;/.test(line)) {
+      const name = line.replace(/&lt;&lt;&lt;|&gt;&gt;&gt;/g, '').trim();
+      return `<div style="font-weight:600;color:hsl(210,60%,40%);margin:0.8em 0 0.3em;font-size:0.95em;">${name}</div>`;
+    }
     if (/^\s*\[[\w]+\]/.test(line)) {
       return `<h3 style="color:hsl(210,95%,45%);margin:1em 0 0.3em;font-size:0.95em;font-weight:700;font-family:monospace;">${line.trim()}</h3>`;
     }
@@ -77,7 +266,9 @@ function reportToHtml(content: string): string {
     return `<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`;
   });
 
-  return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}</div>`;
+  const chartsHtml = generateChartsHtml(allSeries);
+
+  return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}${chartsHtml}</div>`;
 }
 
 export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayProps) {

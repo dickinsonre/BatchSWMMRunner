@@ -1,0 +1,7 @@
+test
+
+[REPORT]
+INPUT            YES
+SUBCATCHMENTS    ALL
+NODES            ALL
+LINKS            ALL
