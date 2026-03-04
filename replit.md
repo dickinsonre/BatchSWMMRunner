@@ -6,6 +6,12 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Mar 2026**: Added auto-detection of SWMM engine path (scans common install dirs + PATH), `/api/swmm-status` endpoint, and dynamic SWMM status card in UI
+- **Mar 2026**: Added `.rpt` report parsing (`parseReportMetrics()`) extracting continuity errors, flooding, volumes, routing method into `ParsedMetrics` type
+- **Mar 2026**: Enhanced results summary table with continuity error color-coding (green ≤1%, yellow 1-5%, red >5%), flooding badges, and enriched CSV export
+- **Mar 2026**: Added per-file progress bars via `file_progress` WebSocket messages with real-time status icons (pending/running/success/failed)
+- **Mar 2026**: Enhanced processing log with collapse/expand, auto-scroll, stdout/stderr distinction, and per-file attribution
+- **Mar 2026**: Added `SwmmStatus` and `ParsedMetrics` types to shared schema
 - **Mar 2026**: Added time series data tables (subcatchment runoff, node results, link results) to simulated reports with SVG chart visualization in HTML view
 - **Mar 2026**: Enhanced `injectReportOptions()` to force `INPUT YES`, `SUBCATCHMENTS ALL`, `NODES ALL`, `LINKS ALL` in [REPORT] section
 - **Mar 2026**: Added report file viewer with Text and HTML tabs for each successful result

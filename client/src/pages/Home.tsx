@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Activity, PlayCircle, StopCircle, Info, ExternalLink } from "lucide-react";
+import { Activity, PlayCircle, StopCircle, ExternalLink, CheckCircle2, AlertTriangle, Monitor } from "lucide-react";
 import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import FileUploadZone from "@/components/FileUploadZone";
 import FileListPanel, { type FileItem } from "@/components/FileListPanel";
-import ProgressSection from "@/components/ProgressSection";
+import ProgressSection, { type FileProgressInfo } from "@/components/ProgressSection";
 import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
 import WorkflowSteps from "@/components/WorkflowSteps";
 import InstructionsPanel from "@/components/InstructionsPanel";
@@ -17,6 +17,7 @@ import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
 import SampleModels from "@/components/SampleModels";
 import ThemeToggle from "@/components/ThemeToggle";
+import type { SwmmStatus } from "@shared/schema";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -42,6 +43,8 @@ export default function Home() {
   const [stopOnError, setStopOnError] = useState(false);
   const [outputFormat, setOutputFormat] = useState("all");
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
+  const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const { toast } = useToast();
@@ -49,12 +52,22 @@ export default function Home() {
   const totalSize = files.reduce((acc, f: any) => acc + (f.file?.size || 0), 0);
 
   useEffect(() => {
+    fetch('/api/swmm-status')
+      .then(res => res.json())
+      .then((data: SwmmStatus) => setSwmmStatus(data))
+      .catch(err => console.error('Failed to fetch SWMM status:', err));
+
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
       }
     };
   }, []);
+
+  const getTimestamp = () => {
+    const now = new Date();
+    return now.toISOString().replace('T', ' ').substring(0, 19);
+  };
 
   const connectWebSocket = (jobId: string) => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -66,11 +79,6 @@ export default function Home() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      
-      const getTimestamp = () => {
-        const now = new Date();
-        return now.toISOString().replace('T', ' ').substring(0, 19);
-      };
 
       if (data.type === 'progress') {
         setCurrentFile(data.currentFile);
@@ -79,14 +87,56 @@ export default function Home() {
           message: `Processing ${data.fileName}...`,
           type: 'info'
         }]);
+        setFileProgressMap(prev => {
+          const next = new Map(prev);
+          const key = data.fileId || data.fileName;
+          next.set(key, {
+            fileId: key,
+            fileName: data.fileName,
+            percentage: 0,
+            message: 'Starting...',
+            status: 'running',
+          });
+          return next;
+        });
+      } else if (data.type === 'file_progress') {
+        setFileProgressMap(prev => {
+          const next = new Map(prev);
+          next.set(data.fileId, {
+            fileId: data.fileId,
+            fileName: data.fileName,
+            percentage: data.percentage,
+            message: data.message,
+            status: 'running',
+          });
+          return next;
+        });
+      } else if (data.type === 'log') {
+        setLogs(prev => [...prev, {
+          timestamp: getTimestamp(),
+          message: data.text,
+          type: data.stream === 'stderr' ? 'stderr' : 'stdout',
+          fileName: data.fileName,
+        }]);
       } else if (data.type === 'result') {
         setResults(prev => [...prev, data.result]);
         const result = data.result;
+        setFileProgressMap(prev => {
+          const next = new Map(prev);
+          next.set(result.id, {
+            fileId: result.id,
+            fileName: result.fileName,
+            percentage: 100,
+            message: result.status === 'success' ? 'Complete' : 'Failed',
+            status: result.status === 'success' ? 'success' : 'failed',
+          });
+          return next;
+        });
         setLogs(prev => [...prev, {
           timestamp: getTimestamp(),
           message: result.status === 'success' 
-            ? `Processing ${result.fileName}... Success`
-            : `Processing ${result.fileName}... Error: ${result.error || 'Unknown error'}`,
+            ? `${result.fileName} -- Success (${result.processingTime?.toFixed(1)}s)`
+            : `${result.fileName} -- Error: ${result.error || 'Unknown error'}`,
           type: result.status === 'success' ? 'success' : 'error'
         }]);
       } else if (data.type === 'completed') {
@@ -182,6 +232,7 @@ export default function Home() {
     setStartTime(null);
     setElapsedTime('');
     setLogs([]);
+    setFileProgressMap(new Map());
     startTimeRef.current = null;
   };
 
@@ -209,6 +260,7 @@ export default function Home() {
       setCurrentFile(0);
       setResults([]);
       setLogs([]);
+      setFileProgressMap(new Map());
       setStartTime(Date.now());
       startTimeRef.current = Date.now();
 
@@ -271,6 +323,24 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
+              {swmmStatus && (
+                <Badge 
+                  variant={swmmStatus.found ? 'default' : 'secondary'}
+                  data-testid="badge-swmm-mode"
+                >
+                  {swmmStatus.found ? (
+                    <>
+                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                      SWMM Ready
+                    </>
+                  ) : (
+                    <>
+                      <Monitor className="h-3 w-3 mr-1" />
+                      Simulation Mode
+                    </>
+                  )}
+                </Badge>
+              )}
               <Link href="/docs" data-testid="link-documentation">
                 <Badge variant="outline" className="cursor-pointer">
                   Docs
@@ -316,37 +386,67 @@ export default function Home() {
             />
           </section>
 
-          <Card className="border-primary/20 bg-primary/5" data-testid="card-runswmm-info">
+          <Card
+            className={`${swmmStatus?.found ? 'border-green-500/30 bg-green-500/5' : 'border-primary/20 bg-primary/5'}`}
+            data-testid="card-runswmm-info"
+          >
             <CardContent className="p-4">
               <div className="flex gap-3">
-                <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                {swmmStatus?.found ? (
+                  <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                )}
                 <div className="space-y-2 text-sm">
-                  <p className="font-medium">Where is runswmm.exe?</p>
-                  <p className="text-muted-foreground">
-                    BatchSWMM requires the EPA SWMM command-line executable to process .inp files.
-                    Common locations on Windows:
-                  </p>
-                  <ul className="text-xs font-mono text-muted-foreground space-y-1">
-                    <li>C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe</li>
-                    <li>C:\Program Files\EPA SWMM 5.2\runswmm.exe</li>
-                  </ul>
-                  <p className="text-muted-foreground">
-                    Set the path before starting the app:
-                  </p>
-                  <pre className="text-xs font-mono bg-muted p-2 rounded overflow-x-auto">set RUNSWMM_PATH=C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe</pre>
-                  <p className="text-muted-foreground text-xs">
-                    Without runswmm.exe, the app runs in <span className="font-medium text-foreground">simulation mode</span> with sample results.
-                    <a
-                      href="https://www.epa.gov/water-research/storm-water-management-model-swmm"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-primary ml-1"
-                      data-testid="link-download-swmm"
-                    >
-                      Download EPA SWMM
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </p>
+                  {swmmStatus?.found ? (
+                    <>
+                      <p className="font-medium text-green-700 dark:text-green-400" data-testid="text-swmm-found">SWMM Engine Detected</p>
+                      <p className="text-muted-foreground">
+                        Found at: <span className="font-mono text-xs">{swmmStatus.path}</span>
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        Simulations will run using the real SWMM engine.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-medium" data-testid="text-swmm-not-found">Simulation Mode Active</p>
+                      <p className="text-muted-foreground">
+                        No SWMM engine was found. The app searched these locations:
+                      </p>
+                      {swmmStatus?.searchedPaths && swmmStatus.searchedPaths.length > 0 && (
+                        <details className="text-xs">
+                          <summary className="cursor-pointer text-muted-foreground">
+                            Searched {swmmStatus.searchedPaths.length} locations
+                          </summary>
+                          <ul className="font-mono text-muted-foreground space-y-0.5 mt-1 pl-4">
+                            {swmmStatus.searchedPaths.map((p, i) => (
+                              <li key={i}>{p}</li>
+                            ))}
+                          </ul>
+                        </details>
+                      )}
+                      <p className="text-muted-foreground">
+                        To use real SWMM processing, install EPA SWMM and set the path:
+                      </p>
+                      <pre className="text-xs font-mono bg-muted p-2 rounded overflow-x-auto" data-testid="text-swmm-path-hint">
+                        set RUNSWMM_PATH=C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe
+                      </pre>
+                      <p className="text-muted-foreground text-xs">
+                        Without it, the app runs in <span className="font-medium text-foreground">simulation mode</span> with generated results.
+                        <a
+                          href="https://www.epa.gov/water-research/storm-water-management-model-swmm"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-primary ml-1"
+                          data-testid="link-download-swmm"
+                        >
+                          Download EPA SWMM
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -438,6 +538,8 @@ export default function Home() {
                   startTime={startTime || undefined}
                   successCount={results.filter(r => r.status === 'success').length}
                   failedCount={results.filter(r => r.status === 'failed').length}
+                  fileProgressMap={fileProgressMap}
+                  fileNames={files.map(f => f.name)}
                 />
               </section>
               <section data-testid="section-processing-log">
@@ -450,7 +552,7 @@ export default function Home() {
             <>
               <Separator />
               <section data-testid="section-processing-log">
-                <ProcessingLog logs={logs} />
+                <ProcessingLog logs={logs} defaultCollapsed={true} />
               </section>
               <section data-testid="section-results">
                 <ResultsDisplay results={results} elapsedTime={elapsedTime} />
@@ -465,7 +567,7 @@ export default function Home() {
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <p data-testid="text-footer-version">BatchSWMM v1.0.0</p>
             <p className="font-mono" data-testid="text-footer-executable">
-              runswmm.exe
+              {swmmStatus?.found ? swmmStatus.path : 'simulation mode'}
             </p>
           </div>
         </div>

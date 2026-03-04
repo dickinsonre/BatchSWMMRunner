@@ -1,10 +1,11 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3 } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
+import type { ParsedMetrics } from "@shared/schema";
 
 export interface ProcessResult {
   id: string;
@@ -19,6 +20,7 @@ export interface ProcessResult {
     peakFlow?: number;
     totalVolume?: number;
   };
+  parsedMetrics?: ParsedMetrics;
 }
 
 interface ResultsDisplayProps {
@@ -37,6 +39,22 @@ interface ParsedTimeSeries {
   columns: string[];
   units: string[];
   data: TimeSeriesEntry[];
+}
+
+function getContinuityErrorColor(error: number | undefined): string {
+  if (error === undefined) return 'text-muted-foreground';
+  const abs = Math.abs(error);
+  if (abs <= 1) return 'text-green-600';
+  if (abs <= 5) return 'text-yellow-600';
+  return 'text-destructive';
+}
+
+function getContinuityErrorBadge(error: number | undefined): { variant: 'default' | 'secondary' | 'destructive' | 'outline'; label: string } {
+  if (error === undefined) return { variant: 'outline', label: 'N/A' };
+  const abs = Math.abs(error);
+  if (abs <= 1) return { variant: 'outline', label: `${error.toFixed(3)}%` };
+  if (abs <= 5) return { variant: 'secondary', label: `${error.toFixed(3)}%` };
+  return { variant: 'destructive', label: `${error.toFixed(3)}%` };
 }
 
 function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
@@ -403,6 +421,15 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
   const successCount = results.filter(r => r.status === 'success').length;
   const failedCount = results.filter(r => r.status === 'failed').length;
 
+  const continuityWarnings = results.filter(r => {
+    const m = r.parsedMetrics;
+    if (!m) return false;
+    return (m.runoffContinuityError !== undefined && Math.abs(m.runoffContinuityError) > 1) ||
+           (m.routingContinuityError !== undefined && Math.abs(m.routingContinuityError) > 1);
+  });
+
+  const floodedFiles = results.filter(r => r.parsedMetrics?.nodesFlooded && r.parsedMetrics.nodesFlooded > 0);
+
   const toggleError = (id: string) => {
     const newExpanded = new Set(expandedErrors);
     if (newExpanded.has(id)) {
@@ -436,13 +463,21 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
   };
 
   const exportToCSV = () => {
-    const headers = ['File Name', 'File Path', 'Status', 'Peak Flow (CFS)', 'Total Volume (MG)', 'Processing Time (s)', 'Error'];
+    const headers = [
+      'File Name', 'Status', 'Peak Flow (CFS)', 'Total Volume (MG)',
+      'Runoff CE (%)', 'Routing CE (%)', 'Nodes Flooded', 'Flooding Summary',
+      'Flow Routing', 'Processing Time (s)', 'Error'
+    ];
     const rows = results.map(r => [
       r.fileName,
-      r.filePath,
       r.status,
       r.results?.peakFlow?.toFixed(2) || 'N/A',
       r.results?.totalVolume?.toFixed(2) || 'N/A',
+      r.parsedMetrics?.runoffContinuityError?.toFixed(3) || 'N/A',
+      r.parsedMetrics?.routingContinuityError?.toFixed(3) || 'N/A',
+      r.parsedMetrics?.nodesFlooded?.toString() || 'N/A',
+      r.parsedMetrics?.floodingSummary || 'N/A',
+      r.parsedMetrics?.flowRoutingMethod || 'N/A',
       r.processingTime?.toFixed(1) || 'N/A',
       r.error || ''
     ]);
@@ -465,93 +500,70 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card data-testid="card-summary-total">
-          <CardContent className="p-6">
+          <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Total Processed</p>
-              <p className="text-3xl font-bold mt-2" data-testid="text-total-processed">{results.length}</p>
+              <p className="text-xs text-muted-foreground">Total Processed</p>
+              <p className="text-2xl font-bold mt-1" data-testid="text-total-processed">{results.length}</p>
             </div>
           </CardContent>
         </Card>
         
         <Card data-testid="card-summary-success">
-          <CardContent className="p-6">
+          <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Successful</p>
-              <p className="text-3xl font-bold mt-2 text-green-600" data-testid="text-total-success">{successCount}</p>
+              <p className="text-xs text-muted-foreground">Successful</p>
+              <p className="text-2xl font-bold mt-1 text-green-600" data-testid="text-total-success">{successCount}</p>
             </div>
           </CardContent>
         </Card>
         
         <Card data-testid="card-summary-failed">
-          <CardContent className="p-6">
+          <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Failed</p>
-              <p className="text-3xl font-bold mt-2 text-destructive" data-testid="text-total-failed">{failedCount}</p>
+              <p className="text-xs text-muted-foreground">Failed</p>
+              <p className="text-2xl font-bold mt-1 text-destructive" data-testid="text-total-failed">{failedCount}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card data-testid="card-summary-warnings">
+          <CardContent className="p-4">
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">Warnings</p>
+              <p className={`text-2xl font-bold mt-1 ${continuityWarnings.length > 0 ? 'text-yellow-600' : 'text-muted-foreground'}`} data-testid="text-total-warnings">
+                {continuityWarnings.length}
+              </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {elapsedTime && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground" data-testid="text-total-time">
-          <Clock className="h-4 w-4" />
-          Total processing time: {elapsedTime}
-        </div>
-      )}
+      <div className="flex items-center gap-4 flex-wrap">
+        {elapsedTime && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground" data-testid="text-total-time">
+            <Clock className="h-4 w-4" />
+            Total time: {elapsedTime}
+          </div>
+        )}
+        {floodedFiles.length > 0 && (
+          <div className="flex items-center gap-2 text-sm text-yellow-600" data-testid="text-flooding-alert">
+            <Droplets className="h-4 w-4" />
+            {floodedFiles.length} file{floodedFiles.length !== 1 ? 's' : ''} with flooding detected
+          </div>
+        )}
+        {continuityWarnings.length > 0 && (
+          <div className="flex items-center gap-2 text-sm text-yellow-600" data-testid="text-continuity-alert">
+            <AlertTriangle className="h-4 w-4" />
+            {continuityWarnings.length} file{continuityWarnings.length !== 1 ? 's' : ''} with continuity error &gt; 1%
+          </div>
+        )}
+      </div>
 
       <Card data-testid="card-summary-table">
-        <CardHeader>
-          <CardTitle className="text-lg" data-testid="text-summary-title">Summary Table</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm" data-testid="table-summary">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2 px-3 font-medium">File Name</th>
-                  <th className="text-left py-2 px-3 font-medium">Status</th>
-                  <th className="text-right py-2 px-3 font-medium">Peak Flow</th>
-                  <th className="text-right py-2 px-3 font-medium">Total Volume</th>
-                  <th className="text-right py-2 px-3 font-medium">Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.map((result) => (
-                  <tr key={result.id} className="border-b last:border-0" data-testid={`row-summary-${result.id}`}>
-                    <td className="py-2 px-3 font-mono text-xs">{result.fileName}</td>
-                    <td className="py-2 px-3">
-                      {result.status === 'success' ? (
-                        <span className="text-green-600 flex items-center gap-1">
-                          <CheckCircle className="h-3 w-3" /> Success
-                        </span>
-                      ) : (
-                        <span className="text-destructive flex items-center gap-1">
-                          <XCircle className="h-3 w-3" /> Failed
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-2 px-3 text-right font-mono">
-                      {result.results?.peakFlow != null ? `${result.results.peakFlow.toFixed(2)} CFS` : 'N/A'}
-                    </td>
-                    <td className="py-2 px-3 text-right font-mono">
-                      {result.results?.totalVolume != null ? `${result.results.totalVolume.toFixed(2)} MG` : 'N/A'}
-                    </td>
-                    <td className="py-2 px-3 text-right font-mono">
-                      {result.processingTime != null ? `${result.processingTime.toFixed(1)}s` : 'N/A'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card data-testid="card-results-list">
         <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
-          <CardTitle className="text-lg" data-testid="text-results-title">Processing Results</CardTitle>
+          <CardTitle className="text-lg" data-testid="text-summary-title">Results Summary</CardTitle>
           <Button 
             variant="outline" 
             size="sm" 
@@ -561,6 +573,86 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
             <Download className="h-4 w-4 mr-2" />
             Export CSV
           </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="table-summary">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-2 px-2 font-medium">File Name</th>
+                  <th className="text-left py-2 px-2 font-medium">Status</th>
+                  <th className="text-right py-2 px-2 font-medium">Peak Flow</th>
+                  <th className="text-right py-2 px-2 font-medium">Volume</th>
+                  <th className="text-right py-2 px-2 font-medium">Runoff CE</th>
+                  <th className="text-right py-2 px-2 font-medium">Routing CE</th>
+                  <th className="text-center py-2 px-2 font-medium">Flooding</th>
+                  <th className="text-right py-2 px-2 font-medium">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((result) => {
+                  const runoffCE = getContinuityErrorBadge(result.parsedMetrics?.runoffContinuityError);
+                  const routingCE = getContinuityErrorBadge(result.parsedMetrics?.routingContinuityError);
+
+                  return (
+                    <tr key={result.id} className="border-b last:border-0" data-testid={`row-summary-${result.id}`}>
+                      <td className="py-2 px-2 font-mono text-xs">{result.fileName}</td>
+                      <td className="py-2 px-2">
+                        {result.status === 'success' ? (
+                          <span className="text-green-600 flex items-center gap-1">
+                            <CheckCircle className="h-3 w-3" /> OK
+                          </span>
+                        ) : (
+                          <span className="text-destructive flex items-center gap-1">
+                            <XCircle className="h-3 w-3" /> Fail
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-2 px-2 text-right font-mono text-xs">
+                        {result.results?.peakFlow != null ? `${result.results.peakFlow.toFixed(2)} CFS` : 'N/A'}
+                      </td>
+                      <td className="py-2 px-2 text-right font-mono text-xs">
+                        {result.results?.totalVolume != null ? `${result.results.totalVolume.toFixed(2)} MG` : 'N/A'}
+                      </td>
+                      <td className="py-2 px-2 text-right">
+                        <span className={`font-mono text-xs ${getContinuityErrorColor(result.parsedMetrics?.runoffContinuityError)}`}>
+                          {runoffCE.label}
+                        </span>
+                      </td>
+                      <td className="py-2 px-2 text-right">
+                        <span className={`font-mono text-xs ${getContinuityErrorColor(result.parsedMetrics?.routingContinuityError)}`}>
+                          {routingCE.label}
+                        </span>
+                      </td>
+                      <td className="py-2 px-2 text-center">
+                        {result.parsedMetrics?.nodesFlooded !== undefined ? (
+                          result.parsedMetrics.nodesFlooded > 0 ? (
+                            <Badge variant="secondary" className="text-yellow-700">
+                              <Droplets className="h-3 w-3 mr-1" />
+                              {result.parsedMetrics.nodesFlooded}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-green-600">None</span>
+                          )
+                        ) : (
+                          <span className="text-xs text-muted-foreground">N/A</span>
+                        )}
+                      </td>
+                      <td className="py-2 px-2 text-right font-mono text-xs">
+                        {result.processingTime != null ? `${result.processingTime.toFixed(1)}s` : 'N/A'}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card data-testid="card-results-list">
+        <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+          <CardTitle className="text-lg" data-testid="text-results-title">Detailed Results</CardTitle>
         </CardHeader>
         <CardContent>
           <ScrollArea className="max-h-96">
@@ -588,10 +680,38 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                         >
                           {result.status}
                         </Badge>
+                        {result.parsedMetrics?.flowRoutingMethod && (
+                          <Badge variant="outline" data-testid={`badge-routing-${result.id}`}>
+                            {result.parsedMetrics.flowRoutingMethod}
+                          </Badge>
+                        )}
+                        {result.parsedMetrics?.runoffContinuityError !== undefined && Math.abs(result.parsedMetrics.runoffContinuityError) > 1 && (
+                          <Badge variant="secondary" className="text-yellow-700" data-testid={`badge-ce-warning-${result.id}`}>
+                            <AlertTriangle className="h-3 w-3 mr-1" />
+                            CE: {result.parsedMetrics.runoffContinuityError.toFixed(3)}%
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-xs text-muted-foreground font-mono mt-1" data-testid={`text-result-filepath-${result.id}`}>
                         {result.filePath}
                       </p>
+
+                      {result.parsedMetrics && result.status === 'success' && (
+                        <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground flex-wrap" data-testid={`metrics-summary-${result.id}`}>
+                          {result.parsedMetrics.totalPrecipitation !== undefined && (
+                            <span>Precip: {result.parsedMetrics.totalPrecipitation.toFixed(3)} ac-ft</span>
+                          )}
+                          {result.parsedMetrics.surfaceRunoff !== undefined && (
+                            <span>Runoff: {result.parsedMetrics.surfaceRunoff.toFixed(3)} ac-ft</span>
+                          )}
+                          {result.parsedMetrics.floodingSummary && (
+                            <span className={result.parsedMetrics.nodesFlooded && result.parsedMetrics.nodesFlooded > 0 ? 'text-yellow-600' : 'text-green-600'}>
+                              {result.parsedMetrics.floodingSummary}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
                       {result.error && (
                         <div className="mt-2">
                           <button
