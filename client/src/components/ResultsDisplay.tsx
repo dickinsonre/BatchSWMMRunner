@@ -4,9 +4,45 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
+
+const MAX_PREVIEW_LINES = 2000;
+
+function LargeTextViewer({ content, testId }: { content: string; testId: string }) {
+  const [showFull, setShowFull] = useState(false);
+  const lineCount = useMemo(() => content.split('\n').length, [content]);
+  const isTruncated = lineCount > MAX_PREVIEW_LINES && !showFull;
+  const displayContent = isTruncated
+    ? content.split('\n').slice(0, MAX_PREVIEW_LINES).join('\n')
+    : content;
+
+  return (
+    <div>
+      <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={testId}>
+        {displayContent}
+      </pre>
+      {lineCount > MAX_PREVIEW_LINES && (
+        <div className="flex items-center justify-center gap-3 p-3 border-t bg-muted/50">
+          <span className="text-xs text-muted-foreground">
+            {isTruncated
+              ? `Showing first ${MAX_PREVIEW_LINES.toLocaleString()} of ${lineCount.toLocaleString()} lines`
+              : `Showing all ${lineCount.toLocaleString()} lines`}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFull(!showFull)}
+            data-testid={`button-toggle-full-${testId}`}
+          >
+            {isTruncated ? 'Show All' : 'Show Less'}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export interface ProcessResult {
   id: string;
@@ -521,18 +557,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                 {result.inpContent && (
                                   <TabsContent value="inp">
                                     <ScrollArea className="h-[800px] rounded border">
-                                      <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-inp-content-${result.id}`}>
-                                        {result.inpContent}
-                                      </pre>
+                                      <LargeTextViewer content={result.inpContent!} testId={`text-inp-content-${result.id}`} />
                                     </ScrollArea>
                                   </TabsContent>
                                 )}
                                 {result.reportContent && (
                                   <TabsContent value="text">
                                     <ScrollArea className="h-[800px] rounded border">
-                                      <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
-                                        {result.reportContent}
-                                      </pre>
+                                      <LargeTextViewer content={result.reportContent!} testId={`text-report-content-${result.id}`} />
                                     </ScrollArea>
                                   </TabsContent>
                                 )}
