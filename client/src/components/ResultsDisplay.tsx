@@ -162,7 +162,35 @@ function generateSvgChart(ts: ParsedTimeSeries, colIndex: number, color: string,
   </svg>`;
 }
 
-function generateChartsHtml(allSeries: ParsedTimeSeries[]): string {
+function generateTableHtml(ts: ParsedTimeSeries): string {
+  const escH = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const maxCols = Math.min(ts.columns.length, ts.data[0]?.values.length ?? 0);
+  const step = Math.max(Math.floor(ts.data.length / 20), 1);
+
+  let html = '<table style="border-collapse:collapse;font-family:monospace;font-size:0.8em;margin:8px 0;width:auto;">';
+  html += '<thead><tr style="border-bottom:2px solid hsl(210,20%,75%);">';
+  html += '<th style="padding:3px 10px;text-align:left;color:hsl(210,40%,35%);">Time</th>';
+  for (let c = 0; c < maxCols; c++) {
+    const unit = ts.units[c] ? ` (${escH(ts.units[c])})` : '';
+    html += `<th style="padding:3px 10px;text-align:right;color:hsl(210,40%,35%);">${escH(ts.columns[c] || '')}${unit}</th>`;
+  }
+  html += '</tr></thead><tbody>';
+
+  for (let r = 0; r < ts.data.length; r += step) {
+    const d = ts.data[r];
+    const bg = (r / step) % 2 === 0 ? '' : ' style="background:hsl(210,20%,96%);"';
+    html += `<tr${bg}>`;
+    html += `<td style="padding:2px 10px;white-space:nowrap;">${escH(d.time)}</td>`;
+    for (let c = 0; c < maxCols; c++) {
+      html += `<td style="padding:2px 10px;text-align:right;">${(d.values[c] ?? 0).toFixed(2)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function generateChartsAndTablesHtml(allSeries: ParsedTimeSeries[]): string {
   if (allSeries.length === 0) return '';
 
   const chartColors = [
@@ -188,18 +216,24 @@ function generateChartsHtml(allSeries: ParsedTimeSeries[]): string {
     }
 
     if (charts.length > 0) {
+      const escH = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const tableHtml = generateTableHtml(ts);
       if (!sections[ts.title]) sections[ts.title] = [];
       sections[ts.title].push(`
-        <div style="margin-bottom:10px;">
-          <div style="font-weight:600;font-size:0.9em;color:hsl(210,40%,35%);margin-bottom:4px;">${ts.element}</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;">${charts.join('')}</div>
+        <div style="margin-bottom:16px;">
+          <div style="font-weight:600;font-size:0.95em;color:hsl(210,40%,35%);margin-bottom:6px;">${escH(ts.element)}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;">${charts.join('')}</div>
+          <details style="margin-top:4px;">
+            <summary style="cursor:pointer;font-size:0.85em;color:hsl(210,60%,45%);font-weight:500;">Show Data Table</summary>
+            ${tableHtml}
+          </details>
         </div>
       `);
     }
   }
 
   let html = '<div style="margin-top:1.5em;border-top:2px solid hsl(210,20%,85%);padding-top:1em;">';
-  html += '<h2 style="color:hsl(210,95%,45%);font-size:1.15em;font-weight:700;margin-bottom:0.8em;">Time Series Charts</h2>';
+  html += '<h2 style="color:hsl(210,95%,45%);font-size:1.15em;font-weight:700;margin-bottom:0.8em;">Time Series Results</h2>';
   for (const [sectionTitle, chartGroups] of Object.entries(sections)) {
     html += `<h3 style="color:hsl(210,60%,40%);font-size:1em;font-weight:600;margin:1em 0 0.5em;border-bottom:1px solid hsl(210,20%,85%);padding-bottom:0.2em;">${sectionTitle}</h3>`;
     html += chartGroups.join('');
@@ -528,14 +562,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                   </TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="text">
-                                  <ScrollArea className="h-[600px] rounded border">
+                                  <ScrollArea className="h-[800px] rounded border">
                                     <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={`text-report-content-${result.id}`}>
                                       {result.reportContent}
                                     </pre>
                                   </ScrollArea>
                                 </TabsContent>
                                 <TabsContent value="html">
-                                  <ScrollArea className="h-[600px] rounded border">
+                                  <ScrollArea className="h-[800px] rounded border">
                                     <div
                                       className="text-sm p-4 bg-background"
                                       dangerouslySetInnerHTML={{ __html: reportToHtml(result.reportContent) }}
