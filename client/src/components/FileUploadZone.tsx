@@ -1,4 +1,4 @@
-import { Upload, FileCheck, AlertCircle } from "lucide-react";
+import { Upload, FileCheck, AlertCircle, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,13 @@ export default function FileUploadZone({ onFilesSelected, selectedCount, totalSi
     if (e.target.files && e.target.files.length > 0) {
       onFilesSelected(e.target.files);
     }
+  };
+
+  const handleDirectoryInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      onFilesSelected(e.target.files);
+    }
+    e.target.value = '';
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -52,16 +59,25 @@ export default function FileUploadZone({ onFilesSelected, selectedCount, totalSi
             Upload SWMM5 Input Files
           </h3>
           <p className="text-sm text-muted-foreground mt-1" data-testid="text-upload-description">
-            Drag and drop .inp files here, or click to browse
+            Drag and drop .inp files here, browse files, or load an entire directory
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 flex-wrap">
           <Button
             variant="default"
             onClick={() => document.getElementById('file-input')?.click()}
             data-testid="button-browse-files"
           >
+            <Upload className="h-4 w-4 mr-1.5" />
             Browse Files
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => document.getElementById('directory-input')?.click()}
+            data-testid="button-load-directory"
+          >
+            <FolderOpen className="h-4 w-4 mr-1.5" />
+            Load Directory
           </Button>
           <input
             id="file-input"
@@ -71,6 +87,14 @@ export default function FileUploadZone({ onFilesSelected, selectedCount, totalSi
             onChange={handleFileInput}
             className="hidden"
             data-testid="input-file"
+          />
+          <input
+            id="directory-input"
+            type="file"
+            onChange={handleDirectoryInput}
+            className="hidden"
+            data-testid="input-directory"
+            {...({ webkitdirectory: "", directory: "" } as React.InputHTMLAttributes<HTMLInputElement>)}
           />
         </div>
         {selectedCount > 0 && (
