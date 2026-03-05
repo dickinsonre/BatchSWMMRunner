@@ -1,12 +1,14 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useMemo } from "react";
+import { useLocation } from "wouter";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
+import { setDashboardResults } from "@/lib/resultsStore";
 
 const MAX_PREVIEW_LINES = 2000;
 
@@ -179,6 +181,7 @@ function reportToHtml(content: string): string {
 }
 
 export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayProps) {
+  const [, setLocation] = useLocation();
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
   const [expandedReports, setExpandedReports] = useState<Set<string>>(new Set());
   
@@ -328,15 +331,29 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
       <Card data-testid="card-summary-table">
         <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
           <CardTitle className="text-lg" data-testid="text-summary-title">Results Summary</CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={exportToCSV}
-            data-testid="button-export-csv"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={exportToCSV}
+              data-testid="button-export-csv"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => {
+                setDashboardResults(results, elapsedTime);
+                setLocation('/dashboard');
+              }}
+              data-testid="button-open-dashboard"
+            >
+              <LayoutDashboard className="h-4 w-4 mr-2" />
+              Open in Results Dashboard
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
