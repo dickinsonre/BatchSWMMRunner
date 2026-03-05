@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -539,6 +539,19 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                               >
                                 <Download className="h-3 w-3 mr-1" />
                                 Download .rpt
+                              </Button>
+                            )}
+                            {result.status === 'success' && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  window.open('https://swmm-engine.replit.app/', '_blank', 'noopener,noreferrer');
+                                }}
+                                data-testid={`button-open-engine-${result.id}`}
+                              >
+                                <ExternalLink className="h-3 w-3 mr-1" />
+                                Open in Simulation Engine
                               </Button>
                             )}
                           </div>
