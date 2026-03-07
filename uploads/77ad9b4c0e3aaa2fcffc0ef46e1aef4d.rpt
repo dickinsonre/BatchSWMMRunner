@@ -1,0 +1,188 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CB at line 28 of [JUNC] section:
+  CB               303.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 30 of [JUNC] section:
+  MH               303.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 31 of [JUNC] section:
+  MH               303.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 32 of [JUNC] section:
+  CB               302.95     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 33 of [JUNC] section:
+  CB               302.95     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 34 of [JUNC] section:
+  CB               302.79     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 35 of [JUNC] section:
+  CB               302.79     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 36 of [JUNC] section:
+  CB               302.95     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 37 of [JUNC] section:
+  CB               303.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 38 of [JUNC] section:
+  CB               303.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 39 of [JUNC] section:
+  CB               303.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 40 of [JUNC] section:
+  CB               303.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 41 of [JUNC] section:
+  CB               308.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 42 of [JUNC] section:
+  MH               304.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 43 of [JUNC] section:
+  MH               314.70     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 44 of [JUNC] section:
+  MH               315.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 45 of [JUNC] section:
+  MH               317.25     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 46 of [JUNC] section:
+  MH               308.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 71 of [JUNC] section:
+  CB               302.95     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 72 of [JUNC] section:
+  CB               317.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 73 of [JUNC] section:
+  CB               317.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 74 of [JUNC] section:
+  MH               309.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 75 of [JUNC] section:
+  MH               306.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 76 of [JUNC] section:
+  CB               303.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 77 of [JUNC] section:
+  CB               303.65     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 78 of [JUNC] section:
+  CB               302.79     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 79 of [JUNC] section:
+  MH               305.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 80 of [JUNC] section:
+  CB               305.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 86 of [JUNC] section:
+  MH               316.70     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 87 of [JUNC] section:
+  MH               312.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 88 of [JUNC] section:
+  MH               313.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 89 of [JUNC] section:
+  CB               303.75     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 90 of [JUNC] section:
+  CB               303.65     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 91 of [JUNC] section:
+  CB               304.15     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 92 of [JUNC] section:
+  CB               311.70     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 93 of [JUNC] section:
+  CB               311.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 94 of [JUNC] section:
+  CB               305.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 95 of [JUNC] section:
+  MH               304.55     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 96 of [JUNC] section:
+  MH               305.35     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 97 of [JUNC] section:
+  MH               305.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 101 of [JUNC] section:
+  MH               304.75     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 103 of [JUNC] section:
+  CB               319.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 136 of [STORAGE] section:
+  CB               302.79     0          0          FUNCTIONAL 12.50 0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 137 of [STORAGE] section:
+  MH               311.50     0          0          FUNCTIONAL 81.00 0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 138 of [STORAGE] section:
+  MH               311.50     0          0          FUNCTIONAL 28.00 0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 57 of [XSECT] section:
+  never            TRAPEZOIDAL  5.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 59 of [XSECT] section:
+  always           TRAPEZOIDAL  5.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 61 of [XSECT] section:
+  standard         TRAPEZOIDAL  5.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 62 of [XSECT] section:
+  36               CIRCULAR     0          10.00      0          0          1
+
+  
+  ERROR 211: invalid number  at line 63 of [XSECT] section:
+  37               CIRCULAR     0          10.00      0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

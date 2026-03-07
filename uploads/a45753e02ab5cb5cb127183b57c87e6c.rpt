@@ -1,0 +1,168 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 124 of [CONDUIT] section:
+  IC-G331C         ?                ?                65.00      0.0240     6.00       6.00       0          0
+
+  
+  ERROR 209: undefined object 0 at line 169 of [XSECT] section:
+  IC-10            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 170 of [XSECT] section:
+  IC-20            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 171 of [XSECT] section:
+  IC-30            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 172 of [XSECT] section:
+  IC-40            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 173 of [XSECT] section:
+  IC-50            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 174 of [XSECT] section:
+  IC-60            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 175 of [XSECT] section:
+  IC-70            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 182 of [XSECT] section:
+  IC-80            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 183 of [XSECT] section:
+  IC-85            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 184 of [XSECT] section:
+  IC-90            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 185 of [XSECT] section:
+  IC-100           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 186 of [XSECT] section:
+  IC-110           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 187 of [XSECT] section:
+  IC-120           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 188 of [XSECT] section:
+  IC-130           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 189 of [XSECT] section:
+  IC-140           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 190 of [XSECT] section:
+  IC-150           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 191 of [XSECT] section:
+  IC-160           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 192 of [XSECT] section:
+  IC-170           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 193 of [XSECT] section:
+  IC-180           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 194 of [XSECT] section:
+  IC-190           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 195 of [XSECT] section:
+  IC-200           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 208 of [XSECT] section:
+  IC-210           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 209 of [XSECT] section:
+  IC-220           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 210 of [XSECT] section:
+  IC-230           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 211 of [XSECT] section:
+  IC-240           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 212 of [XSECT] section:
+  IC-250           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 213 of [XSECT] section:
+  IC-260           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 214 of [XSECT] section:
+  IC-270           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 215 of [XSECT] section:
+  IC-280           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 216 of [XSECT] section:
+  IC-290           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 225 of [XSECT] section:
+  168              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 226 of [XSECT] section:
+  IC-G333AW        RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 227 of [XSECT] section:
+  345.1            RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 228 of [XSECT] section:
+  349.1            RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 229 of [XSECT] section:
+  353.1            RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 230 of [XSECT] section:
+  357.1            RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 231 of [XSECT] section:
+  361.1            RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 232 of [XSECT] section:
+  365.1            RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 233 of [XSECT] section:
+  IC-G333HW        RECT_OPEN    0          36.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

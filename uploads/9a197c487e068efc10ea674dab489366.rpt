@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object U-43B at line 246 of [CONDUIT] section:
+  U-43A            U-43B            U-43N            128.00     0.0190     -1.55      -2.10      0          0
+
+  
+  ERROR 209: undefined object U-44B at line 247 of [CONDUIT] section:
+  U-44A            U-44B            U-44C            77.00      0.0200     -0.90      -1.30      0          0
+
+  
+  ERROR 209: undefined object U-45B at line 248 of [CONDUIT] section:
+  U-45A            U-45B            U-45C            80.00      0.0200     -2.25      -2.70      0          0
+
+  
+  ERROR 209: undefined object U-46B at line 249 of [CONDUIT] section:
+  U-46A            U-46B            U-46C            108.00     0.0200     -2.40      -2.40      0          0
+
+  
+  ERROR 209: undefined object U-48B at line 259 of [CONDUIT] section:
+  U-48A            U-48B            U-49N            49.00      0.0200     -2.30      -2.80      0          0
+
+  
+  ERROR 209: undefined object U-21B at line 280 of [CONDUIT] section:
+  U-21A            U-21B            U-21E            376.00     0.0240     -4.60      -4.60      0          0
+
+  
+  ERROR 209: undefined object U-29B at line 281 of [CONDUIT] section:
+  U-29A            U-29B            U-29E            448.00     0.0240     -2.70      -2.70      0          0
+
+  
+  ERROR 209: undefined object U-42B at line 282 of [CONDUIT] section:
+  U-42A            U-42B            U-42C            231.00     0.0270     -2.22      -2.22      0          0
+
+  
+  ERROR 209: undefined object U47-B at line 283 of [CONDUIT] section:
+  U-47A            U47-B            U-47N            128.00     0.0260     1.86       -1.30      0          0
+
+  
+  ERROR 209: undefined object U-31B at line 284 of [CONDUIT] section:
+  U-31A            U-31B            U-31E            100.00     0.0200     -0.30      -0.32      0          0
+
+  
+  ERROR 209: undefined object U-51B at line 285 of [CONDUIT] section:
+  U-51A            U-51B            U-51N            80.00      0.0190     -0.40      -0.60      0          0
+
+  
+  ERROR 209: undefined object SHEET1 at line 350 of [CONDUIT] section:
+  CULVERT          SHEET1           SHEET2           356.00     0.0140     -8.00      -8.00      0          0
+
+  
+  ERROR 209: undefined object 0 at line 358 of [XSECT] section:
+  GTY-N-2          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 361 of [XSECT] section:
+  PP-N-2           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 362 of [XSECT] section:
+  GTY-N-3          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 365 of [XSECT] section:
+  C7-101           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 366 of [XSECT] section:
+  PP-N-3           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 367 of [XSECT] section:
+  GTY-N-4A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 369 of [XSECT] section:
+  GTY-N-4B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 371 of [XSECT] section:
+  GTY-N-5A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 373 of [XSECT] section:
+  GTY-N-5B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 375 of [XSECT] section:
+  GTY-N-5C         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 377 of [XSECT] section:
+  GTY-N-5D         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 379 of [XSECT] section:
+  GTY-N-5E         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 381 of [XSECT] section:
+  GTY-N-5F         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 382 of [XSECT] section:
+  C7-102           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 383 of [XSECT] section:
+  C7-103           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 384 of [XSECT] section:
+  GTY-N-6          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 387 of [XSECT] section:
+  RR-N-2A          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 389 of [XSECT] section:
+  RR-N-2B          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 391 of [XSECT] section:
+  RR-N-2C          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 393 of [XSECT] section:
+  RR-N-2D          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 395 of [XSECT] section:
+  RR-N-2E          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 397 of [XSECT] section:
+  RR-N-2F          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 399 of [XSECT] section:
+  RR-N-2G          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 401 of [XSECT] section:
+  RR-N-2H          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 403 of [XSECT] section:
+  RR-N-2I          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 404 of [XSECT] section:
+  RR-N-3A          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 405 of [XSECT] section:
+  RR-N-3B          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 406 of [XSECT] section:
+  RR-N-4A          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 407 of [XSECT] section:
+  RR-N-4B          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 413 of [XSECT] section:
+  RR-S-2           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 414 of [XSECT] section:
+  RR-S-3           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 416 of [XSECT] section:
+  RR-S-4           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 418 of [XSECT] section:
+  RR-S-5           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 419 of [XSECT] section:
+  RR-S-6           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 420 of [XSECT] section:
+  98ST-2           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 422 of [XSECT] section:
+  C7-104           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 423 of [XSECT] section:
+  C7-105           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 424 of [XSECT] section:
+  C7-106           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 425 of [XSECT] section:
+  C7-107           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 426 of [XSECT] section:
+  C7-108           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 427 of [XSECT] section:
+  127ST-2          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 429 of [XSECT] section:
+  127ST-3          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 431 of [XSECT] section:
+  127ST-4          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 433 of [XSECT] section:
+  127ST-5          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 434 of [XSECT] section:
+  SPUR-N-1         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 435 of [XSECT] section:
+  SPUR-N-3         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 436 of [XSECT] section:
+  C7-110           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 437 of [XSECT] section:
+  C7-109           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 438 of [XSECT] section:
+  C7-111           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 439 of [XSECT] section:
+  C7-112           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 440 of [XSECT] section:
+  C7-113           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 441 of [XSECT] section:
+  C7-114           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 448 of [XSECT] section:
+  223              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 449 of [XSECT] section:
+  225              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 450 of [XSECT] section:
+  229              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 451 of [XSECT] section:
+  231              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 452 of [XSECT] section:
+  233              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 453 of [XSECT] section:
+  235              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 454 of [XSECT] section:
+  237              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 455 of [XSECT] section:
+  239              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 456 of [XSECT] section:
+  241              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 457 of [XSECT] section:
+  247              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 458 of [XSECT] section:
+  248              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 459 of [XSECT] section:
+  249              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 460 of [XSECT] section:
+  250              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 461 of [XSECT] section:
+  257              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 462 of [XSECT] section:
+  258              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 463 of [XSECT] section:
+  260              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 464 of [XSECT] section:
+  261              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 465 of [XSECT] section:
+  266              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 466 of [XSECT] section:
+  267              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 467 of [XSECT] section:
+  268              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 468 of [XSECT] section:
+  269              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 469 of [XSECT] section:
+  275              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 470 of [XSECT] section:
+  276              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 471 of [XSECT] section:
+  277              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 472 of [XSECT] section:
+  279              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 473 of [XSECT] section:
+  281              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 474 of [XSECT] section:
+  283              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 475 of [XSECT] section:
+  291              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 476 of [XSECT] section:
+  292              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 477 of [XSECT] section:
+  293              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 478 of [XSECT] section:
+  294              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 479 of [XSECT] section:
+  295              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 480 of [XSECT] section:
+  299              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 481 of [XSECT] section:
+  300              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 482 of [XSECT] section:
+  301              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 483 of [XSECT] section:
+  306              CIRCULAR     0          0          0          0          1
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

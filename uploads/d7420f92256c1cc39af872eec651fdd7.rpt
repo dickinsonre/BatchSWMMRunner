@@ -1,0 +1,108 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 48 of [CONDUIT] section:
+  239              ?                ?                33.00      0.0140     10.00      9.99       0          0
+
+  
+  ERROR 209: undefined object ? at line 49 of [CONDUIT] section:
+  241              ?                ?                33.00      0.0140     9.99       9.98       0          0
+
+  
+  ERROR 209: undefined object ? at line 50 of [CONDUIT] section:
+  243              ?                ?                33.00      0.0140     9.98       9.97       0          0
+
+  
+  ERROR 209: undefined object ? at line 55 of [WEIR] section:
+  227              ?                ?                TRANSVERSE 11.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 56 of [WEIR] section:
+  228              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 57 of [WEIR] section:
+  229              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 58 of [WEIR] section:
+  230              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 59 of [WEIR] section:
+  231              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 60 of [WEIR] section:
+  232              ?                ?                TRANSVERSE 11.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 61 of [WEIR] section:
+  233              ?                ?                TRANSVERSE 11.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 62 of [WEIR] section:
+  234              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 63 of [WEIR] section:
+  235              ?                ?                TRANSVERSE 11.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 64 of [WEIR] section:
+  236              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 65 of [WEIR] section:
+  237              ?                ?                TRANSVERSE 12.00      1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 73 of [XSECT] section:
+  227              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 74 of [XSECT] section:
+  228              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 75 of [XSECT] section:
+  229              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 76 of [XSECT] section:
+  230              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 77 of [XSECT] section:
+  231              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  232              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  233              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  234              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  235              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 82 of [XSECT] section:
+  236              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 83 of [XSECT] section:
+  237              RECT_OPEN    0          2.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

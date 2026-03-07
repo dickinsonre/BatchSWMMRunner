@@ -1,0 +1,288 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 66 of [CONDUIT] section:
+  3807             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 67 of [CONDUIT] section:
+  3808             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 68 of [CONDUIT] section:
+  3809             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 69 of [CONDUIT] section:
+  3810             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 70 of [CONDUIT] section:
+  3811             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 71 of [CONDUIT] section:
+  3812             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 72 of [CONDUIT] section:
+  3813             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 73 of [CONDUIT] section:
+  3814             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 74 of [CONDUIT] section:
+  3815             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 75 of [CONDUIT] section:
+  3816             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 76 of [CONDUIT] section:
+  3817             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 77 of [CONDUIT] section:
+  3818             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 78 of [CONDUIT] section:
+  3819             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 79 of [CONDUIT] section:
+  3820             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 80 of [CONDUIT] section:
+  3821             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 81 of [CONDUIT] section:
+  3822             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 82 of [CONDUIT] section:
+  3823             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 83 of [CONDUIT] section:
+  3824             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 84 of [CONDUIT] section:
+  3825             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 85 of [CONDUIT] section:
+  3826             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 86 of [CONDUIT] section:
+  3827             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 87 of [CONDUIT] section:
+  3828             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 88 of [CONDUIT] section:
+  3829             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 89 of [CONDUIT] section:
+  3830             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 90 of [CONDUIT] section:
+  3831             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 91 of [CONDUIT] section:
+  3832             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 92 of [CONDUIT] section:
+  3833             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 93 of [CONDUIT] section:
+  3834             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 94 of [CONDUIT] section:
+  3835             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 95 of [CONDUIT] section:
+  3836             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 96 of [CONDUIT] section:
+  3837             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 97 of [CONDUIT] section:
+  3838             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 98 of [CONDUIT] section:
+  3839             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 99 of [CONDUIT] section:
+  3840             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 100 of [CONDUIT] section:
+  3841             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 105 of [XSECT] section:
+  3807             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 106 of [XSECT] section:
+  3808             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 107 of [XSECT] section:
+  3809             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 108 of [XSECT] section:
+  3810             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 109 of [XSECT] section:
+  3811             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 110 of [XSECT] section:
+  3812             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 111 of [XSECT] section:
+  3813             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 112 of [XSECT] section:
+  3814             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 113 of [XSECT] section:
+  3815             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 114 of [XSECT] section:
+  3816             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 115 of [XSECT] section:
+  3817             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 116 of [XSECT] section:
+  3818             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 117 of [XSECT] section:
+  3819             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 118 of [XSECT] section:
+  3820             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 119 of [XSECT] section:
+  3821             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 120 of [XSECT] section:
+  3822             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 121 of [XSECT] section:
+  3823             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 122 of [XSECT] section:
+  3824             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 123 of [XSECT] section:
+  3825             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 124 of [XSECT] section:
+  3826             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 125 of [XSECT] section:
+  3827             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 126 of [XSECT] section:
+  3828             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 127 of [XSECT] section:
+  3829             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 128 of [XSECT] section:
+  3830             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 129 of [XSECT] section:
+  3831             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 130 of [XSECT] section:
+  3832             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 131 of [XSECT] section:
+  3833             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 132 of [XSECT] section:
+  3834             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 133 of [XSECT] section:
+  3835             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 134 of [XSECT] section:
+  3836             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 135 of [XSECT] section:
+  3837             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 136 of [XSECT] section:
+  3838             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 137 of [XSECT] section:
+  3839             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 138 of [XSECT] section:
+  3840             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 139 of [XSECT] section:
+  3841             CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

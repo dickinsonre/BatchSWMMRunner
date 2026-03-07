@@ -1,0 +1,48 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Node_9070 at line 35 of [CONDUIT] section:
+  c9070            Node_9070        Node_10721139    368.20     0.0300     972.00     968.00     0          0
+
+  
+  ERROR 209: undefined object Node_9027 at line 36 of [CONDUIT] section:
+  c9027            Node_9027        Node_11521072    274.10     0.0350     976.00     972.00     0          0
+
+  
+  ERROR 209: undefined object Node_6071 at line 37 of [CONDUIT] section:
+  c6071            Node_6071        Node_10701152    896.40     0.0320     1010.00    976.00     0          0
+
+  
+  ERROR 209: undefined object Node_6070 at line 38 of [CONDUIT] section:
+  c6070            Node_6070        Node_10711072    864.80     0.0320     1028.00    972.00     0          0
+
+  
+  ERROR 209: undefined object Node_6027 at line 39 of [CONDUIT] section:
+  c6027            Node_6027        Node_11511152    1172.10    0.0320     1021.00    976.00     0          0
+
+  
+  ERROR 209: undefined object 0 at line 44 of [XSECT] section:
+  c9070            IRREGULAR    0          11.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 45 of [XSECT] section:
+  c9027            IRREGULAR    0          10.00      0          0          1
+
+  
+  ERROR 211: invalid number  at line 46 of [XSECT] section:
+  c6071            TRAPEZOIDAL  4.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 47 of [XSECT] section:
+  c6070            TRAPEZOIDAL  4.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 48 of [XSECT] section:
+  c6027            TRAPEZOIDAL  4.00       0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

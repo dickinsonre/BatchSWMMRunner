@@ -1,0 +1,108 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 290.2 at line 118 of [CONDUIT] section:
+  290.1            290.2            19i.1            139.00     0.0130     111.72     107.91     0          0
+
+  
+  ERROR 209: undefined object 291.2 at line 119 of [CONDUIT] section:
+  291.1            291.2            19j.1            39.00      0.0130     107.21     106.04     0          0
+
+  
+  ERROR 209: undefined object 296.2 at line 124 of [CONDUIT] section:
+  296.1            296.2            20b.1            74.00      0.0130     106.09     105.79     0          0
+
+  
+  ERROR 209: undefined object 297.2 at line 125 of [CONDUIT] section:
+  297.1            297.2            20c.1            42.00      0.0130     105.69     105.56     0          0
+
+  
+  ERROR 209: undefined object 298.2 at line 126 of [CONDUIT] section:
+  298.1            298.2            20d.1            62.00      0.0130     105.04     104.83     0          0
+
+  
+  ERROR 209: undefined object 299.2 at line 127 of [CONDUIT] section:
+  299.1            299.2            20e.1            69.00      0.0130     100.99     100.88     0          0
+
+  
+  ERROR 209: undefined object 300.2 at line 128 of [CONDUIT] section:
+  300.1            300.2            20.1             29.00      0.0130     100.88     100.28     0          0
+
+  
+  ERROR 209: undefined object 316.2 at line 144 of [CONDUIT] section:
+  316.1            316.2            22c.1            116.00     0.0130     106.30     102.82     0          0
+
+  
+  ERROR 209: undefined object 317.2 at line 145 of [CONDUIT] section:
+  317.1            317.2            22.1             119.00     0.0130     102.07     98.50      0          0
+
+  
+  ERROR 209: undefined object 319.2 at line 147 of [CONDUIT] section:
+  319.1            319.2            23b.1            76.00      0.0130     103.72     101.44     0          0
+
+  
+  ERROR 209: undefined object 320.2 at line 148 of [CONDUIT] section:
+  320.1            320.2            23c.1            21.00      0.0130     100.17     99.54      0          0
+
+  
+  ERROR 209: undefined object 321.2 at line 149 of [CONDUIT] section:
+  321.1            321.2            23d.1            61.00      0.0130     99.53      98.09      0          0
+
+  
+  ERROR 209: undefined object 324.2 at line 152 of [CONDUIT] section:
+  324.1            324.2            24b.1            58.00      0.0130     99.53      98.70      0          0
+
+  
+  ERROR 209: undefined object 325.2 at line 153 of [CONDUIT] section:
+  325.1            325.2            24c.1            45.00      0.0130     98.54      97.19      0          0
+
+  
+  ERROR 209: undefined object 326.2 at line 154 of [CONDUIT] section:
+  326.1            326.2            24.1             36.00      0.0130     97.19      96.90      0          0
+
+  
+  ERROR 209: undefined object 328.2 at line 156 of [CONDUIT] section:
+  328.1            328.2            25b.1            160.00     0.0130     98.99      96.93      0          0
+
+  
+  ERROR 209: undefined object 329.2 at line 157 of [CONDUIT] section:
+  329.1            329.2            25.1             30.00      0.0130     96.93      96.28      0          0
+
+  
+  ERROR 209: undefined object 335.2 at line 163 of [CONDUIT] section:
+  335.1            335.2            27.1             44.00      0.0130     94.64      94.51      0          0
+
+  
+  ERROR 209: undefined object 344.2 at line 172 of [CONDUIT] section:
+  344.1            344.2            29b.1            140.00     0.0130     94.12      93.70      0          0
+
+  
+  ERROR 209: undefined object 345.2 at line 173 of [CONDUIT] section:
+  345.1            345.2            29c.1            36.00      0.0130     93.70      93.59      0          0
+
+  
+  ERROR 209: undefined object 346.2 at line 174 of [CONDUIT] section:
+  346.1            346.2            29.1             44.00      0.0130     93.00      92.86      0          0
+
+  
+  ERROR 209: undefined object 348.2 at line 176 of [CONDUIT] section:
+  348.1            348.2            30b.1            72.00      0.0130     97.26      97.04      0          0
+
+  
+  ERROR 209: undefined object 349.2 at line 177 of [CONDUIT] section:
+  349.1            349.2            30.1             185.00     0.0130     96.82      93.71      0          0
+
+  
+  ERROR 209: undefined object 359.2 at line 187 of [CONDUIT] section:
+  359.1            359.2            33a-1.1          50.00      0.0130     93.43      93.36      0          0
+
+  
+  ERROR 209: undefined object 360.2 at line 188 of [CONDUIT] section:
+  360.1            360.2            33.1             141.00     0.0130     93.36      90.57      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

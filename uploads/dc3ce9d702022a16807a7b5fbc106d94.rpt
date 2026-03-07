@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 2108 at line 306 of [CONDUIT] section:
+  2106             2108             18               650.00     0.0150     -1.74      -1.86      0          0
+
+  
+  ERROR 209: undefined object 94023 at line 430 of [CONDUIT] section:
+  14013            94023            28060            15.00      0.0150     28.17      8.75       0          0
+
+  
+  ERROR 211: invalid number  at line 802 of [XSECT] section:
+  MUL3             RECT_OPEN    0          7.33       0          0          
+
+  
+  ERROR 211: invalid number  at line 803 of [XSECT] section:
+  MUL4             RECT_OPEN    0          4.75       0          0          
+
+  
+  ERROR 211: invalid number  at line 804 of [XSECT] section:
+  MUL5             RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 805 of [XSECT] section:
+  MUL6             RECT_OPEN    0          12.75      0          0          
+
+  
+  ERROR 211: invalid number  at line 806 of [XSECT] section:
+  MUL7             RECT_OPEN    0          6.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

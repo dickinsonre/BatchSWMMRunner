@@ -1,0 +1,20 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name Mason at line 295 of [CONDUIT] section:
+  Mason            A1184            A1130            54.00      0          393.32     391.15     0          0
+
+  
+  ERROR 207: duplicate ID name Mason at line 296 of [CONDUIT] section:
+  Mason            A994             A923             117.00     0          391.15     390.89     0          0
+
+  
+  ERROR 207: duplicate ID name HWY at line 545 of [CONDUIT] section:
+  HWY              23973            23546            427.00     0.0140     444.30     441.47     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,140 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 570 of [CONDUIT] section:
+  792              ?                ?                27.00      0.0130     180.33     180.19     0          0
+
+  
+  ERROR 209: undefined object ? at line 571 of [CONDUIT] section:
+  793              ?                ?                179.23     0.0130     181.38     180.20     0          0
+
+  
+  ERROR 209: undefined object ? at line 572 of [CONDUIT] section:
+  795              ?                ?                165.00     0.0130     180.70     179.40     0          0
+
+  
+  ERROR 209: undefined object ? at line 573 of [CONDUIT] section:
+  796              ?                ?                22.60      0.0130     181.96     179.70     0          0
+
+  
+  ERROR 209: undefined object ? at line 574 of [CONDUIT] section:
+  797              ?                ?                400.00     0.0130     188.61     187.41     0          0
+
+  
+  ERROR 209: undefined object ? at line 578 of [CONDUIT] section:
+  804              ?                ?                600.00     0.0130     187.11     185.31     0          0
+
+  
+  ERROR 209: undefined object ? at line 592 of [CONDUIT] section:
+  829              ?                ?                60.00      0.0130     178.83     178.10     0          0
+
+  
+  ERROR 209: undefined object ? at line 651 of [CONDUIT] section:
+  intoRoyal        ?                Node_10011002    200.00     0.0130     189.69     188.09     0          0
+
+  
+  ERROR 209: undefined object ? at line 652 of [CONDUIT] section:
+  intoDrumm        ?                Node_10071009    250.00     0.0130     178.37     177.37     0          0
+
+  
+  ERROR 209: undefined object ? at line 655 of [CONDUIT] section:
+  1028             ?                ?                143.00     0.0130     172.53     171.10     0          0
+
+  
+  ERROR 209: undefined object ? at line 656 of [CONDUIT] section:
+  MuddyRun1        ?                Node_10271029    260.00     0.0130     171.10     168.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 657 of [CONDUIT] section:
+  MuddyRun2        ?                Node_10291031    290.00     0.0130     168.50     165.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 658 of [CONDUIT] section:
+  MuddyRun3        ?                Node_10311033    144.00     0.0130     165.60     164.16     0          0
+
+  
+  ERROR 209: undefined object ? at line 659 of [CONDUIT] section:
+  MuddyRun4        ?                Node_10331035    260.00     0.0130     164.16     161.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 660 of [CONDUIT] section:
+  1037             ?                ?                183.38     0.0130     170.40     165.30     0          0
+
+  
+  ERROR 209: undefined object ? at line 661 of [CONDUIT] section:
+  toOV6            ?                Node_10351039    200.00     0.0130     161.56     158.56     0          0
+
+  
+  ERROR 209: undefined object ? at line 662 of [CONDUIT] section:
+  toMuddy2         ?                Node_1035364     32.00      0.0130     161.25     161.20     0          0
+
+  
+  ERROR 209: undefined object ? at line 664 of [CONDUIT] section:
+  1047             ?                ?                25.00      0.0130     172.39     172.21     0          0
+
+  
+  ERROR 209: undefined object ? at line 665 of [CONDUIT] section:
+  toOV2            ?                Node_10461048    80.00      0.0130     172.17     170.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 667 of [CONDUIT] section:
+  NiagSewer        ?                Node_10511046    75.00      0.0130     172.25     171.90     0          0
+
+  
+  ERROR 209: undefined object ? at line 669 of [CONDUIT] section:
+  StamfrdSwr       ?                Node_10541046    75.00      0.0130     172.01     171.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 670 of [CONDUIT] section:
+  1060             ?                ?                100.00     0.0130     171.60     169.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 675 of [CONDUIT] section:
+  toOV10           ?                Node_10021071    100.00     0.0130     187.87     186.83     0          0
+
+  
+  ERROR 209: undefined object ? at line 676 of [CONDUIT] section:
+  toOV9            ?                Node_10091073    50.00      0.0130     178.27     177.77     0          0
+
+  
+  ERROR 209: undefined object ? at line 681 of [CONDUIT] section:
+  1083             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 687 of [ORIFICE] section:
+  CentOrf1         ?                Node_1027349     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object ? at line 700 of [PUMP] section:
+  RoyalPS          ?                Node_1002428     *          ON       0          0         
+
+  
+  ERROR 209: undefined object ? at line 702 of [PUMP] section:
+  DrummondPS       ?                Node_1009434     *          ON       0          0         
+
+  
+  ERROR 209: undefined object ? at line 704 of [PUMP] section:
+  SenecaPS         ?                Node_1013341     *          ON       0          0         
+
+  
+  ERROR 209: undefined object ? at line 707 of [PUMP] section:
+  CentralPS        ?                Node_10191051    *          ON       0          0         
+
+  
+  ERROR 211: invalid number  at line 1030 of [XSECT] section:
+  1083             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 1031 of [XSECT] section:
+  CentOrf2         RECT_CLOSED  0.91       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1032 of [XSECT] section:
+  CentOrf1         RECT_CLOSED  0.61       0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,44 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name MH at line 26 of [JUNC] section:
+  MH               409.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 27 of [JUNC] section:
+  MH               409.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 28 of [JUNC] section:
+  MH               413.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 29 of [JUNC] section:
+  MH               411.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 30 of [JUNC] section:
+  MH               406.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Pipe at line 38 of [CONDUIT] section:
+  Pipe             MH               MH               70.00      0.0140     406.20     406.00     0          0
+
+  
+  ERROR 207: duplicate ID name Pipe at line 39 of [CONDUIT] section:
+  Pipe             MH               MH               112.00     0.0140     410.00     408.00     0          0
+
+  
+  ERROR 207: duplicate ID name Pipe at line 40 of [CONDUIT] section:
+  Pipe             MH               MH               76.00      0.0140     408.00     406.00     0          0
+
+  
+  ERROR 207: duplicate ID name Pipe at line 41 of [CONDUIT] section:
+  Pipe             MH               MH               134.00     0.0140     406.00     403.50     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

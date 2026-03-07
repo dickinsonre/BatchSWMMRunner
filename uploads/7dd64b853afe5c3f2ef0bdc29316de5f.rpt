@@ -1,0 +1,88 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name GATE at line 453 of [ORIFICE] section:
+  GATE 31          REG31            428              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name GATE at line 454 of [ORIFICE] section:
+  GATE 30          REG30            455              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name GATE at line 455 of [ORIFICE] section:
+  GATE 29          REG29            473              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name GATE at line 457 of [ORIFICE] section:
+  GATE 28          REG28            493              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name GATE at line 458 of [ORIFICE] section:
+  GATE 27          REG27            521              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name PINCH at line 460 of [ORIFICE] section:
+  PINCH 25         REG25            542              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name PINCH at line 461 of [ORIFICE] section:
+  PINCH 24         REG24            554              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name PINCH at line 462 of [ORIFICE] section:
+  PINCH 23         REG23            568              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name WEIR at line 488 of [WEIR] section:
+  WEIR 30          REG30            458              TRANSVERSE 576.74     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name DROP at line 490 of [WEIR] section:
+  DROP 29          DC29             466              TRANSVERSE 574.66     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 491 of [WEIR] section:
+  WEIR 29          REG29            476              TRANSVERSE 575.81     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 492 of [WEIR] section:
+  WEIR 28B         REG28B           496              TRANSVERSE 576.06     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 493 of [WEIR] section:
+  WEIR 28          REG28            498              TRANSVERSE 575.50     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name DROP at line 494 of [WEIR] section:
+  DROP 28          DC28B            505              TRANSVERSE 575.20     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name DROP at line 496 of [WEIR] section:
+  DROP 27          DC27             516              TRANSVERSE 583.26     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 497 of [WEIR] section:
+  WEIR 27          REG27            524              TRANSVERSE 578.42     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 498 of [WEIR] section:
+  WEIR 26          REG26            532              TRANSVERSE 580.98     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 499 of [WEIR] section:
+  WEIR 25          REG25            545              TRANSVERSE 576.77     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 500 of [WEIR] section:
+  WEIR 24          REG24            557              TRANSVERSE 575.76     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 501 of [WEIR] section:
+  WEIR 23          REG23            571              TRANSVERSE 575.99     1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: 00:00:01

@@ -1,0 +1,128 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object MH008#2 at line 274 of [CONDUIT] section:
+  MH008#1          MH008#2          I009006N         771.00     0.0140     682.29     681.86     0          0
+
+  
+  ERROR 211: invalid number  at line 683 of [XSECT] section:
+  ORIFICE3         RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 684 of [XSECT] section:
+  CSO015ORF        RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 685 of [XSECT] section:
+  CSO019O          RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 686 of [XSECT] section:
+  CSO004ORF        RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 687 of [XSECT] section:
+  CSO009ORF        RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 688 of [XSECT] section:
+  CSO011ORF        RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 689 of [XSECT] section:
+  CSO014ORF        RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 690 of [XSECT] section:
+  CSO016ORF        RECT_CLOSED  1.25       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 691 of [XSECT] section:
+  meter            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 692 of [XSECT] section:
+  CSO020ORF        RECT_CLOSED  0.72       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 693 of [XSECT] section:
+  CSO004W          RECT_OPEN    0          7.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 694 of [XSECT] section:
+  CSO009OFW        RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 695 of [XSECT] section:
+  CSO011OFW        RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 696 of [XSECT] section:
+  CSO012OFW        RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 697 of [XSECT] section:
+  CSO012AOFW       RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 698 of [XSECT] section:
+  CSO012BOFW       RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 699 of [XSECT] section:
+  CSO016OFW        RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 700 of [XSECT] section:
+  CSO018OFW        RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 701 of [XSECT] section:
+  CSO020OFW        RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 702 of [XSECT] section:
+  CSO019OFW        RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 703 of [XSECT] section:
+  CSO002OFW        RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 704 of [XSECT] section:
+  h                RECT_OPEN    0          3.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 705 of [XSECT] section:
+  CSO015OFW        RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 706 of [XSECT] section:
+  CSO006OFW        RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 707 of [XSECT] section:
+  T003015C         RECT_OPEN    0          1.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 708 of [XSECT] section:
+  T011030C         RECT_OPEN    0          5.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 709 of [XSECT] section:
+  T011006C         RECT_OPEN    0          5.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 710 of [XSECT] section:
+  CSO0130FW        RECT_OPEN    0          5.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 711 of [XSECT] section:
+  19-GWTRW         RECT_OPEN    0          1.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

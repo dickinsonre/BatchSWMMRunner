@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Rd at line 343 of [CONDUIT] section:
+  KRdFM  Rd        29530590         29530494         950.00     0.0130     -13.50     -3.07      0          0
+
+  
+  ERROR 209: undefined object 62696 at line 522 of [CONDUIT] section:
+  62695            62696            61066            262.00     0.0130     -1.96      -1.97      0          0
+
+  
+  ERROR 209: undefined object Node_935 at line 523 of [CONDUIT] section:
+  935              Node_935         Node_1134302     35.00      0.0140     -5.66      -5.69      0          0
+
+  
+  ERROR 205: invalid keyword Rd at line 593 of [XSECT] section:
+  KRdFM  Rd        CIRCULAR     1.67       0          0          0          1
+
+  
+  ERROR 211: invalid number Rd at line 843 of [LOSS] section:
+  KRdFM  Rd        0          0          0          NO
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

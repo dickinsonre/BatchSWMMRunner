@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 33 of [CONDUIT] section:
+  203              ?                ?                100.00     0.0140     804.00     803.65     0          0
+
+  
+  ERROR 209: undefined object ? at line 34 of [CONDUIT] section:
+  207              ?                ?                100.00     0.0140     795.00     794.00     0          0
+
+  
+  ERROR 209: undefined object ? at line 39 of [ORIFICE] section:
+  205.1            ?                ?                SIDE       803.65     0.650      NO       0
+
+  
+  ERROR 211: invalid number  at line 46 of [XSECT] section:
+  205.1            RECT_CLOSED  1.25       0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

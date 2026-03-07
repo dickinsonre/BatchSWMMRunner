@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Activity, PlayCircle, StopCircle, ExternalLink, CheckCircle2, AlertTriangle, Monitor } from "lucide-react";
-import { Link } from "wouter";
-import { Badge } from "@/components/ui/badge";
+import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import AppHeader from "@/components/AppHeader";
 import FileUploadZone from "@/components/FileUploadZone";
 import FileListPanel, { type FileItem } from "@/components/FileListPanel";
 import ProgressSection, { type FileProgressInfo } from "@/components/ProgressSection";
@@ -16,7 +15,6 @@ import ExpectedOutputs from "@/components/ExpectedOutputs";
 import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
 import SampleModels from "@/components/SampleModels";
-import ThemeToggle from "@/components/ThemeToggle";
 import type { SwmmStatus } from "@shared/schema";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
@@ -308,49 +306,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b">
-        <div className="container max-w-6xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-primary p-2">
-                <Activity className="h-6 w-6 text-primary-foreground" data-testid="icon-app-logo" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-semibold" data-testid="text-app-title">BatchSWMM</h1>
-                <p className="text-sm text-muted-foreground" data-testid="text-app-subtitle">
-                  Batch EPA SWMM Processing Tool
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              {swmmStatus && (
-                <Badge 
-                  variant={swmmStatus.found ? 'default' : 'secondary'}
-                  data-testid="badge-swmm-mode"
-                >
-                  {swmmStatus.found ? (
-                    <>
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      SWMM Ready
-                    </>
-                  ) : (
-                    <>
-                      <Monitor className="h-3 w-3 mr-1" />
-                      Simulation Mode
-                    </>
-                  )}
-                </Badge>
-              )}
-              <Link href="/docs" data-testid="link-documentation">
-                <Badge variant="outline" className="cursor-pointer">
-                  Docs
-                </Badge>
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader swmmStatus={swmmStatus} />
 
       <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
         <div className="space-y-8">
@@ -400,7 +356,7 @@ export default function Home() {
                 <div className="space-y-2 text-sm">
                   {swmmStatus?.found ? (
                     <>
-                      <p className="font-medium text-green-700 dark:text-green-400" data-testid="text-swmm-found">SWMM Engine Detected</p>
+                      <p className="font-medium text-green-700 dark:text-green-400" data-testid="text-swmm-found">SWMM5 Engine Detected</p>
                       <p className="text-muted-foreground">
                         Found at: <span className="font-mono text-xs">{swmmStatus.path}</span>
                       </p>

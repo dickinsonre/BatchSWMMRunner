@@ -1,0 +1,64 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 235: invalid infiltration parameters at line 94 of [INFIL] section:
+  MC-157_1         5.86       0.225      64.8      
+
+  
+  ERROR 235: invalid infiltration parameters at line 95 of [INFIL] section:
+  MC-155_1         4.81       0.26       72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 96 of [INFIL] section:
+  MC-156_1         4.8        0.26       72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 97 of [INFIL] section:
+  MC-158_1         4.8        0.262      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 98 of [INFIL] section:
+  MC-159_1         4.77       0.303      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 99 of [INFIL] section:
+  MC-160_1         4.8        0.28       72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 100 of [INFIL] section:
+  MC-161_1         4.8        0.307      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 101 of [INFIL] section:
+  MC-164_1         4.8        0.262      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 102 of [INFIL] section:
+  MC-165_1         4.8        0.279      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 103 of [INFIL] section:
+  MC-162_1         4.8        0.269      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 104 of [INFIL] section:
+  MC-163_1         4.8        0.276      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 105 of [INFIL] section:
+  MR-1_1           4.8        0.27       72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 106 of [INFIL] section:
+  MC-169_1         4.8        0.311      72        
+
+  
+  ERROR 235: invalid infiltration parameters at line 107 of [INFIL] section:
+  MC-167_1         4.8        0.334      72        
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

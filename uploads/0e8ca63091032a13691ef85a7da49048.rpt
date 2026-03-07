@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 1 at line 39 of [CONDUIT] section:
+  line 1           line 2           409              145.00     0.0140     803.77     802.70     0          0
+
+  
+  ERROR 209: undefined object Node_1071 at line 41 of [CONDUIT] section:
+  1071             Node_1071        Node_1270606     100.00     0.0140     810.90     810.60     0          0
+
+  
+  ERROR 209: undefined object Node_1074 at line 43 of [CONDUIT] section:
+  1074             Node_1074        Node_1272607     670.00     0.0200     805.10     803.77     0          0
+
+  
+  ERROR 209: undefined object Node_1076 at line 44 of [CONDUIT] section:
+  1076             Node_1076        Node_12751272    100.00     0.0140     805.90     805.60     0          0
+
+  
+  ERROR 205: invalid keyword 1 at line 50 of [XSECT] section:
+  line 1           CIRCULAR     0.67       0          0          0          1
+
+  
+  ERROR 205: invalid keyword 0 at line 61 of [LOSS] section:
+  line 1           0          0          0          NO
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

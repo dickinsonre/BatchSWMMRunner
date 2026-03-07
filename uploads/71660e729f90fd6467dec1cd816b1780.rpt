@@ -1,0 +1,156 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name mh at line 27 of [JUNC] section:
+  mh               135.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 29 of [JUNC] section:
+  mh               155.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 30 of [JUNC] section:
+  mh               120.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 31 of [JUNC] section:
+  mh               111.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 33 of [JUNC] section:
+  mh               137.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 34 of [JUNC] section:
+  mh               130.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 35 of [JUNC] section:
+  mh               125.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 102 at line 70 of [JUNC] section:
+  102              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 103 at line 71 of [JUNC] section:
+  103              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 104 at line 72 of [JUNC] section:
+  104              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 93 of [JUNC] section:
+  Outfall          705.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CR at line 104 of [JUNC] section:
+  CR               781.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PD2 at line 108 of [JUNC] section:
+  PD2              755.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PD3 at line 110 of [JUNC] section:
+  PD3              753.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PD1 at line 114 of [JUNC] section:
+  PD1              755.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name outlet at line 144 of [JUNC] section:
+  outlet           289.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name outfall at line 172 of [JUNC] section:
+  outfall          693.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 43000 at line 173 of [JUNC] section:
+  43000            810.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name mh at line 185 of [STORAGE] section:
+  mh               125.00     -25.00     0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 209 at line 227 of [CONDUIT] section:
+  209              109              108              165.00     0.0220     5.89       5.26       0          0
+
+  
+  ERROR 207: duplicate ID name 207 at line 229 of [CONDUIT] section:
+  207              107              106              90.00      0.0220     4.31       3.66       0          0
+
+  
+  ERROR 207: duplicate ID name CP at line 270 of [CONDUIT] section:
+  CP               CR               CP4              1700.00    0.0350     766.30     753.00     0          0
+
+  
+  ERROR 207: duplicate ID name CP at line 272 of [CONDUIT] section:
+  CP               PD1              PD2              650.00     0.0350     749.93     748.55     0          0
+
+  
+  ERROR 207: duplicate ID name CP at line 273 of [CONDUIT] section:
+  CP               PD2              PD3              750.00     0.0350     748.55     747.84     0          0
+
+  
+  ERROR 207: duplicate ID name CP at line 275 of [CONDUIT] section:
+  CP               PD3              Dean             1500.00    0.0350     747.84     747.00     0          0
+
+  
+  ERROR 207: duplicate ID name CP at line 277 of [CONDUIT] section:
+  CP               Dean             DeanLkRdUS       200.00     0.0350     747.00     740.30     0          0
+
+  
+  ERROR 207: duplicate ID name pipe1 at line 283 of [CONDUIT] section:
+  pipe1            1                2                199.00     0.0170     814.80     813.80     0          0
+
+  
+  ERROR 207: duplicate ID name pipe2 at line 284 of [CONDUIT] section:
+  pipe2            2                3                200.00     0.0140     740.30     700.00     0          0
+
+  
+  ERROR 207: duplicate ID name road at line 289 of [CONDUIT] section:
+  road             inflo2           inflo3           10.00      0.0140     99.30      99.25      0          0
+
+  
+  ERROR 207: duplicate ID name road at line 290 of [CONDUIT] section:
+  road             inflo3           roadjunc         55.00      0.0140     99.25      99.10      0          0
+
+  
+  ERROR 207: duplicate ID name road at line 293 of [CONDUIT] section:
+  road             roadjunc         outletrd         103.00     0.0140     99.10      99.00      0          0
+
+  
+  ERROR 207: duplicate ID name 4200 at line 336 of [CONDUIT] section:
+  4200             42000            43000            280.00     0.0170     812.80     806.90     0          0
+
+  
+  ERROR 207: duplicate ID name 3700 at line 337 of [CONDUIT] section:
+  3700             37000            43000            100.00     0.0170     808.00     806.90     0          0
+
+  
+  ERROR 207: duplicate ID name 4300 at line 338 of [CONDUIT] section:
+  4300             43000            11000            77.00      0.0170     806.90     804.90     0          0
+
+  
+  ERROR 207: duplicate ID name manhole at line 347 of [ORIFICE] section:
+  manhole          inflo1           1                SIDE       800.90     0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name manhole at line 348 of [ORIFICE] section:
+  manhole          inflo3           3                SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name manhole at line 349 of [ORIFICE] section:
+  manhole          roadjunc         4                SIDE       800.60     0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,12 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 326.1 at line 41 of [CONDUIT] section:
+  326.1            UP2BOX           MORV1            48.00      0.0130     428.60     427.60     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

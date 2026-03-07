@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object SPTRAP at line 43 of [CONDUIT] section:
+  SPCAPB           SPTRAP           D1STOR           200.00     0.0350     1527.73    1527.73    0          0
+
+  
+  ERROR 209: undefined object WSBRIDS at line 45 of [CONDUIT] section:
+  WSBRIDN          WSBRIDS          D1A              292.00     0.0160     1539.19    1539.04    0          0
+
+  
+  ERROR 209: undefined object DECKPIERS at line 51 of [WEIR] section:
+  OLCAPBRD         DECKPIERS        OLTRAP           TRANSVERSE 0          1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number 0 at line 56 of [XSECT] section:
+  INWEIR           CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 57 of [XSECT] section:
+  SPCAPB           CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 60 of [XSECT] section:
+  OLCERT           CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 61 of [XSECT] section:
+  OLCAPBRD         RECT_OPEN    0          200.00     0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

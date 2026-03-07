@@ -1,0 +1,152 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 46 of [CONDUIT] section:
+  220              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 47 of [CONDUIT] section:
+  221              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 48 of [CONDUIT] section:
+  222              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 49 of [CONDUIT] section:
+  223              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 50 of [CONDUIT] section:
+  224              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 51 of [CONDUIT] section:
+  225              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 52 of [CONDUIT] section:
+  226              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 53 of [CONDUIT] section:
+  227              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 54 of [CONDUIT] section:
+  228              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 55 of [CONDUIT] section:
+  229              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 56 of [CONDUIT] section:
+  230              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 57 of [CONDUIT] section:
+  231              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 58 of [CONDUIT] section:
+  232              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 59 of [CONDUIT] section:
+  233              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 60 of [CONDUIT] section:
+  234              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 61 of [CONDUIT] section:
+  235              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 62 of [CONDUIT] section:
+  236              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 63 of [CONDUIT] section:
+  237              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 68 of [XSECT] section:
+  220              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 69 of [XSECT] section:
+  221              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 70 of [XSECT] section:
+  222              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 71 of [XSECT] section:
+  223              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 72 of [XSECT] section:
+  224              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 73 of [XSECT] section:
+  225              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 74 of [XSECT] section:
+  226              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 75 of [XSECT] section:
+  227              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 76 of [XSECT] section:
+  228              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 77 of [XSECT] section:
+  229              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  230              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  231              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  232              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  233              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 82 of [XSECT] section:
+  234              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 83 of [XSECT] section:
+  235              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 84 of [XSECT] section:
+  236              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 85 of [XSECT] section:
+  237              CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,64 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name NR at line 96 of [CONDUIT] section:
+  NR 2             T-22             T-24             1000.00    0.0300     1040.00    1000.00    0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 97 of [CONDUIT] section:
+  NR  5            T-27             TL               100.00     0.0300     970.00     963.10     0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 98 of [CONDUIT] section:
+  NR 3             T-23             T-24             400.00     0.0300     1020.00    1000.00    0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 99 of [CONDUIT] section:
+  NR 4             T-26             TL               100.00     0.0300     970.00     963.10     0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 100 of [CONDUIT] section:
+  NR  6            T-28             TL               100.00     0.0300     970.00     963.10     0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 101 of [CONDUIT] section:
+  NR 7             T-30             TL               100.00     0.0300     970.00     963.10     0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 102 of [CONDUIT] section:
+  NR 8             T-31/32          TL               100.00     0.0300     970.00     963.10     0          0
+
+  
+  ERROR 207: duplicate ID name NR at line 103 of [CONDUIT] section:
+  NR 9             T-34             TL               100.00     0.0300     970.00     963.10     0          0
+
+  
+  ERROR 207: duplicate ID name 12" at line 142 of [ORIFICE] section:
+  12"              T-07             354              SIDE       1043.00    0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name OUT<12" at line 146 of [ORIFICE] section:
+  OUT<12"          T-10             320              SIDE       986.00     0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 12" at line 149 of [ORIFICE] section:
+  12"              T-18             324              SIDE       1010.10    0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name <12" at line 152 of [ORIFICE] section:
+  <12"             T-21             326              SIDE       1040.00    0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 12" at line 153 of [ORIFICE] section:
+  12"              T-24             345              SIDE       1000.00    0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 15" at line 155 of [ORIFICE] section:
+  15"              T-13             312              SIDE       1052.50    0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

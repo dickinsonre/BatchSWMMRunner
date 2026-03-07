@@ -1,0 +1,292 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number -14.13 at line 719 of [PUMP] section:
+  E1FM             R-02             E1-05            PC_E1FM    ON       -14.13     -14.63    
+
+  
+  ERROR 211: invalid number -16.00 at line 720 of [PUMP] section:
+  FM               HAN-PS           E2-01            PC_FM      ON       -16.00     -16.50    
+
+  
+  ERROR 211: invalid number -18.00 at line 721 of [PUMP] section:
+  MR-PUMP          MR-PS            MR-FM1           PC_MR-PUMP ON       -18.00     -18.50    
+
+  
+  ERROR 211: invalid number  at line 1002 of [XSECT] section:
+  WW-01            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1003 of [XSECT] section:
+  WW-02            RECT_CLOSED  0.90       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1004 of [XSECT] section:
+  SG-35            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1005 of [XSECT] section:
+  W-35             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1006 of [XSECT] section:
+  11               RECT_CLOSED  1.75       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1007 of [XSECT] section:
+  R4W              RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1008 of [XSECT] section:
+  R5W              RECT_CLOSED  1.47       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1009 of [XSECT] section:
+  W-06             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1010 of [XSECT] section:
+  W-08             RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1011 of [XSECT] section:
+  W-10             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1012 of [XSECT] section:
+  W-19             RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1013 of [XSECT] section:
+  SG-27            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1014 of [XSECT] section:
+  W-28             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1015 of [XSECT] section:
+  W-29             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1016 of [XSECT] section:
+  W-32             RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1017 of [XSECT] section:
+  W-33             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1018 of [XSECT] section:
+  SG-W01           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1019 of [XSECT] section:
+  SG-W02           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1020 of [XSECT] section:
+  SG-W03           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1021 of [XSECT] section:
+  SG-W04           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1022 of [XSECT] section:
+  SG-W05           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1023 of [XSECT] section:
+  SG-W06           RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1024 of [XSECT] section:
+  SG-37            RECT_CLOSED  1.25       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1025 of [XSECT] section:
+  SG-18            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1026 of [XSECT] section:
+  SG-19            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1027 of [XSECT] section:
+  SG-20            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1028 of [XSECT] section:
+  SG-23            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1029 of [XSECT] section:
+  SG-28            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1030 of [XSECT] section:
+  SG-29            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1031 of [XSECT] section:
+  SG-31            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1032 of [XSECT] section:
+  SG-32            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1033 of [XSECT] section:
+  SG-33            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1034 of [XSECT] section:
+  SG-34            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1035 of [XSECT] section:
+  SG-01            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1036 of [XSECT] section:
+  SG-03            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1037 of [XSECT] section:
+  SG-04            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1038 of [XSECT] section:
+  SG-05            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1039 of [XSECT] section:
+  SG-06            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1040 of [XSECT] section:
+  SG-07            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1041 of [XSECT] section:
+  SG-08            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1042 of [XSECT] section:
+  SG-09            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1043 of [XSECT] section:
+  SG-10            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1044 of [XSECT] section:
+  SG-11            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1045 of [XSECT] section:
+  SG-13            RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1046 of [XSECT] section:
+  SG-15            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1047 of [XSECT] section:
+  SG-16            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1048 of [XSECT] section:
+  PUMPS            RECT_CLOSED  12.00      0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1049 of [XSECT] section:
+  SG-17            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1050 of [XSECT] section:
+  WW-03            RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1051 of [XSECT] section:
+  WW-04            RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1052 of [XSECT] section:
+  WW-05            RECT_OPEN    0          16.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 1053 of [XSECT] section:
+  WW-06            RECT_OPEN    0          17.33      0          0          
+
+  
+  ERROR 211: invalid number  at line 1054 of [XSECT] section:
+  W-37             RECT_OPEN    0          5.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1055 of [XSECT] section:
+  W-36             RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1056 of [XSECT] section:
+  R1W              RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1057 of [XSECT] section:
+  W-07             RECT_OPEN    0          14.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 1058 of [XSECT] section:
+  W-09             RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1059 of [XSECT] section:
+  W-11             RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1060 of [XSECT] section:
+  W-13             RECT_OPEN    0          21.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 1061 of [XSECT] section:
+  W-15             RECT_OPEN    0          24.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 1062 of [XSECT] section:
+  W-16             RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1063 of [XSECT] section:
+  W-17             RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1064 of [XSECT] section:
+  W-18             RECT_OPEN    0          6.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 1065 of [XSECT] section:
+  472.1            RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1066 of [XSECT] section:
+  W-23             RECT_OPEN    0          6.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 1067 of [XSECT] section:
+  W-31             RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1068 of [XSECT] section:
+  W-34             RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1069 of [XSECT] section:
+  W-MR             RECT_OPEN    0          8.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object B27p2 at line 180 of [CONDUIT] section:
+  B27p1            B27p2            B27p3            42.40      0.0140     0.60       0.99       0          0
+
+  
+  ERROR 209: undefined object B25P2 at line 181 of [CONDUIT] section:
+  B25P1            B25P2            B25P3            65.20      0.0140     1.66       1.47       0          0
+
+  
+  ERROR 209: undefined object B15P2 at line 182 of [CONDUIT] section:
+  B15P1            B15P2            B15P3            65.00      0.0140     4.01       4.00       0          0
+
+  
+  ERROR 209: undefined object B12P2 at line 183 of [CONDUIT] section:
+  B12P1            B12P2            B12R             43.10      0.0140     3.91       3.87       0          0
+
+  
+  ERROR 209: undefined object A07R at line 185 of [CONDUIT] section:
+  A07P1            A07R             A08              90.00      0.0140     7.42       6.43       0          0
+
+  
+  ERROR 209: undefined object B05R at line 187 of [CONDUIT] section:
+  B05P1            B05R             B06              550.00     0.0140     5.61       4.76       0          0
+
+  
+  ERROR 209: undefined object B06R at line 188 of [CONDUIT] section:
+  B06P1            B06R             B10              400.00     0.0140     4.76       4.14       0          0
+
+  
+  ERROR 209: undefined object B10R at line 189 of [CONDUIT] section:
+  B10P1            B10R             B11              500.00     0.0140     4.14       3.37       0          0
+
+  
+  ERROR 209: undefined object B09R at line 190 of [CONDUIT] section:
+  B09P1            B09R             B10              150.00     0.0140     4.26       4.14       0          0
+
+  
+  ERROR 209: undefined object A29R at line 191 of [CONDUIT] section:
+  A29P1            A29R             B05              100.00     0.0140     4.20       4.20       0          0
+
+  
+  ERROR 209: undefined object B04R at line 192 of [CONDUIT] section:
+  B04P1            B04R             B05              110.00     0.0140     5.96       5.61       0          0
+
+  
+  ERROR 209: undefined object B01R at line 193 of [CONDUIT] section:
+  B01P1            B01R             B02              850.00     0.0140     8.50       7.66       0          0
+
+  
+  ERROR 209: undefined object B02R at line 194 of [CONDUIT] section:
+  B02P1            B02R             B03              600.00     0.0140     7.66       7.06       0          0
+
+  
+  ERROR 209: undefined object B03R at line 195 of [CONDUIT] section:
+  B03P1            B03R             B04              1100.00    0.0200     7.06       5.96       0          0
+
+  
+  ERROR 209: undefined object B18R at line 196 of [CONDUIT] section:
+  B18P             B18R             B20              380.00     0.0140     4.25       3.68       0          0
+
+  
+  ERROR 209: undefined object B20R at line 197 of [CONDUIT] section:
+  B20P1            B20R             B21              80.00      0.0140     3.68       3.66       0          0
+
+  
+  ERROR 209: undefined object A24R at line 198 of [CONDUIT] section:
+  A24P1            A24R             A25              600.00     0.0120     6.03       5.79       0          0
+
+  
+  ERROR 209: undefined object A22R at line 199 of [CONDUIT] section:
+  A22P1            A22R             A118             430.00     0.0120     6.36       6.19       0          0
+
+  
+  ERROR 209: undefined object A20R at line 200 of [CONDUIT] section:
+  A20P1            A20R             A21              420.00     0.0120     6.47       6.37       0          0
+
+  
+  ERROR 209: undefined object A18R at line 201 of [CONDUIT] section:
+  A18P1            A18R             A19              170.00     0.0120     6.56       6.48       0          0
+
+  
+  ERROR 209: undefined object A16R at line 202 of [CONDUIT] section:
+  A16P1            A16R             A17              360.00     0.0120     6.57       6.56       0          0
+
+  
+  ERROR 209: undefined object A10R at line 203 of [CONDUIT] section:
+  A10P1            A10R             A16              220.00     0.0120     6.64       6.57       0          0
+
+  
+  ERROR 209: undefined object A27R at line 204 of [CONDUIT] section:
+  A27P1            A27R             A28              750.00     0.0120     5.41       5.41       0          0
+
+  
+  ERROR 209: undefined object A125G1 at line 206 of [CONDUIT] section:
+  A125P1           A125G1           A132             150.00     0.0120     8.00       7.50       0          0
+
+  
+  ERROR 209: undefined object A119G1 at line 211 of [CONDUIT] section:
+  A119P1           A119G1           A23              200.00     0.0120     6.06       6.06       0          0
+
+  
+  ERROR 209: undefined object A115G1 at line 212 of [CONDUIT] section:
+  A115P1           A115G1           A116             400.00     0.0120     8.00       6.50       0          0
+
+  
+  ERROR 209: undefined object A116G1 at line 213 of [CONDUIT] section:
+  A116P1           A116G1           A118             140.00     0.0120     6.50       6.20       0          0
+
+  
+  ERROR 209: undefined object A113G1 at line 214 of [CONDUIT] section:
+  A113P1           A113G1           A114             200.00     0.0120     7.50       6.50       0          0
+
+  
+  ERROR 209: undefined object A101R at line 215 of [CONDUIT] section:
+  A101P1           A101R            A102             500.00     0.0120     8.90       8.70       0          0
+
+  
+  ERROR 209: undefined object A102R at line 216 of [CONDUIT] section:
+  A102P1           A102R            A103             560.00     0.0120     8.70       8.40       0          0
+
+  
+  ERROR 209: undefined object A103R at line 217 of [CONDUIT] section:
+  A103P1           A103R            A104             450.00     0.0120     8.40       8.10       0          0
+
+  
+  ERROR 209: undefined object A104G1 at line 218 of [CONDUIT] section:
+  A104P1           A104G1           A105             125.00     0.0120     8.10       8.00       0          0
+
+  
+  ERROR 209: undefined object A106G1 at line 219 of [CONDUIT] section:
+  A106P1           A106G1           A107             30.00      0.0120     8.10       8.00       0          0
+
+  
+  ERROR 209: undefined object A108G1 at line 220 of [CONDUIT] section:
+  A108P1           A108G1           A110             200.00     0.0120     8.50       7.50       0          0
+
+  
+  ERROR 209: undefined object A112G1 at line 221 of [CONDUIT] section:
+  A112P1           A112G1           A113             450.00     0.0120     9.00       7.50       0          0
+
+  
+  ERROR 209: undefined object A118R at line 222 of [CONDUIT] section:
+  A118P1           A118R            A23              320.00     0.0120     6.19       6.06       0          0
+
+  
+  ERROR 209: undefined object A114G1 at line 223 of [CONDUIT] section:
+  A114P1           A114G1           A21              150.00     0.0120     6.50       6.37       0          0
+
+  
+  ERROR 209: undefined object A111R at line 227 of [CONDUIT] section:
+  A111P1           A111R            A16              48.90      0.0140     7.17       6.57       0          0
+
+  
+  ERROR 209: undefined object C33R at line 236 of [CONDUIT] section:
+  C33P1            C33R             C34              151.00     0.0140     -1.52      -1.61      0          0
+
+  
+  ERROR 209: undefined object C23P2 at line 237 of [CONDUIT] section:
+  C23P1            C23P2            C23R             420.00     0.0140     4.93       4.80       0          0
+
+  
+  ERROR 209: undefined object C20R at line 238 of [CONDUIT] section:
+  C20P1            C20R             C21              86.50      0.0140     6.29       6.06       0          0
+
+  
+  ERROR 209: undefined object C18P2 at line 239 of [CONDUIT] section:
+  C18P1            C18P2            C18R             90.00      0.0140     6.66       6.60       0          0
+
+  
+  ERROR 209: undefined object C16R at line 240 of [CONDUIT] section:
+  C16P1            C16R             C17              86.00      0.0140     7.37       7.24       0          0
+
+  
+  ERROR 209: undefined object C107R at line 241 of [CONDUIT] section:
+  C107P1           C107R            C113             100.00     0.0140     6.51       6.45       0          0
+
+  
+  ERROR 209: undefined object C22R at line 243 of [CONDUIT] section:
+  C22P1            C22R             C23              620.00     0.0140     6.38       5.76       0          0
+
+  
+  ERROR 209: undefined object C24R at line 244 of [CONDUIT] section:
+  C24P1            C24R             C25              400.00     0.0140     4.80       4.50       0          0
+
+  
+  ERROR 209: undefined object C25R at line 245 of [CONDUIT] section:
+  C25P1            C25R             C26              250.00     0.0140     4.50       3.96       0          0
+
+  
+  ERROR 209: undefined object C26R at line 246 of [CONDUIT] section:
+  C26P1            C26R             C27              220.00     0.0140     3.96       3.09       0          0
+
+  
+  ERROR 209: undefined object C27R at line 247 of [CONDUIT] section:
+  C27P1            C27R             C28              230.00     0.0240     3.09       3.09       0          0
+
+  
+  ERROR 209: undefined object C28R at line 248 of [CONDUIT] section:
+  C28P1            C28R             C29              450.00     0.0240     3.09       1.38       0          0
+
+  
+  ERROR 209: undefined object C02R at line 249 of [CONDUIT] section:
+  C02P1            C02R             C03              120.00     0.0140     4.04       3.82       0          0
+
+  
+  ERROR 209: undefined object C03R at line 250 of [CONDUIT] section:
+  C03P1            C03R             C04              330.00     0.0140     3.82       3.19       0          0
+
+  
+  ERROR 209: undefined object C04R at line 251 of [CONDUIT] section:
+  C04P1            C04R             C06              320.00     0.0240     3.19       2.77       0          0
+
+  
+  ERROR 209: undefined object C06R at line 252 of [CONDUIT] section:
+  C06P1            C06R             C29              1300.00    0.0240     2.77       1.38       0          0
+
+  
+  ERROR 209: undefined object C01R at line 253 of [CONDUIT] section:
+  C01P1            C01R             C03              190.00     0.0140     4.58       3.82       0          0
+
+  
+  ERROR 209: undefined object C05R at line 254 of [CONDUIT] section:
+  C05P1            C05R             C06              250.00     0.0140     5.59       2.77       0          0
+
+  
+  ERROR 209: undefined object A28R at line 260 of [CONDUIT] section:
+  A28P1            A28R             A29              450.00     0.0140     6.21       4.55       0          0
+
+  
+  ERROR 209: undefined object A30R at line 261 of [CONDUIT] section:
+  A30P1            A30R             A26              260.00     0.0140     6.87       5.91       0          0
+
+  
+  ERROR 209: undefined object A26R at line 262 of [CONDUIT] section:
+  A26P1            A26R             A27              180.00     0.0120     5.91       5.41       0          0
+
+  
+  ERROR 209: undefined object A31R at line 263 of [CONDUIT] section:
+  A31P1            A31R             A26              140.00     0.0140     6.56       5.91       0          0
+
+  
+  ERROR 209: undefined object A23R at line 264 of [CONDUIT] section:
+  A23P1            A23R             A24              80.00      0.0120     6.06       6.03       0          0
+
+  
+  ERROR 209: undefined object A21R at line 265 of [CONDUIT] section:
+  A21P1            A21R             A22              94.00      0.0120     6.37       6.36       0          0
+
+  
+  ERROR 209: undefined object A19R at line 266 of [CONDUIT] section:
+  A19P1            A19R             A20              98.50      0.0120     6.48       6.47       0          0
+
+  
+  ERROR 209: undefined object A17R at line 267 of [CONDUIT] section:
+  A17P1            A17R             A18              62.00      0.0120     6.56       6.56       0          0
+
+  
+  ERROR 209: undefined object A09R at line 268 of [CONDUIT] section:
+  A09P1            A09R             A10              78.60      0.0120     6.66       6.64       0          0
+
+  
+  ERROR 209: undefined object A25R at line 269 of [CONDUIT] section:
+  A25P1            A25R             A29              420.00     0.0140     5.79       5.61       0          0
+
+  
+  ERROR 209: undefined object A131G1 at line 272 of [CONDUIT] section:
+  A131P1           A131G1           A132             50.00      0.0120     8.00       7.50       0          0
+
+  
+  ERROR 209: undefined object A110G1 at line 288 of [WEIR] section:
+  A110W1           A110G1           A111             TRANSVERSE 8.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object A141G1 at line 289 of [WEIR] section:
+  A124W1           A141G1           A124W2           TRANSVERSE 8.50       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object A130G1 at line 290 of [WEIR] section:
+  A130W1           A130G1           A130W2           TRANSVERSE 8.50       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C114w2 at line 291 of [WEIR] section:
+  C114w1           C114w2           C01              TRANSVERSE 6.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C105w2 at line 292 of [WEIR] section:
+  C105w1           C105w2           C106             TRANSVERSE 8.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C115w2 at line 293 of [WEIR] section:
+  C115w1           C115w2           C05              TRANSVERSE 6.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C111W2 at line 294 of [WEIR] section:
+  C111W1           C111W2           C112             TRANSVERSE 8.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 0 at line 299 of [XSECT] section:
+  A06C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 300 of [XSECT] section:
+  A08C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 301 of [XSECT] section:
+  A03C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 302 of [XSECT] section:
+  A04C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 303 of [XSECT] section:
+  B11C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 304 of [XSECT] section:
+  B13C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 305 of [XSECT] section:
+  B17C             IRREGULAR    0          2.50       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 306 of [XSECT] section:
+  B21C             IRREGULAR    0          3.00       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 307 of [XSECT] section:
+  B19C             IRREGULAR    0          2.50       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 308 of [XSECT] section:
+  B16C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 309 of [XSECT] section:
+  B07C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 310 of [XSECT] section:
+  B22C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 311 of [XSECT] section:
+  B23C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 312 of [XSECT] section:
+  B24C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 313 of [XSECT] section:
+  B26C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 314 of [XSECT] section:
+  B28C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 320 of [XSECT] section:
+  B08C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 322 of [XSECT] section:
+  B30C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 360 of [XSECT] section:
+  A02C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 361 of [XSECT] section:
+  A105C            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 362 of [XSECT] section:
+  A107C            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 365 of [XSECT] section:
+  C17C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 366 of [XSECT] section:
+  C19C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 367 of [XSECT] section:
+  C21C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 370 of [XSECT] section:
+  C31C             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 371 of [XSECT] section:
+  C32C             IRREGULAR    0          0          0          0          1
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

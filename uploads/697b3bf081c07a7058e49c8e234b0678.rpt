@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 10" at line 43 of [CONDUIT] section:
+  10"              S.               W.               260.00     0.0150     968.54     964.64     0          0
+
+  
+  ERROR 207: duplicate ID name 8" at line 46 of [CONDUIT] section:
+  8"               N.               Gras-Inlet       65.00      0.0100     971.00     970.35     0          0
+
+  
+  ERROR 207: duplicate ID name 18" at line 47 of [CONDUIT] section:
+  18"              Gras-Inlet       Pav-Inlet        84.00      0.0100     966.70     966.29     0          0
+
+  
+  ERROR 207: duplicate ID name 18" at line 48 of [CONDUIT] section:
+  18"              Pav-Inlet        Junction         73.00      0.0100     966.29     965.94     0          0
+
+  
+  ERROR 207: duplicate ID name 18" at line 49 of [CONDUIT] section:
+  18"              Junction         Gym              123.00     0.0100     965.94     965.34     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

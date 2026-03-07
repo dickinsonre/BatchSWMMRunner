@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 48 of [CONDUIT] section:
+  240              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 52 of [CONDUIT] section:
+  333              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object 10.00 at line 57 of [XSECT] section:
+  shape1a          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 58 of [XSECT] section:
+  shape1b          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 59 of [XSECT] section:
+  shape1c          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 60 of [XSECT] section:
+  shape2a          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 61 of [XSECT] section:
+  shape2b          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 62 of [XSECT] section:
+  shape2c          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 63 of [XSECT] section:
+  240              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 64 of [XSECT] section:
+  shape3a          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 65 of [XSECT] section:
+  shape3b          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.00 at line 66 of [XSECT] section:
+  shape3c          IRREGULAR    10.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 67 of [XSECT] section:
+  333              CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

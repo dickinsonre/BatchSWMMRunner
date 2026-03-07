@@ -1,0 +1,208 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object TS1B-W2 at line 205 of [CONDUIT] section:
+  TS1A-W2          TS1B-W2          W2               550.00     0.0130     155.00     54.82      0          0
+
+  
+  ERROR 209: undefined object 12INCH at line 214 of [CONDUIT] section:
+  24INCH           12INCH           HOB.             2400.00    0          20.90      -4.06      0          0
+
+  
+  ERROR 211: invalid number  at line 381 of [XSECT] section:
+  24INCH           CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 415 of [XSECT] section:
+  TS1-HSI          CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 443 of [XSECT] section:
+  IC1-W5           RECT_CLOSED  0.42       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 444 of [XSECT] section:
+  IC2-W5           RECT_CLOSED  0.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 445 of [XSECT] section:
+  IC1-W4           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 446 of [XSECT] section:
+  IC1-W1           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 447 of [XSECT] section:
+  IC1-W3           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 448 of [XSECT] section:
+  OF1-W2           RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 449 of [XSECT] section:
+  IC1-W2           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 450 of [XSECT] section:
+  IC2-W2           RECT_CLOSED  0.51       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 451 of [XSECT] section:
+  IC2-W3           RECT_CLOSED  0.58       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 452 of [XSECT] section:
+  IC2-W1           RECT_CLOSED  0.54       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 453 of [XSECT] section:
+  IC1-H7           RECT_CLOSED  1.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 454 of [XSECT] section:
+  IC2-H7           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 455 of [XSECT] section:
+  IC1-H6           RECT_CLOSED  0.54       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 456 of [XSECT] section:
+  IC2-H6           RECT_CLOSED  0.54       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 457 of [XSECT] section:
+  IC1-H5           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 458 of [XSECT] section:
+  IC2-H5           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 459 of [XSECT] section:
+  IC1-HSI          RECT_CLOSED  0.42       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 460 of [XSECT] section:
+  IC1-H4           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 461 of [XSECT] section:
+  IC2-H4           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 462 of [XSECT] section:
+  IC1-H3           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 463 of [XSECT] section:
+  IC2-H3           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 464 of [XSECT] section:
+  IC1-H2           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 465 of [XSECT] section:
+  IC2-H2           RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 466 of [XSECT] section:
+  IC1-H1           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 467 of [XSECT] section:
+  IC2-H1           RECT_CLOSED  1.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 468 of [XSECT] section:
+  OF1-W5           RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 469 of [XSECT] section:
+  OF1-W4           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 470 of [XSECT] section:
+  OF1-W1           RECT_OPEN    0          3.75       0          0          
+
+  
+  ERROR 211: invalid number  at line 471 of [XSECT] section:
+  OF1-W3           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 472 of [XSECT] section:
+  OF1-H7           RECT_OPEN    0          13.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 473 of [XSECT] section:
+  OF2-H7           RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 474 of [XSECT] section:
+  OF1-H6           RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 475 of [XSECT] section:
+  OF2-H6           RECT_OPEN    0          3.75       0          0          
+
+  
+  ERROR 211: invalid number  at line 476 of [XSECT] section:
+  OF1-H5           RECT_OPEN    0          27.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 477 of [XSECT] section:
+  OF2-H5           RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 478 of [XSECT] section:
+  OF1-HSI          RECT_OPEN    0          1.33       0          0          
+
+  
+  ERROR 211: invalid number  at line 479 of [XSECT] section:
+  OF1-H4           RECT_OPEN    0          19.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 480 of [XSECT] section:
+  OF2-H4           RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 481 of [XSECT] section:
+  OF1-H3           RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 482 of [XSECT] section:
+  OF2-H3           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 483 of [XSECT] section:
+  OF1-H2           RECT_OPEN    0          17.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 484 of [XSECT] section:
+  OF2-H2           RECT_OPEN    0          4.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 485 of [XSECT] section:
+  OF1-H1           RECT_OPEN    0          16.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 486 of [XSECT] section:
+  OF2-H1           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 487 of [XSECT] section:
+  OF1-H0           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 488 of [XSECT] section:
+  OF1-18PS         RECT_OPEN    0          4.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

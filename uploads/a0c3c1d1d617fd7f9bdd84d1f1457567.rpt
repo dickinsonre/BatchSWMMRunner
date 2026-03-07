@@ -1,0 +1,44 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 1703100 at line 42 of [CONDUIT] section:
+  1703000          1703100          1700524          310.00     0.0150     96.50      96.00      0          0
+
+  
+  ERROR 209: undefined object 1700118 at line 43 of [CONDUIT] section:
+  1700018          1700118          1700019          490.00     0.0130     102.04     100.62     0          0
+
+  
+  ERROR 209: undefined object 1700016 at line 46 of [CONDUIT] section:
+  1700017          1700016          1700016o         365.00     0.0140     97.00      96.80      0          0
+
+  
+  ERROR 209: undefined object 1700021 at line 51 of [WEIR] section:
+  1700020          1700021          1700121          TRANSVERSE 105.75     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1700124 at line 52 of [WEIR] section:
+  1700024          1700124          1700522          TRANSVERSE 104.90     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1700122 at line 53 of [WEIR] section:
+  1700022o         1700122          1700022          TRANSVERSE 105.20     1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 65 of [XSECT] section:
+  1700020          RECT_OPEN    0          50.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 66 of [XSECT] section:
+  1700024          RECT_OPEN    0          50.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 67 of [XSECT] section:
+  1700022o         RECT_OPEN    0          50.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

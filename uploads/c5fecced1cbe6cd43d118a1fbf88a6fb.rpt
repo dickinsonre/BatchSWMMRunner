@@ -1,0 +1,76 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 68650o at line 54 of [CONDUIT] section:
+  38650            68650o           39069            330.00     0.0140     681.00     678.70     0          0
+
+  
+  ERROR 209: undefined object 38652o at line 55 of [CONDUIT] section:
+  38652            38652o           39071            200.00     0.0140     678.70     677.20     0          0
+
+  
+  ERROR 209: undefined object 38658o at line 56 of [CONDUIT] section:
+  38658            38658o           39075            80.00      0.0140     677.20     676.70     0          0
+
+  
+  ERROR 209: undefined object 38660o at line 57 of [CONDUIT] section:
+  38660            38660o           39077            295.00     0.0140     676.70     676.20     0          0
+
+  
+  ERROR 209: undefined object 38666o at line 58 of [CONDUIT] section:
+  38666            38666o           39083            135.00     0.0140     676.20     675.40     0          0
+
+  
+  ERROR 209: undefined object 38676o at line 59 of [CONDUIT] section:
+  38676            38676o           39091            100.00     0.0140     675.40     674.60     0          0
+
+  
+  ERROR 209: undefined object 38680o at line 60 of [CONDUIT] section:
+  38680            38680o           39119            60.00      0.0140     674.60     674.00     0          0
+
+  
+  ERROR 209: undefined object 38706o at line 61 of [CONDUIT] section:
+  38706            38706o           39121            670.00     0.0140     676.70     675.40     0          0
+
+  
+  ERROR 209: undefined object 38708o at line 62 of [CONDUIT] section:
+  38708            38708o           39119            90.00      0.0140     675.30     674.00     0          0
+
+  
+  ERROR 209: undefined object 38710o at line 69 of [CONDUIT] section:
+  38710            38710o           39123            210.00     0.0140     673.90     671.80     0          0
+
+  
+  ERROR 209: undefined object 38714o at line 70 of [CONDUIT] section:
+  38714            38714o           39127            85.00      0.0140     671.80     670.90     0          0
+
+  
+  ERROR 209: undefined object 38716o at line 71 of [CONDUIT] section:
+  38716            38716o           39129            88.00      0.0140     670.90     670.70     0          0
+
+  
+  ERROR 209: undefined object 38720o at line 72 of [CONDUIT] section:
+  38720            38720o           39157            110.00     0.0140     670.70     670.40     0          0
+
+  
+  ERROR 209: undefined object 38744o at line 73 of [CONDUIT] section:
+  38744            38744o           39133            100.00     0.0140     670.40     669.90     0          0
+
+  
+  ERROR 209: undefined object 38732o at line 74 of [CONDUIT] section:
+  38732            38732o           39145            160.00     0.0140     669.90     669.50     0          0
+
+  
+  ERROR 209: undefined object 38750o at line 75 of [CONDUIT] section:
+  38750            38750o           39163            174.00     0.0140     669.50     668.90     0          0
+
+  
+  ERROR 209: undefined object 38752o at line 76 of [CONDUIT] section:
+  38752            38752o           39165            250.00     0.0140     668.90     668.10     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object p1 at line 454 of [PUMP] section:
+  lincoln p1       lincoln p2       430              PC_lincoln p1 ON       799.50     796.17    
+
+  
+  ERROR 209: undefined object p1 at line 455 of [PUMP] section:
+  const p1         const p2         const p3         PC_const p1 ON       776.75     775.00    
+
+  
+  ERROR 205: invalid keyword p1 at line 468 of [CURVE] section:
+  PC_lincoln p1    Pump4      0          0
+
+  
+  ERROR 205: invalid keyword p1 at line 470 of [CURVE] section:
+  PC_const p1      Pump4      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

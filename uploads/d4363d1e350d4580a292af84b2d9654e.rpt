@@ -1,0 +1,340 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object HP11_2 at line 303 of [CONDUIT] section:
+  HP11_1           HP11_2           F8               55.10      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object HP3L_1 at line 310 of [CONDUIT] section:
+  HP3_1            HP3L_1           HP3L_3           19.40      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object FL10_2 at line 312 of [CONDUIT] section:
+  FL10_1           FL10_2           D8               45.50      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object FL9_2 at line 313 of [CONDUIT] section:
+  FL9_1            FL9_2            D7               45.50      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object FL8_2 at line 314 of [CONDUIT] section:
+  FL8_1            FL8_2            D6               45.50      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object FL7_2 at line 315 of [CONDUIT] section:
+  FL7_1            FL7_2            D5               45.50      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object FL6_2 at line 316 of [CONDUIT] section:
+  FL6_1            FL6_2            D4               82.90      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object FL5_2 at line 317 of [CONDUIT] section:
+  FL5_1            FL5_2            D3               82.90      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object SY4_2 at line 326 of [CONDUIT] section:
+  SY4_1            SY4_2            E3               9.50       0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object SY3_2 at line 327 of [CONDUIT] section:
+  SY3_1            SY3_2            E2               9.50       0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object SY2_2 at line 328 of [CONDUIT] section:
+  SY2_1            SY2_2            E1               9.50       0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object BG30_2 at line 350 of [CONDUIT] section:
+  BG30_1           BG30_2           G50              116.30     0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object BG31_2 at line 351 of [CONDUIT] section:
+  BG31_1           BG31_2           G51              116.30     0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object OS3_2 at line 353 of [CONDUIT] section:
+  OS3_1            OS3_2            H4               19.70      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object AS10_2 at line 386 of [CONDUIT] section:
+  AS10_1           AS10_2           BX2              91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object AS11_2 at line 387 of [CONDUIT] section:
+  AS11_1           AS11_2           B5               91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object XJ2_2 at line 388 of [CONDUIT] section:
+  XJ2_1            XJ2_2            C1               91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object XJ1_2 at line 389 of [CONDUIT] section:
+  XJ1_1            XJ1_2            B6               91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object XJ5_2 at line 394 of [CONDUIT] section:
+  XJ5_1            XJ5_2            C4               91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object XJ12_2 at line 396 of [CONDUIT] section:
+  XJ12_1           XJ12_2           C11              91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object XJ11_2 at line 397 of [CONDUIT] section:
+  XJ11_1           XJ11_2           C10              91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object XJ13_2 at line 400 of [CONDUIT] section:
+  XJ13_1           XJ13_2           C12              91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object F7L1_2 at line 420 of [CONDUIT] section:
+  F7L1_1           F7L1_2           F7               55.10      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object F12L1_2 at line 421 of [CONDUIT] section:
+  F12L1_1          F12L1_2          F12              55.10      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object F7L2_2 at line 423 of [CONDUIT] section:
+  F7L2_1           F7L2_2           F7LA1            55.10      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object G52L1_2 at line 430 of [CONDUIT] section:
+  G52L1_1          G52L1_2          G52L1_3          200.00     0.0120     13.98      12.44      0          0
+
+  
+  ERROR 209: undefined object G52L2_2 at line 431 of [CONDUIT] section:
+  G52L2_1          G52L2_2          G52              200.00     0.0120     22.69      12.83      0          0
+
+  
+  ERROR 209: undefined object G42L2_2 at line 432 of [CONDUIT] section:
+  G42L2_1          G42L2_2          G42LA1           104.60     0.0120     11.70      11.03      0          0
+
+  
+  ERROR 209: undefined object G42L6_2 at line 433 of [CONDUIT] section:
+  G42L6_1          G42L6_2          G42L6_3          101.10     0.0120     16.89      13.40      0          0
+
+  
+  ERROR 209: undefined object G42L5_2 at line 434 of [CONDUIT] section:
+  G42L5_1          G42L5_2          G42L5_3          91.90      0.0120     13.40      12.39      0          0
+
+  
+  ERROR 209: undefined object G42L4_2 at line 435 of [CONDUIT] section:
+  G42L4_1          G42L4_2          G42L4_3          76.00      0.0120     12.39      11.38      0          0
+
+  
+  ERROR 209: undefined object G42L3_2 at line 436 of [CONDUIT] section:
+  G42L3_1          G42L3_2          G42              39.00      0.0120     11.38      11.37      0          0
+
+  
+  ERROR 209: undefined object G32L2_2 at line 437 of [CONDUIT] section:
+  G32L2_1          G32L2_2          G32LA1           124.40     0.0120     11.07      10.82      0          0
+
+  
+  ERROR 209: undefined object G32L1_2 at line 438 of [CONDUIT] section:
+  G32L1_1          G32L1_2          G32              178.08     0.0120     10.73      9.93       0          0
+
+  
+  ERROR 209: undefined object H11bL2_2 at line 451 of [CONDUIT] section:
+  H11bL2_1         H11bL2_2         H11bLA1          43.40      0.0120     9.16       8.89       0          0
+
+  
+  ERROR 209: undefined object H11bL1_2 at line 452 of [CONDUIT] section:
+  H11bL1_1         H11bL1_2         H11b             204.40     0.0120     8.76       8.33       0          0
+
+  
+  ERROR 209: undefined object K19L7_2 at line 472 of [CONDUIT] section:
+  K19L7_1          K19L7_2          K19LA2           80.20      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C3L9_2 at line 476 of [CONDUIT] section:
+  C3L9_1           C3L9_2           C3LA8            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C3L8_2 at line 477 of [CONDUIT] section:
+  C3L8_1           C3L8_2           C3LA7            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C3L7_2 at line 478 of [CONDUIT] section:
+  C3L7_1           C3L7_2           C3LA6            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C3L6_2 at line 479 of [CONDUIT] section:
+  C3L6_1           C3L6_2           C3LA5            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L2_2 at line 486 of [CONDUIT] section:
+  C13L2_1          C13L2_2          C13              91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L3_2 at line 489 of [CONDUIT] section:
+  C13L3_1          C13L3_2          C13              91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L5_2 at line 490 of [CONDUIT] section:
+  C13L5_1          C13L5_2          C13LA5           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L6_2 at line 491 of [CONDUIT] section:
+  C13L6_1          C13L6_2          C13LA6           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L7_2 at line 492 of [CONDUIT] section:
+  C13L7_1          C13L7_2          ASCB             91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L13_2 at line 495 of [CONDUIT] section:
+  C13L13_1         C13L13_2         C13LA12          91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L10_2 at line 498 of [CONDUIT] section:
+  C13L10_1         C13L10_2         PRCB             149.40     0.0120     29.42      29.00      0          0
+
+  
+  ERROR 209: undefined object C13L14_2 at line 499 of [CONDUIT] section:
+  C13L14_1         C13L14_2         ARCB             91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object C13L4_2 at line 500 of [CONDUIT] section:
+  C13L4_1          C13L4_2          C13LA3           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L2_2 at line 507 of [CONDUIT] section:
+  B4L2_1           B4L2_2           B4LA1            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L4_2 at line 508 of [CONDUIT] section:
+  B4L4_1           B4L4_2           B4LA3            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L3_2 at line 509 of [CONDUIT] section:
+  B4L3_1           B4L3_2           B4LA2            91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L15_2 at line 518 of [CONDUIT] section:
+  B4L15_1          B4L15_2          B4LA14           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L14_2 at line 519 of [CONDUIT] section:
+  B4L14_1          B4L14_2          B4LA13           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L13_2 at line 520 of [CONDUIT] section:
+  B4L13_1          B4L13_2          B4LA12           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L18_2 at line 521 of [CONDUIT] section:
+  B4L18_1          B4L18_2          B4LA17           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B4L19_2 at line 525 of [CONDUIT] section:
+  B4L19_1          B4L19_2          B4LA18           91.60      0.1000     0          0          0          0
+
+  
+  ERROR 209: undefined object B1bL1_2 at line 528 of [CONDUIT] section:
+  B1bL1_1          B1bL1_2          B1b              5.00       0.0120     10.10      10.09      0          0
+
+  
+  ERROR 209: undefined object B1bL6_2 at line 531 of [CONDUIT] section:
+  B1bL6_1          B1bL6_2          B1bLA4           196.70     0.0120     25.30      19.42      0          0
+
+  
+  ERROR 209: undefined object K13L2_2 at line 539 of [CONDUIT] section:
+  K13L2_1          K13L2_2          K13LA1           80.00      0.0120     10.62      10.49      0          0
+
+  
+  ERROR 209: undefined object K13L1_2 at line 540 of [CONDUIT] section:
+  K13L1_1          K13L1_2          K13              54.10      0.0120     10.49      10.30      0          0
+
+  
+  ERROR 209: undefined object HL1W_2 at line 562 of [WEIR] section:
+  HL1W_1           HL1W_2           HLK1             V-NOTCH    7.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object HL2W_2 at line 563 of [WEIR] section:
+  HL2W_1           HL2W_2           HLK2             V-NOTCH    7.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object HL3W_2 at line 564 of [WEIR] section:
+  HL3W_1           HL3W_2           HLK2             V-NOTCH    7.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object HL4W_2 at line 565 of [WEIR] section:
+  HL4W_1           HL4W_2           HLK3             V-NOTCH    7.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 2.36 at line 651 of [XSECT] section:
+  OS24_1           IRREGULAR    2.36       0          0          0          1
+
+  
+  ERROR 209: undefined object 1.81 at line 735 of [XSECT] section:
+  OS21_1           IRREGULAR    1.81       0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 826 of [XSECT] section:
+  RATING1          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 827 of [XSECT] section:
+  RATING2          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 828 of [XSECT] section:
+  RATING3          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 829 of [XSECT] section:
+  RATING4          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 830 of [XSECT] section:
+  RATING5          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 831 of [XSECT] section:
+  RATING6          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 832 of [XSECT] section:
+  RATING7          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 833 of [XSECT] section:
+  RATING8          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 834 of [XSECT] section:
+  RATING9          CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 835 of [XSECT] section:
+  RATING10         CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 836 of [XSECT] section:
+  RATING11         CUSTOM       0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 838 of [XSECT] section:
+  HL1W_1           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 839 of [XSECT] section:
+  HL2W_1           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 840 of [XSECT] section:
+  HL3W_1           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 841 of [XSECT] section:
+  HL4W_1           RECT_OPEN    0          3.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:26 2026
+  Analysis ended on:  Sat Mar  7 21:51:26 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,272 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name icchbr at line 106 of [JUNC] section:
+  icchbr           59.74      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ic1b at line 113 of [JUNC] section:
+  ic1b             60.40      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ic3 at line 114 of [JUNC] section:
+  ic3              71.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ic4 at line 115 of [JUNC] section:
+  ic4              66.05      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ic5 at line 116 of [JUNC] section:
+  ic5              57.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name rr40 at line 118 of [JUNC] section:
+  rr40             63.95      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name rr02800 at line 121 of [JUNC] section:
+  rr02800          57.13      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name os1 at line 123 of [JUNC] section:
+  os1              55.47      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name rm22 at line 124 of [JUNC] section:
+  rm22             58.77      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name xxb at line 125 of [JUNC] section:
+  xxb              46.02      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name hl12 at line 126 of [JUNC] section:
+  hl12             61.72      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name os2 at line 127 of [JUNC] section:
+  os2              59.13      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name bd3 at line 128 of [JUNC] section:
+  bd3              62.36      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ah1 at line 129 of [JUNC] section:
+  ah1              61.66      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name aw8 at line 130 of [JUNC] section:
+  aw8              64.22      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ah1a at line 131 of [JUNC] section:
+  ah1a             62.42      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ah4 at line 132 of [JUNC] section:
+  ah4              62.30      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name os3 at line 133 of [JUNC] section:
+  os3              68.58      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name os4 at line 134 of [JUNC] section:
+  os4              83.82      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name os5 at line 135 of [JUNC] section:
+  os5              65.64      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name os6 at line 136 of [JUNC] section:
+  os6              56.39      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ROPEC-OUT at line 138 of [JUNC] section:
+  ROPEC-OUT        52.42      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 903 at line 139 of [JUNC] section:
+  903              57.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name hra at line 149 of [JUNC] section:
+  hra              46.67      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name HEM1 at line 150 of [JUNC] section:
+  HEM1             46.67      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name HEM2 at line 151 of [JUNC] section:
+  HEM2             46.02      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 457 at line 152 of [JUNC] section:
+  457              61.66      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name HEM4 at line 153 of [JUNC] section:
+  HEM4             61.66      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name HEM3 at line 154 of [JUNC] section:
+  HEM3             58.77      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name grit at line 155 of [JUNC] section:
+  grit             52.54      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ROPEC-BY at line 156 of [JUNC] section:
+  ROPEC-BY         52.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name lfhem at line 244 of [STORAGE] section:
+  lfhem            46.72      0          0          FUNCTIONAL 9.35 0          0
+
+  
+  ERROR 207: duplicate ID name oschbr at line 245 of [STORAGE] section:
+  oschbr           52.42      0          0          FUNCTIONAL 34.74 0          0
+
+  
+  ERROR 207: duplicate ID name os16 at line 347 of [CONDUIT] section:
+  os16             icchbr           ic1b             90.20      0.0150     44.81      43.93      0          0
+
+  
+  ERROR 207: duplicate ID name bo5 at line 348 of [CONDUIT] section:
+  bo5              bo7b             BOOTH-REG        804.70     0.0150     49.57      46.43      0          0
+
+  
+  ERROR 207: duplicate ID name pr3 at line 349 of [CONDUIT] section:
+  pr3              pr13             pr12             49.00      0.0150     53.98      53.88      0          0
+
+  
+  ERROR 207: duplicate ID name cc4 at line 350 of [CONDUIT] section:
+  cc4              cc95a            PREST-REG        108.10     0.0150     50.29      49.74      0          0
+
+  
+  ERROR 207: duplicate ID name os15 at line 351 of [CONDUIT] section:
+  os15             ic1b             ic3              1050.20    0.0150     43.93      42.88      0          0
+
+  
+  ERROR 207: duplicate ID name os11 at line 352 of [CONDUIT] section:
+  os11             ic3              ic4              970.50     0.0150     42.88      41.80      0          0
+
+  
+  ERROR 207: duplicate ID name os10 at line 353 of [CONDUIT] section:
+  os10             ic4              ic5              1270.10    0.0150     41.80      40.77      0          0
+
+  
+  ERROR 207: duplicate ID name os9 at line 354 of [CONDUIT] section:
+  os9              ic5              os1              756.90     0.0150     40.77      39.85      0          0
+
+  
+  ERROR 207: duplicate ID name rr70 at line 355 of [CONDUIT] section:
+  rr70             rr43             rr40             259.10     0.0150     56.39      55.60      0          0
+
+  
+  ERROR 207: duplicate ID name rr67 at line 356 of [CONDUIT] section:
+  rr67             rr40             rr10             3681.40    0.0150     54.32      52.53      0          0
+
+  
+  ERROR 207: duplicate ID name rr36 at line 357 of [CONDUIT] section:
+  rr36             rr10             rr02800          1421.00    0.0150     52.53      52.15      0          0
+
+  
+  ERROR 207: duplicate ID name os7 at line 358 of [CONDUIT] section:
+  os7              os1              os2              1468.10    0.0150     39.85      38.55      0          0
+
+  
+  ERROR 207: duplicate ID name hl38 at line 359 of [CONDUIT] section:
+  hl38             rm22             xxb              908.70     0.0150     54.10      44.13      0          0
+
+  
+  ERROR 207: duplicate ID name hl26 at line 360 of [CONDUIT] section:
+  hl26             xxb              lfhem            9.70       0.0150     43.92      43.88      0          0
+
+  
+  ERROR 207: duplicate ID name bd2 at line 363 of [CONDUIT] section:
+  bd2              bd3              ah1              117.00     0.0150     59.26      58.98      0          0
+
+  
+  ERROR 207: duplicate ID name ah11 at line 364 of [CONDUIT] section:
+  ah11             ah1              ah4              129.00     0.0150     58.75      58.54      0          0
+
+  
+  ERROR 207: duplicate ID name aw2 at line 365 of [CONDUIT] section:
+  aw2              aw8              ah1a             205.70     0.0150     61.88      60.30      0          0
+
+  
+  ERROR 207: duplicate ID name aw1 at line 366 of [CONDUIT] section:
+  aw1              ah1a             ah4              54.30      0.0150     60.07      59.75      0          0
+
+  
+  ERROR 207: duplicate ID name ah8 at line 367 of [CONDUIT] section:
+  ah8              ah4              os3              517.80     0.0150     58.39      57.49      0          0
+
+  
+  ERROR 207: duplicate ID name PRESTN at line 373 of [CONDUIT] section:
+  PRESTN           PREST-REG        903              250.00     0.0150     50.64      45.00      0          0
+
+  
+  ERROR 207: duplicate ID name rr7 at line 380 of [CONDUIT] section:
+  rr7              rrr              RRIVER-REG       526.70     0.0150     48.98      47.62      0          0
+
+  
+  ERROR 207: duplicate ID name hra-ovf at line 382 of [CONDUIT] section:
+  hra-ovf          hra              HEM1             100.00     0.0150     45.05      44.55      0          0
+
+  
+  ERROR 207: duplicate ID name hraa at line 383 of [CONDUIT] section:
+  hraa             hra              lfhem            10.00      0.0150     44.74      44.73      0          0
+
+  
+  ERROR 207: duplicate ID name xxb-ovf at line 384 of [CONDUIT] section:
+  xxb-ovf          xxb              HEM2             100.00     0.0150     44.23      43.73      0          0
+
+  
+  ERROR 207: duplicate ID name 458 at line 385 of [CONDUIT] section:
+  458              ah1              457              100.00     0.0150     59.13      58.38      0          0
+
+  
+  ERROR 207: duplicate ID name 459 at line 386 of [CONDUIT] section:
+  459              ah1a             457              100.00     0.0150     60.30      58.63      0          0
+
+  
+  ERROR 207: duplicate ID name ah-ovf at line 387 of [CONDUIT] section:
+  ah-ovf           457              HEM4             100.00     0.0150     58.63      58.13      0          0
+
+  
+  ERROR 207: duplicate ID name rm-ovf at line 388 of [CONDUIT] section:
+  rm-ovf           rm22             HEM3             100.00     0.0150     54.44      51.94      0          0
+
+  
+  ERROR 207: duplicate ID name outfall at line 391 of [CONDUIT] section:
+  outfall          grit             ROPEC-OUT        500.00     0.0150     46.54      37.00      0          0
+
+  
+  ERROR 207: duplicate ID name BY-ROPEC at line 392 of [CONDUIT] section:
+  BY-ROPEC         oschbr           ROPEC-BY         200.00     0.0150     45.11      44.11      0          0
+
+  
+  ERROR 207: duplicate ID name ocr3-21 at line 492 of [ORIFICE] section:
+  ocr3-21          ocr3             645              SIDE       62.71      0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name hl25 at line 514 of [PUMP] section:
+  hl25             lfhem            hl12             *          ON       0          0         
+
+  
+  ERROR 207: duplicate ID name pump at line 515 of [PUMP] section:
+  pump             oschbr           grit             *          ON       0          0         
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

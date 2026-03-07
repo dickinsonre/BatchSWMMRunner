@@ -1,0 +1,108 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 2.00 at line 123 of [XSECT] section:
+  CH(A-B)          IRREGULAR    2.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 2.50 at line 124 of [XSECT] section:
+  CH(B-C)          IRREGULAR    2.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.85 at line 125 of [XSECT] section:
+  CH(C-D)          IRREGULAR    6.85       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.85 at line 126 of [XSECT] section:
+  CH(D-E-F)        IRREGULAR    6.85       0          0          0          1
+
+  
+  ERROR 209: undefined object 5.89 at line 127 of [XSECT] section:
+  CH(F-G)          IRREGULAR    5.89       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.92 at line 128 of [XSECT] section:
+  CH(G-H)          IRREGULAR    6.92       0          0          0          1
+
+  
+  ERROR 209: undefined object 5.80 at line 129 of [XSECT] section:
+  CH(H-I)          IRREGULAR    5.80       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.50 at line 130 of [XSECT] section:
+  CH(I-O)          IRREGULAR    4.50       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 147 of [XSECT] section:
+  culv             RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 148 of [XSECT] section:
+  ICD-D1           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 149 of [XSECT] section:
+  ICD-D2           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 150 of [XSECT] section:
+  ICD-D3           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 151 of [XSECT] section:
+  ICD-CS           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 152 of [XSECT] section:
+  ICD-C1           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 153 of [XSECT] section:
+  ICD-C3           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 154 of [XSECT] section:
+  OR-C4            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 155 of [XSECT] section:
+  OR-C5            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 156 of [XSECT] section:
+  or-as            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 157 of [XSECT] section:
+  ICD-DN           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 158 of [XSECT] section:
+  ICD-CN           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 159 of [XSECT] section:
+  ICD-BN           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 160 of [XSECT] section:
+  ICD-C2           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 161 of [XSECT] section:
+  orfi1            RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 162 of [XSECT] section:
+  orife2           RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 163 of [XSECT] section:
+  flush            RECT_CLOSED  2.00       0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

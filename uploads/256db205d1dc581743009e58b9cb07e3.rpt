@@ -1,0 +1,116 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 86 of [XSECT] section:
+  3                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 87 of [XSECT] section:
+  5                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 88 of [XSECT] section:
+  7                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 89 of [XSECT] section:
+  9                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 90 of [XSECT] section:
+  11               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 91 of [XSECT] section:
+  13               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 92 of [XSECT] section:
+  15               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 93 of [XSECT] section:
+  17               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 94 of [XSECT] section:
+  19               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 95 of [XSECT] section:
+  21               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 96 of [XSECT] section:
+  23               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 97 of [XSECT] section:
+  25               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 98 of [XSECT] section:
+  27               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 99 of [XSECT] section:
+  29               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 100 of [XSECT] section:
+  31               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 101 of [XSECT] section:
+  33               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 102 of [XSECT] section:
+  35               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 103 of [XSECT] section:
+  37               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 104 of [XSECT] section:
+  39               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 105 of [XSECT] section:
+  41               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 106 of [XSECT] section:
+  43               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 107 of [XSECT] section:
+  45               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 108 of [XSECT] section:
+  47               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 109 of [XSECT] section:
+  49               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 110 of [XSECT] section:
+  51               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 111 of [XSECT] section:
+  59               CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 112 of [XSECT] section:
+  61               CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

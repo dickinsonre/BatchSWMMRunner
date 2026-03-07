@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Altern2 at line 48 of [WEIR] section:
+  WeirOF           Altern2          EndOF            V-NOTCH    117.00     1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 54 of [XSECT] section:
+  9x4STM           RECT_OPEN    0          15.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 55 of [XSECT] section:
+  36inCTRL         RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 56 of [XSECT] section:
+  Weir             RECT_OPEN    0          15.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 57 of [XSECT] section:
+  WeirOF           RECT_OPEN    0          9.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

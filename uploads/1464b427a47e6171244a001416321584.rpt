@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name D.A. at line 37 of [STORAGE] section:
+  D.A.             56.50      0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name D.A. at line 38 of [STORAGE] section:
+  D.A.             55.00      0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name D.A. at line 39 of [STORAGE] section:
+  D.A.             56.50      0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name REACH at line 46 of [CONDUIT] section:
+  REACH            50B              50-BOUNDRY       85.00      0.0110     50.10      49.72      0          0
+
+  
+  ERROR 207: duplicate ID name REACH at line 47 of [CONDUIT] section:
+  REACH            D.A.             D.A.             604.00     0.0130     52.70      49.50      0          0
+
+  
+  ERROR 207: duplicate ID name REACH at line 54 of [ORIFICE] section:
+  REACH 11         D.A.             D.A.E1a          SIDE       51.56      0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,1847 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+     Aubrey Cornish Coarse Runoff Model 
+     Catchments duplicated as to connectivity to CS or SRS - ratio lines proportion areas 
+     Aubrey Cornish Coarse Extran Model - All outfalls as pumps with single dummy pipes 
+  
+  *************
+  Element Count
+  *************
+  Number of rain gages ...... 1
+  Number of subcatchments ... 168
+  Number of nodes ........... 141
+  Number of links ........... 139
+  Number of pollutants ...... 0
+  Number of land uses ....... 0
+  
+  
+  ****************
+  Raingage Summary
+  ****************
+                                                      Data       Recording
+  Name                 Data Source                    Type       Interval 
+  ------------------------------------------------------------------------
+  GAGE1                SERIES1                        INTENSITY   15 min.
+  
+  
+  ********************
+  Subcatchment Summary
+  ********************
+  Name                       Area     Width   %Imperv    %Slope Rain Gage            Outlet              
+  -----------------------------------------------------------------------------------------------------------
+  CMCPWIN                    3.43    514.60     76.00    1.0000 GAGE1                CMCPWIN-I           
+  CMCPBAN                    1.73    259.40     83.00    1.0000 GAGE1                CMCPBAN-I           
+  CMCPELG                    1.38    207.40     48.00    1.0000 GAGE1                CMCPELG-I           
+  CMCPPAC                    2.28    341.40     83.00    1.0000 GAGE1                CMCPPAC-I           
+  CPAC72                     2.36    354.40     50.00    1.0000 GAGE1                CPAC72-I            
+  CPAC75                     2.34    351.00     60.00    1.0000 GAGE1                CPAC75-I            
+  CALEXAN                    0.17     25.40     80.00    1.0000 GAGE1                CALEXAN-I           
+  CLOG80                     1.18    177.20     90.00    1.0000 GAGE1                CLOG80-I            
+  CHEN90                     2.81    421.20     42.00    1.0000 GAGE1                CHEN90-I            
+  CHIGMAU                    1.45    218.00     74.00    1.0000 GAGE1                CHIGMAU-I           
+  CHEN90-R                   1.16    174.40     10.00    1.0000 GAGE1                CHEN90-I            
+  CHIGMAU-R                  0.94    141.40     10.00    1.0000 GAGE1                CHIGMAU-I           
+  CMCPLOG                    1.83    274.60     40.00    1.0000 GAGE1                CMCPLOG-I           
+  CLOGYEO                    0.91    136.80     20.00    1.0000 GAGE1                CLOGYEO-I           
+  CLOGYEO-R                  0.10     14.40     10.00    1.0000 GAGE1                CLOGYEO-I           
+  CLOGWNK                    2.38    357.60     35.00    1.0000 GAGE1                CLOGWNK-I           
+  CLOGCEC-R                  5.49    823.20     10.00    1.0000 GAGE1                CLOGCEC-I           
+  CLOGQUE-R                  0.83    125.20     18.00    1.0000 GAGE1                CLOGQUE-I           
+  CLOGVIN-R                  2.36    354.40     10.00    1.0000 GAGE1                CLOGVIN-I           
+  CLOGWNK-R                  0.47     69.80     10.00    1.0000 GAGE1                CLOGWNK-I           
+  CLOGELE                    1.45    217.80     40.00    1.0000 GAGE1                CLOGELE-I           
+  CLOGVIN                    2.14    320.40     65.00    1.0000 GAGE1                CLOGVIN-I           
+  CLOGQUE                    0.33     49.60     60.00    1.0000 GAGE1                CLOGQUE-I           
+  CLOGCEC                    1.87    280.80     55.00    1.0000 GAGE1                CLOGCEC-I           
+  CCECROY                    0.34     50.40     55.00    1.0000 GAGE1                CCECROY-I           
+  SMCPWIN1                   1.37    205.76     80.00    1.0000 GAGE1                SMYRWIN-I           
+  SMCPWIN2                   6.86   1028.80     72.00    1.0000 GAGE1                SMCPMCD-I           
+  SMCPBAN                    6.92   1037.60     83.00    1.0000 GAGE1                SLARWIL-I           
+  SMCPELG                    5.53    829.60     48.00    1.0000 GAGE1                SXANELG-I           
+  SMCPPAC                    9.10   1365.60     83.00    1.0000 GAGE1                SXANELG-I           
+  SPAC72                     9.45   1417.60     50.00    1.0000 GAGE1                SXANALE-I           
+  SPAC75                     9.36   1404.00     60.00    1.0000 GAGE1                SXANALE-I           
+  SXANALE                    0.68    101.60     80.00    1.0000 GAGE1                SXANALE-I           
+  SLOG80                     4.73    708.80     90.00    1.0000 GAGE1                SMCP85-I            
+  SHEN90                    11.23   1684.80     42.00    1.0000 GAGE1                SALEMAU-I           
+  SHIGMAU                    5.81    872.00     74.00    1.0000 GAGE1                SMAULOG-I           
+  SHEN90-R                   4.65    697.60     10.00    1.0000 GAGE1                SMAULOG-I           
+  SHIGMAU-R                  3.77    565.60     10.00    1.0000 GAGE1                SMAULOG-I           
+  SMCPLOG                    7.32   1098.40     40.00    1.0000 GAGE1                SMCP85-I            
+  SLOGYEO                    3.65    547.20     20.00    1.0000 GAGE1                SDUM1-I             
+  SLOGYEO-R                  0.38     57.60     10.00    1.0000 GAGE1                SALEMAU-I           
+  SLOGWNK                    9.54   1430.40     35.00    1.0000 GAGE1                SDUM1-I             
+  SLOGCEC-R                 21.95   3292.80     10.00    1.0000 GAGE1                SDUM2-I             
+  SLOGQUE-R                  3.34    500.80     18.00    1.0000 GAGE1                SDUM2-I             
+  SLOGVIN-R                  9.45   1417.60     10.00    1.0000 GAGE1                SALEMAU-I           
+  SLOGWNK-R                  1.86    279.20     10.00    1.0000 GAGE1                SALEMAU-I           
+  SLOGELE                    5.81    871.20     40.00    1.0000 GAGE1                SDUM1-I             
+  SLOGVIN                    8.54   1281.60     65.00    1.0000 GAGE1                SDUM2-I             
+  SLOGQUE                    1.32    198.40     60.00    1.0000 GAGE1                SDUM2-I             
+  SLOGCEC                    7.49   1123.20     55.00    1.0000 GAGE1                SDUM3-I             
+  SCECROY                    1.35    201.60     55.00    1.0000 GAGE1                SDUM3-I             
+  CLIPSAR                    3.79    567.84     58.00    1.0000 GAGE1                CLIPSAR-I           
+  CSARBUR                    2.13    319.55     55.00    1.0000 GAGE1                CSARBUR-I           
+  CSARARL                    4.84    726.60     58.00    1.0000 GAGE1                CSARARL-I           
+  CLIPWEL                    5.25    787.50     60.00    1.0000 GAGE1                CLIPWEL-I           
+  CWELSHB                    1.67    249.90     55.00    1.0000 GAGE1                CWELSHB-I           
+  CWELDOM                    5.10    765.10     53.00    1.0000 GAGE1                CWELDOM-I           
+  CLIPNOT                    3.48    522.20     73.00    1.0000 GAGE1                CLIPNOT-I           
+  CNOTDOM                    9.67   1450.05     55.00    1.0000 GAGE1                CNOTDOM-I           
+  CNOTSHB                    4.08    612.15     59.00    1.0000 GAGE1                CNOTSHB-I           
+  SLIPSAR                    3.08    461.37     58.00    1.0000 GAGE1                SSHBSAR-I           
+  SSARBUR                    3.96    593.45     55.00    1.0000 GAGE1                SALVSAR-I           
+  SSARARL1                   3.00    449.80     59.53    1.0000 GAGE1                SSIMSAR-I           
+  SSARARL2                   3.00    449.80     59.53    1.0000 GAGE1                SALVWEL-I           
+  SSARARL3                   3.00    449.80     55.00    1.0000 GAGE1                SSIMWEL-I           
+  SLIPWEL1                   6.83   1023.75     60.00    1.0000 GAGE1                SALVWEL-I           
+  SLIPWEL2                   2.92    438.75     60.00    1.0000 GAGE1                SSHBWEL-I           
+  SWELSHB                    3.09    464.10     55.00    1.0000 GAGE1                SSHBWEL-I           
+  SWELDOM                    9.47   1420.90     53.00    1.0000 GAGE1                SWELDOM-I           
+  SLIPNOT1                   3.23    484.90     56.00    1.0000 GAGE1                SSHBNOT-I           
+  SLIPNOT2                   3.23    484.90     90.00    1.0000 GAGE1                SALVNOT-I           
+  SNOTDOM1                   5.98    897.65     55.00    1.0000 GAGE1                SSHBNOT-I           
+  SNOTDOM2                   5.98    897.65     55.00    1.0000 GAGE1                SNOTMYR-I           
+  SNOTDOM3                   5.98    897.65     55.00    1.0000 GAGE1                SNOTWLL-I           
+  SNOTSHB                    7.58   1136.85     59.00    1.0000 GAGE1                SSHB54-I            
+  CAUBPAL                    1.00    149.76     55.00    1.0000 GAGE1                CAUBPAL-I           
+  CAUBWOL                    3.56    534.00     55.00    1.0000 GAGE1                CAUBWOL-I           
+  CAUBWSM                    1.30    195.60     55.00    1.0000 GAGE1                CAUBWSM-I           
+  CELCGRF                    6.65    998.00     55.00    1.0000 GAGE1                CELCGRF-I           
+  CELCING                    2.52    378.00     55.00    1.0000 GAGE1                CELCING-I           
+  CLIPELC                    1.05    157.60     55.00    1.0000 GAGE1                CLIPELC-I           
+  CLIPSMT                    3.72    557.60     56.00    1.0000 GAGE1                CLIPSMT-I           
+  CPORBAN                    4.86    728.40     55.00    1.0000 GAGE1                CPORBAN-I           
+  CPORBUR                    8.74   1311.60     69.00    1.0000 GAGE1                CPORBUR-I           
+  CPORDOM                    4.45    667.20     65.00    1.0000 GAGE1                CPORDOM-I           
+  CPORGRE                    6.78   1017.20     55.00    1.0000 GAGE1                CPORGRE-I           
+  CPORLIP                    2.36    354.80     58.00    1.0000 GAGE1                CPORLIP-I           
+  CPORSHB                    4.09    614.00     59.00    1.0000 GAGE1                CPORSHB-I           
+  CPORSPR                    4.00    600.00     60.00    1.0000 GAGE1                CPORSPR-I           
+  CPORWLL                    6.57    985.20     80.00    1.0000 GAGE1                CPORWLL-I           
+  CSMTING                    3.04    456.40     55.00    1.0000 GAGE1                CSMTING-I           
+  CSTMSHB                    5.24    786.00     55.00    1.0000 GAGE1                CSTMSHB-I           
+  SAUBPAL                    0.92    138.24     55.00    1.0000 GAGE1                SRUBPAL-I           
+  SAUBWOL                    5.34    801.00     55.00    1.0000 GAGE1                SSHBPAL-I           
+  SELCGRF1                   7.98   1197.60     55.00    1.0000 GAGE1                SELCDOM-I           
+  SELCGRF2                   2.00    299.40     55.00    1.0000 GAGE1                SSHBSAR-I           
+  SELCING                    3.78    567.00     55.00    1.0000 GAGE1                SSHBELC-I           
+  SLIPELC                    1.58    236.40     55.00    1.0000 GAGE1                SSHBELC-I           
+  SLIPSMT1                   2.79    418.20     55.00    1.0000 GAGE1                SSHBSTM-I           
+  SLIPSMT2                   2.79    418.20     57.00    1.0000 GAGE1                SBURELC-I           
+  SPORBAN1                   5.10    765.00     55.00    1.0000 GAGE1                SLENWSM-I           
+  SPORBAN2                   2.19    327.60     55.00    1.0000 GAGE1                SBUREIN-I           
+  SPORBUR1                   3.28    492.00     55.00    1.0000 GAGE1                SLENWSM-I           
+  SPORBUR2                   3.28    492.00     83.00    1.0000 GAGE1                SBURPOR-I           
+  SPORBUR3                   3.28    492.00     69.00    1.0000 GAGE1                SBURSMT-I           
+  SPORBUR4                   3.28    492.00     69.00    1.0000 GAGE1                SBURELC-I           
+  SPORDOM1                   1.67    250.20     55.00    1.0000 GAGE1                SSHBPAL-I           
+  SPORDOM2                   1.67    250.20     55.00    1.0000 GAGE1                SSHBWSM-I           
+  SPORDOM3                   1.67    250.20     70.00    1.0000 GAGE1                SPORSHB-I           
+  SPORDOM4                   1.67    250.20     80.00    1.0000 GAGE1                SSHBWLV-I           
+  SPORGRE1                   2.54    381.60     55.00    1.0000 GAGE1                SSHBPAL-I           
+  SPORGRE2                   2.54    381.60     55.00    1.0000 GAGE1                SPORGRE-I           
+  SPORGRE3                   2.54    381.60     55.00    1.0000 GAGE1                SSHBWLV-I           
+  SPORGRE4                   2.54    381.60     55.00    1.0000 GAGE1                SSHBSTM-I           
+  SPORLIP1                   1.77    265.80     58.00    1.0000 GAGE1                SPORSHB-I           
+  SPORLIP2                   1.77    265.80     58.00    1.0000 GAGE1                SBURPOR-I           
+  SPORSHB1                   2.05    307.20     55.00    1.0000 GAGE1                SSHBWSM-I           
+  SPORSHB2                   2.05    307.20     67.00    1.0000 GAGE1                SPORSHB-I           
+  SPORSHB3                   2.05    307.20     55.00    1.0000 GAGE1                SSHBWLV-I           
+  SPORSPR1                   2.00    300.00     55.00    1.0000 GAGE1                SSHBWSM-I           
+  SPORSPR2                   2.00    300.00     70.02    1.0000 GAGE1                SPORSPR-I           
+  SPORSPR3                   2.00    300.00     55.00    1.0000 GAGE1                SSHBWLV-I           
+  SPORWLL1                   3.28    492.60     50.00    1.0000 GAGE1                SSHBWSM-I           
+  SPORWLL2                   3.28    492.60     95.00    1.0000 GAGE1                SPORWLL-I           
+  SPORWLL3                   3.28    492.60     95.00    1.0000 GAGE1                SSHBWLV-I           
+  SSMTING1                   3.19    479.40     55.00    1.0000 GAGE1                SSHBELC-I           
+  SSMTING2                   1.37    205.20     55.00    1.0000 GAGE1                SPORSHB-I           
+  SSTMSHB1                   3.93    589.80     55.00    1.0000 GAGE1                SSHBSTM-I           
+  SSTMSHB2                   1.97    294.60     71.00    1.0000 GAGE1                SSTMDOM-I           
+  SSTMSHB3                   1.97    294.60     39.00    1.0000 GAGE1                SSHBWLV-I           
+  CPORCAN                    0.86    129.00     69.00    1.0000 GAGE1                CPORCAN-I           
+  CPORHOM                    1.96    294.00     62.00    1.0000 GAGE1                CPORHOM-I           
+  CSIMSTM                    2.53    379.80     55.00    1.0000 GAGE1                CSIMSTM-I           
+  CSIMELC                    2.97    445.60     55.00    1.0000 GAGE1                CSIMELC-I           
+  CSIMSAR                    1.32    198.60     59.00    1.0000 GAGE1                CSIMSAR-I           
+  CSIMWEL                    1.40    210.20     66.00    1.0000 GAGE1                CSIMWEL-I           
+  SPORCAN1                   0.57     85.92     83.00    1.0000 GAGE1                SSIMPOR-I           
+  SPORCAN2                   2.87    429.60     55.00    1.0000 GAGE1                SSIMSTM-I           
+  SPORHOM1                   3.92    588.00     62.00    1.0000 GAGE1                SBUREIN-I           
+  SPORHOM2                   3.92    588.00     62.00    1.0000 GAGE1                SSIMSTM-I           
+  SSIMSTM1                   5.06    760.00     55.00    1.0000 GAGE1                SSTMARL-I           
+  SSIMSTM2                   5.06    760.00     55.00    1.0000 GAGE1                SSIMSTM-I           
+  SSIMELC                   11.88   1782.40     55.00    1.0000 GAGE1                SSIMELC-I           
+  SSIMSAR                    5.29    794.40     59.00    1.0000 GAGE1                SSIMSAR-I           
+  SSIMWEL1                   2.80    840.80     66.00    1.0000 GAGE1                SWELMRY-I           
+  SSIMWEL2                   2.80    840.80     66.00    1.0000 GAGE1                SWELVIC-I           
+  CCORMID                    6.72   1008.00     40.00    1.0000 GAGE1                CCORMID-I           
+  CMRYCOR                    2.06    309.50     59.00    1.0000 GAGE1                CMRYCOR-I           
+  CMRYWSM                    0.96    144.50     60.00    1.0000 GAGE1                CMRYWSM-I           
+  CWALPUR                    1.74    260.50     55.00    1.0000 GAGE1                CWALPUR-I           
+  CWSMWAL                    4.67    700.50     55.00    1.0000 GAGE1                CWSMWAL-I           
+  CWSMARL                    5.88    882.00     55.00    1.0000 GAGE1                CWSMARL-I           
+  CWSMCAN                    3.84    576.50     55.00    1.0000 GAGE1                CWSMCAN-I           
+  CWSMETH                    4.31    646.00     55.00    1.0000 GAGE1                CWSMETH-I           
+  CCANPRE                    3.34    501.50     33.00    1.0000 GAGE1                CCANPRE-I           
+  SCORMID                    4.20    630.00     40.00    1.0000 GAGE1                SCANWOL-I           
+  SMRYCOR                    2.06    309.50     59.00    1.0000 GAGE1                SCANWOL-I           
+  SMRYWSM                    0.96    144.50     60.00    1.0000 GAGE1                SCANWSM-I           
+  SWALPUR                    1.74    260.50     55.00    1.0000 GAGE1                SCANPRE-I           
+  SWSMWAL1                   2.33    350.50     55.00    1.0000 GAGE1                SCANWOL-I           
+  SWSMWAL2                   2.33    350.50     55.00    1.0000 GAGE1                SCANWSM-I           
+  SWSMARL1                   2.94    441.00     55.00    1.0000 GAGE1                SWOLHOM-I           
+  SWSMARL2                   2.94    441.00     55.00    1.0000 GAGE1                SWSMARL-I           
+  SWSMCAN1                   1.92    288.00     55.00    1.0000 GAGE1                SCANWOL-I           
+  SWSMCAN2                   1.92    288.00     55.00    1.0000 GAGE1                SCANWSM-I           
+  SWSMETH1                   2.15    323.00     55.00    1.0000 GAGE1                SWOLHOM-I           
+  SWSMETH2                   2.15    323.00     55.00    1.0000 GAGE1                SWSMHOM-I           
+  SCANPRE                    3.34    501.50     33.00    1.0000 GAGE1                SCANPRE-I           
+  
+  
+  ************
+  Node Summary
+  ************
+                                           Invert      Max.    Ponded    External
+  Name                 Type                 Elev.     Depth      Area    Inflow  
+  -------------------------------------------------------------------------------
+  XCAUBPAL             JUNCTION            223.48      5.69       0.0
+  CCOROUT1             JUNCTION            223.95      3.21       0.0
+  XSRUBPAL             JUNCTION            221.50     10.38       0.0
+  XSCANPAL             JUNCTION            222.28      8.93       0.0
+  SCANOUT1             JUNCTION            222.26      8.95       0.0
+  SAUBOUT              OUTFALL             221.00      2.89       0.0
+  SCANOUT              OUTFALL             222.10      1.98       0.0
+  SRUBOUT              OUTFALL             221.15      2.70       0.0
+  CAUBOUT              OUTFALL             223.29      2.85       0.0
+  CCOROUT              OUTFALL             223.85      1.64       0.0
+  CMRYOUT              OUTFALL             223.39      0.75       0.0
+  CALEXAN-I            STORAGE             225.87      3.94       0.0
+  CAUBPAL-I            STORAGE             223.42      5.75       0.0
+  CAUBPOR              STORAGE             223.85      6.52       0.0
+  CAUBSPS              STORAGE             223.36      4.64       0.0
+  CAUBWOL-I            STORAGE             223.59      6.43       0.0
+  CAUBWSM-I            STORAGE             223.73      6.29       0.0
+  CCANPRE-I            STORAGE             225.53      4.27       0.0
+  CCECROY-I            STORAGE             227.70      1.86       0.0
+  CCORDIV              STORAGE             223.95      3.21       0.0
+  CCORMID-I            STORAGE             224.11      5.82       0.0
+  CELCGRF-I            STORAGE             225.61      4.28       0.0
+  CELCING-I            STORAGE             225.24      5.69       0.0
+  CHEN90-I             STORAGE             226.03      4.18       0.0
+  CHIGMAU-I            STORAGE             226.12      3.78       0.0
+  CLIP25               STORAGE             224.06      5.90       0.0
+  CLIP35               STORAGE             224.31      5.45       0.0
+  CLIPELC-I            STORAGE             224.40      6.48       0.0
+  CLIPNOT-I            STORAGE             225.07      4.56       0.0
+  CLIPSAR-I            STORAGE             224.60      6.18       0.0
+  CLIPSMT-I            STORAGE             224.22      5.93       0.0
+  CLIPWEL-I            STORAGE             224.79      5.68       0.0
+  CLIPYAR              STORAGE             224.90      4.97       0.0
+  CLOG80-I             STORAGE             225.95      5.44       0.0
+  CLOGCEC-I            STORAGE             227.24      2.90       0.0
+  CLOGELE-I            STORAGE             226.62      3.04       0.0
+  CLOGQUE-I            STORAGE             226.94      3.14       0.0
+  CLOGVIN-I            STORAGE             226.82      3.58       0.0
+  CLOGWNK-I            STORAGE             226.40      3.16       0.0
+  CLOGYEO-I            STORAGE             226.19      3.51       0.0
+  CMCPBAN-I            STORAGE             225.41      4.33       0.0
+  CMCPELG-I            STORAGE             225.55      4.49       0.0
+  CMCPLOG-I            STORAGE             225.98      3.91       0.0
+  CMCPPAC-I            STORAGE             225.66      4.26       0.0
+  CMCPROS              STORAGE             225.62      4.54       0.0
+  CMCPWIN-I            STORAGE             225.21      5.10       0.0
+  CMRYCOR-I            STORAGE             224.31      5.85       0.0
+  CMRYCSO              STORAGE             223.40      3.00       0.0
+  CMRYWSM-I            STORAGE             224.67      5.34       0.0
+  CNOTDOM-I            STORAGE             226.44      3.63       0.0
+  CNOTSHB-I            STORAGE             225.98      3.96       0.0
+  CPAC72-I             STORAGE             226.85      3.09       0.0
+  CPAC75-I             STORAGE             227.80      1.92       0.0
+  CPORBAN-I            STORAGE             224.72      5.51       0.0
+  CPORBUR-I            STORAGE             224.96      4.94       0.0
+  CPORCAN-I            STORAGE             225.82      4.42       0.0
+  CPORDOM-I            STORAGE             225.12      5.33       0.0
+  CPORGRE-I            STORAGE             225.54      5.00       0.0
+  CPORHOM-I            STORAGE             226.26      3.95       0.0
+  CPORLIP-I            STORAGE             223.92      6.20       0.0
+  CPORSHB-I            STORAGE             224.67      5.78       0.0
+  CPORSPR-I            STORAGE             226.34      4.16       0.0
+  CPORWLL-I            STORAGE             226.79      3.86       0.0
+  CPREWAL              STORAGE             225.29      4.80       0.0
+  CSARARL-I            STORAGE             226.06      3.38       0.0
+  CSARBUR-I            STORAGE             225.56      4.20       0.0
+  CSIMELC-I            STORAGE             227.20      3.16       0.0
+  CSIMPOR              STORAGE             225.95      4.24       0.0
+  CSIMSAR-I            STORAGE             227.69      1.74       0.0
+  CSIMSTM-I            STORAGE             226.57      3.31       0.0
+  CSIMWEL-I            STORAGE             228.66      0.86       0.0
+  CSMTING-I            STORAGE             225.37      4.89       0.0
+  CSTMSHB-I            STORAGE             225.58      4.76       0.0
+  CWALPUR-I            STORAGE             225.11      4.99       0.0
+  CWELDOM-I            STORAGE             226.82      3.39       0.0
+  CWELSHB-I            STORAGE             226.34      3.46       0.0
+  CWSMARL-I            STORAGE             226.54      3.44       0.0
+  CWSMCAN-I            STORAGE             225.96      4.14       0.0
+  CWSMETH-I            STORAGE             226.28      3.70       0.0
+  CWSMWAL-I            STORAGE             225.59      4.59       0.0
+  SALEMAU-I            STORAGE             224.44      7.92       0.0
+  SALVNOT-I            STORAGE             223.62      8.39       0.0
+  SALVSAR-I            STORAGE             222.96      9.27       0.0
+  SALVWEL-I            STORAGE             223.20      9.15       0.0
+  SBUR28               STORAGE             222.25     10.40       0.0
+  SBUREIN-I            STORAGE             222.16     10.25       0.0
+  SBURELC-I            STORAGE             222.74     10.13       0.0
+  SBURPOR-I            STORAGE             222.03     10.29       0.0
+  SBURSMT-I            STORAGE             222.56      9.66       0.0
+  SCANPAL              STORAGE             222.26      8.95       0.0
+  SCANPRE-I            STORAGE             222.95      9.05       0.0
+  SCANWOL-I            STORAGE             222.41      8.55       0.0
+  SCANWSM-I            STORAGE             222.58      9.96       0.0
+  SDUM1-I              STORAGE             225.44      6.56       0.0
+  SDUM2-I              STORAGE             225.86      6.64       0.0
+  SDUM3-I              STORAGE             226.99      5.51       0.0
+  SDUM4                STORAGE             224.70      7.50       0.0
+  SDUM5                STORAGE             224.39      7.81       0.0
+  SELCDOM-I            STORAGE             225.76      7.09       0.0
+  SLARWIL-I            STORAGE             223.96      8.24       0.0
+  SLENWSM-I            STORAGE             221.77     10.66       0.0
+  SMAULOG-I            STORAGE             224.55      8.65       0.0
+  SMCP85-I             STORAGE             225.02      7.22       0.0
+  SMCPMCD-I            STORAGE             223.82      8.76       0.0
+  SMCPNOT              STORAGE             223.74      8.54       0.0
+  SMYRWIN-I            STORAGE             224.56      7.64       0.0
+  SNOTMYR-I            STORAGE             224.40      8.00       0.0
+  SNOTWLL-I            STORAGE             226.15      6.25       0.0
+  SPORDOM-I            STORAGE             223.34      9.63       0.0
+  SPORGRE-I            STORAGE             223.81      9.29       0.0
+  SPORSHB-I            STORAGE             221.67     11.01       0.0
+  SPORSPR-I            STORAGE             224.12      8.82       0.0
+  SPORWLL-I            STORAGE             224.52      8.59       0.0
+  SRUB02               STORAGE             221.24     10.26       0.0
+  SRUBPAL-I            STORAGE             221.46     10.42       0.0
+  SRUBWOL-I            STORAGE             221.59     10.80       0.0
+  SSHB33               STORAGE             222.62     10.17       0.0
+  SSHB54-I             STORAGE             223.85      8.54       0.0
+  SSHBELC-I            STORAGE             222.76     10.28       0.0
+  SSHBNOT-I            STORAGE             224.07      8.31       0.0
+  SSHBPAL-I            STORAGE             221.23     10.89       0.0
+  SSHBSAR-I            STORAGE             223.07     10.02       0.0
+  SSHBSTM-I            STORAGE             222.38     10.27       0.0
+  SSHBWEL-I            STORAGE             223.47      8.77       0.0
+  SSHBWLV-I            STORAGE             221.98     10.97       0.0
+  SSHBWSM-I            STORAGE             221.44     11.20       0.0
+  SSIMELC-I            STORAGE             224.70      8.02       0.0
+  SSIMPOR-I            STORAGE             223.51      8.81       0.0
+  SSIMSAR-I            STORAGE             225.73      6.26       0.0
+  SSIMSTM-I            STORAGE             224.15      8.10       0.0
+  SSIMWEL-I            STORAGE             226.24      6.00       0.0
+  SSTMARL-I            STORAGE             224.55      7.85       0.0
+  SSTMDOM-I            STORAGE             224.21      8.56       0.0
+  SWELDOM-I            STORAGE             225.14      7.51       0.0
+  SWELMRY-I            STORAGE             226.80      5.34       0.0
+  SWELVIC-I            STORAGE             226.54      5.43       0.0
+  SWOLHOM-I            STORAGE             223.90      6.75       0.0
+  SWSMARL-I            STORAGE             224.64      6.32       0.0
+  SWSMHOM-I            STORAGE             224.20      8.21       0.0
+  SXANALE-I            STORAGE             224.34      8.09       0.0
+  SXANELG-I            STORAGE             224.08      8.69       0.0
+  
+  
+  ************
+  Link Summary
+  ************
+  Name             From Node        To Node          Type            Length    %Slope Roughness
+  ---------------------------------------------------------------------------------------------
+  CHEN90           CHEN90-I         CLOG80-I         CONDUIT          136.0    0.0566    0.0140
+  CHIGMAU          CHIGMAU-I        CHEN90-I         CONDUIT          307.0    0.0274    0.0140
+  CPORSHB          CPORSHB-I        CAUBPOR          CONDUIT           83.0    0.9193    0.0140
+  CPORDOM          CPORDOM-I        CPORSHB-I        CONDUIT          131.0    0.3382    0.0140
+  CPORGRE          CPORGRE-I        CPORDOM-I        CONDUIT          127.0    0.3331    0.0140
+  CPORSPR          CPORSPR-I        CPORGRE-I        CONDUIT          104.0    0.7644    0.0140
+  CPORWLL          CPORWLL-I        CPORSPR-I        CONDUIT          136.0    0.3368    0.0140
+  CPORBAN          CPORBAN-I        CPORLIP-I        CONDUIT           84.0    0.9477    0.0140
+  CPORBUR          CPORBUR-I        CPORBAN-I        CONDUIT          120.0    0.2033    0.0140
+  CSMTING          CSMTING-I        CLIPSMT-I        CONDUIT           81.0    0.7111    0.0140
+  CSTMSHB          CSTMSHB-I        CSMTING-I        CONDUIT           81.0    0.1272    0.0140
+  CELCING          CELCING-I        CLIPELC-I        CONDUIT           89.0    0.9439    0.0140
+  CELCGRF          CELCGRF-I        CELCING-I        CONDUIT          155.0    0.2387    0.0140
+  CWELSHB          CWELSHB-I        CLIPWEL-I        CONDUIT          161.0    0.2217    0.0140
+  CWELDOM          CWELDOM-I        CWELSHB-I        CONDUIT          166.0    0.2940    0.0140
+  CNOTSHB          CNOTSHB-I        CLIPNOT-I        CONDUIT          183.0    0.2388    0.0140
+  CNOTDOM          CNOTDOM-I        CNOTSHB-I        CONDUIT          179.0    0.2564    0.0140
+  CPAC72           CPAC72-I         CMCPPAC-I        CONDUIT          129.0    0.2488    0.0140
+  CPAC75           CPAC75-I         CPAC72-I         CONDUIT          163.0    0.5798    0.0140
+  CLOGYEO          CLOGYEO-I        CMCPLOG-I        CONDUIT          204.0    0.1034    0.0140
+  CLOGWNK          CLOGWNK-I        CLOGYEO-I        CONDUIT          216.0    0.0995    0.0140
+  CAUBWOL          CAUBWOL-I        XCAUBPAL         CONDUIT          246.0    0.0443    0.0140
+  XCAUBPAL         XCAUBPAL         CAUBPAL-I        CONDUIT          200.0    0.0280    0.0140
+  CAUBWSM          CAUBWSM-I        CAUBWOL-I        CONDUIT          245.0    0.0584    0.0140
+  CAUBPOR          CAUBPOR          CAUBWSM-I        CONDUIT          326.0    0.0365    0.0140
+  CPORLIP          CPORLIP-I        CAUBPOR          CONDUIT          200.0    0.0365    0.0091
+  CLIP25           CLIP25           CPORLIP-I        CONDUIT          271.0    0.0502    0.0140
+  CLIPSMT          CLIPSMT-I        CLIP25           CONDUIT          324.0    0.0503    0.0140
+  CLIP35           CLIP35           CLIPSMT-I        CONDUIT          200.0    0.0445    0.0140
+  CLIPELC          CLIPELC-I        CLIP35           CONDUIT          200.0    0.0440    0.0140
+  CLIPSAR          CLIPSAR-I        CLIPELC-I        CONDUIT          402.0    0.0490    0.0140
+  CLIPWEL          CLIPWEL-I        CLIPSAR-I        CONDUIT          381.0    0.0501    0.0140
+  CLIPYAR          CLIPYAR          CLIPWEL-I        CONDUIT          226.0    0.0509    0.0140
+  CLIPNOT          CLIPNOT-I        CLIPYAR          CONDUIT          332.0    0.0503    0.0140
+  CMCPWIN          CMCPWIN-I        CLIPNOT-I        CONDUIT          200.0    0.0320    0.0114
+  CMCPBAN          CMCPBAN-I        CMCPWIN-I        CONDUIT          203.0    0.0946    0.0140
+  CMCPELG          CMCPELG-I        CMCPBAN-I        CONDUIT          243.0    0.0601    0.0140
+  CMCPROS          CMCPROS          CMCPELG-I        CONDUIT          200.0    0.0320    0.0101
+  CMCPPAC          CMCPPAC-I        CMCPROS          CONDUIT          200.0    0.0215    0.0094
+  CMCPLOG          CMCPLOG-I        CMCPPAC-I        CONDUIT          196.0    0.1617    0.0140
+  CALEXAN          CALEXAN-I        CMCPPAC-I        CONDUIT          436.0    0.0493    0.0140
+  CLOG80           CLOG80-I         CALEXAN-I        CONDUIT          143.0    0.0559    0.0140
+  CLOGELE          CLOGELE-I        CLOGWNK-I        CONDUIT          230.0    0.0970    0.0140
+  CLOGVIN          CLOGVIN-I        CLOGELE-I        CONDUIT          212.0    0.0934    0.0140
+  CLOGQUE          CLOGQUE-I        CLOGVIN-I        CONDUIT          195.0    0.0626    0.0140
+  CLOGCEC          CLOGCEC-I        CLOGQUE-I        CONDUIT          229.0    0.1279    0.0140
+  CCECROY          CCECROY-I        CLOGCEC-I        CONDUIT          191.0    0.2440    0.0140
+  CSARBUR          CSARBUR-I        CLIPSAR-I        CONDUIT          162.0    0.3809    0.0140
+  CSARARL          CSARARL-I        CSARBUR-I        CONDUIT          146.0    0.3363    0.0140
+  CCOROUT1         CCOROUT1         CCOROUT          CONDUIT          100.0    0.1010    0.0050
+  CCORMID          CCORMID-I        CCORDIV          CONDUIT          165.0    0.0976    0.0140
+  CMRYCOR          CMRYCOR-I        CCORMID-I        CONDUIT          194.0    0.1021    0.0140
+  CMRYCSO          CMRYCSO          CMRYOUT          CONDUIT          300.0    0.0023    0.0140
+  CMRYWSM          CMRYWSM-I        CMRYCOR-I        CONDUIT          335.0    0.1101    0.0140
+  CWALPUR          CWALPUR-I        CMRYWSM-I        CONDUIT          292.0    0.1493    0.0140
+  CWSMWAL          CWSMWAL-I        CWALPUR-I        CONDUIT           88.0    0.3125    0.0140
+  CWSMCAN          CWSMCAN-I        CWSMWAL-I        CONDUIT          162.0    0.2272    0.0140
+  CWSMETH          CWSMETH-I        CWSMCAN-I        CONDUIT          131.0    0.2382    0.0140
+  CWSMARL          CWSMARL-I        CWSMETH-I        CONDUIT          130.0    0.2038    0.0140
+  CPREWAL          CPREWAL          CWALPUR-I        CONDUIT          130.0    0.1385    0.0140
+  CCANPRE          CCANPRE-I        CPREWAL          CONDUIT          188.0    0.1250    0.0140
+  CPORCAN          CPORCAN-I        CCANPRE-I        CONDUIT          281.0    0.1050    0.0140
+  CSIMPOR          CSIMPOR          CPORCAN-I        CONDUIT          200.0    0.0655    0.0076
+  CPORHOM          CPORHOM-I        CSIMPOR          CONDUIT           93.0    0.3376    0.0140
+  CSIMSTM          CSIMSTM-I        CSIMPOR          CONDUIT          400.0    0.1548    0.0140
+  CSIMELC          CSIMELC-I        CSIMSTM-I        CONDUIT          348.0    0.1813    0.0140
+  CSIMSAR          CSIMSAR-I        CSIMELC-I        CONDUIT          413.0    0.1182    0.0140
+  CSIMWEL          CSIMWEL-I        CSIMSAR-I        CONDUIT          382.0    0.2421    0.0140
+  CAUBSPS          CAUBSPS          CAUBOUT          CONDUIT          300.0    0.0230    0.0140
+  SSHBPAL          SSHBPAL-I        SAUBOUT          CONDUIT          284.0    0.0810    0.0230
+  SSHBWSM          SSHBWSM-I        SSHBPAL-I        CONDUIT          262.0    0.0802    0.0140
+  SPORSHB          SPORSHB-I        SSHBWSM-I        CONDUIT          284.0    0.0810    0.0140
+  SPORDOM          SPORDOM-I        SPORSHB-I        CONDUIT          157.0    0.2815    0.0140
+  SPORGRE          SPORGRE-I        SPORDOM-I        CONDUIT          101.0    0.3010    0.0140
+  SPORSPR          SPORSPR-I        SPORGRE-I        CONDUIT          102.0    0.3069    0.0140
+  SPORWLL          SPORWLL-I        SPORSPR-I        CONDUIT          133.0    0.3015    0.0140
+  SSHBWLV          SSHBWLV-I        SPORSHB-I        CONDUIT          275.0    0.0982    0.0140
+  SSHBSTM          SSHBSTM-I        SSHBWLV-I        CONDUIT          386.0    0.1036    0.0140
+  SSTMDOM          SSTMDOM-I        SSHBSTM-I        CONDUIT          155.0    0.4968    0.0140
+  SELCDOM          SELCDOM-I        SSTMDOM-I        CONDUIT          351.0    0.4416    0.0140
+  SSHB33           SSHB33           SSHBSTM-I        CONDUIT          200.0    0.0600    0.0109
+  SSHBELC          SSHBELC-I        SSHB33           CONDUIT          218.0    0.0642    0.0140
+  SSHBSAR          SSHBSAR-I        SSHBELC-I        CONDUIT          421.0    0.0736    0.0140
+  SSHBWEL          SSHBWEL-I        SSHBSAR-I        CONDUIT          371.0    0.0674    0.0140
+  SSHB54           SSHB54-I         SSHBWEL-I        CONDUIT          315.0    0.0698    0.0140
+  SSHBNOT          SSHBNOT-I        SSHB54-I         CONDUIT          315.0    0.0698    0.0140
+  SRS-XCON1        SSHBNOT-I        SMCPNOT          CONDUIT          238.6    0.1383    0.0140
+  SRS-XCON2        SSHBWEL-I        SALVWEL-I        CONDUIT          373.0    0.0724    0.0140
+  SNOTMYR          SNOTMYR-I        SSHBNOT-I        CONDUIT          253.0    0.0791    0.0140
+  SMYRWIN          SMYRWIN-I        SNOTMYR-I        CONDUIT          200.0    0.0800    0.0086
+  SNOTWLL          SNOTWLL-I        SNOTMYR-I        CONDUIT           74.0    1.3920    0.0140
+  SRUB02           SRUB02           SRUBOUT          CONDUIT          300.0    0.0300    0.0140
+  SRUBWOL          SRUBWOL-I        XSRUBPAL         CONDUIT          235.0    0.0383    0.0140
+  XSRUBPAL         XSRUBPAL         SRUBPAL-I        CONDUIT          200.0    0.0200    0.0140
+  SLENWSM          SLENWSM-I        SRUBWOL-I        CONDUIT          254.0    0.0709    0.0140
+  SBURPOR          SBURPOR-I        SLENWSM-I        CONDUIT          478.0    0.0544    0.0140
+  SBUREIN          SBUREIN-I        SBURPOR-I        CONDUIT          197.0    0.0609    0.0140
+  SBUR28           SBUR28           SBUREIN-I        CONDUIT          200.0    0.0450    0.0118
+  SBURSMT          SBURSMT-I        SBUR28           CONDUIT          273.0    0.0586    0.0140
+  SBURELC          SBURELC-I        SBURSMT-I        CONDUIT          257.0    0.0700    0.0140
+  SALVSAR          SALVSAR-I        SBURELC-I        CONDUIT          409.0    0.0538    0.0140
+  SALVWEL          SALVWEL-I        SALVSAR-I        CONDUIT          418.0    0.0574    0.0140
+  SALVNOT          SALVNOT-I        SALVWEL-I        CONDUIT          420.0    0.0643    0.0140
+  SMCPNOT          SMCPNOT          SALVNOT-I        CONDUIT          250.0    0.0480    0.0129
+  SMCPMCD          SMCPMCD-I        SMCPNOT          CONDUIT          250.0    0.0320    0.0099
+  SLARWIL          SLARWIL-I        SMCPMCD-I        CONDUIT          296.0    0.0476    0.0140
+  SXANELG          SXANELG-I        SLARWIL-I        CONDUIT          250.0    0.0476    0.0108
+  SXANALE          SXANALE-I        SXANELG-I        CONDUIT          250.0    0.0428    0.0134
+  SALEMAU          SALEMAU-I        SXANALE-I        CONDUIT          250.0    0.0428    0.0128
+  SMAULOG          SMAULOG-I        SALEMAU-I        CONDUIT          250.0    0.0424    0.0080
+  SMCP85           SMCP85-I         SMAULOG-I        CONDUIT          271.0    0.0590    0.0140
+  SCANOUT1         SCANOUT1         SCANOUT          CONDUIT          300.0    0.0533    0.0140
+  SCANWOL          SCANWOL-I        XSCANPAL         CONDUIT          200.0    0.0650    0.0099
+  XSCANPAL         XSCANPAL         SCANPAL          CONDUIT          200.0    0.0100    0.0140
+  SCANWSM          SCANWSM-I        SCANWOL-I        CONDUIT          277.0    0.0614    0.0140
+  SWSMHOM          SWSMHOM-I        SCANWSM-I        CONDUIT          181.0    0.4696    0.0140
+  SWSMARL          SWSMARL-I        SWSMHOM-I        CONDUIT           86.0    0.5116    0.0140
+  SCANPRE          SCANPRE-I        SCANWSM-I        CONDUIT          214.0    0.0935    0.0140
+  SSIMPOR          SSIMPOR-I        SCANPRE-I        CONDUIT          316.0    0.1772    0.0140
+  SSIMSTM          SSIMSTM-I        SSIMPOR-I        CONDUIT          495.0    0.1293    0.0140
+  SSTMARL          SSTMARL-I        SSIMSTM-I        CONDUIT          156.0    0.1295    0.0140
+  SSIMELC          SSIMELC-I        SSIMSTM-I        CONDUIT          450.0    0.1222    0.0140
+  SSIMSAR          SSIMSAR-I        SSIMELC-I        CONDUIT          391.0    0.1841    0.0140
+  SSIMWEL          SSIMWEL-I        SSIMSAR-I        CONDUIT          369.0    0.1377    0.0140
+  SWELVIC          SWELVIC-I        SSIMWEL-I        CONDUIT          243.0    0.1202    0.0140
+  SWELMRY          SWELMRY-I        SWELVIC-I        CONDUIT          206.0    0.1262    0.0140
+  SWELDOM          SWELDOM-I        SSHBWEL-I        CONDUIT          148.0    0.7095    0.0140
+  SWOLHOM          SWOLHOM-I        SCANWOL-I        CONDUIT          170.0    0.6824    0.0140
+  SDUM1            SDUM1-I          SMCP85-I         CONDUIT          500.0    0.0840    0.0140
+  SDUM2            SDUM2-I          SDUM1-I          CONDUIT          400.0    0.1050    0.0140
+  SDUM3            SDUM3-I          SDUM2-I          CONDUIT          400.0    0.2825    0.0140
+  SMCP85A          SMCP85-I         SDUM4            CONDUIT          402.0    0.0786    0.0140
+  SDUM4            SDUM4            SDUM5            CONDUIT          402.0    0.0789    0.0140
+  SDUM5            SDUM5            SSHBNOT-I        CONDUIT          402.0    0.0789    0.0140
+  PUMP@SCANPAL-SCANOUT1 SCANPAL          SCANOUT1         TYPE4 PUMP  
+  PUMP@SRUBPAL-I-SRUB02 SRUBPAL-I        SRUB02           TYPE4 PUMP  
+  PUMP@CAUBPAL-I-CAUBSPS CAUBPAL-I        CAUBSPS          TYPE4 PUMP  
+  PUMP@CCORDIV-CCOROUT1 CCORDIV          CCOROUT1         TYPE4 PUMP  
+  PUMP@CMRYCOR-I-CMRYCSO CMRYCOR-I        CMRYCSO          TYPE4 PUMP  
+  
+  
+  *********************
+  Cross Section Summary
+  *********************
+                                        Full     Full     Hyd.     Max.   No. of     Full
+  Conduit          Shape               Depth     Area     Rad.    Width  Barrels     Flow
+  ---------------------------------------------------------------------------------------
+  CHEN90           EGG                  1.91     1.85     0.37     1.27        1     1.62
+  CHIGMAU          EGG                  1.83     1.71     0.35     1.22        1     1.01
+  CPORSHB          CIRCULAR             0.91     0.66     0.23     0.91        1     1.68
+  CPORDOM          CIRCULAR             0.91     0.66     0.23     0.91        1     1.02
+  CPORGRE          CIRCULAR             0.91     0.66     0.23     0.91        1     1.01
+  CPORSPR          CIRCULAR             0.76     0.46     0.19     0.76        1     0.94
+  CPORWLL          CIRCULAR             0.76     0.46     0.19     0.76        1     0.63
+  CPORBAN          CIRCULAR             0.91     0.66     0.23     0.91        1     1.71
+  CPORBUR          CIRCULAR             0.91     0.66     0.23     0.91        1     0.79
+  CSMTING          CIRCULAR             0.76     0.46     0.19     0.76        1     0.91
+  CSTMSHB          CIRCULAR             0.76     0.46     0.19     0.76        1     0.38
+  CELCING          CIRCULAR             0.91     0.66     0.23     0.91        1     1.70
+  CELCGRF          CIRCULAR             0.76     0.46     0.19     0.76        1     0.53
+  CWELSHB          CIRCULAR             0.91     0.66     0.23     0.91        1     0.82
+  CWELDOM          CIRCULAR             0.76     0.46     0.19     0.76        1     0.58
+  CNOTSHB          CIRCULAR             0.76     0.46     0.19     0.76        1     0.53
+  CNOTDOM          CIRCULAR             0.76     0.46     0.19     0.76        1     0.55
+  CPAC72           CIRCULAR             0.91     0.66     0.23     0.91        1     0.87
+  CPAC75           CIRCULAR             0.91     0.66     0.23     0.91        1     1.33
+  CLOGYEO          CIRCULAR             0.76     0.46     0.19     0.76        1     0.35
+  CLOGWNK          CIRCULAR             0.76     0.46     0.19     0.76        1     0.34
+  CAUBWOL          EGG                  2.80     4.00     0.54     1.87        1     3.99
+  XCAUBPAL         RECT_CLOSED          4.00    12.00     0.86     3.00        1    12.94
+  CAUBWSM          EGG                  2.85     4.15     0.55     1.90        1     4.81
+  CAUBPOR          EGG                  2.68     3.67     0.52     1.79        1     3.23
+  CPORLIP          EGG                  2.56     3.35     0.49     1.71        1     4.39
+  CLIP25           EGG                  2.56     3.35     0.49     1.71        1     3.35
+  CLIPSMT          EGG                  2.56     3.35     0.49     1.71        1     3.35
+  CLIP35           EGG                  2.56     3.35     0.49     1.71        1     3.15
+  CLIPELC          EGG                  2.56     3.35     0.49     1.71        1     3.13
+  CLIPSAR          EGG                  2.41     2.96     0.46     1.61        1     2.81
+  CLIPWEL          EGG                  2.21     2.49     0.43     1.47        1     2.26
+  CLIPYAR          EGG                  2.16     2.39     0.42     1.44        1     2.15
+  CLIPNOT          EGG                  2.16     2.39     0.42     1.44        1     2.14
+  CMCPWIN          EGG                  2.16     2.39     0.42     1.44        1     2.10
+  CMCPBAN          EGG                  2.16     2.39     0.42     1.44        1     2.94
+  CMCPELG          EGG                  2.16     2.39     0.42     1.44        1     2.34
+  CMCPROS          EGG                  2.07     2.19     0.40     1.38        1     2.11
+  CMCPPAC          EGG                  2.07     2.19     0.40     1.38        1     1.86
+  CMCPLOG          EGG                  1.22     0.76     0.24     0.81        1     0.83
+  CALEXAN          EGG                  1.91     1.85     0.37     1.27        1     1.51
+  CLOG80           EGG                  1.91     1.85     0.37     1.27        1     1.61
+  CLOGELE          CIRCULAR             0.76     0.46     0.19     0.76        1     0.34
+  CLOGVIN          CIRCULAR             0.76     0.46     0.19     0.76        1     0.33
+  CLOGQUE          CIRCULAR             0.76     0.46     0.19     0.76        1     0.27
+  CLOGCEC          CIRCULAR             0.76     0.46     0.19     0.76        1     0.39
+  CCECROY          CIRCULAR             0.76     0.46     0.19     0.76        1     0.53
+  CSARBUR          CIRCULAR             0.91     0.66     0.23     0.91        1     1.08
+  CSARARL          CIRCULAR             0.76     0.46     0.19     0.76        1     0.63
+  CCOROUT1         EGG                  1.64     1.37     0.32     1.09        1     4.06
+  CCORMID          CIRCULAR             1.50     1.77     0.38     1.50        1     2.05
+  CMRYCOR          CIRCULAR             1.50     1.77     0.38     1.50        1     2.10
+  CMRYCSO          CIRCULAR             0.75     0.44     0.19     0.75        1     0.05
+  CMRYWSM          EGG                  1.83     1.71     0.35     1.22        1     2.02
+  CWALPUR          EGG                  1.58     1.28     0.31     1.06        1     1.61
+  CWSMWAL          CIRCULAR             0.91     0.66     0.23     0.91        1     0.98
+  CWSMCAN          CIRCULAR             0.91     0.66     0.23     0.91        1     0.83
+  CWSMETH          CIRCULAR             0.91     0.66     0.23     0.91        1     0.85
+  CWSMARL          CIRCULAR             0.76     0.46     0.19     0.76        1     0.49
+  CPREWAL          EGG                  1.58     1.28     0.31     1.06        1     1.55
+  CCANPRE          EGG                  1.58     1.28     0.31     1.06        1     1.47
+  CPORCAN          EGG                  1.58     1.28     0.31     1.06        1     1.35
+  CSIMPOR          EGG                  1.22     0.76     0.24     0.81        1     0.97
+  CPORHOM          CIRCULAR             0.76     0.46     0.19     0.76        1     0.63
+  CSIMSTM          CIRCULAR             0.76     0.46     0.19     0.76        1     0.42
+  CSIMELC          CIRCULAR             0.76     0.46     0.19     0.76        1     0.46
+  CSIMSAR          CIRCULAR             0.61     0.29     0.15     0.61        1     0.20
+  CSIMWEL          CIRCULAR             0.61     0.29     0.15     0.61        1     0.29
+  CAUBSPS          CIRCULAR             2.85     6.38     0.71     2.85        1     5.51
+  SSHBPAL          CIRCULAR             2.89     6.56     0.72     2.89        1     6.54
+  SSHBWSM          CIRCULAR             2.85     6.38     0.71     2.85        1    10.29
+  SPORSHB          CIRCULAR             2.85     6.38     0.71     2.85        1    10.35
+  SPORDOM          CIRCULAR             1.50     1.77     0.38     1.50        1     3.48
+  SPORGRE          CIRCULAR             1.35     1.43     0.34     1.35        1     2.72
+  SPORSPR          CIRCULAR             1.35     1.43     0.34     1.35        1     2.75
+  SPORWLL          CIRCULAR             1.35     1.43     0.34     1.35        1     2.72
+  SSHBWLV          CIRCULAR             2.70     5.73     0.68     2.70        1     9.86
+  SSHBSTM          CIRCULAR             2.70     5.73     0.68     2.70        1    10.13
+  SSTMDOM          CIRCULAR             1.27     1.27     0.32     1.27        1     2.97
+  SELCDOM          CIRCULAR             1.25     1.22     0.31     1.25        1     2.65
+  SSHB33           CIRCULAR             2.43     4.64     0.61     2.43        1     7.48
+  SSHBELC          CIRCULAR             2.40     4.52     0.60     2.40        1     5.83
+  SSHBSAR          CIRCULAR             2.43     4.64     0.61     2.43        1     6.45
+  SSHBWEL          CIRCULAR             2.25     3.98     0.56     2.25        1     5.02
+  SSHB54           CIRCULAR             2.15     3.63     0.54     2.15        1     4.53
+  SSHBNOT          CIRCULAR             2.15     3.63     0.54     2.15        1     4.53
+  SRS-XCON1        CIRCULAR             1.20     1.13     0.30     1.20        1     1.35
+  SRS-XCON2        CIRCULAR             1.20     1.13     0.30     1.20        1     0.97
+  SNOTMYR          CIRCULAR             1.50     1.77     0.38     1.50        1     1.85
+  SMYRWIN          CIRCULAR             1.50     1.77     0.38     1.50        1     3.02
+  SNOTWLL          CIRCULAR             0.60     0.28     0.15     0.60        1     0.67
+  SRUB02           CIRCULAR             2.70     5.73     0.68     2.70        1     5.45
+  SRUBWOL          CIRCULAR             2.70     5.73     0.68     2.70        1     6.16
+  XSRUBPAL         RECT_CLOSED          4.00    12.00     0.86     3.00        1    10.94
+  SLENWSM          CIRCULAR             2.70     5.73     0.68     2.70        1     8.38
+  SBURPOR          CIRCULAR             2.70     5.73     0.68     2.70        1     7.34
+  SBUREIN          CIRCULAR             2.70     5.73     0.68     2.70        1     7.77
+  SBUR28           CIRCULAR             2.70     5.73     0.68     2.70        1     7.92
+  SBURSMT          CIRCULAR             2.55     5.11     0.64     2.55        1     6.54
+  SBURELC          CIRCULAR             2.55     5.11     0.64     2.55        1     7.15
+  SALVSAR          CIRCULAR             2.55     5.11     0.64     2.55        1     6.27
+  SALVWEL          CIRCULAR             2.59     5.27     0.65     2.59        1     6.75
+  SALVNOT          CIRCULAR             2.40     4.52     0.60     2.40        1     5.83
+  SMCPNOT          CIRCULAR             2.40     4.52     0.60     2.40        1     5.47
+  SMCPMCD          CIRCULAR             2.40     4.52     0.60     2.40        1     5.82
+  SLARWIL          CIRCULAR             1.95     2.99     0.49     1.95        1     2.88
+  SXANELG          CIRCULAR             1.95     2.99     0.49     1.95        1     3.74
+  SXANALE          CIRCULAR             1.80     2.54     0.45     1.80        1     2.31
+  SALEMAU          CIRCULAR             1.80     2.54     0.45     1.80        1     2.42
+  SMAULOG          CIRCULAR             1.80     2.54     0.45     1.80        1     3.85
+  SMCP85           CIRCULAR             1.35     1.43     0.34     1.35        1     1.20
+  SCANOUT1         CIRCULAR             1.98     3.06     0.49     1.98        1     3.16
+  SCANWOL          CIRCULAR             1.98     3.06     0.49     1.98        1     4.93
+  XSCANPAL         RECT_CLOSED          4.00     8.00     0.67     2.00        1     4.36
+  SCANWSM          CIRCULAR             1.95     2.99     0.49     1.95        1     3.27
+  SWSMHOM          CIRCULAR             1.12     0.99     0.28     1.12        1     2.09
+  SWSMARL          CIRCULAR             1.12     0.99     0.28     1.12        1     2.18
+  SCANPRE          CIRCULAR             1.80     2.54     0.45     1.80        1     3.26
+  SSIMPOR          CIRCULAR             1.65     2.14     0.41     1.65        1     3.56
+  SSIMSTM          CIRCULAR             1.65     2.14     0.41     1.65        1     3.04
+  SSTMARL          CIRCULAR             1.12     0.99     0.28     1.12        1     1.10
+  SSIMELC          CIRCULAR             1.50     1.77     0.38     1.50        1     2.30
+  SSIMSAR          CIRCULAR             1.20     1.13     0.30     1.20        1     1.55
+  SSIMWEL          CIRCULAR             1.20     1.13     0.30     1.20        1     1.34
+  SWELVIC          CIRCULAR             1.20     1.13     0.30     1.20        1     1.26
+  SWELMRY          CIRCULAR             1.20     1.13     0.30     1.20        1     1.29
+  SWELDOM          CIRCULAR             1.20     1.13     0.30     1.20        1     3.05
+  SWOLHOM          CIRCULAR             1.12     0.99     0.28     1.12        1     2.52
+  SDUM1            CIRCULAR             1.80     2.54     0.45     1.80        1     3.09
+  SDUM2            CIRCULAR             1.50     1.77     0.38     1.50        1     2.13
+  SDUM3            CIRCULAR             1.50     1.77     0.38     1.50        1     3.49
+  SMCP85A          CIRCULAR             1.80     2.54     0.45     1.80        1     2.99
+  SDUM4            CIRCULAR             1.80     2.54     0.45     1.80        1     3.00
+  SDUM5            CIRCULAR             1.80     2.54     0.45     1.80        1     3.00
+  
+  
+  ****************
+  Analysis Options
+  ****************
+  Flow Units ............... CMS
+  Process Models:
+    Rainfall/Runoff ........ YES
+    RDII ................... NO
+    Snowmelt ............... NO
+    Groundwater ............ NO
+    Flow Routing ........... YES
+    Ponding Allowed ........ NO
+    Water Quality .......... NO
+  Infiltration Method ...... HORTON
+  Flow Routing Method ...... DYNWAVE
+  Surcharge Method ......... EXTRAN
+  Starting Date ............ 01/01/1999 01:00:00
+  Ending Date .............. 01/01/1999 05:00:00
+  Antecedent Dry Days ...... 0.0
+  Report Time Step ......... 00:00:30
+  Wet Time Step ............ 00:01:00
+  Dry Time Step ............ 00:10:00
+  Routing Time Step ........ 30.00 sec
+  Variable Time Step ....... YES
+  Maximum Trials ........... 8
+  Number of Threads ........ 1
+  Head Tolerance ........... 0.001524 m
+  
+  
+  **************************        Volume         Depth
+  Runoff Quantity Continuity     hectare-m            mm
+  **************************     ---------       -------
+  Total Precipitation ......        25.557        42.200
+  Evaporation Loss .........         0.000         0.000
+  Infiltration Loss ........        11.896        19.642
+  Surface Runoff ...........        13.145        21.705
+  Final Storage ............         0.522         0.863
+  Continuity Error (%) .....        -0.025
+  
+  
+  **************************        Volume        Volume
+  Flow Routing Continuity        hectare-m      10^6 ltr
+  **************************     ---------     ---------
+  Dry Weather Inflow .......         0.000         0.000
+  Wet Weather Inflow .......        13.107       131.067
+  Groundwater Inflow .......         0.000         0.000
+  RDII Inflow ..............         0.000         0.000
+  External Inflow ..........         0.000         0.000
+  External Outflow .........        12.529       125.293
+  Flooding Loss ............         0.032         0.320
+  Evaporation Loss .........         0.000         0.000
+  Exfiltration Loss ........         0.000         0.000
+  Initial Stored Volume ....         2.301        23.011
+  Final Stored Volume ......         2.899        28.987
+  Continuity Error (%) .....        -0.339
+  
+  
+  *************************
+  Highest Continuity Errors
+  *************************
+  Node CWELSHB-I (2.66%)
+  Node CALEXAN-I (2.37%)
+  Node CPAC72-I (2.22%)
+  Node CLIPSAR-I (1.98%)
+  Node SSHBSAR-I (1.75%)
+  
+  
+  ***************************
+  Time-Step Critical Elements
+  ***************************
+  Link CPORSHB (25.71%)
+  Link SNOTWLL (7.25%)
+  Link CLIPELC (6.21%)
+  Link CLIP35 (6.21%)
+  Link CELCING (5.27%)
+  
+  
+  ********************************
+  Highest Flow Instability Indexes
+  ********************************
+  Link PUMP@SCANPAL-SCANOUT1 (49)
+  Link PUMP@SRUBPAL-I-SRUB02 (44)
+  Link XSRUBPAL (19)
+  Link XSCANPAL (17)
+  Link SRUB02 (13)
+  
+  
+  *********************************
+  Most Frequent Nonconverging Nodes
+  *********************************
+  Node SAUBOUT (11.11%)
+  Node SCANOUT (11.11%)
+  Node SRUBOUT (11.11%)
+  Node CAUBOUT (11.11%)
+  Node CCOROUT (11.11%)
+  
+  
+  *************************
+  Routing Time Step Summary
+  *************************
+  Minimum Time Step           :     1.38 sec
+  Average Time Step           :    13.56 sec
+  Maximum Time Step           :    30.00 sec
+  % of Time in Steady State   :     0.00
+  Average Iterations per Step :     3.23
+  % of Steps Not Converging   :    11.11
+  Time Step Frequencies       :
+     30.000 - 13.228 sec      :    48.35 %
+     13.228 -  5.833 sec      :    27.80 %
+      5.833 -  2.572 sec      :    19.89 %
+      2.572 -  1.134 sec      :     3.96 %
+      1.134 -  0.500 sec      :     0.00 %
+  
+  
+  ***************************
+  Subcatchment Runoff Summary
+  ***************************
+  
+  ------------------------------------------------------------------------------------------------------------------------------
+                            Total      Total      Total      Total     Imperv       Perv      Total       Total     Peak  Runoff
+                           Precip      Runon       Evap      Infil     Runoff     Runoff     Runoff      Runoff   Runoff   Coeff
+  Subcatchment                 mm         mm         mm         mm         mm         mm         mm    10^6 ltr      CMS
+  ------------------------------------------------------------------------------------------------------------------------------
+  CMCPWIN                   42.20       0.00       0.00      10.13      30.83       0.00      30.83        1.06     0.56   0.731
+  CMCPBAN                   42.20       0.00       0.00       7.17      33.65       0.00      33.65        0.58     0.31   0.797
+  CMCPELG                   42.20       0.00       0.00      21.94      19.50       0.00      19.50        0.27     0.14   0.462
+  CMCPPAC                   42.20       0.00       0.00       7.17      33.65       0.00      33.65        0.77     0.40   0.797
+  CPAC72                    42.20       0.00       0.00      21.10      20.31       0.00      20.31        0.48     0.25   0.481
+  CPAC75                    42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.57     0.30   0.577
+  CALEXAN                   42.20       0.00       0.00       8.44      32.44       0.00      32.44        0.06     0.03   0.769
+  CLOG80                    42.20       0.00       0.00       4.22      36.47       0.00      36.47        0.43     0.23   0.864
+  CHEN90                    42.20       0.00       0.00      24.48      17.07       0.00      17.07        0.48     0.25   0.405
+  CHIGMAU                   42.20       0.00       0.00      10.97      30.02       0.00      30.02        0.44     0.23   0.711
+  CHEN90-R                  42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.05     0.02   0.097
+  CHIGMAU-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.04     0.02   0.097
+  CMCPLOG                   42.20       0.00       0.00      25.32      16.26       0.00      16.26        0.30     0.16   0.385
+  CLOGYEO                   42.20       0.00       0.00      33.76       8.14       0.00       8.14        0.07     0.04   0.193
+  CLOGYEO-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.00     0.00   0.097
+  CLOGWNK                   42.20       0.00       0.00      27.43      14.23       0.00      14.23        0.34     0.18   0.337
+  CLOGCEC-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.22     0.12   0.097
+  CLOGQUE-R                 42.20       0.00       0.00      34.60       7.33       0.00       7.33        0.06     0.03   0.174
+  CLOGVIN-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.10     0.05   0.097
+  CLOGWNK-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.02     0.01   0.097
+  CLOGELE                   42.20       0.00       0.00      25.32      16.26       0.00      16.26        0.24     0.12   0.385
+  CLOGVIN                   42.20       0.00       0.00      14.77      26.38       0.00      26.38        0.56     0.30   0.625
+  CLOGQUE                   42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.08     0.04   0.577
+  CLOGCEC                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.42     0.22   0.529
+  CCECROY                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.08     0.04   0.529
+  SMCPWIN1                  42.20       0.00       0.00       8.44      32.44       0.00      32.44        0.45     0.23   0.769
+  SMCPWIN2                  42.20       0.00       0.00      11.82      29.21       0.00      29.21        2.00     1.05   0.692
+  SMCPBAN                   42.20       0.00       0.00       7.17      33.65       0.00      33.65        2.33     1.22   0.797
+  SMCPELG                   42.20       0.00       0.00      21.94      19.50       0.00      19.50        1.08     0.57   0.462
+  SMCPPAC                   42.20       0.00       0.00       7.17      33.65       0.00      33.65        3.06     1.61   0.797
+  SPAC72                    42.20       0.00       0.00      21.10      20.31       0.00      20.31        1.92     1.01   0.481
+  SPAC75                    42.20       0.00       0.00      16.88      24.36       0.00      24.36        2.28     1.20   0.577
+  SXANALE                   42.20       0.00       0.00       8.44      32.44       0.00      32.44        0.22     0.12   0.769
+  SLOG80                    42.20       0.00       0.00       4.22      36.47       0.00      36.47        1.72     0.91   0.864
+  SHEN90                    42.20       0.00       0.00      24.48      17.07       0.00      17.07        1.92     1.01   0.405
+  SHIGMAU                   42.20       0.00       0.00      10.97      30.02       0.00      30.02        1.75     0.92   0.711
+  SHEN90-R                  42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.19     0.10   0.097
+  SHIGMAU-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.15     0.08   0.097
+  SMCPLOG                   42.20       0.00       0.00      25.32      16.26       0.00      16.26        1.19     0.63   0.385
+  SLOGYEO                   42.20       0.00       0.00      33.76       8.14       0.00       8.14        0.30     0.16   0.193
+  SLOGYEO-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.02     0.01   0.097
+  SLOGWNK                   42.20       0.00       0.00      27.43      14.23       0.00      14.23        1.36     0.71   0.337
+  SLOGCEC-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.89     0.47   0.097
+  SLOGQUE-R                 42.20       0.00       0.00      34.60       7.33       0.00       7.33        0.24     0.13   0.174
+  SLOGVIN-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.38     0.20   0.097
+  SLOGWNK-R                 42.20       0.00       0.00      37.98       4.07       0.00       4.07        0.08     0.04   0.097
+  SLOGELE                   42.20       0.00       0.00      25.32      16.26       0.00      16.26        0.94     0.50   0.385
+  SLOGVIN                   42.20       0.00       0.00      14.77      26.38       0.00      26.38        2.25     1.19   0.625
+  SLOGQUE                   42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.32     0.17   0.577
+  SLOGCEC                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.67     0.88   0.529
+  SCECROY                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.30     0.16   0.529
+  CLIPSAR                   42.20       0.00       0.00      17.72      23.55       0.00      23.55        0.89     0.47   0.558
+  CSARBUR                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.48     0.25   0.529
+  CSARARL                   42.20       0.00       0.00      17.72      23.55       0.00      23.55        1.14     0.60   0.558
+  CLIPWEL                   42.20       0.00       0.00      16.88      24.36       0.00      24.36        1.28     0.67   0.577
+  CWELSHB                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.37     0.20   0.529
+  CWELDOM                   42.20       0.00       0.00      19.83      21.53       0.00      21.53        1.10     0.58   0.510
+  CLIPNOT                   42.20       0.00       0.00      11.39      29.62       0.00      29.62        1.03     0.54   0.702
+  CNOTDOM                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        2.16     1.14   0.529
+  CNOTSHB                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        0.98     0.51   0.568
+  SLIPSAR                   42.20       0.00       0.00      17.72      23.55       0.00      23.55        0.72     0.38   0.558
+  SSARBUR                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.88     0.47   0.529
+  SSARARL1                  42.20       0.00       0.00      17.08      24.17       0.00      24.17        0.72     0.38   0.573
+  SSARARL2                  42.20       0.00       0.00      17.08      24.17       0.00      24.17        0.72     0.38   0.573
+  SSARARL3                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.67     0.35   0.529
+  SLIPWEL1                  42.20       0.00       0.00      16.88      24.36       0.00      24.36        1.66     0.88   0.577
+  SLIPWEL2                  42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.71     0.38   0.577
+  SWELSHB                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.69     0.36   0.529
+  SWELDOM                   42.20       0.00       0.00      19.83      21.53       0.00      21.53        2.04     1.07   0.510
+  SLIPNOT1                  42.20       0.00       0.00      18.57      22.74       0.00      22.74        0.74     0.39   0.539
+  SLIPNOT2                  42.20       0.00       0.00       4.22      36.47       0.00      36.47        1.18     0.62   0.864
+  SNOTDOM1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.34     0.70   0.529
+  SNOTDOM2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.34     0.70   0.529
+  SNOTDOM3                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.34     0.70   0.529
+  SNOTSHB                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        1.82     0.96   0.568
+  CAUBPAL                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.22     0.12   0.529
+  CAUBWOL                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.80     0.42   0.529
+  CAUBWSM                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.29     0.15   0.529
+  CELCGRF                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.49     0.78   0.529
+  CELCING                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.56     0.30   0.529
+  CLIPELC                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.23     0.12   0.529
+  CLIPSMT                   42.20       0.00       0.00      18.57      22.74       0.00      22.74        0.85     0.45   0.539
+  CPORBAN                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.08     0.57   0.529
+  CPORBUR                   42.20       0.00       0.00      13.08      28.00       0.00      28.00        2.45     1.29   0.664
+  CPORDOM                   42.20       0.00       0.00      14.77      26.38       0.00      26.38        1.17     0.62   0.625
+  CPORGRE                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.51     0.80   0.529
+  CPORLIP                   42.20       0.00       0.00      17.72      23.55       0.00      23.55        0.56     0.29   0.558
+  CPORSHB                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        0.98     0.52   0.568
+  CPORSPR                   42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.97     0.51   0.577
+  CPORWLL                   42.20       0.00       0.00       8.44      32.44       0.00      32.44        2.13     1.12   0.769
+  CSMTING                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.68     0.36   0.529
+  CSTMSHB                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.17     0.62   0.529
+  SAUBPAL                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.21     0.11   0.529
+  SAUBWOL                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.19     0.63   0.529
+  SELCGRF1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.78     0.94   0.529
+  SELCGRF2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.45     0.23   0.529
+  SELCING                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.84     0.44   0.529
+  SLIPELC                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.35     0.19   0.529
+  SLIPSMT1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.62     0.33   0.529
+  SLIPSMT2                  42.20       0.00       0.00      18.15      23.15       0.00      23.15        0.65     0.34   0.549
+  SPORBAN1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.14     0.60   0.529
+  SPORBAN2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.49     0.26   0.529
+  SPORBUR1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.73     0.39   0.529
+  SPORBUR2                  42.20       0.00       0.00       7.17      33.65       0.00      33.65        1.10     0.58   0.797
+  SPORBUR3                  42.20       0.00       0.00      13.08      28.00       0.00      28.00        0.92     0.48   0.664
+  SPORBUR4                  42.20       0.00       0.00      13.08      28.00       0.00      28.00        0.92     0.48   0.664
+  SPORDOM1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.37     0.20   0.529
+  SPORDOM2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.37     0.20   0.529
+  SPORDOM3                  42.20       0.00       0.00      12.66      28.40       0.00      28.40        0.47     0.25   0.673
+  SPORDOM4                  42.20       0.00       0.00       8.44      32.44       0.00      32.44        0.54     0.28   0.769
+  SPORGRE1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.57     0.30   0.529
+  SPORGRE2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.57     0.30   0.529
+  SPORGRE3                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.57     0.30   0.529
+  SPORGRE4                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.57     0.30   0.529
+  SPORLIP1                  42.20       0.00       0.00      17.72      23.55       0.00      23.55        0.42     0.22   0.558
+  SPORLIP2                  42.20       0.00       0.00      17.72      23.55       0.00      23.55        0.42     0.22   0.558
+  SPORSHB1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.46     0.24   0.529
+  SPORSHB2                  42.20       0.00       0.00      13.93      27.19       0.00      27.19        0.56     0.29   0.644
+  SPORSHB3                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.46     0.24   0.529
+  SPORSPR1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.45     0.24   0.529
+  SPORSPR2                  42.20       0.00       0.00      12.65      28.41       0.00      28.41        0.57     0.30   0.673
+  SPORSPR3                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.45     0.24   0.529
+  SPORWLL1                  42.20       0.00       0.00      21.10      20.31       0.00      20.31        0.67     0.35   0.481
+  SPORWLL2                  42.20       0.00       0.00       2.11      38.49       0.00      38.49        1.26     0.66   0.912
+  SPORWLL3                  42.20       0.00       0.00       2.11      38.49       0.00      38.49        1.26     0.66   0.912
+  SSMTING1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.71     0.38   0.529
+  SSMTING2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.31     0.16   0.529
+  SSTMSHB1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.88     0.46   0.529
+  SSTMSHB2                  42.20       0.00       0.00      12.24      28.81       0.00      28.81        0.57     0.30   0.683
+  SSTMSHB3                  42.20       0.00       0.00      25.74      15.86       0.00      15.86        0.31     0.16   0.376
+  CPORCAN                   42.20       0.00       0.00      13.08      28.00       0.00      28.00        0.24     0.13   0.664
+  CPORHOM                   42.20       0.00       0.00      16.04      25.17       0.00      25.17        0.49     0.26   0.596
+  CSIMSTM                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.57     0.30   0.529
+  CSIMELC                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.66     0.35   0.529
+  CSIMSAR                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        0.32     0.17   0.568
+  CSIMWEL                   42.20       0.00       0.00      14.35      26.79       0.00      26.79        0.38     0.20   0.635
+  SPORCAN1                  42.20       0.00       0.00       7.17      33.65       0.00      33.65        0.19     0.10   0.797
+  SPORCAN2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.64     0.34   0.529
+  SPORHOM1                  42.20       0.00       0.00      16.04      25.17       0.00      25.17        0.99     0.52   0.596
+  SPORHOM2                  42.20       0.00       0.00      16.04      25.17       0.00      25.17        0.99     0.52   0.596
+  SSIMSTM1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.13     0.60   0.529
+  SSIMSTM2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.13     0.60   0.529
+  SSIMELC                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        2.65     1.40   0.529
+  SSIMSAR                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        1.27     0.67   0.568
+  SSIMWEL1                  42.20       0.00       0.00      14.35      26.84       0.00      26.84        0.75     0.40   0.636
+  SSIMWEL2                  42.20       0.00       0.00      14.35      26.84       0.00      26.84        0.75     0.40   0.636
+  CCORMID                   42.20       0.00       0.00      25.32      16.26       0.00      16.26        1.09     0.58   0.385
+  CMRYCOR                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        0.49     0.26   0.568
+  CMRYWSM                   42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.23     0.12   0.577
+  CWALPUR                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.39     0.20   0.529
+  CWSMWAL                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.04     0.55   0.529
+  CWSMARL                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        1.31     0.69   0.529
+  CWSMCAN                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.86     0.45   0.529
+  CWSMETH                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.96     0.51   0.529
+  CCANPRE                   42.20       0.00       0.00      28.27      13.42       0.00      13.42        0.45     0.24   0.318
+  SCORMID                   42.20       0.00       0.00      25.32      16.26       0.00      16.26        0.68     0.36   0.385
+  SMRYCOR                   42.20       0.00       0.00      17.30      23.96       0.00      23.96        0.49     0.26   0.568
+  SMRYWSM                   42.20       0.00       0.00      16.88      24.36       0.00      24.36        0.23     0.12   0.577
+  SWALPUR                   42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.39     0.20   0.529
+  SWSMWAL1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.52     0.27   0.529
+  SWSMWAL2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.52     0.27   0.529
+  SWSMARL1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.66     0.35   0.529
+  SWSMARL2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.66     0.35   0.529
+  SWSMCAN1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.43     0.23   0.529
+  SWSMCAN2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.43     0.23   0.529
+  SWSMETH1                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.48     0.25   0.529
+  SWSMETH2                  42.20       0.00       0.00      18.99      22.34       0.00      22.34        0.48     0.25   0.529
+  SCANPRE                   42.20       0.00       0.00      28.27      13.42       0.00      13.42        0.45     0.24   0.318
+  
+  
+  ******************
+  Node Depth Summary
+  ******************
+  
+  ---------------------------------------------------------------------------------
+                                 Average  Maximum  Maximum  Time of Max    Reported
+                                   Depth    Depth      HGL   Occurrence   Max Depth
+  Node                 Type       Meters   Meters   Meters  days hr:min      Meters
+  ---------------------------------------------------------------------------------
+  XCAUBPAL             JUNCTION     1.51     2.31   225.79     0  01:58        2.31
+  CCOROUT1             JUNCTION     0.47     0.88   224.83     0  01:46        0.88
+  XSRUBPAL             JUNCTION     2.33     2.55   224.05     0  01:59        2.55
+  XSCANPAL             JUNCTION     1.65     2.18   224.46     0  01:47        2.18
+  SCANOUT1             JUNCTION     1.57     1.90   224.16     0  01:47        1.90
+  SAUBOUT              OUTFALL      2.70     2.70   223.70     0  00:00        2.70
+  SCANOUT              OUTFALL      1.60     1.60   223.70     0  00:00        1.60
+  SRUBOUT              OUTFALL      2.55     2.55   223.70     0  00:00        2.55
+  CAUBOUT              OUTFALL      0.73     1.02   224.31     0  01:58        1.02
+  CCOROUT              OUTFALL      0.46     0.88   224.73     0  01:47        0.88
+  CMRYOUT              OUTFALL      0.38     0.50   223.89     0  02:01        0.50
+  CALEXAN-I            STORAGE      0.87     1.58   227.45     0  02:01        1.58
+  CAUBPAL-I            STORAGE      1.55     2.34   225.76     0  01:58        2.34
+  CAUBPOR              STORAGE      1.74     2.66   226.51     0  01:54        2.66
+  CAUBSPS              STORAGE      1.03     1.47   224.83     0  01:58        1.47
+  CAUBWOL-I            STORAGE      1.59     2.42   226.01     0  01:57        2.42
+  CAUBWSM-I            STORAGE      1.61     2.46   226.19     0  01:56        2.46
+  CCANPRE-I            STORAGE      0.69     1.52   227.05     0  01:51        1.52
+  CCECROY-I            STORAGE      0.19     0.58   228.29     0  01:47        0.58
+  CCORDIV              STORAGE      0.42     0.95   224.90     0  01:47        0.95
+  CCORMID-I            STORAGE      0.55     1.04   225.15     0  01:45        1.04
+  CELCGRF-I            STORAGE      0.73     1.66   227.27     0  01:45        1.65
+  CELCING-I            STORAGE      0.92     1.76   227.00     0  01:50        1.76
+  CHEN90-I             STORAGE      0.76     1.45   227.48     0  02:00        1.45
+  CHIGMAU-I            STORAGE      0.69     1.37   227.48     0  02:00        1.37
+  CLIP25               STORAGE      1.66     2.62   226.68     0  01:53        2.62
+  CLIP35               STORAGE      1.61     2.58   226.89     0  01:51        2.58
+  CLIPELC-I            STORAGE      1.60     2.55   226.95     0  01:51        2.55
+  CLIPNOT-I            STORAGE      1.42     2.26   227.33     0  02:05        2.26
+  CLIPSAR-I            STORAGE      1.55     2.47   227.07     0  01:53        2.47
+  CLIPSMT-I            STORAGE      1.64     2.60   226.82     0  01:52        2.60
+  CLIPWEL-I            STORAGE      1.51     2.41   227.19     0  01:52        2.41
+  CLIPYAR              STORAGE      1.46     2.34   227.24     0  01:51        2.34
+  CLOG80-I             STORAGE      0.82     1.51   227.47     0  02:00        1.51
+  CLOGCEC-I            STORAGE      0.45     1.04   228.28     0  01:49        1.04
+  CLOGELE-I            STORAGE      0.71     1.38   228.00     0  02:00        1.38
+  CLOGQUE-I            STORAGE      0.61     1.28   228.23     0  01:47        1.28
+  CLOGVIN-I            STORAGE      0.67     1.35   228.17     0  01:49        1.35
+  CLOGWNK-I            STORAGE      0.76     1.43   227.83     0  02:01        1.43
+  CLOGYEO-I            STORAGE      0.77     1.47   227.66     0  02:06        1.47
+  CMCPBAN-I            STORAGE      1.16     1.97   227.38     0  02:05        1.97
+  CMCPELG-I            STORAGE      1.08     1.85   227.40     0  02:05        1.85
+  CMCPLOG-I            STORAGE      0.82     1.51   227.48     0  02:04        1.51
+  CMCPPAC-I            STORAGE      1.04     1.77   227.43     0  02:04        1.77
+  CMCPROS              STORAGE      1.05     1.80   227.42     0  02:03        1.80
+  CMCPWIN-I            STORAGE      1.31     2.14   227.35     0  02:05        2.14
+  CMRYCOR-I            STORAGE      0.52     1.03   225.33     0  01:47        1.03
+  CMRYCSO              STORAGE      0.92     1.76   225.16     0  02:01        1.76
+  CMRYWSM-I            STORAGE      0.87     1.53   226.20     0  01:49        1.53
+  CNOTDOM-I            STORAGE      0.93     3.63   230.07     0  01:41        3.63
+  CNOTSHB-I            STORAGE      1.06     3.30   229.28     0  01:45        3.30
+  CPAC72-I             STORAGE      0.27     0.58   227.43     0  02:04        0.58
+  CPAC75-I             STORAGE      0.11     0.29   228.09     0  01:45        0.29
+  CPORBAN-I            STORAGE      1.11     2.42   227.14     0  01:45        2.42
+  CPORBUR-I            STORAGE      0.99     2.76   227.72     0  01:45        2.74
+  CPORCAN-I            STORAGE      0.60     1.29   227.11     0  01:51        1.29
+  CPORDOM-I            STORAGE      1.35     4.14   229.26     0  01:45        4.14
+  CPORGRE-I            STORAGE      1.28     4.53   230.07     0  01:45        4.53
+  CPORHOM-I            STORAGE      0.33     0.91   227.17     0  01:50        0.91
+  CPORLIP-I            STORAGE      1.71     2.64   226.56     0  01:52        2.64
+  CPORSHB-I            STORAGE      1.34     3.04   227.71     0  01:46        3.04
+  CPORSPR-I            STORAGE      1.09     4.16   230.50     0  01:44        4.16
+  CPORWLL-I            STORAGE      1.02     3.86   230.65     0  01:41        3.86
+  CPREWAL              STORAGE      0.78     1.72   227.01     0  01:48        1.72
+  CSARARL-I            STORAGE      0.49     1.17   227.22     0  01:45        1.16
+  CSARBUR-I            STORAGE      0.78     1.55   227.11     0  01:54        1.55
+  CSIMELC-I            STORAGE      0.41     1.04   228.25     0  01:47        1.04
+  CSIMPOR              STORAGE      0.55     1.22   227.17     0  01:51        1.21
+  CSIMSAR-I            STORAGE      0.36     0.98   228.67     0  01:50        0.98
+  CSIMSTM-I            STORAGE      0.54     1.30   227.87     0  01:50        1.30
+  CSIMWEL-I            STORAGE      0.14     0.36   229.02     0  01:45        0.36
+  CSMTING-I            STORAGE      0.76     1.54   226.90     0  01:51        1.54
+  CSTMSHB-I            STORAGE      0.64     1.41   226.99     0  01:45        1.41
+  CWALPUR-I            STORAGE      0.89     1.86   226.97     0  01:48        1.86
+  CWELDOM-I            STORAGE      0.23     0.62   227.45     0  01:45        0.62
+  CWELSHB-I            STORAGE      0.41     0.89   227.23     0  01:53        0.89
+  CWSMARL-I            STORAGE      0.57     2.79   229.33     0  01:45        2.79
+  CWSMCAN-I            STORAGE      0.69     2.62   228.59     0  01:46        2.62
+  CWSMETH-I            STORAGE      0.62     2.69   228.97     0  01:46        2.69
+  CWSMWAL-I            STORAGE      0.70     2.14   227.73     0  01:45        2.14
+  SALEMAU-I            STORAGE      0.96     2.51   226.96     0  01:45        2.51
+  SALVNOT-I            STORAGE      1.07     2.02   225.64     0  01:51        2.02
+  SALVSAR-I            STORAGE      1.37     2.22   225.18     0  01:54        2.22
+  SALVWEL-I            STORAGE      1.25     2.19   225.39     0  01:52        2.19
+  SBUR28               STORAGE      1.82     2.42   224.67     0  01:58        2.42
+  SBUREIN-I            STORAGE      1.89     2.45   224.61     0  01:58        2.45
+  SBURELC-I            STORAGE      1.47     2.22   224.96     0  01:54        2.22
+  SBURPOR-I            STORAGE      1.98     2.49   224.52     0  01:57        2.49
+  SBURSMT-I            STORAGE      1.58     2.26   224.82     0  01:56        2.26
+  SCANPAL              STORAGE      1.63     2.10   224.36     0  01:47        2.10
+  SCANPRE-I            STORAGE      1.19     2.20   225.15     0  01:47        2.20
+  SCANWOL-I            STORAGE      1.56     2.19   224.60     0  01:45        2.19
+  SCANWSM-I            STORAGE      1.48     2.32   224.90     0  01:46        2.32
+  SDUM1-I              STORAGE      0.70     1.95   227.39     0  01:46        1.95
+  SDUM2-I              STORAGE      0.61     1.89   227.75     0  01:45        1.89
+  SDUM3-I              STORAGE      0.24     0.82   227.81     0  01:46        0.82
+  SDUM4                STORAGE      0.75     1.93   226.63     0  01:48        1.93
+  SDUM5                STORAGE      0.75     1.82   226.20     0  01:49        1.82
+  SELCDOM-I            STORAGE      0.19     0.51   226.27     0  01:45        0.51
+  SLARWIL-I            STORAGE      1.12     2.47   226.43     0  01:46        2.47
+  SLENWSM-I            STORAGE      2.15     2.53   224.30     0  01:58        2.53
+  SMAULOG-I            STORAGE      0.87     2.42   226.97     0  01:45        2.42
+  SMCP85-I             STORAGE      0.74     2.01   227.03     0  01:47        2.01
+  SMCPMCD-I            STORAGE      1.05     2.01   225.83     0  01:48        2.01
+  SMCPNOT              STORAGE      1.06     2.02   225.76     0  01:50        2.02
+  SMYRWIN-I            STORAGE      0.48     1.34   225.90     0  01:50        1.34
+  SNOTMYR-I            STORAGE      0.62     1.48   225.88     0  01:50        1.48
+  SNOTWLL-I            STORAGE      0.17     0.52   226.67     0  01:45        0.52
+  SPORDOM-I            STORAGE      0.62     1.24   224.58     0  01:46        1.24
+  SPORGRE-I            STORAGE      0.30     0.79   224.59     0  01:46        0.79
+  SPORSHB-I            STORAGE      2.29     2.87   224.54     0  01:46        2.87
+  SPORSPR-I            STORAGE      0.21     0.55   224.67     0  01:44        0.55
+  SPORWLL-I            STORAGE      0.18     0.45   224.97     0  01:45        0.45
+  SRUB02               STORAGE      2.52     2.62   223.86     0  01:57        2.62
+  SRUBPAL-I            STORAGE      2.35     2.54   224.00     0  01:59        2.54
+  SRUBWOL-I            STORAGE      2.28     2.58   224.17     0  01:58        2.58
+  SSHB33               STORAGE      1.48     2.29   224.91     0  01:48        2.29
+  SSHB54-I             STORAGE      0.85     1.80   225.65     0  01:51        1.80
+  SSHBELC-I            STORAGE      1.39     2.28   225.04     0  01:48        2.28
+  SSHBNOT-I            STORAGE      0.80     1.75   225.82     0  01:50        1.75
+  SSHBPAL-I            STORAGE      2.62     2.96   224.19     0  01:45        2.96
+  SSHBSAR-I            STORAGE      1.18     2.18   225.25     0  01:50        2.18
+  SSHBSTM-I            STORAGE      1.69     2.45   224.83     0  01:47        2.45
+  SSHBWEL-I            STORAGE      0.98     1.98   225.45     0  01:50        1.98
+  SSHBWLV-I            STORAGE      2.03     2.71   224.69     0  01:47        2.71
+  SSHBWSM-I            STORAGE      2.47     2.92   224.36     0  01:45        2.92
+  SSIMELC-I            STORAGE      0.74     2.17   226.87     0  01:46        2.17
+  SSIMPOR-I            STORAGE      0.84     2.15   225.66     0  01:48        2.15
+  SSIMSAR-I            STORAGE      0.53     1.57   227.30     0  01:46        1.57
+  SSIMSTM-I            STORAGE      0.84     2.25   226.40     0  01:46        2.25
+  SSIMWEL-I            STORAGE      0.38     1.15   227.39     0  01:46        1.15
+  SSTMARL-I            STORAGE      0.56     1.86   226.41     0  01:47        1.86
+  SSTMDOM-I            STORAGE      0.25     0.62   224.83     0  01:50        0.62
+  SWELDOM-I            STORAGE      0.18     0.49   225.63     0  01:45        0.49
+  SWELMRY-I            STORAGE      0.20     0.61   227.41     0  01:50        0.61
+  SWELVIC-I            STORAGE      0.30     0.83   227.37     0  01:48        0.83
+  SWOLHOM-I            STORAGE      0.24     0.73   224.63     0  01:45        0.73
+  SWSMARL-I            STORAGE      0.12     0.30   224.94     0  01:45        0.30
+  SWSMHOM-I            STORAGE      0.22     0.75   224.95     0  01:46        0.75
+  SXANALE-I            STORAGE      1.01     2.58   226.91     0  01:45        2.58
+  SXANELG-I            STORAGE      1.09     2.58   226.66     0  01:45        2.58
+  
+  
+  *******************
+  Node Inflow Summary
+  *******************
+  
+  -------------------------------------------------------------------------------------------------
+                                  Maximum  Maximum                  Lateral       Total        Flow
+                                  Lateral    Total  Time of Max      Inflow      Inflow     Balance
+                                   Inflow   Inflow   Occurrence      Volume      Volume       Error
+  Node                 Type           CMS      CMS  days hr:min    10^6 ltr    10^6 ltr     Percent
+  -------------------------------------------------------------------------------------------------
+  XCAUBPAL             JUNCTION     0.000    5.751     0  01:50           0          30       1.311
+  CCOROUT1             JUNCTION     0.000    1.934     0  01:47           0        6.46       0.012
+  XSRUBPAL             JUNCTION     0.000    7.666     0  01:58           0        32.6       0.005
+  XSCANPAL             JUNCTION     0.000    5.457     0  01:45           0        17.2      -0.010
+  SCANOUT1             JUNCTION     0.000    5.268     0  01:47           0        17.2      -0.102
+  SAUBOUT              OUTFALL      0.000    9.945     0  01:46           0        36.5       0.000
+  SCANOUT              OUTFALL      0.000    5.300     0  01:47           0        17.3       0.000
+  SRUBOUT              OUTFALL      0.000    7.699     0  01:59           0        32.8       0.000
+  CAUBOUT              OUTFALL      0.000    5.622     0  01:58           0        29.4       0.000
+  CCOROUT              OUTFALL      0.000    1.945     0  01:47           0        6.46       0.000
+  CMRYOUT              OUTFALL      0.000    0.654     0  02:01           0        2.84       0.000
+  CALEXAN-I            STORAGE      0.029    0.486     0  01:53      0.0549        1.73       2.423
+  CAUBPAL-I            STORAGE      0.117    5.630     0  01:56       0.222        29.8       0.856
+  CAUBPOR              STORAGE      0.000    6.181     0  01:46           0        29.9       1.131
+  CAUBSPS              STORAGE      0.000    5.619     0  01:58           0        29.6       0.491
+  CAUBWOL-I            STORAGE      0.419    5.995     0  01:48       0.793        30.3       0.969
+  CAUBWSM-I            STORAGE      0.153    6.046     0  01:48        0.29        29.8       1.145
+  CCANPRE-I            STORAGE      0.236    0.827     0  01:42       0.447        3.05       0.459
+  CCECROY-I            STORAGE      0.040    0.130     0  01:42      0.0749      0.0898      -0.179
+  CCORDIV              STORAGE      0.000    1.965     0  01:45           0        6.46       0.036
+  CCORMID-I            STORAGE      0.575    2.069     0  01:45        1.09        6.47       0.178
+  CELCGRF-I            STORAGE      0.782    0.782     0  01:45        1.48        1.48       0.199
+  CELCING-I            STORAGE      0.296    0.971     0  01:36       0.561        2.04      -0.062
+  CHEN90-I             STORAGE      0.277    0.452     0  01:40       0.525         1.1       1.253
+  CHIGMAU-I            STORAGE      0.250    0.250     0  01:45       0.473       0.502       0.832
+  CLIP25               STORAGE      0.000    3.217     0  02:13           0        19.9       1.633
+  CLIP35               STORAGE      0.000    2.989     0  01:47           0        17.7       1.105
+  CLIPELC-I            STORAGE      0.124    3.491     0  01:45       0.234          18       1.664
+  CLIPNOT-I            STORAGE      0.542    2.353     0  01:44        1.03        11.2       0.812
+  CLIPSAR-I            STORAGE      0.469    3.296     0  01:45       0.889          16       2.020
+  CLIPSMT-I            STORAGE      0.445    3.521     0  01:45       0.843        20.2       1.258
+  CLIPWEL-I            STORAGE      0.673    2.810     0  01:44        1.28        13.7       1.189
+  CLIPYAR              STORAGE      0.000    1.877     0  01:44           0        11.2       1.558
+  CLOG80-I             STORAGE      0.226    0.519     0  01:40        0.43        1.57       0.725
+  CLOGCEC-I            STORAGE      0.338    0.372     0  01:39        0.64        0.73       0.170
+  CLOGELE-I            STORAGE      0.124    0.509     0  01:37       0.235        1.74       0.336
+  CLOGQUE-I            STORAGE      0.075    0.357     0  01:37       0.141       0.855       0.363
+  CLOGVIN-I            STORAGE      0.347    0.539     0  01:37       0.658        1.51       0.323
+  CLOGWNK-I            STORAGE      0.188    0.551     0  01:37       0.357        2.09       0.357
+  CLOGYEO-I            STORAGE      0.041    0.468     0  01:37      0.0779        2.16       0.365
+  CMCPBAN-I            STORAGE      0.306    1.211     0  02:23        0.58         6.3       1.092
+  CMCPELG-I            STORAGE      0.142    1.095     0  02:23       0.269        5.79       1.097
+  CMCPLOG-I            STORAGE      0.157    0.522     0  01:41       0.297        2.45       0.406
+  CMCPPAC-I            STORAGE      0.403    1.506     0  01:41       0.764        5.83       1.192
+  CMCPROS              STORAGE      0.000    1.141     0  01:44           0        5.58       0.956
+  CMCPWIN-I            STORAGE      0.556    1.357     0  02:23        1.05        7.29       1.119
+  CMRYCOR-I            STORAGE      0.260    2.390     0  01:45       0.493        8.25       0.204
+  CMRYCSO              STORAGE      0.000    0.708     0  01:47           0        2.85       0.146
+  CMRYWSM-I            STORAGE      0.124    2.243     0  01:46       0.234         7.8       0.557
+  CNOTDOM-I            STORAGE      1.137    1.137     0  01:45        2.15        2.15      -0.001
+  CNOTSHB-I            STORAGE      0.515    1.470     0  01:39       0.975        3.04       0.910
+  CPAC72-I             STORAGE      0.253    0.553     0  01:45       0.478        1.05       2.275
+  CPAC75-I             STORAGE      0.300    0.300     0  01:45       0.568       0.568      -0.083
+  CPORBAN-I            STORAGE      0.571    1.827     0  01:43        1.08        3.52       0.376
+  CPORBUR-I            STORAGE      1.289    1.289     0  01:45        2.44        2.44      -0.018
+  CPORCAN-I            STORAGE      0.127    0.756     0  01:44        0.24        2.62       0.525
+  CPORDOM-I            STORAGE      0.618    2.084     0  01:43        1.17        5.55      -0.016
+  CPORGRE-I            STORAGE      0.797    1.723     0  01:42        1.51        4.37      -0.043
+  CPORHOM-I            STORAGE      0.260    0.260     0  01:45       0.492       0.492      -0.084
+  CPORLIP-I            STORAGE      0.293    4.188     0  01:46       0.555        23.7       1.230
+  CPORSHB-I            STORAGE      0.516    2.416     0  01:45       0.977        6.52       0.205
+  CPORSPR-I            STORAGE      0.513    1.287     0  01:41       0.972        2.87      -0.115
+  CPORWLL-I            STORAGE      1.121    1.121     0  01:45        2.12        2.12       0.142
+  CPREWAL              STORAGE      0.000    0.897     0  02:00           0        3.04       0.389
+  CSARARL-I            STORAGE      0.601    0.601     0  01:45        1.14        1.14       0.046
+  CSARBUR-I            STORAGE      0.251    0.828     0  01:38       0.475        1.61       0.181
+  CSIMELC-I            STORAGE      0.349    0.548     0  01:40       0.662        1.35       0.512
+  CSIMPOR              STORAGE      0.000    0.728     0  01:45           0        2.39       0.558
+  CSIMSAR-I            STORAGE      0.167    0.358     0  01:45       0.316       0.686      -0.461
+  CSIMSTM-I            STORAGE      0.298    0.721     0  01:39       0.564        1.91       0.352
+  CSIMWEL-I            STORAGE      0.198    0.198     0  01:45       0.374       0.374       1.145
+  CSMTING-I            STORAGE      0.358    0.916     0  01:37       0.678        1.83      -0.419
+  CSTMSHB-I            STORAGE      0.616    0.616     0  01:45        1.17        1.17       1.376
+  CWALPUR-I            STORAGE      0.204    2.265     0  01:45       0.387        7.57       0.021
+  CWELDOM-I            STORAGE      0.578    0.578     0  01:45        1.09        1.09       0.132
+  CWELSHB-I            STORAGE      0.196    0.773     0  01:43       0.371        1.46       2.737
+  CWSMARL-I            STORAGE      0.692    0.692     0  01:45        1.31        1.31       0.109
+  CWSMCAN-I            STORAGE      0.452    1.394     0  01:45       0.856        3.12       0.065
+  CWSMETH-I            STORAGE      0.506    1.094     0  01:45       0.959        2.27       0.007
+  CWSMWAL-I            STORAGE      0.549    1.784     0  01:45        1.04        4.16       0.180
+  SALEMAU-I            STORAGE      1.259    2.148     0  01:35        2.39        6.68       0.252
+  SALVNOT-I            STORAGE      0.619    6.591     0  01:45        1.18        22.2       0.713
+  SALVSAR-I            STORAGE      0.465    6.935     0  01:49       0.882        25.3       0.032
+  SALVWEL-I            STORAGE      1.257    7.130     0  01:45        2.38        24.9      -1.225
+  SBUR28               STORAGE      0.000    7.005     0  01:54           0        27.8      -0.028
+  SBUREIN-I            STORAGE      0.776    7.213     0  01:55        1.47        29.2       0.007
+  SBURELC-I            STORAGE      0.823    7.003     0  01:52        1.56        26.9       0.010
+  SBURPOR-I            STORAGE      0.800    7.427     0  01:55        1.52        30.8       0.023
+  SBURSMT-I            STORAGE      0.483    7.073     0  01:53       0.916        27.8       0.001
+  SCANPAL              STORAGE      0.000    5.327     0  01:46           0        17.3       0.095
+  SCANPRE-I            STORAGE      0.440    3.581     0  01:49       0.834        11.7      -0.022
+  SCANWOL-I            STORAGE      1.120    5.622     0  01:45        2.12        17.2      -0.007
+  SCANWSM-I            STORAGE      0.624    4.260     0  01:48        1.18          14       0.049
+  SDUM1-I              STORAGE      1.367    3.770     0  01:40        2.59        8.24       0.373
+  SDUM2-I              STORAGE      1.955    2.970     0  01:41         3.7        5.67       0.437
+  SDUM3-I              STORAGE      1.039    1.039     0  01:45        1.97        1.97       0.049
+  SDUM4                STORAGE      0.000    4.585     0  01:44           0         8.8       0.580
+  SDUM5                STORAGE      0.000    3.754     0  01:46           0        8.75       1.350
+  SELCDOM-I            STORAGE      0.939    0.939     0  01:45        1.78        1.78      -0.054
+  SLARWIL-I            STORAGE      1.224    6.541     0  01:45        2.32        17.6       0.384
+  SLENWSM-I            STORAGE      0.985    7.682     0  01:56        1.87        32.6       0.010
+  SMAULOG-I            STORAGE      1.099    1.773     0  01:37        2.08        4.52       0.239
+  SMCP85-I             STORAGE      1.532    5.446     0  01:40        2.91        11.3       0.813
+  SMCPMCD-I            STORAGE      1.054    7.399     0  01:43           2        19.5       0.370
+  SMCPNOT              STORAGE      0.000    7.110     0  01:44           0        21.5       0.683
+  SMYRWIN-I            STORAGE      0.234    0.276     0  01:34       0.444       0.453       0.221
+  SNOTMYR-I            STORAGE      0.704    1.619     0  01:42        1.33        3.11       1.455
+  SNOTWLL-I            STORAGE      0.704    0.704     0  01:45        1.33        1.33       0.570
+  SPORDOM-I            STORAGE      0.000    1.224     0  01:42           0        2.39      -0.280
+  SPORGRE-I            STORAGE      0.299    1.262     0  01:44       0.566        2.39       0.284
+  SPORSHB-I            STORAGE      0.923    8.696     0  01:51        1.75        32.4       0.003
+  SPORSPR-I            STORAGE      0.299    0.961     0  01:45       0.567        1.83       0.051
+  SPORWLL-I            STORAGE      0.663    0.663     0  01:45        1.26        1.26       0.039
+  SRUB02               STORAGE      0.000    7.694     0  01:59           0        32.8      -0.134
+  SRUBPAL-I            STORAGE      0.108    7.696     0  01:59       0.205        32.8       0.130
+  SRUBWOL-I            STORAGE      0.000    7.667     0  01:58           0        32.6       0.013
+  SSHB33               STORAGE      0.000    5.971     0  01:52           0        20.3       0.011
+  SSHB54-I             STORAGE      0.956    4.989     0  01:46        1.81        13.8       0.527
+  SSHBELC-I            STORAGE      1.006    5.748     0  01:51         1.9        20.3       0.017
+  SSHBNOT-I            STORAGE      1.091    5.211     0  01:45        2.07        14.1      -0.239
+  SSHBPAL-I            STORAGE      1.123    9.904     0  01:46        2.13        36.5      -0.002
+  SSHBSAR-I            STORAGE      0.616    5.184     0  01:54        1.17        18.7       1.779
+  SSHBSTM-I            STORAGE      1.089    6.989     0  01:52        2.06        24.7      -0.009
+  SSHBWEL-I            STORAGE      0.739    5.579     0  01:45         1.4          18      -0.406
+  SSHBWLV-I            STORAGE      1.887    7.847     0  01:53        3.58        28.3       0.010
+  SSHBWSM-I            STORAGE      1.023    9.286     0  01:47        1.94        34.4      -0.001
+  SSIMELC-I            STORAGE      1.397    2.983     0  01:40        2.65        6.77      -0.676
+  SSIMPOR-I            STORAGE      0.101    3.894     0  01:41       0.192        10.8      -0.246
+  SSIMSAR-I            STORAGE      1.049    1.945     0  01:41        1.99        4.17       0.982
+  SSIMSTM-I            STORAGE      1.452    4.340     0  01:42        2.75        10.7       0.581
+  SSIMWEL-I            STORAGE      0.353    1.089     0  01:42       0.668        2.17      -0.747
+  SSTMARL-I            STORAGE      0.596    0.596     0  01:45        1.13        1.13       0.671
+  SSTMDOM-I            STORAGE      0.298    1.236     0  01:45       0.564        2.34       0.223
+  SWELDOM-I            STORAGE      1.073    1.073     0  01:45        2.03        2.03       1.318
+  SWELMRY-I            STORAGE      0.395    0.395     0  01:45       0.749       0.749      -0.064
+  SWELVIC-I            STORAGE      0.396    0.782     0  01:42        0.75         1.5       0.120
+  SWOLHOM-I            STORAGE      0.599    0.599     0  01:45        1.13        1.13       0.096
+  SWSMARL-I            STORAGE      0.346    0.346     0  01:45       0.655       0.655      -0.072
+  SWSMHOM-I            STORAGE      0.253    0.599     0  01:45        0.48        1.13       0.145
+  SXANALE-I            STORAGE      2.327    3.765     0  01:45        4.41        11.1       0.546
+  SXANELG-I            STORAGE      2.179    5.626     0  01:45        4.13        15.1      -0.680
+  
+  
+  **********************
+  Node Surcharge Summary
+  **********************
+  
+  No nodes were surcharged.
+  
+  
+  *********************
+  Node Flooding Summary
+  *********************
+  
+  Flooding refers to all water that overflows a node, whether it ponds or not.
+  --------------------------------------------------------------------------
+                                                             Total   Maximum
+                                 Maximum   Time of Max       Flood    Ponded
+                        Hours       Rate    Occurrence      Volume     Depth
+  Node                 Flooded       CMS   days hr:min    10^6 ltr    Meters
+  --------------------------------------------------------------------------
+  CNOTDOM-I               0.09     0.406      0  01:45       0.089     0.000
+  CPORSPR-I               0.04     0.143      0  01:45       0.014     0.000
+  CPORWLL-I               0.13     0.745      0  01:45       0.220     0.000
+  
+  
+  **********************
+  Storage Volume Summary
+  **********************
+  
+  ------------------------------------------------------------------------------------------------
+                         Average    Avg   Evap  Exfil     Maximum    Max    Time of Max    Maximum
+                          Volume   Pcnt   Pcnt   Pcnt      Volume   Pcnt     Occurrence    Outflow
+  Storage Unit           1000 m³   Full   Loss   Loss     1000 m³   Full    days hr:min        CMS
+  ------------------------------------------------------------------------------------------------
+  CALEXAN-I                0.001    1.1    0.0    0.0       0.002    2.2       0  02:01      0.369
+  CAUBPAL-I                0.002    1.9    0.0    0.0       0.003    3.1       0  01:58      5.619
+  CAUBPOR                  0.006    6.5    0.0    0.0       0.021   21.5       0  01:54      5.973
+  CAUBSPS                  0.001    1.3    0.0    0.0       0.002    1.8       0  01:58      5.622
+  CAUBWOL-I                0.002    2.4    0.0    0.0       0.006    5.8       0  01:57      5.751
+  CAUBWSM-I                0.002    2.4    0.0    0.0       0.006    5.8       0  01:56      5.808
+  CCANPRE-I                0.001    1.5    0.0    0.0       0.007    7.4       0  01:51      0.897
+  CCECROY-I                0.000    0.4    0.0    0.0       0.002    2.2       0  01:47      0.040
+  CCORDIV                  0.001    0.5    0.0    0.0       0.001    1.2       0  01:47      1.934
+  CCORMID-I                0.001    0.7    0.0    0.0       0.001    1.3       0  01:45      1.965
+  CELCGRF-I                0.015   15.6    0.0    0.0       0.064   66.7       0  01:45      0.689
+  CELCING-I                0.020   20.2    0.0    0.0       0.063   64.2       0  01:50      0.838
+  CHEN90-I                 0.001    0.9    0.0    0.0       0.002    1.8       0  02:00      0.300
+  CHIGMAU-I                0.001    0.9    0.0    0.0       0.002    1.7       0  02:00      0.175
+  CLIP25                   0.008    7.7    0.0    0.0       0.025   25.7       0  01:53      3.307
+  CLIP35                   0.007    6.7    0.0    0.0       0.022   22.7       0  01:51      2.882
+  CLIPELC-I                0.006    6.1    0.0    0.0       0.020   20.7       0  01:51      2.989
+  CLIPNOT-I                0.007    7.1    0.0    0.0       0.022   22.5       0  02:05      1.877
+  CLIPSAR-I                0.007    7.0    0.0    0.0       0.023   23.5       0  01:53      2.699
+  CLIPSMT-I                0.007    7.2    0.0    0.0       0.024   24.2       0  01:52      3.217
+  CLIPWEL-I                0.009    9.3    0.0    0.0       0.029   29.9       0  01:52      2.276
+  CLIPYAR                  0.009    8.9    0.0    0.0       0.027   28.1       0  01:51      1.912
+  CLOG80-I                 0.001    1.0    0.0    0.0       0.002    1.9       0  02:00      0.392
+  CLOGCEC-I                0.004    3.7    0.0    0.0       0.015   15.6       0  01:49      0.284
+  CLOGELE-I                0.014   14.3    0.0    0.0       0.038   40.2       0  02:00      0.364
+  CLOGQUE-I                0.009    9.6    0.0    0.0       0.031   32.3       0  01:47      0.204
+  CLOGVIN-I                0.012   12.1    0.0    0.0       0.036   37.2       0  01:49      0.387
+  CLOGWNK-I                0.015   16.0    0.0    0.0       0.043   44.9       0  02:01      0.427
+  CLOGYEO-I                0.015   16.1    0.0    0.0       0.046   48.2       0  02:06      0.371
+  CMCPBAN-I                0.002    2.2    0.0    0.0       0.007    7.5       0  02:05      1.300
+  CMCPELG-I                0.001    1.4    0.0    0.0       0.004    3.6       0  02:05      1.179
+  CMCPLOG-I                0.006    5.8    0.0    0.0       0.021   21.9       0  02:04      0.447
+  CMCPPAC-I                0.001    1.4    0.0    0.0       0.003    3.3       0  02:04      1.141
+  CMCPROS                  0.001    1.4    0.0    0.0       0.004    4.0       0  02:03      1.081
+  CMCPWIN-I                0.004    4.6    0.0    0.0       0.015   15.3       0  02:05      1.438
+  CMRYCOR-I                0.004    3.9    0.0    0.0       0.015   15.0       0  01:47      2.368
+  CMRYCSO                  0.024   25.4    0.0    0.0       0.077   81.5       0  02:01      0.654
+  CMRYWSM-I                0.001    1.1    0.0    0.0       0.002    2.3       0  01:49      2.231
+  CNOTDOM-I                0.026   27.2    0.0    0.0       0.096  100.0       0  01:41      0.961
+  CNOTSHB-I                0.032   33.1    0.0    0.0       0.095   99.2       0  01:45      1.204
+  CPAC72-I                 0.000    0.3    0.0    0.0       0.001    0.7       0  02:04      0.552
+  CPAC75-I                 0.000    0.1    0.0    0.0       0.000    0.4       0  01:45      0.300
+  CPORBAN-I                0.031   32.2    0.0    0.0       0.094   96.2       0  01:45      1.715
+  CPORBUR-I                0.025   25.3    0.0    0.0       0.095   97.3       0  01:45      1.257
+  CPORCAN-I                0.001    0.7    0.0    0.0       0.002    1.7       0  01:51      0.724
+  CPORDOM-I                0.021   21.7    0.0    0.0       0.075   76.2       0  01:45      1.906
+  CPORGRE-I                0.022   22.3    0.0    0.0       0.089   89.8       0  01:45      1.467
+  CPORHOM-I                0.001    1.3    0.0    0.0       0.008    8.7       0  01:50      0.247
+  CPORLIP-I                0.008    8.1    0.0    0.0       0.026   26.8       0  01:52      4.047
+  CPORSHB-I                0.019   19.2    0.0    0.0       0.049   49.6       0  01:46      2.303
+  CPORSPR-I                0.023   23.3    0.0    0.0       0.098  100.0       0  01:44      0.928
+  CPORWLL-I                0.023   23.4    0.0    0.0       0.099  100.0       0  01:41      0.778
+  CPREWAL                  0.003    3.2    0.0    0.0       0.017   17.1       0  01:48      0.966
+  CSARARL-I                0.005    5.2    0.0    0.0       0.022   23.5       0  01:45      0.581
+  CSARBUR-I                0.013   13.3    0.0    0.0       0.043   44.2       0  01:54      0.717
+  CSIMELC-I                0.003    3.0    0.0    0.0       0.015   15.8       0  01:47      0.427
+  CSIMPOR                  0.001    1.2    0.0    0.0       0.006    6.4       0  01:51      0.630
+  CSIMSAR-I                0.003    3.9    0.0    0.0       0.018   21.1       0  01:50      0.202
+  CSIMSTM-I                0.008    8.3    0.0    0.0       0.032   33.4       0  01:50      0.495
+  CSIMWEL-I                0.003    5.4    0.0    0.0       0.012   24.5       0  01:45      0.191
+  CSMTING-I                0.016   16.7    0.0    0.0       0.052   53.7       0  01:51      0.853
+  CSTMSHB-I                0.011   11.0    0.0    0.0       0.041   42.2       0  01:45      0.572
+  CWALPUR-I                0.005    5.1    0.0    0.0       0.026   26.5       0  01:48      2.178
+  CWELDOM-I                0.000    0.3    0.0    0.0       0.001    0.8       0  01:45      0.577
+  CWELSHB-I                0.001    0.8    0.0    0.0       0.003    3.5       0  01:53      0.770
+  CWSMARL-I                0.007    9.9    0.0    0.0       0.054   76.8       0  01:45      0.589
+  CWSMCAN-I                0.007    8.8    0.0    0.0       0.046   54.9       0  01:46      1.273
+  CWSMETH-I                0.008    9.9    0.0    0.0       0.052   67.2       0  01:46      0.950
+  CWSMWAL-I                0.007    7.1    0.0    0.0       0.034   35.8       0  01:45      1.689
+  SALEMAU-I                0.006    2.9    0.0    0.0       0.038   19.9       0  01:45      2.307
+  SALVNOT-I                0.001    3.2    0.0    0.0       0.003    6.7       0  01:51      6.225
+  SALVSAR-I                0.002    3.4    0.0    0.0       0.003    5.5       0  01:54      6.722
+  SALVWEL-I                0.002    3.1    0.0    0.0       0.003    5.4       0  01:52      6.757
+  SBUR28                   0.002    4.2    0.0    0.0       0.003    5.6       0  01:58      6.977
+  SBUREIN-I                0.002    4.4    0.0    0.0       0.003    5.9       0  01:58      7.176
+  SBURELC-I                0.002    3.6    0.0    0.0       0.003    5.4       0  01:54      6.915
+  SBURPOR-I                0.002    4.7    0.0    0.0       0.004    6.8       0  01:57      7.392
+  SBURSMT-I                0.002    3.9    0.0    0.0       0.003    5.6       0  01:56      7.005
+  SCANPAL                  0.002    1.5    0.0    0.0       0.005    3.2       0  01:47      5.268
+  SCANPRE-I                0.004    5.5    0.0    0.0       0.016   22.5       0  01:47      3.674
+  SCANWOL-I                0.004    4.0    0.0    0.0       0.018   15.7       0  01:45      5.457
+  SCANWSM-I                0.003    5.0    0.0    0.0       0.013   18.5       0  01:46      4.338
+  SDUM1-I                  0.002    1.9    0.0    0.0       0.011   13.3       0  01:46      3.322
+  SDUM2-I                  0.001    2.1    0.0    0.0       0.007   13.0       0  01:45      2.405
+  SDUM3-I                  0.000    0.7    0.0    0.0       0.001    2.3       0  01:46      1.024
+  SDUM4                    0.001    1.6    0.0    0.0       0.008    9.7       0  01:48      3.754
+  SDUM5                    0.001    1.5    0.0    0.0       0.005    6.9       0  01:49      3.459
+  SELCDOM-I                0.000    0.6    0.0    0.0       0.001    1.6       0  01:45      0.938
+  SLARWIL-I                0.004    4.1    0.0    0.0       0.022   23.6       0  01:46      6.348
+  SLENWSM-I                0.003    5.0    0.0    0.0       0.004    7.5       0  01:58      7.667
+  SMAULOG-I                0.004    2.6    0.0    0.0       0.026   18.6       0  01:45      1.661
+  SMCP85-I                 0.004    2.4    0.0    0.0       0.025   16.5       0  01:47      4.585
+  SMCPMCD-I                0.005   15.5    0.0    0.0       0.012   38.1       0  01:48      7.110
+  SMCPNOT                  0.001    3.4    0.0    0.0       0.002    6.5       0  01:50      6.657
+  SMYRWIN-I                0.001    0.5    0.0    0.0       0.004    2.8       0  01:50      0.227
+  SNOTMYR-I                0.001    1.0    0.0    0.0       0.009    6.8       0  01:50      1.413
+  SNOTWLL-I                0.000    0.5    0.0    0.0       0.001    1.8       0  01:45      0.704
+  SPORDOM-I                0.001    1.8    0.0    0.0       0.002    3.7       0  01:46      1.088
+  SPORGRE-I                0.000    0.9    0.0    0.0       0.001    2.3       0  01:46      1.224
+  SPORSHB-I                0.007    6.3    0.0    0.0       0.023   21.0       0  01:46      8.800
+  SPORSPR-I                0.000    0.6    0.0    0.0       0.001    1.6       0  01:44      0.963
+  SPORWLL-I                0.000    0.5    0.0    0.0       0.001    1.3       0  01:45      0.662
+  SRUB02                   0.006   14.7    0.0    0.0       0.008   19.0       0  01:57      7.699
+  SRUBPAL-I                0.004    9.5    0.0    0.0       0.007   15.6       0  01:59      7.694
+  SRUBWOL-I                0.003    5.4    0.0    0.0       0.004    7.1       0  01:58      7.666
+  SSHB33                   0.002    2.4    0.0    0.0       0.008    8.2       0  01:48      6.101
+  SSHB54-I                 0.001    1.0    0.0    0.0       0.003    2.5       0  01:51      4.675
+  SSHBELC-I                0.002    2.3    0.0    0.0       0.008    8.1       0  01:48      5.971
+  SSHBNOT-I                0.002    1.6    0.0    0.0       0.008    7.4       0  01:50      4.595
+  SSHBPAL-I                0.009    7.5    0.0    0.0       0.022   18.2       0  01:45      9.945
+  SSHBSAR-I                0.002    1.6    0.0    0.0       0.005    5.1       0  01:50      5.436
+  SSHBSTM-I                0.003    3.2    0.0    0.0       0.011   11.7       0  01:47      7.222
+  SSHBWEL-I                0.001    1.3    0.0    0.0       0.005    5.1       0  01:50      5.380
+  SSHBWLV-I                0.006    5.1    0.0    0.0       0.021   18.6       0  01:47      7.932
+  SSHBWSM-I                0.007    5.7    0.0    0.0       0.021   17.2       0  01:45      9.342
+  SSIMELC-I                0.003    4.0    0.0    0.0       0.018   25.5       0  01:46      2.380
+  SSIMPOR-I                0.003    3.9    0.0    0.0       0.015   20.6       0  01:48      3.419
+  SSIMSAR-I                0.001    1.9    0.0    0.0       0.010   13.2       0  01:46      1.597
+  SSIMSTM-I                0.003    4.7    0.0    0.0       0.020   26.6       0  01:46      3.794
+  SSIMWEL-I                0.001    0.7    0.0    0.0       0.003    4.0       0  01:46      0.901
+  SSTMARL-I                0.002    4.4    0.0    0.0       0.012   25.7       0  01:47      0.537
+  SSTMDOM-I                0.000    0.7    0.0    0.0       0.001    1.8       0  01:50      1.232
+  SWELDOM-I                0.000    0.3    0.0    0.0       0.001    0.8       0  01:45      1.073
+  SWELMRY-I                0.000    0.3    0.0    0.0       0.001    1.0       0  01:50      0.387
+  SWELVIC-I                0.000    0.6    0.0    0.0       0.001    1.5       0  01:48      0.737
+  SWOLHOM-I                0.000    0.7    0.0    0.0       0.001    2.3       0  01:45      0.591
+  SWSMARL-I                0.000    0.4    0.0    0.0       0.000    1.0       0  01:45      0.346
+  SWSMHOM-I                0.000    0.7    0.0    0.0       0.001    2.2       0  01:46      0.594
+  SXANALE-I                0.005    3.2    0.0    0.0       0.030   21.0       0  01:45      3.499
+  SXANELG-I                0.004    3.9    0.0    0.0       0.027   24.3       0  01:45      5.342
+  
+  
+  ***********************
+  Outfall Loading Summary
+  ***********************
+  
+  -----------------------------------------------------------
+                         Flow       Avg       Max       Total
+                         Freq      Flow      Flow      Volume
+  Outfall Node           Pcnt       CMS       CMS    10^6 ltr
+  -----------------------------------------------------------
+  SAUBOUT               98.02     4.423     9.945      36.488
+  SCANOUT               97.08     2.181     5.300      17.252
+  SRUBOUT               97.74     3.755     7.699      32.818
+  CAUBOUT               98.49     3.039     5.622      29.433
+  CCOROUT               96.33     0.825     1.945       6.460
+  CMRYOUT               96.52     0.330     0.654       2.842
+  -----------------------------------------------------------
+  System                97.36    14.552    29.776     125.293
+  
+  
+  ********************
+  Link Flow Summary
+  ********************
+  
+  -----------------------------------------------------------------------------
+                                 Maximum  Time of Max   Maximum    Max/    Max/
+                                  |Flow|   Occurrence   |Veloc|    Full    Full
+  Link                 Type          CMS  days hr:min     m/sec    Flow   Depth
+  -----------------------------------------------------------------------------
+  CHEN90               CONDUIT     0.300     0  01:39      0.55    0.19    0.78
+  CHIGMAU              CONDUIT     0.175     0  01:40      0.33    0.17    0.77
+  CPORSHB              CONDUIT     2.303     0  01:45      3.51    1.37    1.00
+  CPORDOM              CONDUIT     1.906     0  01:45      2.90    1.87    1.00
+  CPORGRE              CONDUIT     1.467     0  01:43      2.24    1.45    1.00
+  CPORSPR              CONDUIT     0.928     0  01:42      2.03    0.98    1.00
+  CPORWLL              CONDUIT     0.778     0  01:41      1.70    1.24    1.00
+  CPORBAN              CONDUIT     1.715     0  01:45      2.61    1.01    1.00
+  CPORBUR              CONDUIT     1.257     0  01:43      1.92    1.59    1.00
+  CSMTING              CONDUIT     0.853     0  01:35      2.00    0.94    1.00
+  CSTMSHB              CONDUIT     0.572     0  01:36      1.48    1.49    1.00
+  CELCING              CONDUIT     0.838     0  01:37      1.49    0.49    1.00
+  CELCGRF              CONDUIT     0.689     0  01:36      1.63    1.31    1.00
+  CWELSHB              CONDUIT     0.770     0  01:42      1.67    0.93    0.99
+  CWELDOM              CONDUIT     0.577     0  01:43      1.45    0.99    0.88
+  CNOTSHB              CONDUIT     1.204     0  01:44      2.64    2.29    1.00
+  CNOTDOM              CONDUIT     0.961     0  01:39      2.11    1.76    1.00
+  CPAC72               CONDUIT     0.552     0  01:44      1.59    0.63    0.81
+  CPAC75               CONDUIT     0.300     0  01:45      1.10    0.22    0.45
+  CLOGYEO              CONDUIT     0.371     0  01:47      0.81    1.07    1.00
+  CLOGWNK              CONDUIT     0.427     0  01:37      0.96    1.25    1.00
+  CAUBWOL              CONDUIT     5.751     0  01:50      1.76    1.44    0.84
+  XCAUBPAL             CONDUIT     5.595     0  01:56      0.81    0.43    0.58
+  CAUBWSM              CONDUIT     5.808     0  01:48      1.67    1.21    0.86
+  CAUBPOR              CONDUIT     5.973     0  01:48      1.72    1.85    0.95
+  CPORLIP              CONDUIT     4.047     0  01:50      1.21    0.92    1.00
+  CLIP25               CONDUIT     3.307     0  02:14      1.06    0.99    1.00
+  CLIPSMT              CONDUIT     3.217     0  02:13      1.03    0.96    1.00
+  CLIP35               CONDUIT     2.882     0  02:12      0.96    0.91    1.00
+  CLIPELC              CONDUIT     2.989     0  01:47      0.95    0.95    1.00
+  CLIPSAR              CONDUIT     2.699     0  01:46      0.94    0.96    1.00
+  CLIPWEL              CONDUIT     2.276     0  01:45      0.92    1.01    1.00
+  CLIPYAR              CONDUIT     1.912     0  02:22      0.83    0.89    1.00
+  CLIPNOT              CONDUIT     1.877     0  01:44      1.02    0.88    1.00
+  CMCPWIN              CONDUIT     1.438     0  02:23      0.69    0.69    0.99
+  CMCPBAN              CONDUIT     1.300     0  02:24      0.68    0.44    0.95
+  CMCPELG              CONDUIT     1.179     0  02:24      0.69    0.50    0.88
+  CMCPROS              CONDUIT     1.081     0  02:23      0.76    0.51    0.88
+  CMCPPAC              CONDUIT     1.141     0  01:44      1.08    0.61    0.86
+  CMCPLOG              CONDUIT     0.447     0  01:40      0.74    0.54    1.00
+  CALEXAN              CONDUIT     0.476     0  01:53      0.31    0.32    0.87
+  CLOG80               CONDUIT     0.392     0  01:39      0.74    0.24    0.81
+  CLOGELE              CONDUIT     0.364     0  01:37      0.81    1.08    1.00
+  CLOGVIN              CONDUIT     0.387     0  01:37      0.87    1.17    1.00
+  CLOGQUE              CONDUIT     0.204     0  01:37      0.46    0.76    1.00
+  CLOGCEC              CONDUIT     0.284     0  01:37      0.81    0.74    1.00
+  CCECROY              CONDUIT     0.090     0  01:42      0.27    0.17    0.88
+  CSARBUR              CONDUIT     0.717     0  01:36      1.27    0.66    1.00
+  CSARARL              CONDUIT     0.581     0  01:38      1.54    0.93    1.00
+  CCOROUT1             CONDUIT     1.945     0  01:47      2.91    0.48    0.54
+  CCORMID              CONDUIT     1.965     0  01:45      1.61    0.96    0.66
+  CMRYCOR              CONDUIT     1.663     0  01:49      1.29    0.79    0.69
+  CMRYCSO              CONDUIT     0.654     0  02:01      1.66   13.09    0.83
+  CMRYWSM              CONDUIT     2.231     0  01:49      1.87    1.10    0.70
+  CWALPUR              CONDUIT     2.178     0  01:48      1.71    1.35    0.98
+  CWSMWAL              CONDUIT     1.689     0  01:45      2.57    1.72    1.00
+  CWSMCAN              CONDUIT     1.273     0  01:46      1.94    1.52    1.00
+  CWSMETH              CONDUIT     0.950     0  01:45      1.45    1.11    1.00
+  CWSMARL              CONDUIT     0.589     0  01:45      1.29    1.21    1.00
+  CPREWAL              CONDUIT     0.966     0  02:03      0.87    0.62    1.00
+  CCANPRE              CONDUIT     0.897     0  02:00      0.93    0.61    0.98
+  CPORCAN              CONDUIT     0.724     0  02:01      0.90    0.54    0.89
+  CSIMPOR              CONDUIT     0.630     0  01:44      1.24    0.65    1.00
+  CPORHOM              CONDUIT     0.247     0  01:40      0.81    0.39    1.00
+  CSIMSTM              CONDUIT     0.495     0  01:45      1.09    1.17    1.00
+  CSIMELC              CONDUIT     0.427     0  01:39      1.01    0.93    1.00
+  CSIMSAR              CONDUIT     0.202     0  01:39      0.72    0.98    1.00
+  CSIMWEL              CONDUIT     0.191     0  01:45      0.87    0.65    0.79
+  CAUBSPS              CONDUIT     5.622     0  01:58      2.09    1.02    0.44
+  SSHBPAL              CONDUIT     9.945     0  01:46      1.53    1.52    0.97
+  SSHBWSM              CONDUIT     9.342     0  01:48      1.46    0.91    1.00
+  SPORSHB              CONDUIT     8.800     0  01:48      1.38    0.85    1.00
+  SPORDOM              CONDUIT     1.088     0  01:47      0.86    0.31    0.91
+  SPORGRE              CONDUIT     1.224     0  01:42      1.79    0.45    0.69
+  SPORSPR              CONDUIT     0.963     0  01:44      1.54    0.35    0.49
+  SPORWLL              CONDUIT     0.662     0  01:45      1.36    0.24    0.37
+  SSHBWLV              CONDUIT     7.932     0  01:53      1.39    0.80    1.00
+  SSHBSTM              CONDUIT     7.222     0  01:53      1.31    0.71    0.95
+  SSTMDOM              CONDUIT     1.232     0  01:45      1.72    0.42    0.74
+  SELCDOM              CONDUIT     0.938     0  01:45      1.89    0.35    0.43
+  SSHB33               CONDUIT     6.101     0  01:53      1.42    0.82    0.95
+  SSHBELC              CONDUIT     5.971     0  01:52      1.40    1.02    0.95
+  SSHBSAR              CONDUIT     5.436     0  01:55      1.30    0.84    0.92
+  SSHBWEL              CONDUIT     4.992     0  01:54      1.47    0.99    0.89
+  SSHB54               CONDUIT     4.675     0  01:49      1.45    1.03    0.84
+  SSHBNOT              CONDUIT     4.403     0  01:47      1.43    0.97    0.83
+  SRS-XCON1            CONDUIT     0.802     0  01:43      0.71    0.60    1.00
+  SRS-XCON2            CONDUIT     0.450     0  01:51      0.40    0.46    1.00
+  SNOTMYR              CONDUIT     1.413     0  01:39      1.24    0.77    0.99
+  SMYRWIN              CONDUIT     0.227     0  01:37      0.24    0.08    0.94
+  SNOTWLL              CONDUIT     0.704     0  01:45      2.71    1.05    0.88
+  SRUB02               CONDUIT     7.699     0  01:59      1.36    1.41    0.96
+  SRUBWOL              CONDUIT     7.666     0  01:58      1.37    1.24    0.95
+  XSRUBPAL             CONDUIT     7.664     0  01:59      1.00    0.70    0.64
+  SLENWSM              CONDUIT     7.667     0  01:58      1.37    0.92    0.95
+  SBURPOR              CONDUIT     7.392     0  01:56      1.33    1.01    0.93
+  SBUREIN              CONDUIT     7.176     0  01:55      1.31    0.92    0.91
+  SBUR28               CONDUIT     6.977     0  01:55      1.29    0.88    0.90
+  SBURSMT              CONDUIT     7.005     0  01:54      1.47    1.07    0.89
+  SBURELC              CONDUIT     6.915     0  01:53      1.46    0.97    0.88
+  SALVSAR              CONDUIT     6.722     0  01:52      1.43    1.07    0.87
+  SALVWEL              CONDUIT     6.757     0  01:50      1.47    1.00    0.85
+  SALVNOT              CONDUIT     6.225     0  01:48      1.58    1.07    0.84
+  SMCPNOT              CONDUIT     6.071     0  01:46      1.67    1.11    0.84
+  SMCPMCD              CONDUIT     7.110     0  01:44      1.97    1.22    0.84
+  SLARWIL              CONDUIT     6.348     0  01:43      2.14    2.20    1.00
+  SXANELG              CONDUIT     5.342     0  01:45      1.79    1.43    1.00
+  SXANALE              CONDUIT     3.499     0  01:45      1.37    1.52    1.00
+  SALEMAU              CONDUIT     2.307     0  01:51      0.91    0.95    1.00
+  SMAULOG              CONDUIT     1.661     0  01:51      0.65    0.43    1.00
+  SMCP85               CONDUIT     1.117     0  01:54      0.98    0.93    1.00
+  SCANOUT1             CONDUIT     5.300     0  01:47      1.85    1.68    0.89
+  SCANWOL              CONDUIT     5.457     0  01:45      1.78    1.11    1.00
+  XSCANPAL             CONDUIT     5.327     0  01:46      1.25    1.22    0.54
+  SCANWSM              CONDUIT     4.338     0  01:48      1.45    1.33    1.00
+  SWSMHOM              CONDUIT     0.594     0  01:41      1.03    0.28    0.83
+  SWSMARL              CONDUIT     0.346     0  01:45      1.27    0.16    0.45
+  SCANPRE              CONDUIT     3.674     0  01:49      1.44    1.13    1.00
+  SSIMPOR              CONDUIT     3.419     0  01:50      1.60    0.96    1.00
+  SSIMSTM              CONDUIT     3.794     0  01:41      1.87    1.25    1.00
+  SSTMARL              CONDUIT     0.537     0  01:41      0.72    0.49    1.00
+  SSIMELC              CONDUIT     2.380     0  01:42      1.37    1.04    1.00
+  SSIMSAR              CONDUIT     1.597     0  01:40      1.56    1.03    1.00
+  SSIMWEL              CONDUIT     0.901     0  01:41      1.00    0.67    0.98
+  SWELVIC              CONDUIT     0.737     0  01:42      1.10    0.59    0.81
+  SWELMRY              CONDUIT     0.387     0  01:42      0.81    0.30    0.58
+  SWELDOM              CONDUIT     1.073     0  01:45      2.43    0.35    0.67
+  SWOLHOM              CONDUIT     0.591     0  01:39      0.84    0.23    0.82
+  SDUM1                CONDUIT     3.322     0  01:40      1.54    1.07    1.00
+  SDUM2                CONDUIT     2.405     0  01:40      1.37    1.13    1.00
+  SDUM3                CONDUIT     1.024     0  01:41      0.91    0.29    0.77
+  SMCP85A              CONDUIT     4.585     0  01:44      1.89    1.53    1.00
+  SDUM4                CONDUIT     3.754     0  01:46      1.53    1.25    1.00
+  SDUM5                CONDUIT     3.459     0  01:48      1.36    1.15    0.99
+  PUMP@SCANPAL-SCANOUT1 PUMP        5.268     0  01:47              0.35
+  PUMP@SRUBPAL-I-SRUB02 PUMP        7.694     0  01:59              0.51
+  PUMP@CAUBPAL-I-CAUBSPS PUMP        5.619     0  01:58              0.70
+  PUMP@CCORDIV-CCOROUT1 PUMP        1.934     0  01:47              0.39
+  PUMP@CMRYCOR-I-CMRYCSO PUMP        0.708     0  01:47              0.51
+  
+  
+  ***************************
+  Flow Classification Summary
+  ***************************
+  
+  -------------------------------------------------------------------------------------
+                      Adjusted    ---------- Fraction of Time in Flow Class ---------- 
+                       /Actual         Up    Down  Sub   Sup   Up    Down  Norm  Inlet 
+  Conduit               Length    Dry  Dry   Dry   Crit  Crit  Crit  Crit  Ltd   Ctrl  
+  -------------------------------------------------------------------------------------
+  CHEN90                  1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.14  0.00
+  CHIGMAU                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.21  0.00
+  CPORSHB                 1.00   0.06  0.00  0.00  0.82  0.01  0.00  0.10  0.21  0.00
+  CPORDOM                 1.00   0.06  0.00  0.00  0.90  0.03  0.00  0.00  0.11  0.00
+  CPORGRE                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.53  0.00
+  CPORSPR                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.75  0.00
+  CPORWLL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.09  0.00
+  CPORBAN                 1.00   0.06  0.00  0.00  0.90  0.04  0.00  0.00  0.26  0.00
+  CPORBUR                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.03  0.00
+  CSMTING                 1.00   0.06  0.00  0.00  0.63  0.01  0.00  0.30  0.10  0.00
+  CSTMSHB                 1.00   0.06  0.00  0.00  0.50  0.00  0.00  0.44  0.04  0.00
+  CELCING                 1.00   0.06  0.00  0.00  0.90  0.03  0.00  0.00  0.26  0.00
+  CELCGRF                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.13  0.00
+  CWELSHB                 1.00   0.06  0.00  0.00  0.41  0.00  0.00  0.52  0.13  0.00
+  CWELDOM                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.68  0.00
+  CNOTSHB                 1.00   0.06  0.00  0.00  0.63  0.00  0.00  0.30  0.14  0.00
+  CNOTDOM                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.52  0.00
+  CPAC72                  1.00   0.06  0.00  0.00  0.34  0.00  0.00  0.60  0.13  0.00
+  CPAC75                  1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.90  0.00
+  CLOGYEO                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.42  0.00
+  CLOGWNK                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.19  0.00
+  CAUBWOL                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  XCAUBPAL                1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  CAUBWSM                 1.00   0.00  0.07  0.00  0.93  0.00  0.00  0.00  0.19  0.00
+  CAUBPOR                 1.00   0.07  0.00  0.00  0.93  0.00  0.00  0.00  0.00  0.00
+  CPORLIP                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.04  0.00
+  CLIP25                  1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.16  0.00
+  CLIPSMT                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.01  0.00
+  CLIP35                  1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.11  0.00
+  CLIPELC                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  CLIPSAR                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.16  0.00
+  CLIPWEL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  CLIPYAR                 1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.18  0.00
+  CLIPNOT                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  CMCPWIN                 1.00   0.06  0.00  0.00  0.86  0.00  0.00  0.08  0.04  0.00
+  CMCPBAN                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.22  0.00
+  CMCPELG                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.27  0.00
+  CMCPROS                 1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.13  0.00
+  CMCPPAC                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  CMCPLOG                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.36  0.00
+  CALEXAN                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.26  0.00
+  CLOG80                  1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  CLOGELE                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.55  0.00
+  CLOGVIN                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.25  0.00
+  CLOGQUE                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.49  0.00
+  CLOGCEC                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.44  0.00
+  CCECROY                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.74  0.00
+  CSARBUR                 1.00   0.06  0.00  0.00  0.68  0.00  0.00  0.25  0.14  0.00
+  CSARARL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.39  0.00
+  CCOROUT1                1.00   0.06  0.00  0.00  0.08  0.85  0.00  0.00  0.05  0.00
+  CCORMID                 1.00   0.06  0.00  0.00  0.60  0.33  0.00  0.00  0.00  0.00
+  CMRYCOR                 1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.64  0.00
+  CMRYCSO                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  CMRYWSM                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  CWALPUR                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.50  0.00
+  CWSMWAL                 1.00   0.06  0.00  0.00  0.60  0.00  0.00  0.34  0.24  0.00
+  CWSMCAN                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.71  0.00
+  CWSMETH                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.69  0.00
+  CWSMARL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.73  0.00
+  CPREWAL                 1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.31  0.00
+  CCANPRE                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.37  0.00
+  CPORCAN                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.69  0.00
+  CSIMPOR                 1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.33  0.00
+  CPORHOM                 1.00   0.06  0.00  0.00  0.90  0.03  0.00  0.00  0.55  0.00
+  CSIMSTM                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.58  0.00
+  CSIMELC                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.72  0.00
+  CSIMSAR                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.80  0.00
+  CSIMWEL                 1.00   0.06  0.00  0.00  0.64  0.00  0.00  0.29  0.53  0.00
+  CAUBSPS                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSHBPAL                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSHBWSM                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SPORSHB                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SPORDOM                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SPORGRE                 1.00   0.00  0.06  0.00  0.91  0.00  0.00  0.02  0.71  0.00
+  SPORSPR                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.77  0.00
+  SPORWLL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.87  0.00
+  SSHBWLV                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSHBSTM                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSTMDOM                 1.00   0.00  0.07  0.00  0.93  0.00  0.00  0.00  0.85  0.00
+  SELCDOM                 1.00   0.06  0.00  0.00  0.87  0.06  0.00  0.00  0.68  0.00
+  SSHB33                  1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSHBELC                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSHBSAR                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSHBWEL                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.18  0.00
+  SSHB54                  1.00   0.00  0.06  0.00  0.85  0.00  0.00  0.08  0.14  0.00
+  SSHBNOT                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.45  0.00
+  SRS-XCON1               1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.23  0.00
+  SRS-XCON2               1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SNOTMYR                 1.00   0.06  0.00  0.00  0.64  0.00  0.00  0.30  0.29  0.00
+  SMYRWIN                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.43  0.00
+  SNOTWLL                 1.00   0.06  0.00  0.00  0.10  0.02  0.00  0.82  0.12  0.00
+  SRUB02                  1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SRUBWOL                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  XSRUBPAL                1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SLENWSM                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SBURPOR                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SBUREIN                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SBUR28                  1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SBURSMT                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SBURELC                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SALVSAR                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SALVWEL                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SALVNOT                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.05  0.00
+  SMCPNOT                 1.00   0.00  0.07  0.00  0.93  0.00  0.00  0.00  0.16  0.00
+  SMCPMCD                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.00  0.00
+  SLARWIL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.04  0.00
+  SXANELG                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.03  0.00
+  SXANALE                 1.00   0.06  0.00  0.00  0.65  0.00  0.00  0.29  0.01  0.00
+  SALEMAU                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.11  0.00
+  SMAULOG                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.25  0.00
+  SMCP85                  1.00   0.22  0.00  0.00  0.24  0.00  0.00  0.54  0.00  0.00
+  SCANOUT1                1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SCANWOL                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  XSCANPAL                1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SCANWSM                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SWSMHOM                 1.00   0.00  0.07  0.00  0.93  0.00  0.00  0.00  0.83  0.00
+  SWSMARL                 1.00   0.06  0.00  0.00  0.91  0.03  0.00  0.00  0.83  0.00
+  SCANPRE                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00
+  SSIMPOR                 1.00   0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.47  0.00
+  SSIMSTM                 1.00   0.00  0.06  0.00  0.94  0.00  0.00  0.00  0.42  0.00
+  SSTMARL                 1.00   0.06  0.00  0.00  0.64  0.00  0.00  0.29  0.31  0.00
+  SSIMELC                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.61  0.00
+  SSIMSAR                 1.00   0.06  0.00  0.00  0.16  0.00  0.00  0.77  0.04  0.00
+  SSIMWEL                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.84  0.00
+  SWELVIC                 1.00   0.06  0.00  0.00  0.91  0.00  0.00  0.03  0.57  0.00
+  SWELMRY                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.77  0.00
+  SWELDOM                 1.00   0.06  0.00  0.00  0.28  0.02  0.00  0.64  0.28  0.00
+  SWOLHOM                 1.00   0.00  0.07  0.00  0.93  0.00  0.00  0.00  0.79  0.00
+  SDUM1                   1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.55  0.00
+  SDUM2                   1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.57  0.00
+  SDUM3                   1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.89  0.00
+  SMCP85A                 1.00   0.06  0.00  0.00  0.94  0.00  0.00  0.00  0.39  0.00
+  SDUM4                   1.00   0.07  0.00  0.00  0.93  0.00  0.00  0.00  0.36  0.00
+  SDUM5                   1.00   0.06  0.00  0.00  0.93  0.00  0.00  0.00  0.40  0.00
+  
+  
+  *************************
+  Conduit Surcharge Summary
+  *************************
+  
+  ----------------------------------------------------------------------------
+                                                           Hours        Hours 
+                         --------- Hours Full --------   Above Full   Capacity
+  Conduit                Both Ends  Upstream  Dnstream   Normal Flow   Limited
+  ----------------------------------------------------------------------------
+  CPORSHB                     1.54      1.54      2.60      0.32         0.32
+  CPORDOM                     1.01      1.01      1.54      0.57         0.55
+  CPORGRE                     0.76      0.76      1.01      0.48         0.45
+  CPORSPR                     0.63      0.63      0.81      0.01         0.01
+  CPORWLL                     0.57      0.57      0.63      0.12         0.10
+  CPORBAN                     1.50      1.50      2.59      0.01         0.01
+  CPORBUR                     1.16      1.16      1.50      0.25         0.22
+  CSMTING                     1.09      1.09      1.91      0.01         0.01
+  CSTMSHB                     0.82      0.83      0.94      0.24         0.14
+  CELCING                     1.21      1.21      2.50      0.01         0.01
+  CELCGRF                     0.98      1.01      1.44      0.24         0.17
+  CWELSHB                     0.01      0.01      0.58      0.01         0.01
+  CWELDOM                     0.01      0.01      0.40      0.01         0.01
+  CNOTSHB                     1.12      1.17      1.63      0.53         0.46
+  CNOTDOM                     0.81      0.81      1.17      0.31         0.29
+  CLOGYEO                     1.25      1.25      1.35      0.16         0.15
+  CLOGWNK                     1.16      1.18      1.25      0.40         0.34
+  CAUBWOL                     0.01      0.01      0.01      0.83         0.01
+  CAUBWSM                     0.01      0.01      0.01      0.46         0.01
+  CAUBPOR                     0.01      0.01      0.01      1.12         0.01
+  CPORLIP                     0.27      0.27      0.29      0.01         0.01
+  CLIP25                      0.24      0.24      0.27      0.01         0.01
+  CLIPSMT                     0.21      0.21      0.24      0.01         0.01
+  CLIP35                      0.12      0.12      0.21      0.01         0.01
+  CLIPELC                     0.01      0.01      0.12      0.01         0.01
+  CLIPSAR                     0.24      0.24      0.32      0.01         0.01
+  CLIPWEL                     0.47      0.47      0.49      0.02         0.01
+  CLIPYAR                     0.48      0.48      0.52      0.01         0.01
+  CLIPNOT                     0.41      0.41      0.48      0.01         0.01
+  CMCPWIN                     0.01      0.01      0.05      0.01         0.01
+  CMCPLOG                     0.64      0.64      1.02      0.01         0.01
+  CLOGELE                     1.07      1.07      1.18      0.28         0.25
+  CLOGVIN                     0.96      0.97      1.07      0.22         0.16
+  CLOGQUE                     0.88      0.88      0.97      0.01         0.01
+  CLOGCEC                     0.55      0.55      0.88      0.01         0.01
+  CCECROY                     0.01      0.01      0.55      0.01         0.01
+  CSARBUR                     0.96      0.96      1.85      0.01         0.01
+  CSARARL                     0.59      0.59      1.16      0.01         0.01
+  CMRYCSO                     0.01      1.03      0.01      2.76         0.01
+  CMRYWSM                     0.01      0.01      0.01      0.29         0.01
+  CWALPUR                     0.01      0.30      0.01      0.50         0.01
+  CWSMWAL                     0.55      0.58      0.67      0.40         0.36
+  CWSMCAN                     0.50      0.50      0.58      0.36         0.34
+  CWSMETH                     0.43      0.43      0.50      0.14         0.14
+  CWSMARL                     0.43      0.43      0.47      0.20         0.17
+  CPREWAL                     0.20      0.20      0.30      0.01         0.01
+  CCANPRE                     0.01      0.01      0.20      0.01         0.01
+  CSIMPOR                     0.01      0.01      0.17      0.01         0.01
+  CPORHOM                     0.21      0.21      0.60      0.01         0.01
+  CSIMSTM                     0.60      0.60      0.60      0.66         0.60
+  CSIMELC                     0.38      0.38      0.60      0.01         0.01
+  CSIMSAR                     0.40      0.40      0.48      0.01         0.01
+  CSIMWEL                     0.01      0.01      0.37      0.01         0.01
+  CAUBSPS                     0.01      0.01      0.01      0.18         0.01
+  SSHBPAL                     0.01      0.20      0.01      0.65         0.01
+  SSHBWSM                     0.15      0.15      0.31      0.01         0.01
+  SPORSHB                     0.04      0.04      0.15      0.01         0.01
+  SPORDOM                     0.01      0.01      0.22      0.01         0.01
+  SSHBWLV                     0.03      0.03      0.21      0.01         0.01
+  SSHBSTM                     0.01      0.01      0.03      0.01         0.01
+  SSTMDOM                     0.01      0.01      0.18      0.01         0.01
+  SSHBELC                     0.01      0.01      0.01      0.12         0.01
+  SSHB54                      0.01      0.01      0.01      0.05         0.01
+  SRS-XCON1                   0.54      0.54      0.84      0.01         0.01
+  SRS-XCON2                   0.74      0.74      1.01      0.01         0.01
+  SNOTMYR                     0.01      0.01      0.19      0.01         0.01
+  SNOTWLL                     0.01      0.01      0.18      0.14         0.01
+  SRUB02                      0.01      0.01      0.01      0.68         0.01
+  SRUBWOL                     0.01      0.01      0.01      0.53         0.01
+  SBURPOR                     0.01      0.01      0.01      0.10         0.01
+  SBURSMT                     0.01      0.01      0.01      0.25         0.01
+  SALVSAR                     0.01      0.01      0.01      0.21         0.01
+  SALVWEL                     0.01      0.01      0.01      0.02         0.01
+  SALVNOT                     0.01      0.01      0.01      0.13         0.01
+  SMCPNOT                     0.01      0.01      0.01      0.18         0.01
+  SMCPMCD                     0.01      0.01      0.01      0.18         0.01
+  SLARWIL                     0.14      0.35      0.14      0.62         0.14
+  SXANELG                     0.34      0.35      0.35      0.33         0.23
+  SXANALE                     0.35      0.37      0.35      0.52         0.35
+  SALEMAU                     0.34      0.34      0.37      0.01         0.03
+  SMAULOG                     0.29      0.29      0.34      0.01         0.01
+  SMCP85                      0.24      0.24      0.29      0.01         0.02
+  SCANOUT1                    0.01      0.01      0.01      0.68         0.01
+  SCANWOL                     0.28      0.28      0.31      0.15         0.13
+  XSCANPAL                    0.01      0.01      0.01      0.34         0.01
+  SCANWSM                     0.31      0.35      0.31      0.50         0.31
+  SWSMHOM                     0.01      0.01      0.39      0.01         0.01
+  SCANPRE                     0.32      0.32      0.33      0.34         0.27
+  SSIMPOR                     0.32      0.32      0.42      0.01         0.01
+  SSIMSTM                     0.27      0.29      0.32      0.25         0.17
+  SSTMARL                     0.36      0.36      0.45      0.01         0.01
+  SSIMELC                     0.32      0.32      0.37      0.07         0.04
+  SSIMSAR                     0.22      0.22      0.31      0.02         0.01
+  SSIMWEL                     0.01      0.01      0.22      0.01         0.01
+  SWELDOM                     0.01      0.01      0.20      0.01         0.01
+  SWOLHOM                     0.01      0.01      0.85      0.01         0.01
+  SDUM1                       0.09      0.09      0.12      0.07         0.01
+  SDUM2                       0.18      0.20      0.20      0.13         0.06
+  SDUM3                       0.01      0.01      0.20      0.01         0.01
+  SMCP85A                     0.07      0.12      0.08      0.17         0.05
+  SDUM4                       0.07      0.08      0.07      0.19         0.07
+  SDUM5                       0.01      0.07      0.01      0.20         0.01
+  
+  
+  ***************
+  Pumping Summary
+  ***************
+  
+  ---------------------------------------------------------------------------------------------------------
+                                                  Min       Avg       Max     Total     Power    % Time Off
+                        Percent   Number of      Flow      Flow      Flow    Volume     Usage    Pump Curve
+  Pump                 Utilized   Start-Ups       CMS       CMS       CMS  10^6 ltr     Kw-hr    Low   High
+  ---------------------------------------------------------------------------------------------------------
+  PUMP@SCANPAL-SCANOUT1    88.52          25      0.00      2.23      5.27    17.236      4.46    0.0    0.0
+  PUMP@SRUBPAL-I-SRUB02    85.90          46      0.00      3.94      7.69    32.764      6.81    0.0    0.0
+  PUMP@CAUBPAL-I-CAUBSPS   100.00           1      0.00      3.03      5.62    29.570     57.45   32.7    0.0
+  PUMP@CCORDIV-CCOROUT1    92.69           1      0.00      0.82      1.93     6.460      1.16    0.0    0.0
+  PUMP@CMRYCOR-I-CMRYCSO    93.54           1      0.00      0.34      0.71     2.847      3.33    0.0    0.0
+  
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

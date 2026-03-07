@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object highcap2 at line 41 of [CONDUIT] section:
+  french2          highcap2         drainend         2000.00    0.0200     0          0          0          0
+
+  
+  ERROR 209: undefined object highcap1 at line 44 of [CONDUIT] section:
+  french1          highcap1         street1          700.00     0.0170     3.00       2.80       0          0
+
+  
+  ERROR 211: invalid number  at line 55 of [XSECT] section:
+  french2          POWER        10.00      20.00      0          0          1
+
+  
+  ERROR 209: undefined object 0.60 at line 59 of [XSECT] section:
+  streetoflo       IRREGULAR    0.60       0.00       0          0          1
+
+  
+  ERROR 211: invalid number  at line 60 of [XSECT] section:
+  stormpipe        RECT_OPEN    0          0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

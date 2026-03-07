@@ -1,0 +1,56 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 104 at line 49 of [CONDUIT] section:
+  103              104              105              100.00     0.0300     8.35       5.00       0          0
+
+  
+  ERROR 209: undefined object 0 at line 82 of [XSECT] section:
+  20               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 83 of [XSECT] section:
+  30               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 84 of [XSECT] section:
+  60               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 85 of [XSECT] section:
+  70               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 86 of [XSECT] section:
+  80               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 87 of [XSECT] section:
+  90               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 88 of [XSECT] section:
+  100              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 92 of [XSECT] section:
+  MUL2             RECT_OPEN    0          360.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 93 of [XSECT] section:
+  MUL4             RECT_OPEN    0          220.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 94 of [XSECT] section:
+  MUL6             RECT_OPEN    0          385.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 95 of [XSECT] section:
+  MUL7             RECT_OPEN    0          1445.00    0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

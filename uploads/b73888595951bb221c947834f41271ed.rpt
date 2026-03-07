@@ -1,0 +1,40 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name Ex at line 73 of [CONDUIT] section:
+  Ex               34               Dgwood           50.00      0.0240     5.43       5.22       0          0
+
+  
+  ERROR 207: duplicate ID name Clvt at line 76 of [CONDUIT] section:
+  Clvt             46               48               41.00      0.0130     5.46       5.17       0          0
+
+  
+  ERROR 207: duplicate ID name Clvt at line 78 of [CONDUIT] section:
+  Clvt             50               52               41.00      0.0130     5.51       5.35       0          0
+
+  
+  ERROR 207: duplicate ID name Chan at line 79 of [CONDUIT] section:
+  Chan             52               54               210.00     0          5.35       4.52       0          0
+
+  
+  ERROR 207: duplicate ID name Clvt at line 80 of [CONDUIT] section:
+  Clvt             54               56               42.00      0.0130     4.52       4.38       0          0
+
+  
+  ERROR 207: duplicate ID name Chan at line 81 of [CONDUIT] section:
+  Chan             56               Myrtle           400.00     0          4.38       4.50       0          0
+
+  
+  ERROR 207: duplicate ID name Chan at line 82 of [CONDUIT] section:
+  Chan             Holly            63               150.00     0.0200     4.75       4.33       0          0
+
+  
+  ERROR 207: duplicate ID name Chan at line 84 of [CONDUIT] section:
+  Chan             65               Myrtle           150.00     0.0300     4.24       4.20       0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

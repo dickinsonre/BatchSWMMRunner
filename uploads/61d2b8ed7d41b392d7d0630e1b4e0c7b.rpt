@@ -1,0 +1,176 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 172 of [CONDUIT] section:
+  Link_615         ?                ?                2141.00    0.0139     76.26      75.62      0          0
+
+  
+  ERROR 209: undefined object 609b at line 176 of [CONDUIT] section:
+  609a             609b             608              110.00     0.0140     87.65      76.70      0          0
+
+  
+  ERROR 209: undefined object 611b at line 177 of [CONDUIT] section:
+  611a             611b             610              180.00     0.0140     76.70      76.70      0          0
+
+  
+  ERROR 209: undefined object 612b at line 195 of [ORIFICE] section:
+  612a             612b             612c             SIDE       76.70      0.650      NO       0
+
+  
+  ERROR 209: undefined object 0 at line 221 of [XSECT] section:
+  16               CUSTOM       10.50      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 223 of [XSECT] section:
+  18               CUSTOM       10.50      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 224 of [XSECT] section:
+  19               CUSTOM       11.08      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 225 of [XSECT] section:
+  20               CUSTOM       11.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 228 of [XSECT] section:
+  24               CUSTOM       12.50      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 230 of [XSECT] section:
+  25               CUSTOM       12.50      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 272 of [XSECT] section:
+  Link_615         CUSTOM       12.50      0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 275 of [XSECT] section:
+  607              CUSTOM       10.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 279 of [XSECT] section:
+  516.1            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 280 of [XSECT] section:
+  527.1            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 281 of [XSECT] section:
+  530.1            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 282 of [XSECT] section:
+  532.1            RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 283 of [XSECT] section:
+  537.1            RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 284 of [XSECT] section:
+  549.1            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 285 of [XSECT] section:
+  561.1            RECT_CLOSED  1.25       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 286 of [XSECT] section:
+  563.1            RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 287 of [XSECT] section:
+  567.1            RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 288 of [XSECT] section:
+  573.1            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 289 of [XSECT] section:
+  611.1            RECT_CLOSED  1.75       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 290 of [XSECT] section:
+  613.1            RECT_CLOSED  1.75       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 291 of [XSECT] section:
+  612a             RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 292 of [XSECT] section:
+  o62              RECT_CLOSED  8.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 293 of [XSECT] section:
+  c83              RECT_CLOSED  1.25       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 294 of [XSECT] section:
+  c56a             RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 295 of [XSECT] section:
+  o60              RECT_OPEN    0          14.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 296 of [XSECT] section:
+  o61              RECT_OPEN    0          6.25       0          0          
+
+  
+  ERROR 211: invalid number  at line 297 of [XSECT] section:
+  o46              RECT_OPEN    0          5.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 298 of [XSECT] section:
+  o48              RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 299 of [XSECT] section:
+  o49              RECT_OPEN    0          1.25       0          0          
+
+  
+  ERROR 211: invalid number  at line 300 of [XSECT] section:
+  o50              RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 301 of [XSECT] section:
+  o51              RECT_OPEN    0          18.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 302 of [XSECT] section:
+  opa              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 303 of [XSECT] section:
+  o53              RECT_OPEN    0          1.25       0          0          
+
+  
+  ERROR 211: invalid number  at line 304 of [XSECT] section:
+  o52              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 305 of [XSECT] section:
+  o54              RECT_OPEN    0          4.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 306 of [XSECT] section:
+  o55              RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 307 of [XSECT] section:
+  c562             RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 308 of [XSECT] section:
+  083              RECT_OPEN    0          12.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

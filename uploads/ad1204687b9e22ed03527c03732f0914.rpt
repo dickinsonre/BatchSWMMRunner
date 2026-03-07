@@ -1,0 +1,52 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name DROP at line 220 of [JUNC] section:
+  DROP             589.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DROP at line 222 of [JUNC] section:
+  DROP             589.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DEAIR at line 422 of [CONDUIT] section:
+  DEAIR            DROP             002              300.00     0.0130     442.25     441.95     0          0
+
+  
+  ERROR 207: duplicate ID name DEAIR at line 424 of [CONDUIT] section:
+  DEAIR            DROP             003              340.00     0.0130     444.19     443.85     0          0
+
+  
+  ERROR 207: duplicate ID name ORIFICE at line 432 of [ORIFICE] section:
+  ORIFICE          300              033              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name ORIFICE at line 433 of [ORIFICE] section:
+  ORIFICE          900              093              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name ORIFICE at line 434 of [ORIFICE] section:
+  ORIFICE          500              055              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name weir at line 440 of [WEIR] section:
+  weir 14          042              041              TRANSVERSE 576.85     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 441 of [WEIR] section:
+  WEIR 13          300              031              TRANSVERSE 571.72     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name weir at line 442 of [WEIR] section:
+  weir 5           413              045              TRANSVERSE 585.09     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name weir at line 443 of [WEIR] section:
+  weir 15          500              051              TRANSVERSE 575.63     1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

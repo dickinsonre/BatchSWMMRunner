@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 510 at line 60 of [CONDUIT] section:
+  510              510              505              70.00      0.0240     323.60     321.80     0          0
+
+  
+  ERROR 209: undefined object 600 at line 65 of [CONDUIT] section:
+  600              600              605              130.00     0.0130     310.61     302.40     0          0
+
+  
+  ERROR 209: undefined object 620 at line 66 of [CONDUIT] section:
+  620              620              625              250.00     0.0350     302.40     290.20     0          0
+
+  
+  ERROR 209: undefined object 630 at line 67 of [CONDUIT] section:
+  630              630              635              130.00     0.0130     290.20     284.30     0          0
+
+  
+  ERROR 209: undefined object 640 at line 68 of [CONDUIT] section:
+  640              640              645              350.00     0.0350     284.30     275.00     0          0
+
+  
+  ERROR 209: undefined object 650 at line 69 of [CONDUIT] section:
+  650              650              655              110.00     0.0130     275.00     269.00     0          0
+
+  
+  ERROR 209: undefined object 700 at line 82 of [CONDUIT] section:
+  690              700              695              56.00      0.0130     78.20      72.80      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

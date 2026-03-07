@@ -1,0 +1,68 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 1403 at line 106 of [CONDUIT] section:
+  1402             1403             1404             179.20     0.0210     0          0          0          0
+
+  
+  ERROR 209: undefined object 2202 at line 108 of [CONDUIT] section:
+  2201             2202             220              950.00     0.0350     0          0          0          0
+
+  
+  ERROR 209: undefined object 2264 at line 110 of [CONDUIT] section:
+  2263             2264             226              750.00     0.0350     0.20       0          0          0
+
+  
+  ERROR 209: undefined object 2402 at line 112 of [CONDUIT] section:
+  2401             2402             250              96.00      0.0290     0          0          0          0
+
+  
+  ERROR 209: undefined object 2512 at line 113 of [CONDUIT] section:
+  2511             2512             251              299.90     0.0290     0          0          0          0
+
+  
+  ERROR 209: undefined object 1104 at line 114 of [CONDUIT] section:
+  1102             1104             110              90.00      0.0250     0          6.41       0          0
+
+  
+  ERROR 209: undefined object 1203 at line 115 of [CONDUIT] section:
+  1202             1203             1204             90.00      0.0250     0          5.95       0          0
+
+  
+  ERROR 209: undefined object 1303 at line 116 of [CONDUIT] section:
+  1302             1303             1304             130.00     0.0210     0          4.33       0          0
+
+  
+  ERROR 209: undefined object 5106 at line 118 of [CONDUIT] section:
+  5105             5106             510              50.00      0.0190     0          0.80       0          0
+
+  
+  ERROR 209: undefined object 5204 at line 119 of [CONDUIT] section:
+  5203             5204             520              45.00      0.0190     0          0.80       0          0
+
+  
+  ERROR 209: undefined object 4302 at line 120 of [CONDUIT] section:
+  4301             4302             430              225.00     0.0240     0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 238 of [XSECT] section:
+  MUL14            RECT_OPEN    0          8.67       0          0          
+
+  
+  ERROR 211: invalid number  at line 239 of [XSECT] section:
+  MUL17            RECT_OPEN    0          300.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 240 of [XSECT] section:
+  MUL18            RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 241 of [XSECT] section:
+  MUL19            RECT_OPEN    0          20.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

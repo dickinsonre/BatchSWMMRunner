@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 415 of [CONDUIT] section:
+  TS2-C2           ?                Node_1518250     148.00     0.0170     -0.80      -0.87      0          0
+
+  
+  ERROR 209: undefined object ? at line 417 of [CONDUIT] section:
+  TS5-C2           ?                Node_1270261     305.00     0.0170     1.40       1.40       0          0
+
+  
+  ERROR 209: undefined object ? at line 418 of [CONDUIT] section:
+  TS7-C2           ?                Node_1299266     671.00     0.0140     5.65       4.79       0          0
+
+  
+  ERROR 209: undefined object ? at line 434 of [CONDUIT] section:
+  TS1-C5           ?                Node_1255368     437.00     0.0170     -2.34      -2.69      0          0
+
+  
+  ERROR 209: undefined object ? at line 447 of [CONDUIT] section:
+  TS1-C9           ?                Node_1243452     101.00     0.0150     0.85       0.07       0          0
+
+  
+  ERROR 209: undefined object ? at line 469 of [CONDUIT] section:
+  TS1-C14          ?                Node_1247558     375.00     0.0150     1.87       -3.39      0          0
+
+  
+  ERROR 209: undefined object ? at line 473 of [CONDUIT] section:
+  TS3-C11          ?                Node_1238574     430.00     0.0150     1.09       -1.07      0          0
+
+  
+  ERROR 209: undefined object ? at line 475 of [CONDUIT] section:
+  TS3-C10          ?                Node_1237469     1962.00    0.0150     5.03       -3.70      0          0
+
+  
+  ERROR 209: undefined object ? at line 480 of [CONDUIT] section:
+  TS9-C3           ?                Node_1264283     1638.00    0.0150     4.51       0.96       0          0
+
+  
+  ERROR 209: undefined object ? at line 528 of [CONDUIT] section:
+  IC3-C22          ?                Node_1509798     85.00      0.0130     -4.25      -4.09      0          0
+
+  
+  ERROR 209: undefined object ? at line 531 of [CONDUIT] section:
+  FM1-PI           ?                Node_1448812     4192.00    0.0130     4.12       10.92      0          0
+
+  
+  ERROR 209: undefined object ? at line 549 of [CONDUIT] section:
+  FM2-BA           ?                Node_1442957     2361.00    0.0130     0.70       8.00       0          0
+
+  
+  ERROR 209: undefined object ? at line 552 of [CONDUIT] section:
+  TS1-C23          ?                Node_1501985     181.00     0.0150     -0.61      -1.54      0          0
+
+  
+  ERROR 209: undefined object ? at line 556 of [CONDUIT] section:
+  TS1-C24          ?                Node_10091001    254.00     0.0150     0.32       -1.12      0          0
+
+  
+  ERROR 209: undefined object ? at line 557 of [CONDUIT] section:
+  OP-C24           ?                Node_10001002    410.00     0.0150     -1.12      -1.16      0          0
+
+  
+  ERROR 209: undefined object ? at line 558 of [CONDUIT] section:
+  IC3-C24          ?                Node_10011147    126.00     0.0150     -1.12      -1.27      0          0
+
+  
+  ERROR 209: undefined object Node_90 at line 559 of [CONDUIT] section:
+  TS1-C90          Node_90          Node_10221017    727.00     0.0150     -0.19      -1.50      0          0
+
+  
+  ERROR 209: undefined object ? at line 560 of [CONDUIT] section:
+  OP-C32           ?                Node_10161503    224.00     0.0130     -1.50      -3.36      0          0
+
+  
+  ERROR 209: undefined object ? at line 561 of [CONDUIT] section:
+  IC3-C32          ?                Node_10191021    40.00      0.0150     -7.38      -7.65      0          0
+
+  
+  ERROR 209: undefined object ? at line 562 of [CONDUIT] section:
+  TS1-G2           ?                Node_13031037    260.00     0.0150     -0.90      -1.24      0          0
+
+  
+  ERROR 209: undefined object ? at line 563 of [CONDUIT] section:
+  OP-G2            ?                Node_10331035    337.00     0.0150     -1.07      -1.10      0          0
+
+  
+  ERROR 209: undefined object ? at line 564 of [CONDUIT] section:
+  G02RG            ?                Node_10371045    10.00      0.0160     -1.28      -1.29      0          0
+
+  
+  ERROR 209: undefined object ? at line 565 of [CONDUIT] section:
+  TS1-G1           ?                Node_10471053    60.00      0.0150     -2.80      -1.43      0          0
+
+  
+  ERROR 209: undefined object ? at line 566 of [CONDUIT] section:
+  OP-G1            ?                Node_10491051    758.00     0.0150     -1.64      -1.72      0          0
+
+  
+  ERROR 209: undefined object ? at line 567 of [CONDUIT] section:
+  G01RG            ?                Node_10531054    10.00      0.0160     -1.92      -1.93      0          0
+
+  
+  ERROR 209: undefined object ? at line 568 of [CONDUIT] section:
+  TS1-G3           ?                Node_10631069    138.00     0.0150     1.70       0.32       0          0
+
+  
+  ERROR 209: undefined object ? at line 569 of [CONDUIT] section:
+  OP-G3            ?                Node_10651067    471.00     0.0150     0.19       0.14       0          0
+
+  
+  ERROR 209: undefined object ? at line 570 of [CONDUIT] section:
+  G03RG            ?                Node_10691070    10.00      0.0160     -0.29      -0.30      0          0
+
+  
+  ERROR 209: undefined object ? at line 571 of [CONDUIT] section:
+  TS1-G4           ?                Node_10791085    463.00     0.0150     1.11       0.32       0          0
+
+  
+  ERROR 209: undefined object ? at line 572 of [CONDUIT] section:
+  OP-G4            ?                Node_10811083    503.00     0.0150     0.37       0.32       0          0
+
+  
+  ERROR 209: undefined object ? at line 573 of [CONDUIT] section:
+  G04RG            ?                Node_10851086    10.00      0.0160     0.32       0.31       0          0
+
+  
+  ERROR 209: undefined object ? at line 574 of [CONDUIT] section:
+  TS1-G5           ?                Node_10951101    52.00      0.0150     3.40       3.35       0          0
+
+  
+  ERROR 209: undefined object ? at line 575 of [CONDUIT] section:
+  OP-G5            ?                Node_10971099    554.00     0.0150     3.33       3.27       0          0
+
+  
+  ERROR 209: undefined object ? at line 576 of [CONDUIT] section:
+  G05RG            ?                Node_11011102    10.00      0.0160     2.35       2.34       0          0
+
+  
+  ERROR 209: undefined object ? at line 577 of [CONDUIT] section:
+  TS1-G6           ?                Node_11111117    617.00     0.0150     5.32       3.22       0          0
+
+  
+  ERROR 209: undefined object ? at line 578 of [CONDUIT] section:
+  OP-G6            ?                Node_11131115    589.00     0.0150     3.13       3.07       0          0
+
+  
+  ERROR 209: undefined object ? at line 579 of [CONDUIT] section:
+  G06RG            ?                Node_11171118    10.00      0.0160     1.68       1.67       0          0
+
+  
+  ERROR 209: undefined object ? at line 580 of [CONDUIT] section:
+  TS1-G7           ?                Node_11271133    339.00     0.0150     4.17       2.98       0          0
+
+  
+  ERROR 209: undefined object ? at line 581 of [CONDUIT] section:
+  OP-G7            ?                Node_11291131    1120.00    0.0150     2.82       2.82       0          0
+
+  
+  ERROR 209: undefined object ? at line 582 of [CONDUIT] section:
+  G07RG            ?                Node_11331128    10.00      0.0160     2.62       2.63       0          0
+
+  
+  ERROR 209: undefined object ? at line 583 of [CONDUIT] section:
+  IC3-G7           ?                Node_11281134    100.00     0.0140     2.01       1.78       0          0
+
+  
+  ERROR 209: undefined object ? at line 585 of [CONDUIT] section:
+  IC-C24C23        ?                Node_11471462    19.00      0.0140     -8.25      -9.60      0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 586 of [CONDUIT] section:
+  TS1-C60          Node_60          Node_11771017    956.00     0.0140     -0.52      -1.50      0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 587 of [CONDUIT] section:
+  TS2-C60          Node_60          Node_11791177    2336.00    0.0150     0.66       -0.52      0          0
+
+  
+  ERROR 209: undefined object ? at line 588 of [CONDUIT] section:
+  TS2-C24          ?                Node_11811009    205.00     0.0140     1.14       0.32       0          0
+
+  
+  ERROR 209: undefined object ? at line 589 of [CONDUIT] section:
+  TS2-C23          ?                Node_11851501    666.00     0.0140     0.66       0          0          0
+
+  
+  ERROR 209: undefined object ? at line 590 of [CONDUIT] section:
+  TS1-C22A         ?                Node_1188938     50.00      0.0140     -0.97      -1.39      0          0
+
+  
+  ERROR 209: undefined object ? at line 591 of [CONDUIT] section:
+  TS4-C22A         ?                Node_11901191    633.00     0.0140     8.29       4.25       0          0
+
+  
+  ERROR 209: undefined object ? at line 592 of [CONDUIT] section:
+  TS3-C22A         ?                Node_1191944     383.00     0.0140     4.25       0.92       0          0
+
+  
+  ERROR 209: undefined object ? at line 593 of [CONDUIT] section:
+  TS6-C22A         ?                Node_11941195    438.00     0.0140     13.45      9.62       0          0
+
+  
+  ERROR 209: undefined object ? at line 594 of [CONDUIT] section:
+  TS5-C22A         ?                Node_11951190    245.00     0.0140     9.62       8.29       0          0
+
+  
+  ERROR 209: undefined object ? at line 595 of [CONDUIT] section:
+  TS6-C23          ?                Node_12041206    855.00     0.0140     8.29       2.74       0          0
+
+  
+  ERROR 209: undefined object ? at line 596 of [CONDUIT] section:
+  TS5-C23          ?                Node_12061208    255.00     0.0140     2.74       1.06       0          0
+
+  
+  ERROR 209: undefined object ? at line 597 of [CONDUIT] section:
+  TS4-C23          ?                Node_12081210    489.00     0.0140     1.06       0.80       0          0
+
+  
+  ERROR 209: undefined object ? at line 598 of [CONDUIT] section:
+  TS3-C23          ?                Node_12101185    270.00     0.0140     0.80       0.66       0          0
+
+  
+  ERROR 209: undefined object ? at line 599 of [CONDUIT] section:
+  TS7-C23          ?                Node_12011208    855.00     0.0140     9.62       1.06       0          0
+
+  
+  ERROR 209: undefined object ? at line 600 of [CONDUIT] section:
+  TS8-C23          ?                Node_11991210    855.00     0.0140     13.45      0.80       0          0
+
+  
+  ERROR 209: undefined object ? at line 601 of [CONDUIT] section:
+  TS5-C22          ?                Node_12191220    1285.00    0.0140     16.44      8.99       0          0
+
+  
+  ERROR 209: undefined object ? at line 602 of [CONDUIT] section:
+  TS4-C22          ?                Node_12201222    69.00      0.0140     8.99       6.24       0          0
+
+  
+  ERROR 209: undefined object ? at line 603 of [CONDUIT] section:
+  TS3-C22          ?                Node_1222800     1882.00    0.0140     6.24       3.55       0          0
+
+  
+  ERROR 209: undefined object ? at line 604 of [CONDUIT] section:
+  TS7-C22          ?                Node_14961498    1939.00    0.0140     17.20      10.75      0          0
+
+  
+  ERROR 209: undefined object ? at line 605 of [CONDUIT] section:
+  TS6-C22          ?                Node_14981368    962.00     0.0140     10.75      6.84       0          0
+
+  
+  ERROR 209: undefined object ? at line 607 of [CONDUIT] section:
+  TS6-C11          ?                Node_12361238    572.00     0.0140     4.40       1.09       0          0
+
+  
+  ERROR 209: undefined object ? at line 608 of [CONDUIT] section:
+  TS2-C15          ?                Node_1249705     500.00     0.0150     14.82      9.82       0          0
+
+  
+  ERROR 209: undefined object ? at line 609 of [CONDUIT] section:
+  TS2-C17          ?                Node_1251726     631.00     0.0150     5.39       -0.22      0          0
+
+  
+  ERROR 209: undefined object ? at line 611 of [CONDUIT] section:
+  TS19-C3          ?                Node_1257271     726.00     0.0150     0.93       -0.99      0          0
+
+  
+  ERROR 209: undefined object ? at line 612 of [CONDUIT] section:
+  TS20-C3          ?                Node_1259229     395.00     0.0140     0.51       -1.42      0          0
+
+  
+  ERROR 209: undefined object ? at line 613 of [CONDUIT] section:
+  TS11-C3          ?                Node_1262298     216.00     0.0140     -0.69      -0.79      0          0
+
+  
+  ERROR 209: undefined object ? at line 617 of [CONDUIT] section:
+  TS3-C1           ?                Node_1274338     1026.00    0.0150     2.58       -1.12      0          0
+
+  
+  ERROR 209: undefined object ? at line 618 of [CONDUIT] section:
+  TS2-G1           ?                Node_12781047    1704.00    0.0150     2.81       -2.80      0          0
+
+  
+  ERROR 209: undefined object ? at line 619 of [CONDUIT] section:
+  TS2-G4           ?                Node_12821079    445.00     0.0150     1.55       1.11       0          0
+
+  
+  ERROR 209: undefined object ? at line 620 of [CONDUIT] section:
+  TS4-G4           ?                Node_12811283    490.00     0.0140     2.72       2.23       0          0
+
+  
+  ERROR 209: undefined object ? at line 621 of [CONDUIT] section:
+  TS3-G4           ?                Node_12831282    680.00     0.0140     2.23       1.55       0          0
+
+  
+  ERROR 209: undefined object ? at line 622 of [CONDUIT] section:
+  TS2-G6           ?                Node_12881111    461.00     0.0150     6.00       5.32       0          0
+
+  
+  ERROR 209: undefined object TS1b-C19 at line 623 of [CONDUIT] section:
+  TS1a-C19         TS1b-C19         C19-RG           664.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 624 of [CONDUIT] section:
+  TS12-C2          ?                Node_12941296    1315.00    0.0150     18.83      16.93      0          0
+
+  
+  ERROR 209: undefined object ? at line 625 of [CONDUIT] section:
+  TS8-C2           ?                Node_12961299    2757.00    0.0150     16.93      5.65       0          0
+
+  
+  ERROR 209: undefined object ? at line 626 of [CONDUIT] section:
+  TS2-ME           ?                Node_13051306    97.00      0.0140     -5.66      -5.92      0          0
+
+  
+  ERROR 209: undefined object TS7b-C19 at line 627 of [CONDUIT] section:
+  TS7a-C19         TS7b-C19         Node_13091310    1192.00    0.0140     1.25       0.67       0          0
+
+  
+  ERROR 209: undefined object TS4b-C19 at line 628 of [CONDUIT] section:
+  TS4a-C19         TS4b-C19         Node_13161253    259.00     0.0140     0.42       0.60       0          0
+
+  
+  ERROR 209: undefined object TS2b-C19 at line 629 of [CONDUIT] section:
+  TS2a-C19         TS2b-C19         Node_1314752     478.00     0.0140     0.17       -0.08      0          0
+
+  
+  ERROR 209: undefined object TS3b-C19 at line 630 of [CONDUIT] section:
+  TS3a-C19         TS3b-C19         Node_12531314    237.00     0.0140     0.60       0.17       0          0
+
+  
+  ERROR 209: undefined object TS6b-C19 at line 631 of [CONDUIT] section:
+  TS6a-C19         TS6b-C19         Node_13101317    295.00     0.0140     0.67       0.52       0          0
+
+  
+  ERROR 209: undefined object TS5b-C19 at line 632 of [CONDUIT] section:
+  TS5a-C19         TS5b-C19         Node_13171316    250.00     0.0140     0.52       0.42       0          0
+
+  
+  ERROR 209: undefined object ? at line 633 of [CONDUIT] section:
+  TS5-C1           ?                Node_12761324    2159.00    0.0150     5.31       -0.98      0          0
+
+  
+  ERROR 209: undefined object ? at line 634 of [CONDUIT] section:
+  TS4-C1           ?                Node_1324338     212.00     0.0150     -0.98      -1.12      0          0
+
+  
+  ERROR 209: undefined object ? at line 635 of [CONDUIT] section:
+  TS2-C27          ?                Node_1329768     1080.00    0.0140     4.55       -1.78      0          0
+
+  
+  ERROR 209: undefined object ? at line 637 of [CONDUIT] section:
+  TS1-C28A         ?                Node_13311333    1035.00    0.0150     -0.26      -1.31      0          0
+
+  
+  ERROR 209: undefined object ? at line 638 of [CONDUIT] section:
+  IC1-C28A         ?                Node_1333735     55.00      0.0140     -1.31      -2.03      0          0
+
+  
+  ERROR 209: undefined object ? at line 639 of [CONDUIT] section:
+  TS3-C9           ?                Node_13421243    1677.00    0.0140     3.37       0.85       0          0
+
+  
+  ERROR 209: undefined object ? at line 640 of [CONDUIT] section:
+  OP-C23A          ?                Node_13461350    1082.00    0.0150     -0.61      -0.61      0          0
+
+  
+  ERROR 209: undefined object ? at line 641 of [CONDUIT] section:
+  TS6A-C22         ?                Node_13681222    500.00     0.0150     6.84       6.24       0          0
+
+  
+  ERROR 209: undefined object ? at line 642 of [CONDUIT] section:
+  OP3-TH           ?                Node_13641366    1780.00    0.0150     17.20      10.75      0          0
+
+  
+  ERROR 209: undefined object ? at line 643 of [CONDUIT] section:
+  OP2-TH           ?                Node_13661370    1210.00    0.0150     10.75      6.84       0          0
+
+  
+  ERROR 209: undefined object ? at line 644 of [CONDUIT] section:
+  OP1-TH           ?                Node_13701383    2650.00    0.0150     6.84       -2.96      0          0
+
+  
+  ERROR 209: undefined object ? at line 645 of [CONDUIT] section:
+  TS1-CFA          ?                Node_13761457    250.00     0.0150     6.01       5.82       0          0
+
+  
+  ERROR 209: undefined object ? at line 646 of [CONDUIT] section:
+  CFA-OP1          ?                Node_13791381    50.00      0.0150     6.90       4.85       0          0
+
+  
+  ERROR 209: undefined object ? at line 647 of [CONDUIT] section:
+  OP-CME           ?                Node_13931391    50.00      0.0150     3.13       2.88       0          0
+
+  
+  ERROR 209: undefined object ? at line 648 of [CONDUIT] section:
+  TS1-ME           ?                Node_13931305    800.00     0.0150     -4.27      -5.66      0          0
+
+  
+  ERROR 209: undefined object ? at line 649 of [CONDUIT] section:
+  TS3-G6           ?                Node_13961117    900.00     0.0140     12.10      1.73       0          0
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

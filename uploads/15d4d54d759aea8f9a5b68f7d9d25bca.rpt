@@ -1,0 +1,92 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 86 of [XSECT] section:
+  P-13             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 87 of [XSECT] section:
+  P-12             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 88 of [XSECT] section:
+  P-4              RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 89 of [XSECT] section:
+  P-3              RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 90 of [XSECT] section:
+  P-6              RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 91 of [XSECT] section:
+  P-5              RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 92 of [XSECT] section:
+  P=17             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 93 of [XSECT] section:
+  P-16             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 94 of [XSECT] section:
+  P-15             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 95 of [XSECT] section:
+  P-14             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 96 of [XSECT] section:
+  P-11             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 97 of [XSECT] section:
+  P-10             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 98 of [XSECT] section:
+  P-9              RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 99 of [XSECT] section:
+  P-8              RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 100 of [XSECT] section:
+  P-7              RECT_OPEN    0          50.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 101 of [XSECT] section:
+  P1               RECT_OPEN    0          100.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 102 of [XSECT] section:
+  P-20             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 103 of [XSECT] section:
+  P-19             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 104 of [XSECT] section:
+  OF-1             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 105 of [XSECT] section:
+  OF-2             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 106 of [XSECT] section:
+  OF-3             RECT_OPEN    0          20.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

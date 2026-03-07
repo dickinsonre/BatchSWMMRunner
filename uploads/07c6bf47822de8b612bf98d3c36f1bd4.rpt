@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number -6.00 at line 257 of [PUMP] section:
+  252              PCC              p1               PC_252     ON       -6.00      -6.40     
+
+  
+  ERROR 209: undefined object Secondary at line 258 of [PUMP] section:
+  Lead             Secondary        Laie             PC_Lead    ON       -4.09      -5.09     
+
+  
+  ERROR 211: invalid number -4.00 at line 259 of [PUMP] section:
+  TVA/54           TVA              54               PC_TVA/54  ON       -4.00      -4.56     
+
+  
+  ERROR 211: invalid number  at line 349 of [XSECT] section:
+  99/78            CIRCULAR     0.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 383 of [XSECT] section:
+  p1/99            CIRCULAR     0.00       0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

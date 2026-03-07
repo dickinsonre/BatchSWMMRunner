@@ -1,0 +1,56 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 0 at line 170 of [XSECT] section:
+  CHME8240         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 8.50 at line 173 of [XSECT] section:
+  8250             IRREGULAR    8.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 7.00 at line 175 of [XSECT] section:
+  8260             IRREGULAR    7.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 177 of [XSECT] section:
+  8270             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 12.00 at line 179 of [XSECT] section:
+  8280             IRREGULAR    12.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 7.00 at line 188 of [XSECT] section:
+  8315             IRREGULAR    7.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 7.40 at line 190 of [XSECT] section:
+  8325             IRREGULAR    7.40       0          0          0          1
+
+  
+  ERROR 209: undefined object 7.00 at line 192 of [XSECT] section:
+  8335             IRREGULAR    7.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.30 at line 194 of [XSECT] section:
+  8345             IRREGULAR    6.30       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.00 at line 196 of [XSECT] section:
+  8355             IRREGULAR    6.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.50 at line 226 of [XSECT] section:
+  8480             IRREGULAR    4.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 9.50 at line 228 of [XSECT] section:
+  8235             IRREGULAR    9.50       0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

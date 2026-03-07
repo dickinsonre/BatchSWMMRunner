@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 223.1 at line 129 of [CONDUIT] section:
+  223.1            MnC/             JUN5             100.00     0          -3.00      -3.00      0          0
+
+  
+  ERROR 207: duplicate ID name 223.1 at line 131 of [CONDUIT] section:
+  223.1            JUN7             JUN8             100.00     0          -3.00      -3.00      0          0
+
+  
+  ERROR 207: duplicate ID name 223.1 at line 138 of [CONDUIT] section:
+  223.1            JUN11            JUN12            100.00     0          -3.00      -3.00      0          0
+
+  
+  ERROR 207: duplicate ID name 223.1 at line 163 of [CONDUIT] section:
+  223.1            160              MnC/             200.00     0          -3.00      -3.00      0          0
+
+  
+  ERROR 207: duplicate ID name 223.1 at line 164 of [CONDUIT] section:
+  223.1            JUN9B            JUN10            50.00      0          -3.00      -3.00      0          0
+
+  
+  ERROR 207: duplicate ID name 223.1 at line 189 of [CONDUIT] section:
+  223.1            JUN12B           JUN13            50.00      0          -3.00      -3.00      0          0
+
+  
+  ERROR 207: duplicate ID name orifice at line 216 of [ORIFICE] section:
+  orifice          BASIN-2          649              SIDE       4.50       0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

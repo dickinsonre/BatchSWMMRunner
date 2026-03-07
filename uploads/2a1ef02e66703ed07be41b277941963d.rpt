@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 0 at line 27 of [JUNC] section:
+  0                130.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 28 of [JUNC] section:
+  0                100.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 34 of [STORAGE] section:
+  0                150.00     0          0          FUNCTIONAL 10.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 35 of [STORAGE] section:
+  0                100.00     0          0          FUNCTIONAL 12.50 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 36 of [STORAGE] section:
+  0                103.00     -3.00      0.50       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 152 at line 42 of [CONDUIT] section:
+  152              0                0                100.00     0.0050     103.00     103.00     0          0
+
+  
+  ERROR 207: duplicate ID name 157 at line 49 of [PUMP] section:
+  157              0                0                PC_157     ON       56.00      51.00     
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

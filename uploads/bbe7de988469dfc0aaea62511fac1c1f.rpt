@@ -1,0 +1,44 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Node_3020230204 at line 1424 of [CONDUIT] section:
+  3020230204       Node_3020230204  Node_1602664     231.50     0.0140     793.50     790.50     0          0
+
+  
+  ERROR 209: undefined object Node_3044130206 at line 1437 of [CONDUIT] section:
+  3044130206       Node_3044130206  Node_1617666     205.00     0.0140     790.61     789.61     0          0
+
+  
+  ERROR 209: undefined object ? at line 1439 of [CONDUIT] section:
+  XXX              ?                Node_16081625    100.00     0.0140     767.50     767.50     0          0
+
+  
+  ERROR 209: undefined object Node_30085 at line 1446 of [CONDUIT] section:
+  dbox30085        Node_30085       Node_1658547     105.00     0.0140     784.31     784.25     0          0
+
+  
+  ERROR 209: undefined object ? at line 1447 of [CONDUIT] section:
+  dboxsbox         ?                Node_16581659    50.00      0.0140     785.81     785.79     0          0
+
+  
+  ERROR 209: undefined object ? at line 1448 of [CONDUIT] section:
+  sboxt1in         ?                Node_16591660    25.00      0.0140     785.79     785.78     0          0
+
+  
+  ERROR 209: undefined object ? at line 1449 of [CONDUIT] section:
+  t1int1out        ?                Node_16601664    570.00     0.0140     785.78     785.64     0          0
+
+  
+  ERROR 209: undefined object Node_30084 at line 1450 of [CONDUIT] section:
+  t1out30084       Node_30084       Node_1664546     100.00     0.0140     785.64     785.24     0          0
+
+  
+  ERROR 211: invalid number  at line 2161 of [XSECT] section:
+  1437             CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

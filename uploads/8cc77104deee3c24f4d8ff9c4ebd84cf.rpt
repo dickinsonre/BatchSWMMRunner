@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 159 of [CONDUIT] section:
+  C53260           ?                ?                69.00      0.0130     896.50     896.13     0          0
+
+  
+  ERROR 209: undefined object ? at line 205 of [CONDUIT] section:
+  C54005           ?                ?                173.00     0.0180     902.00     896.45     0          0
+
+  
+  ERROR 209: undefined object Upper at line 213 of [WEIR] section:
+  Lower            Upper            N400             TRANSVERSE 825.75     1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 314 of [XSECT] section:
+  Lower            RECT_OPEN    0          7.20       0          0          
+
+  
+  ERROR 211: invalid number  at line 315 of [XSECT] section:
+  CSOMID           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 316 of [XSECT] section:
+  CSOEAST          RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 317 of [XSECT] section:
+  HE2455           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 318 of [XSECT] section:
+  HE2315           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 319 of [XSECT] section:
+  HE1935           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 320 of [XSECT] section:
+  HE900            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 321 of [XSECT] section:
+  HE700            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 322 of [XSECT] section:
+  HE500            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 323 of [XSECT] section:
+  HE300            RECT_OPEN    0          6.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

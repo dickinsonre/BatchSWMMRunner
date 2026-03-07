@@ -1,0 +1,48 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CL at line 150 of [STORAGE] section:
+  CL               9.50       0          0          FUNCTIONAL 160.00 0          0
+
+  
+  ERROR 207: duplicate ID name CL at line 153 of [STORAGE] section:
+  CL               9.00       0          0          FUNCTIONAL 630.00 0          0
+
+  
+  ERROR 207: duplicate ID name F at line 254 of [CONDUIT] section:
+  F                435              446              800.00     0.0160     8.01       8.00       0          0
+
+  
+  ERROR 207: duplicate ID name F at line 255 of [CONDUIT] section:
+  F                446              443              170.00     0.0160     8.00       7.90       0          0
+
+  
+  ERROR 207: duplicate ID name F at line 256 of [CONDUIT] section:
+  F                443              EQ               1685.00    0.0160     7.90       3.50       0          0
+
+  
+  ERROR 207: duplicate ID name F at line 257 of [CONDUIT] section:
+  F                462              YES              334.00     0.0130     8.00       7.90       0          0
+
+  
+  ERROR 207: duplicate ID name F at line 285 of [PUMP] section:
+  F 2#1            SS               497              PC_F 2#1   ON       0          0         
+
+  
+  ERROR 207: duplicate ID name F at line 286 of [PUMP] section:
+  F 3#1            YES              435              PC_F 3#1   ON       0          0         
+
+  
+  ERROR 207: duplicate ID name F at line 287 of [PUMP] section:
+  F 5#1            CAUST            462              PC_F 5#1   ON       0          0         
+
+  
+  ERROR 207: duplicate ID name F at line 288 of [PUMP] section:
+  F 8#1            CL               YES              PC_F 8#1   ON       1.00       0         
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

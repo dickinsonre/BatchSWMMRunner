@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 312_IMPR at line 52 of [CONDUIT] section:
+  312_650          312_IMPR         650              131.00     0.0270     876.86     870.48     0          0
+
+  
+  ERROR 209: undefined object 650_IMPR at line 53 of [CONDUIT] section:
+  650_652          650_IMPR         652              44.00      0.0270     869.98     869.67     0          0
+
+  
+  ERROR 209: undefined object 9000_666 at line 62 of [CONDUIT] section:
+  291.1            9000_666         666              74.00      0.0270     849.04     847.26     0          0
+
+  
+  ERROR 209: undefined object 796_IMPR at line 64 of [CONDUIT] section:
+  796_9000         796_IMPR         9000             407.00     0.0270     855.73     849.04     0          0
+
+  
+  ERROR 209: undefined object OUTFLOW at line 65 of [CONDUIT] section:
+  310O_312         OUTFLOW          312              41.00      0.0270     877.89     877.36     0          0
+
+  
+  ERROR 209: undefined object Weir at line 72 of [ORIFICE] section:
+  Orifice          Weir             310O             SIDE       877.89     0.650      NO       0
+
+  
+  ERROR 211: invalid number  at line 93 of [XSECT] section:
+  Orifice          RECT_CLOSED  2.50       0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

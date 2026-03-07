@@ -1,0 +1,40 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 6_5ch at line 54 of [CONDUIT] section:
+  6_5p             6_5ch            5                125.00     0.0140     921.90     911.92     0          0
+
+  
+  ERROR 209: undefined object 5_3pvdch at line 55 of [CONDUIT] section:
+  5_3p             5_3pvdch         3                105.00     0.0140     911.92     910.76     0          0
+
+  
+  ERROR 209: undefined object 12_11ch at line 63 of [CONDUIT] section:
+  12_11p           12_11ch          11or             165.00     0.0140     909.70     909.40     0          0
+
+  
+  ERROR 209: undefined object 14_13ch at line 65 of [CONDUIT] section:
+  14_13p           14_13ch          131716           125.00     0.0140     911.30     910.80     0          0
+
+  
+  ERROR 211: invalid number  at line 106 of [XSECT] section:
+  11_1_or          RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 107 of [XSECT] section:
+  10_9p            RECT_OPEN    0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 108 of [XSECT] section:
+  7_3weir          RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 109 of [XSECT] section:
+  10_9w            RECT_OPEN    0          6.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

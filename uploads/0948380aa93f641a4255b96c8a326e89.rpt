@@ -1,0 +1,408 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 0 at line 28 of [JUNC] section:
+  0                16.88      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 29 of [JUNC] section:
+  0                14.80      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 30 of [JUNC] section:
+  0                14.68      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 31 of [JUNC] section:
+  0                12.50      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 32 of [JUNC] section:
+  0                11.53      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 33 of [JUNC] section:
+  0                11.30      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 34 of [JUNC] section:
+  0                11.70      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 35 of [JUNC] section:
+  0                11.80      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 36 of [JUNC] section:
+  0                7.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 37 of [JUNC] section:
+  0                7.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 38 of [JUNC] section:
+  0                10.30      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 39 of [JUNC] section:
+  0                11.50      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 40 of [JUNC] section:
+  0                11.60      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 41 of [JUNC] section:
+  0                9.90       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 42 of [JUNC] section:
+  0                12.50      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 43 of [JUNC] section:
+  0                5.06       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 44 of [JUNC] section:
+  0                5.02       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 45 of [JUNC] section:
+  0                6.52       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 46 of [JUNC] section:
+  0                7.92       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 47 of [JUNC] section:
+  0                10.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 48 of [JUNC] section:
+  0                8.97       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 49 of [JUNC] section:
+  0                8.97       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 50 of [JUNC] section:
+  0                9.76       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 51 of [JUNC] section:
+  0                7.94       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 52 of [JUNC] section:
+  0                7.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 53 of [JUNC] section:
+  0                6.83       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 54 of [JUNC] section:
+  0                6.83       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 55 of [JUNC] section:
+  0                4.81       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 56 of [JUNC] section:
+  0                5.11       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 57 of [JUNC] section:
+  0                6.08       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 58 of [JUNC] section:
+  0                9.98       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 59 of [JUNC] section:
+  0                12.40      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 60 of [JUNC] section:
+  0                8.35       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 61 of [JUNC] section:
+  0                7.66       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 62 of [JUNC] section:
+  0                7.68       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 63 of [JUNC] section:
+  0                7.60       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 64 of [JUNC] section:
+  0                6.63       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 65 of [JUNC] section:
+  0                8.27       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 66 of [JUNC] section:
+  0                7.33       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 67 of [JUNC] section:
+  0                6.80       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 68 of [JUNC] section:
+  0                5.83       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 69 of [JUNC] section:
+  0                6.56       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 70 of [JUNC] section:
+  0                10.51      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 71 of [JUNC] section:
+  0                10.81      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 72 of [JUNC] section:
+  0                10.01      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 73 of [JUNC] section:
+  0                7.92       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 74 of [JUNC] section:
+  0                9.12       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 75 of [JUNC] section:
+  0                7.20       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 76 of [JUNC] section:
+  0                6.81       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 77 of [JUNC] section:
+  0                6.14       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 78 of [JUNC] section:
+  0                7.87       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 79 of [JUNC] section:
+  0                6.05       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 80 of [JUNC] section:
+  0                6.06       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 81 of [JUNC] section:
+  0                6.52       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 82 of [JUNC] section:
+  0                6.14       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 83 of [JUNC] section:
+  0                8.56       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 84 of [JUNC] section:
+  0                8.55       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 85 of [JUNC] section:
+  0                8.57       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 86 of [JUNC] section:
+  0                8.96       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 87 of [JUNC] section:
+  0                8.95       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 88 of [JUNC] section:
+  0                9.50       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 89 of [JUNC] section:
+  0                9.48       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 90 of [JUNC] section:
+  0                9.69       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 91 of [JUNC] section:
+  0                9.42       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 92 of [JUNC] section:
+  0                9.29       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 93 of [JUNC] section:
+  0                9.31       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 94 of [JUNC] section:
+  0                9.46       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 95 of [JUNC] section:
+  0                9.22       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 96 of [JUNC] section:
+  0                10.86      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 97 of [JUNC] section:
+  0                11.51      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 98 of [JUNC] section:
+  0                11.50      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 99 of [JUNC] section:
+  0                12.05      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 100 of [JUNC] section:
+  0                12.26      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 101 of [JUNC] section:
+  0                12.05      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 102 of [JUNC] section:
+  0                12.12      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 103 of [JUNC] section:
+  0                10.84      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 104 of [JUNC] section:
+  0                5.73       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 105 of [JUNC] section:
+  0                7.70       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 106 of [JUNC] section:
+  0                8.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 107 of [JUNC] section:
+  0                8.76       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 108 of [JUNC] section:
+  0                8.65       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 109 of [JUNC] section:
+  0                8.61       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 110 of [JUNC] section:
+  0                8.51       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 111 of [JUNC] section:
+  0                8.32       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 112 of [JUNC] section:
+  0                8.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 113 of [JUNC] section:
+  0                8.40       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 114 of [JUNC] section:
+  0                8.22       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 115 of [JUNC] section:
+  0                7.79       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 116 of [JUNC] section:
+  0                7.60       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 117 of [JUNC] section:
+  0                7.45       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 118 of [JUNC] section:
+  0                7.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 119 of [JUNC] section:
+  0                7.00       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 120 of [JUNC] section:
+  0                7.04       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 121 of [JUNC] section:
+  0                6.40       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 122 of [JUNC] section:
+  0                7.13       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 123 of [JUNC] section:
+  0                7.70       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 124 of [JUNC] section:
+  0                8.55       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 125 of [JUNC] section:
+  0                8.62       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 126 of [JUNC] section:
+  0                8.92       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 127 of [JUNC] section:
+  0                8.44       0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

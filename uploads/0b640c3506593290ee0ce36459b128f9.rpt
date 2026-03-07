@@ -1,0 +1,160 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name MH at line 84 of [JUNC] section:
+  MH               581.66     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 85 of [JUNC] section:
+  MH               581.41     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 86 of [JUNC] section:
+  MH               580.62     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 87 of [JUNC] section:
+  MH               580.82     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 88 of [JUNC] section:
+  MH               580.64     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 89 of [JUNC] section:
+  MH               580.23     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 90 of [JUNC] section:
+  MH               579.88     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 91 of [JUNC] section:
+  MH               579.19     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 92 of [JUNC] section:
+  MH               579.12     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 93 of [JUNC] section:
+  MH               579.48     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 94 of [JUNC] section:
+  MH               579.27     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 99 of [JUNC] section:
+  MH               581.67     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 100 of [JUNC] section:
+  MH               581.66     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 101 of [JUNC] section:
+  MH               584.57     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 102 of [JUNC] section:
+  MH               583.29     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 103 of [JUNC] section:
+  MH               583.04     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MH at line 104 of [JUNC] section:
+  MH               581.77     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 179 of [CONDUIT] section:
+  LR               MH               MH               305.00     0.0130     558.07     557.98     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 180 of [CONDUIT] section:
+  LR               MH               MH               299.70     0.0130     557.98     557.90     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 181 of [CONDUIT] section:
+  LR               MH               MH               299.80     0.0130     557.90     557.53     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 182 of [CONDUIT] section:
+  LR               MH               MH               299.50     0.0130     557.53     557.42     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 183 of [CONDUIT] section:
+  LR               MH               MH               299.80     0.0130     557.42     556.92     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 184 of [CONDUIT] section:
+  LR               MH               MH               306.20     0.0130     556.92     556.84     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 185 of [CONDUIT] section:
+  LR               MH               MH               293.00     0.0130     556.84     556.73     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 186 of [CONDUIT] section:
+  LR               MH               MH               299.30     0.0130     556.73     556.44     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 187 of [CONDUIT] section:
+  LR               MH               MH               208.70     0.0130     556.44     556.21     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 189 of [CONDUIT] section:
+  LR               MH               6S2046           221.00     0.0130     556.12     556.10     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 190 of [CONDUIT] section:
+  LR               6S2046           6S2047           300.00     0.0130     556.10     555.66     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 191 of [CONDUIT] section:
+  LR               6S2047           6S2048           300.70     0.0130     555.66     555.50     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 192 of [CONDUIT] section:
+  LR               6S2048           6S2049           299.50     0.0130     555.50     555.34     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 193 of [CONDUIT] section:
+  LR               6S2049           6S2050           291.30     0.0130     555.34     555.00     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 194 of [CONDUIT] section:
+  LR               MH               MH               207.30     0.0130     558.53     558.40     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 195 of [CONDUIT] section:
+  LR               MH               MH               200.70     0.0130     558.40     558.07     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 196 of [CONDUIT] section:
+  LR               MH               MH               301.20     0.0130     559.53     559.31     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 197 of [CONDUIT] section:
+  LR               MH               MH               274.40     0.0130     559.31     559.22     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 198 of [CONDUIT] section:
+  LR               MH               MH               299.00     0.0130     559.22     558.97     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 199 of [CONDUIT] section:
+  LR               MH               MH               288.60     0.0130     558.97     558.53     0          0
+
+  
+  ERROR 207: duplicate ID name LR at line 200 of [CONDUIT] section:
+  LR               7S1511           MH               307.50     0.0130     559.79     559.53     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

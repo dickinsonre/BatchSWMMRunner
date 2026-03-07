@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 196 of [CONDUIT] section:
+  1235             ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 338 of [WEIR] section:
+  512              ?                ?                TRANSVERSE 0          1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 343 of [XSECT] section:
+  296              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 344 of [XSECT] section:
+  295              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 345 of [XSECT] section:
+  260              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 346 of [XSECT] section:
+  258              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 347 of [XSECT] section:
+  257              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 348 of [XSECT] section:
+  252A             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 349 of [XSECT] section:
+  252              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 350 of [XSECT] section:
+  249              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 351 of [XSECT] section:
+  248              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 352 of [XSECT] section:
+  247              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 353 of [XSECT] section:
+  246              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 354 of [XSECT] section:
+  245              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 355 of [XSECT] section:
+  244A             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 356 of [XSECT] section:
+  243              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 357 of [XSECT] section:
+  250              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 358 of [XSECT] section:
+  221              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 359 of [XSECT] section:
+  1235             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 360 of [XSECT] section:
+  219              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 361 of [XSECT] section:
+  218              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 362 of [XSECT] section:
+  220              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 363 of [XSECT] section:
+  220A             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 364 of [XSECT] section:
+  235              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 365 of [XSECT] section:
+  234              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 366 of [XSECT] section:
+  233              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 367 of [XSECT] section:
+  232              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 368 of [XSECT] section:
+  231              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 369 of [XSECT] section:
+  230Link          CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 370 of [XSECT] section:
+  229              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 371 of [XSECT] section:
+  228              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 372 of [XSECT] section:
+  227              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 373 of [XSECT] section:
+  226              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 374 of [XSECT] section:
+  225              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 375 of [XSECT] section:
+  157              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 376 of [XSECT] section:
+  156              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 377 of [XSECT] section:
+  155              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 378 of [XSECT] section:
+  154              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 379 of [XSECT] section:
+  152              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 380 of [XSECT] section:
+  153              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 381 of [XSECT] section:
+  150              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 382 of [XSECT] section:
+  151              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 383 of [XSECT] section:
+  149              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 384 of [XSECT] section:
+  146              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 385 of [XSECT] section:
+  148              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 386 of [XSECT] section:
+  147              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 387 of [XSECT] section:
+  145              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 388 of [XSECT] section:
+  143              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 389 of [XSECT] section:
+  144              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 390 of [XSECT] section:
+  141              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 391 of [XSECT] section:
+  142              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 392 of [XSECT] section:
+  140              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 393 of [XSECT] section:
+  272              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 394 of [XSECT] section:
+  271              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 395 of [XSECT] section:
+  270              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 396 of [XSECT] section:
+  268              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 397 of [XSECT] section:
+  267              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 398 of [XSECT] section:
+  269              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 399 of [XSECT] section:
+  266              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 400 of [XSECT] section:
+  195              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 401 of [XSECT] section:
+  193              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 402 of [XSECT] section:
+  192              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 403 of [XSECT] section:
+  190              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 404 of [XSECT] section:
+  188              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 405 of [XSECT] section:
+  189              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 406 of [XSECT] section:
+  186              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 407 of [XSECT] section:
+  185              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 408 of [XSECT] section:
+  6                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 409 of [XSECT] section:
+  5                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 410 of [XSECT] section:
+  4                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 411 of [XSECT] section:
+  3                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 412 of [XSECT] section:
+  2                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 413 of [XSECT] section:
+  265              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 414 of [XSECT] section:
+  264              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 415 of [XSECT] section:
+  263              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 416 of [XSECT] section:
+  262              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 417 of [XSECT] section:
+  253              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 418 of [XSECT] section:
+  251              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 419 of [XSECT] section:
+  204              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 420 of [XSECT] section:
+  203              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 421 of [XSECT] section:
+  201              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 422 of [XSECT] section:
+  202              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 423 of [XSECT] section:
+  200              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 424 of [XSECT] section:
+  124              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 425 of [XSECT] section:
+  123              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 426 of [XSECT] section:
+  122              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 427 of [XSECT] section:
+  211              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 428 of [XSECT] section:
+  210              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 429 of [XSECT] section:
+  206              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 430 of [XSECT] section:
+  205              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 431 of [XSECT] section:
+  119              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 432 of [XSECT] section:
+  118              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 433 of [XSECT] section:
+  117              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 434 of [XSECT] section:
+  217              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 435 of [XSECT] section:
+  216              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 436 of [XSECT] section:
+  181              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 437 of [XSECT] section:
+  180              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 438 of [XSECT] section:
+  133E             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 439 of [XSECT] section:
+  133D             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 440 of [XSECT] section:
+  133C             CIRCULAR     0          0          0          0          1
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

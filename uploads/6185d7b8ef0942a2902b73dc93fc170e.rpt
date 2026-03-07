@@ -1,0 +1,156 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 14TH at line 104 of [JUNC] section:
+  14TH             597.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 16TH at line 107 of [JUNC] section:
+  16TH             593.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name WEB at line 261 of [JUNC] section:
+  WEB              605.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name EME at line 606 of [STORAGE] section:
+  EME              593.00     -23.00     0          FUNCTIONAL 1342.00 0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 613 of [STORAGE] section:
+  14TH             592.00     -0.50      0          FUNCTIONAL 10800.00 0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 614 of [STORAGE] section:
+  14TH             592.00     -0.50      0          FUNCTIONAL 5400.00 0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 615 of [STORAGE] section:
+  14TH             599.20     -8.20      0          FUNCTIONAL 250.00 0          0
+
+  
+  ERROR 207: duplicate ID name 16TH at line 617 of [STORAGE] section:
+  16TH             593.00     -3.00      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 618 of [STORAGE] section:
+  14TH             590.00     0          0          FUNCTIONAL 150.00 0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 619 of [STORAGE] section:
+  14TH             595.00     -5.00      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name EME at line 620 of [STORAGE] section:
+  EME              600.00     -2.00      0          FUNCTIONAL 52000.00 0          0
+
+  
+  ERROR 207: duplicate ID name WEB at line 624 of [STORAGE] section:
+  WEB              589.00     -1.00      0          FUNCTIONAL 300.00 0          0
+
+  
+  ERROR 207: duplicate ID name WEB at line 626 of [STORAGE] section:
+  WEB              592.00     -1.00      0          FUNCTIONAL 300.00 0          0
+
+  
+  ERROR 207: duplicate ID name WEISS at line 629 of [STORAGE] section:
+  WEISS            602.00     -22.00     0          FUNCTIONAL 716.00 0          0
+
+  
+  ERROR 207: duplicate ID name WEISS at line 630 of [STORAGE] section:
+  WEISS            591.00     0          0          FUNCTIONAL 97700.00 0          0
+
+  
+  ERROR 207: duplicate ID name JAM at line 633 of [STORAGE] section:
+  JAM              615.00     -3.00      0          FUNCTIONAL 150.00 0          0
+
+  
+  ERROR 207: duplicate ID name WEISS at line 635 of [STORAGE] section:
+  WEISS            615.50     -1.50      0          FUNCTIONAL 150.00 0          0
+
+  
+  ERROR 207: duplicate ID name FITZ at line 638 of [STORAGE] section:
+  FITZ             601.00     -1.00      0          FUNCTIONAL 11600.00 0          0
+
+  
+  ERROR 207: duplicate ID name MILLER at line 640 of [STORAGE] section:
+  MILLER           595.20     -5.20      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name W.REM at line 641 of [STORAGE] section:
+  W.REM            595.45     -5.45      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name HAYES at line 642 of [STORAGE] section:
+  HAYES            595.30     -5.30      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name THROOP at line 643 of [STORAGE] section:
+  THROOP           591.70     -1.70      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name HAN at line 644 of [STORAGE] section:
+  HAN              595.00     -5.00      0          FUNCTIONAL 1810.00 0          0
+
+  
+  ERROR 207: duplicate ID name HAN at line 645 of [STORAGE] section:
+  HAN              595.00     -1.00      0          FUNCTIONAL 46790.00 0          0
+
+  
+  ERROR 207: duplicate ID name COURT at line 646 of [STORAGE] section:
+  COURT            595.20     -5.20      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name AMES at line 647 of [STORAGE] section:
+  AMES             598.20     -8.20      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name ADAM at line 650 of [STORAGE] section:
+  ADAM             590.00     0          0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name CASS at line 652 of [STORAGE] section:
+  CASS             595.80     -5.80      0          FUNCTIONAL 600.00 0          0
+
+  
+  ERROR 207: duplicate ID name DITCH at line 723 of [CONDUIT] section:
+  DITCH            DITCH1           DITCH2           875.00     0.0350     576.36     579.50     0          0
+
+  
+  ERROR 207: duplicate ID name 16TH at line 733 of [CONDUIT] section:
+  16TH             ?                Node_1916823     200.00     0.0140     573.25     573.25     0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 738 of [CONDUIT] section:
+  14TH             ?                Node_1924823     200.00     0.0140     571.60     571.60     0          0
+
+  
+  ERROR 207: duplicate ID name EME at line 861 of [CONDUIT] section:
+  EME              EMERSON          EMEd             149.00     0.0150     580.25     579.59     0          0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 1238 of [ORIFICE] section:
+  14TH             WEIR             14TH             SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 16TH at line 1239 of [ORIFICE] section:
+  16TH             ?                Node_19161920    SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 14TH at line 1240 of [ORIFICE] section:
+  14TH             ?                Node_19241929    SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name eme at line 1258 of [PUMP] section:
+  eme              EME              EME              *          ON       0          0         
+
+  
+  ERROR 207: duplicate ID name FITZ at line 1261 of [PUMP] section:
+  FITZ             ?                Node_32473253    *          ON       0          0         
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

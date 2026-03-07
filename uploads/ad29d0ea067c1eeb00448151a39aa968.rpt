@@ -1,0 +1,52 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Rd at line 777 of [CONDUIT] section:
+  KRdFM  Rd        29530590         29530494         950.00     0.0130     -13.50     -3.07      0          0
+
+  
+  ERROR 209: undefined object 62696 at line 960 of [CONDUIT] section:
+  62695            62696            61066            262.00     0.0130     -1.96      -1.97      0          0
+
+  
+  ERROR 209: undefined object Node_930 at line 963 of [CONDUIT] section:
+  Kan4             Node_930         Node_11261129    33.00      0.0140     6.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_933 at line 965 of [CONDUIT] section:
+  933              Node_933         Node_1129238     33.00      0          0          0          0          0
+
+  
+  ERROR 209: undefined object Node_935 at line 966 of [CONDUIT] section:
+  935              Node_935         Node_1134302     35.00      0.0140     -5.66      -5.69      0          0
+
+  
+  ERROR 209: undefined object Node_937 at line 967 of [CONDUIT] section:
+  937              Node_937         Node_1136480     79.00      0.0140     74.00      71.25      0          0
+
+  
+  ERROR 209: undefined object Node_940 at line 969 of [CONDUIT] section:
+  940              Node_940         Node_1138466     138.00     0.0140     45.39      45.21      0          0
+
+  
+  ERROR 209: undefined object Node_942 at line 970 of [CONDUIT] section:
+  942              Node_942         Node_1141637     142.00     0.0140     81.62      75.11      0          0
+
+  
+  ERROR 205: invalid keyword Rd at line 1251 of [XSECT] section:
+  KRdFM  Rd        CIRCULAR     1.67       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 1439 of [XSECT] section:
+  933              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number Rd at line 1725 of [LOSS] section:
+  KRdFM  Rd        0          0          0          NO
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 723 of [CONDUIT] section:
+  P252NW019        ?                ?                278.60     0.0130     190.61     189.16     0          0
+
+  
+  ERROR 209: undefined object ? at line 1098 of [CONDUIT] section:
+  P398SE053        ?                256NW001         203.00     0.0130     152.26     151.29     0          0
+
+  
+  ERROR 209: undefined object ? at line 1099 of [CONDUIT] section:
+  P398SE054        ?                256NW001         392.10     0.0130     151.16     149.00     0          0
+
+  
+  ERROR 209: undefined object ? at line 1100 of [CONDUIT] section:
+  P399SW004        ?                256NW025         349.10     0.0130     197.41     193.92     0          0
+
+  
+  ERROR 209: undefined object ? at line 1101 of [CONDUIT] section:
+  P399SW025        ?                256NW025         162.50     0.0130     193.20     192.80     0          0
+
+  
+  ERROR 209: undefined object ? at line 1102 of [CONDUIT] section:
+  P399SW027        ?                256NW025         262.70     0.0130     192.70     190.84     0          0
+
+  
+  ERROR 209: undefined object ? at line 1103 of [CONDUIT] section:
+  P399SW045        ?                256NW025         280.20     0.0130     189.63     185.83     0          0
+
+  
+  ERROR 209: undefined object ? at line 1104 of [CONDUIT] section:
+  P399SW046        ?                256NW025         95.80      0.0130     189.96     189.73     0          0
+
+  
+  ERROR 209: undefined object ? at line 1105 of [CONDUIT] section:
+  P399SW047        ?                256NW025         95.50      0.0130     190.19     189.96     0          0
+
+  
+  ERROR 209: undefined object ? at line 1106 of [CONDUIT] section:
+  P399SW048        ?                256NW025         191.30     0.0130     190.74     190.29     0          0
+
+  
+  ERROR 209: undefined object ? at line 1107 of [CONDUIT] section:
+  P399SW053        ?                256NW025         197.40     0.0130     185.50     183.76     0          0
+
+  
+  ERROR 209: undefined object ? at line 1108 of [CONDUIT] section:
+  P399SW054        ?                256NW025         65.90      0.0130     183.66     183.00     0          0
+
+  
+  ERROR 209: undefined object ? at line 1109 of [CONDUIT] section:
+  P399SW055        ?                256NW025         126.00     0.0130     183.00     182.80     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1110 of [CONDUIT] section:
+  P400NE003        Node_400         Node_10261027    150.00     0.0130     232.03     231.76     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1111 of [CONDUIT] section:
+  P400NW019        Node_400         Node_10291030    241.00     0.0130     229.09     228.51     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1112 of [CONDUIT] section:
+  P400NW020        Node_400         Node_10321029    100.00     0.0130     229.39     229.19     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1113 of [CONDUIT] section:
+  P400NW021        Node_400         Node_10341032    186.00     0.0130     229.86     229.49     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1114 of [CONDUIT] section:
+  P400NW022        Node_400         Node_10361034    168.00     0.0130     230.30     229.96     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1115 of [CONDUIT] section:
+  P400NW023        Node_400         Node_10381036    205.00     0.0130     230.77     230.40     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1116 of [CONDUIT] section:
+  P400NW024        Node_400         Node_10401038    32.00      0.0130     231.20     230.87     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1117 of [CONDUIT] section:
+  P400NW025        Node_400         Node_10271040    200.00     0.0130     231.66     231.30     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1118 of [CONDUIT] section:
+  P400NW029        Node_400         Node_10431044    361.50     0.0130     226.09     225.00     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1119 of [CONDUIT] section:
+  P400NW030        Node_400         Node_10461043    143.00     0.0130     226.61     226.19     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1120 of [CONDUIT] section:
+  P400NW031        Node_400         Node_10481046    284.00     0.0130     227.51     226.71     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1121 of [CONDUIT] section:
+  P400NW032        Node_400         Node_10301048    334.00     0.0130     228.41     227.61     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1122 of [CONDUIT] section:
+  P400NW039        Node_400         Node_10441051    277.00     0.0130     224.89     223.88     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1123 of [CONDUIT] section:
+  P400NW049        Node_400         Node_10511053    53.00      0.0130     223.78     223.58     0          0
+
+  
+  ERROR 209: undefined object Node_52 at line 1124 of [CONDUIT] section:
+  P400NW052        Node_52          Node_10551056    232.00     0.0130     222.67     222.08     0          0
+
+  
+  ERROR 209: undefined object Node_54 at line 1125 of [CONDUIT] section:
+  P400NW054        Node_54          Node_10531055    210.00     0.0130     223.48     222.77     0          0
+
+  
+  ERROR 209: undefined object Node_58 at line 1126 of [CONDUIT] section:
+  P400NW058        Node_58          Node_10591060    138.30     0.0130     221.32     220.89     0          0
+
+  
+  ERROR 209: undefined object Node_59 at line 1127 of [CONDUIT] section:
+  P400NW059        Node_59          Node_10561059    228.00     0.0130     221.98     221.42     0          0
+
+  
+  ERROR 209: undefined object Node_400 at line 1128 of [CONDUIT] section:
+  P400SW019        Node_400         Node_10631064    185.00     0.0130     193.21     192.03     0          0
+
+  
+  ERROR 209: undefined object ? at line 1129 of [CONDUIT] section:
+  P479NE001        ?                257NE010         322.00     0.0130     128.88     126.20     0          0
+
+  
+  ERROR 209: undefined object ? at line 1130 of [CONDUIT] section:
+  P479NE002        ?                257NE010         315.00     0.0130     123.69     123.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 1131 of [CONDUIT] section:
+  P479NE003        ?                257NE010         443.00     0.0130     126.10     125.39     0          0
+
+  
+  ERROR 209: undefined object ? at line 1132 of [CONDUIT] section:
+  P479NE004        ?                257NE010         448.00     0.0130     123.45     123.18     0          0
+
+  
+  ERROR 209: undefined object ? at line 1133 of [CONDUIT] section:
+  P479NE005        ?                257NE010         425.00     0.0130     125.19     124.42     0          0
+
+  
+  ERROR 209: undefined object ? at line 1134 of [CONDUIT] section:
+  P479NE006        ?                257NE010         425.00     0.0130     122.92     122.66     0          0
+
+  
+  ERROR 209: undefined object ? at line 1135 of [CONDUIT] section:
+  P479NE007        ?                257NE010         19.00      0.0130     124.17     124.12     0          0
+
+  
+  ERROR 209: undefined object ? at line 1136 of [CONDUIT] section:
+  P479NE008        ?                257NE010         325.00     0.0130     131.20     129.58     0          0
+
+  
+  ERROR 209: undefined object ? at line 1137 of [CONDUIT] section:
+  P479NE009        ?                257NE010         326.00     0.0130     129.48     127.65     0          0
+
+  
+  ERROR 209: undefined object ? at line 1138 of [CONDUIT] section:
+  P479NE010        ?                257NE010         194.00     0.0130     127.55     125.17     0          0
+
+  
+  ERROR 209: undefined object ? at line 1139 of [CONDUIT] section:
+  P479NE011        ?                257NE010         163.00     0.0130     125.07     124.12     0          0
+
+  
+  ERROR 209: undefined object ? at line 1140 of [CONDUIT] section:
+  P479NE012        ?                257NE010         449.00     0.0130     122.51     122.24     0          0
+
+  
+  ERROR 209: undefined object ? at line 1141 of [CONDUIT] section:
+  P479NE013        ?                257NE010         398.00     0.0130     122.19     121.95     0          0
+
+  
+  ERROR 209: undefined object ? at line 1142 of [CONDUIT] section:
+  P479NE014        ?                257NE010         283.00     0.0130     121.90     121.73     0          0
+
+  
+  ERROR 209: undefined object ? at line 1143 of [CONDUIT] section:
+  P479NE015        ?                257NE010         414.00     0.0130     121.68     121.43     0          0
+
+  
+  ERROR 209: undefined object ? at line 1144 of [CONDUIT] section:
+  P479NW001        ?                257NE010         385.00     0.0130     124.54     124.31     0          0
+
+  
+  ERROR 209: undefined object ? at line 1145 of [CONDUIT] section:
+  P479NW002        ?                257NE010         401.00     0.0130     124.21     123.97     0          0
+
+  
+  ERROR 209: undefined object ? at line 1146 of [CONDUIT] section:
+  P479NW003        ?                257NE010         317.00     0.0130     130.82     129.10     0          0
+
+  
+  ERROR 209: undefined object ? at line 1147 of [CONDUIT] section:
+  P479NW004        ?                257NE010         305.00     0.0130     123.92     123.74     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1148 of [CONDUIT] section:
+  P480NE009        Node_480         Node_11041105    212.00     0.0130     134.13     133.49     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1149 of [CONDUIT] section:
+  P480NE011        Node_480         Node_11071108    323.00     0.0130     135.96     134.99     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1150 of [CONDUIT] section:
+  P480NE015        Node_480         Node_11081104    250.00     0.0130     134.94     134.19     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1151 of [CONDUIT] section:
+  P480NE035        Node_480         Node_11051111    88.00      0.0100     133.44     133.37     0          0
+
+  
+  ERROR 209: undefined object Node_54 at line 1152 of [CONDUIT] section:
+  P480NE054        Node_54          Node_11131114    347.00     0.0130     133.14     132.90     0          0
+
+  
+  ERROR 209: undefined object Node_56 at line 1153 of [CONDUIT] section:
+  P480NE056        Node_56          Node_11111113    279.00     0.0130     133.37     133.14     0          0
+
+  
+  ERROR 209: undefined object Node_71 at line 1154 of [CONDUIT] section:
+  P480NE071        Node_71          Node_11141117    186.00     0.0130     132.85     132.48     0          0
+
+  
+  ERROR 209: undefined object Node_76 at line 1155 of [CONDUIT] section:
+  P480NE076        Node_76          Node_11171119    291.00     0.0130     132.43     131.85     0          0
+
+  
+  ERROR 209: undefined object Node_79 at line 1156 of [CONDUIT] section:
+  P480NE079        Node_79          Node_11191121    250.00     0.0130     131.80     131.30     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1157 of [CONDUIT] section:
+  P480NW001        Node_480         Node_11231124    377.00     0.0130     128.82     128.59     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1158 of [CONDUIT] section:
+  P480NW007        Node_480         Node_11241126    203.00     0.0130     128.43     128.32     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1159 of [CONDUIT] section:
+  P480NW012        Node_480         Node_11261128    508.00     0.0130     128.32     128.31     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1160 of [CONDUIT] section:
+  P480NW019        Node_480         Node_11281130    489.00     0.0130     128.31     128.29     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1161 of [CONDUIT] section:
+  P480NW024        Node_480         Node_11301132    417.00     0.0130     128.29     127.97     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1162 of [CONDUIT] section:
+  P480NW028        Node_480         Node_11321134    417.00     0.0130     127.97     127.55     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1163 of [CONDUIT] section:
+  P480NW031        Node_480         Node_11341136    501.00     0.0130     127.50     127.00     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1164 of [CONDUIT] section:
+  P480SE001        Node_480         Node_11211138    265.00     0.0130     131.20     130.67     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1165 of [CONDUIT] section:
+  P480SE005        Node_480         Node_11381140    317.00     0.0130     130.57     129.94     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1166 of [CONDUIT] section:
+  P480SE013        Node_480         Node_11401142    423.00     0.0130     129.84     128.99     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1167 of [CONDUIT] section:
+  P480SE016        Node_480         Node_11421144    349.00     0.0130     128.94     128.24     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1168 of [CONDUIT] section:
+  P480SE031        Node_480         Node_11441146    412.00     0.0130     127.99     127.50     0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 1169 of [CONDUIT] section:
+  P480SE060        Node_60          Node_11481081    480.00     0.0130     132.07     131.30     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1170 of [CONDUIT] section:
+  P480SW004        Node_480         Node_11361150    495.00     0.0130     126.90     126.41     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1171 of [CONDUIT] section:
+  P480SW008        Node_480         Node_11501152    480.00     0.0130     126.36     125.88     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1172 of [CONDUIT] section:
+  P480SW011        Node_480         Node_11521154    255.00     0.0130     125.78     125.53     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1173 of [CONDUIT] section:
+  P480SW012        Node_480         Node_11541156    270.00     0.0130     125.03     124.87     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1174 of [CONDUIT] section:
+  P480SW013        Node_480         Node_11461154    308.00     0.0130     127.40     125.53     0          0
+
+  
+  ERROR 209: undefined object Node_480 at line 1175 of [CONDUIT] section:
+  P480SW014        Node_480         Node_11561096    390.10     0.0130     124.82     124.59     0          0
+
+  
+  ERROR 209: undefined object ? at line 1176 of [CONDUIT] section:
+  P481NE011        ?                257NE041         150.00     0.0130     173.59     172.11     0          0
+
+  
+  ERROR 209: undefined object ? at line 1177 of [CONDUIT] section:
+  P481NE028        ?                257NE041         265.00     0.0130     170.72     167.44     0          0
+
+  
+  ERROR 209: undefined object ? at line 1178 of [CONDUIT] section:
+  P481NE029        ?                257NE041         185.00     0.0130     171.73     170.77     0          0
+
+  
+  ERROR 209: undefined object ? at line 1179 of [CONDUIT] section:
+  P481NE042        ?                257NE041         353.00     0.0130     167.06     165.56     0          0
+
+  
+  ERROR 209: undefined object ? at line 1180 of [CONDUIT] section:
+  P481NE046        ?                257NE041         308.00     0.0130     165.18     162.68     0          0
+
+  
+  ERROR 209: undefined object ? at line 1181 of [CONDUIT] section:
+  P481NE057        ?                257NE041         175.00     0.0130     160.52     158.97     0          0
+
+  
+  ERROR 209: undefined object ? at line 1182 of [CONDUIT] section:
+  P481NE058        ?                257NE041         115.00     0.0130     162.68     161.20     0          0
+
+  
+  ERROR 209: undefined object ? at line 1183 of [CONDUIT] section:
+  P481NE083        ?                257NE041         60.00      0.0130     158.63     158.00     0          0
+
+  
+  ERROR 209: undefined object ? at line 1184 of [CONDUIT] section:
+  P481NE085        ?                257NE041         290.60     0.0130     158.00     150.93     0          0
+
+  
+  ERROR 209: undefined object ? at line 1185 of [CONDUIT] section:
+  P481NE086        ?                257NE041         156.30     0.0130     150.88     148.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 1187 of [CONDUIT] section:
+  P481SE003        ?                257NE041         380.30     0.0130     148.35     143.19     0          0
+
+  
+  ERROR 209: undefined object ? at line 1188 of [CONDUIT] section:
+  P481SE009        ?                257NE041         360.00     0.0130     142.36     142.00     0          0
+
+  
+  ERROR 209: undefined object ? at line 1189 of [CONDUIT] section:
+  P481SE020        ?                257NE041         89.00      0.0130     140.87     140.52     0          0
+
+  
+  ERROR 209: undefined object ? at line 1190 of [CONDUIT] section:
+  P481SE042        ?                257NE041         260.00     0.0130     140.52     139.26     0          0
+
+  
+  ERROR 209: undefined object ? at line 1191 of [CONDUIT] section:
+  P481SE057        ?                257NE041         243.00     0.0130     139.26     139.61     0          0
+
+  
+  ERROR 209: undefined object ? at line 1192 of [CONDUIT] section:
+  P481SE058        ?                257NE041         133.00     0.0130     139.53     139.22     0          0
+
+  
+  ERROR 209: undefined object ? at line 1193 of [CONDUIT] section:
+  P481SE059        ?                257NE041         110.00     0.0130     138.14     137.80     0          0
+
+  
+  ERROR 209: undefined object ? at line 1194 of [CONDUIT] section:
+  P481SE060        ?                257NE041         350.00     0.0130     137.75     136.70     0          0
+
+  
+  ERROR 209: undefined object ? at line 1195 of [CONDUIT] section:
+  P481SE077        ?                257NE041         213.00     0.0130     136.65     136.01     0          0
+
+  
+  ERROR 209: undefined object ? at line 1196 of [CONDUIT] section:
+  P481SW029        ?                257NE041         190.00     0.0130     142.95     142.23     0          0
+
+  
+  ERROR 209: undefined object ? at line 1197 of [CONDUIT] section:
+  P481SW030        ?                257NE041         310.50     0.0130     141.93     137.96     0          0
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

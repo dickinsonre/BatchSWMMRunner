@@ -1,0 +1,100 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 0 at line 53 of [CONDUIT] section:
+  0                CBA5             CBA4             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 54 of [CONDUIT] section:
+  0                CBA4             CBA3             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 55 of [CONDUIT] section:
+  0                CBA3             CBA2             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 56 of [CONDUIT] section:
+  0                CBA2             CBA1             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 57 of [CONDUIT] section:
+  0                CBA              CBA1             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 58 of [CONDUIT] section:
+  0                CBA1             ODA10            0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 59 of [CONDUIT] section:
+  0                ODA10            ODA9             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 60 of [CONDUIT] section:
+  0                ODA9             ODA8             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 61 of [CONDUIT] section:
+  0                ODA8             ODA7             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 62 of [CONDUIT] section:
+  0                ODA7             ODA6             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 63 of [CONDUIT] section:
+  0                ODA6             ODA5             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 64 of [CONDUIT] section:
+  0                ODA5             ODA4             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 65 of [CONDUIT] section:
+  0                ODA4             ODA3             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 66 of [CONDUIT] section:
+  0                ODA3             ODA2             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 67 of [CONDUIT] section:
+  0                ODA2             ODA1             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 68 of [CONDUIT] section:
+  0                ODA1             ODA              0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 69 of [CONDUIT] section:
+  0                new1             ODA2             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 70 of [CONDUIT] section:
+  0                new2             ODA3             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 71 of [CONDUIT] section:
+  0                Resex            ACBA             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 72 of [CONDUIT] section:
+  0                Reserv           ACBA             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 73 of [CONDUIT] section:
+  0                Resnew           ACBA             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 74 of [CONDUIT] section:
+  0                comm             CBA1             0          0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 75 of [CONDUIT] section:
+  0                park             CBA1             0          0          0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

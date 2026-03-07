@@ -1,0 +1,76 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object PUMP2 at line 276 of [PUMP] section:
+  PUMP1            PUMP2            PUMP3            *          ON       0          1.00      
+
+  
+  ERROR 211: invalid number  at line 383 of [XSECT] section:
+  OR005            RECT_CLOSED  0.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 384 of [XSECT] section:
+  OR007            RECT_CLOSED  0.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 385 of [XSECT] section:
+  OR010            RECT_CLOSED  0.67       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 386 of [XSECT] section:
+  OR008            RECT_CLOSED  0.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 387 of [XSECT] section:
+  ORP1             RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 388 of [XSECT] section:
+  WR003            RECT_OPEN    0          0.98       0          0          
+
+  
+  ERROR 211: invalid number  at line 389 of [XSECT] section:
+  WR004            RECT_OPEN    0          0.65       0          0          
+
+  
+  ERROR 211: invalid number  at line 390 of [XSECT] section:
+  WR005            RECT_OPEN    0          0.98       0          0          
+
+  
+  ERROR 211: invalid number  at line 391 of [XSECT] section:
+  WR007            RECT_OPEN    0          0.79       0          0          
+
+  
+  ERROR 211: invalid number  at line 392 of [XSECT] section:
+  WR8/10           RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 393 of [XSECT] section:
+  WR010            RECT_OPEN    0          1.57       0          0          
+
+  
+  ERROR 211: invalid number  at line 394 of [XSECT] section:
+  WR090            RECT_OPEN    0          0.98       0          0          
+
+  
+  ERROR 211: invalid number  at line 395 of [XSECT] section:
+  WR008            RECT_OPEN    0          0.79       0          0          
+
+  
+  ERROR 211: invalid number  at line 396 of [XSECT] section:
+  WR011            RECT_OPEN    0          0.65       0          0          
+
+  
+  ERROR 211: invalid number  at line 397 of [XSECT] section:
+  WR006            RECT_OPEN    0          0.92       0          0          
+
+  
+  ERROR 211: invalid number  at line 398 of [XSECT] section:
+  WRRET            RECT_OPEN    0          27.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

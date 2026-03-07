@@ -1,0 +1,52 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 0 at line 72 of [XSECT] section:
+  FC-C-1           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 74 of [XSECT] section:
+  FC-C-2           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 76 of [XSECT] section:
+  FC-C-3           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  W-S-1            RECT_OPEN    0          500.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  W-S-2            RECT_OPEN    0          2610.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  W-N-1            RECT_OPEN    0          500.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  W-N-2            RECT_OPEN    0          1100.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 82 of [XSECT] section:
+  W-N-3            RECT_OPEN    0          2600.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 83 of [XSECT] section:
+  W-N-1-2          RECT_OPEN    0          2670.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 84 of [XSECT] section:
+  FC-N-2-3         RECT_OPEN    0          2650.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 85 of [XSECT] section:
+  FC-S-1-2         RECT_OPEN    0          5260.00    0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,104 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object BY at line 65 of [CONDUIT] section:
+  L36              BY L36           ?                150.00     0.0120     21.27      18.08      0          0
+
+  
+  ERROR 209: undefined object BY at line 66 of [CONDUIT] section:
+  L35              BY L35           ?                250.00     0.0120     27.52      21.27      0          0
+
+  
+  ERROR 209: undefined object BY at line 67 of [CONDUIT] section:
+  L43              BY L43           ?                100.00     0.0120     19.49      16.14      0          0
+
+  
+  ERROR 209: undefined object BY at line 68 of [CONDUIT] section:
+  L45              BY L45           ?                155.00     0.0120     18.36      16.81      0          0
+
+  
+  ERROR 209: undefined object BY at line 69 of [CONDUIT] section:
+  L40              BY L40           ?                40.00      0.0120     18.81      18.50      0          0
+
+  
+  ERROR 209: undefined object BY at line 70 of [CONDUIT] section:
+  L41              BY L41           ?                50.00      0.0120     18.50      17.15      0          0
+
+  
+  ERROR 209: undefined object BOXLR at line 71 of [CONDUIT] section:
+  BOXLC            BOXLR            ?                26.80      0.0530     16.42      16.31      0          0
+
+  
+  ERROR 209: undefined object BY at line 76 of [CONDUIT] section:
+  L37              BY L37           23               9.10       0.0160     16.84      16.83      0          0
+
+  
+  ERROR 209: undefined object BY at line 78 of [CONDUIT] section:
+  L48              BY L48           29               120.00     0.0120     27.37      26.67      0          0
+
+  
+  ERROR 209: undefined object BYL49 at line 79 of [CONDUIT] section:
+  L49              BYL49            30               100.00     0.0120     26.67      23.90      0          0
+
+  
+  ERROR 209: undefined object BYL50 at line 80 of [CONDUIT] section:
+  L50              BYL50            31               325.00     0.0120     23.90      19.58      0          0
+
+  
+  ERROR 209: undefined object BYL52 at line 82 of [CONDUIT] section:
+  L52              BYL52            35               200.00     0.0120     16.70      15.00      0          0
+
+  
+  ERROR 209: undefined object BYL56 at line 85 of [CONDUIT] section:
+  L56              BYL56            362              20.10      0.0710     13.26      13.18      0          0
+
+  
+  ERROR 209: undefined object BYL54 at line 87 of [CONDUIT] section:
+  L54              BYL54            36               65.00      0.0120     16.00      13.35      0          0
+
+  
+  ERROR 209: undefined object 0 at line 92 of [XSECT] section:
+  L38              IRREGULAR    0          8.00       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 93 of [XSECT] section:
+  L42              IRREGULAR    0          4.00       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 94 of [XSECT] section:
+  L44              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 102 of [XSECT] section:
+  L18A             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 103 of [XSECT] section:
+  L18              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 104 of [XSECT] section:
+  L46              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 105 of [XSECT] section:
+  L18B             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 113 of [XSECT] section:
+  L53              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 114 of [XSECT] section:
+  L55              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 116 of [XSECT] section:
+  L56A             IRREGULAR    0          7.77       0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:26 2026
+  Analysis ended on:  Sat Mar  7 21:51:26 2026
+  Total elapsed time: < 1 sec

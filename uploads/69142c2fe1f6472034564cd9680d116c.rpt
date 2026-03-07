@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 0 at line 28 of [JUNC] section:
+  0                101.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 29 of [JUNC] section:
+  0                101.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 30 of [JUNC] section:
+  0                101.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 31 of [JUNC] section:
+  0                100.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 32 of [JUNC] section:
+  0                100.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 33 of [JUNC] section:
+  0                100.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 34 of [JUNC] section:
+  0                100.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 35 of [JUNC] section:
+  0                101.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 36 of [JUNC] section:
+  0                100.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 311 at line 53 of [ORIFICE] section:
+  311              0                0                SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 310 at line 54 of [ORIFICE] section:
+  310              0                0                SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 313 at line 55 of [ORIFICE] section:
+  313              0                0                SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name 315 at line 56 of [ORIFICE] section:
+  315              0                0                SIDE       0          0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,76 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 821 of [XSECT] section:
+  OR1              RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 822 of [XSECT] section:
+  OR2              RECT_CLOSED  1.95       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 823 of [XSECT] section:
+  MUL4             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 824 of [XSECT] section:
+  OR1A             RECT_CLOSED  3.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 825 of [XSECT] section:
+  OR36             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 826 of [XSECT] section:
+  OR35             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 827 of [XSECT] section:
+  OR34             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 828 of [XSECT] section:
+  OR33             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 829 of [XSECT] section:
+  MUL10            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 830 of [XSECT] section:
+  MUL11            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 831 of [XSECT] section:
+  OR30             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 832 of [XSECT] section:
+  OR29             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 833 of [XSECT] section:
+  OR28             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 834 of [XSECT] section:
+  MUL15            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 835 of [XSECT] section:
+  MUL16            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 836 of [XSECT] section:
+  OR18             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 837 of [XSECT] section:
+  OR3              RECT_CLOSED  1.95       0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

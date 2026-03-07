@@ -1,0 +1,116 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object U6-2 at line 77 of [CONDUIT] section:
+  U6-1             U6-2             U6-3             150.00     0.0140     -3.38      -3.40      0          0
+
+  
+  ERROR 209: undefined object U7-2 at line 78 of [CONDUIT] section:
+  U7-1             U7-2             U7-E             208.00     0.0140     -4.40      -4.40      0          0
+
+  
+  ERROR 209: undefined object F-P-S-5-A at line 99 of [WEIR] section:
+  590.1            F-P-S-5-A        U7-W             TRANSVERSE 3.10       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 0 at line 107 of [XSECT] section:
+  FC-C-1           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 109 of [XSECT] section:
+  FC-C-2           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 111 of [XSECT] section:
+  FC-C-3           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 113 of [XSECT] section:
+  FC-C-4           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 115 of [XSECT] section:
+  FC-C-5           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 116 of [XSECT] section:
+  FC-C-6           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 117 of [XSECT] section:
+  FC-C-7-8         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 123 of [XSECT] section:
+  566.1            RECT_OPEN    0          500.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 124 of [XSECT] section:
+  567.1            RECT_OPEN    0          2610.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 125 of [XSECT] section:
+  571.1            RECT_OPEN    0          500.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 126 of [XSECT] section:
+  572.1            RECT_OPEN    0          1100.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 127 of [XSECT] section:
+  573.1            RECT_OPEN    0          2600.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 128 of [XSECT] section:
+  574.1            RECT_OPEN    0          2670.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 129 of [XSECT] section:
+  575.1            RECT_OPEN    0          2650.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 130 of [XSECT] section:
+  576.1            RECT_OPEN    0          5260.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 131 of [XSECT] section:
+  580.1            RECT_OPEN    0          2570.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 132 of [XSECT] section:
+  583.1            RECT_OPEN    0          2600.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 133 of [XSECT] section:
+  584.1            RECT_OPEN    0          5280.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 134 of [XSECT] section:
+  585.1            RECT_OPEN    0          5260.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 135 of [XSECT] section:
+  -4               RECT_OPEN    0          5260.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 136 of [XSECT] section:
+  588.1            RECT_OPEN    0          3580.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 137 of [XSECT] section:
+  590.1            RECT_OPEN    0          120.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 138 of [XSECT] section:
+  -5               RECT_OPEN    0          5260.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 139 of [XSECT] section:
+  594.1            RECT_OPEN    0          3620.00    0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

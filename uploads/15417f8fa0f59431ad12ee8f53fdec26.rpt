@@ -1,0 +1,20 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CH-O at line 229 of [CONDUIT] section:
+  CH-O             CM8SS            CM-8Q            300.00     0.0001     -10.00     -10.00     0          0
+
+  
+  ERROR 207: duplicate ID name CH-O at line 230 of [CONDUIT] section:
+  CH-O             CSIDE-SS         CSID-EQ          300.00     0.0001     -9.97      -10.00     0          0
+
+  
+  ERROR 207: duplicate ID name CH-O at line 231 of [CONDUIT] section:
+  CH-O             CSIDW-SS         CSID-WQ          300.00     0.0001     -9.97      -10.00     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

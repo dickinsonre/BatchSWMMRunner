@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CB at line 30 of [JUNC] section:
+  CB               928.50     0          0.50       0          0
+
+  
+  ERROR 207: duplicate ID name 303.1 at line 51 of [CONDUIT] section:
+  303.1            POND             EXIST.           1895.00    0.0120     923.00     922.11     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

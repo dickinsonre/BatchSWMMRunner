@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name LINK at line 409 of [CONDUIT] section:
+  LINK             34830024         0761             33.00      0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LINK at line 410 of [CONDUIT] section:
+  LINK             0761             0631             33.00      0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LINK at line 411 of [CONDUIT] section:
+  LINK             0631             34530125         33.00      0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LINK at line 412 of [CONDUIT] section:
+  LINK             34530125         34530126         33.00      0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LINK at line 413 of [CONDUIT] section:
+  LINK             34530126         34530030         33.00      0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LINK at line 414 of [CONDUIT] section:
+  LINK             0298             0305             33.00      0          0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

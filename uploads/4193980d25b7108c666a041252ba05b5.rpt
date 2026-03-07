@@ -1,0 +1,204 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 114 of [CONDUIT] section:
+  218/54"RCP       ?                ?                218.00     0.0130     684.61     683.05     0          0
+
+  
+  ERROR 209: undefined object Overland26 at line 119 of [CONDUIT] section:
+  292/42"RCP       Overland26       FES#27           292.00     0.0130     685.40     679.82     0          0
+
+  
+  ERROR 209: undefined object webover at line 121 of [CONDUIT] section:
+  247.1            webover          CB#30            144.00     0.0130     677.52     675.98     0          0
+
+  
+  ERROR 209: undefined object danover at line 122 of [CONDUIT] section:
+  27/36"RCP        danover          CB#31            27.00      0.0130     675.98     675.38     0          0
+
+  
+  ERROR 209: undefined object CB#31Over at line 123 of [CONDUIT] section:
+  254/36"RCP       CB#31Over        DI#33            254.00     0.0130     675.38     672.09     0          0
+
+  
+  ERROR 209: undefined object hartover at line 124 of [CONDUIT] section:
+  250.1            hartover         DI#34            94.00      0.0130     672.09     671.66     0          0
+
+  
+  ERROR 209: undefined object barriover at line 125 of [CONDUIT] section:
+  251.1            barriover        CB#35            146.00     0.0130     671.66     670.65     0          0
+
+  
+  ERROR 209: undefined object AND-OVER at line 126 of [CONDUIT] section:
+  252.1            AND-OVER         CB#36            33.00      0.0130     670.67     668.99     0          0
+
+  
+  ERROR 209: undefined object Overland2 at line 127 of [CONDUIT] section:
+  256/48"RCP       Overland2        FES#38           256.00     0.0130     669.30     668.19     0          0
+
+  
+  ERROR 209: undefined object Andover at line 133 of [CONDUIT] section:
+  138/24"RCP       Andover          CB#36            138.00     0.0130     676.42     670.89     0          0
+
+  
+  ERROR 209: undefined object 28/60"RCP at line 138 of [CONDUIT] section:
+  28/54"RCP        28/60"RCP        ChelmOver        28.00      0.0130     685.52     685.53     0          0
+
+  
+  ERROR 209: undefined object ChelmOver2 at line 139 of [CONDUIT] section:
+  11/Ellipse       ChelmOver2       HW#17            11.00      0.0240     685.53     684.55     0          0
+
+  
+  ERROR 209: undefined object YI#36Over at line 144 of [CONDUIT] section:
+  52/54"RCP        YI#36Over        YI#39            52.00      0.0130     697.22     696.26     0          0
+
+  
+  ERROR 209: undefined object 2301Over at line 157 of [CONDUIT] section:
+  2301Bridge       2301Over         2301Out          10.00      0.0140     667.42     667.40     0          0
+
+  
+  ERROR 209: undefined object 2259Over at line 159 of [CONDUIT] section:
+  2259Bridge       2259Over         2259Out          8.00       0.0140     666.47     667.28     0          0
+
+  
+  ERROR 209: undefined object 2251Over at line 163 of [CONDUIT] section:
+  2251Bridge       2251Over         2251Out          10.00      0.0140     666.82     667.02     0          0
+
+  
+  ERROR 209: undefined object 2243Over at line 167 of [CONDUIT] section:
+  2243Bridge       2243Over         2243Out          9.00       0.0140     666.95     666.94     0          0
+
+  
+  ERROR 209: undefined object WrenOver at line 170 of [CONDUIT] section:
+  WrenBridge       WrenOver         WrenOut          30.00      0.0140     666.55     665.68     0          0
+
+  
+  ERROR 209: undefined object 72"CMP#2 at line 174 of [CONDUIT] section:
+  72"CMP#1         72"CMP#2         72"CMP#3         75.00      0.0270     666.33     665.42     0          0
+
+  
+  ERROR 209: undefined object YI#34Over at line 187 of [CONDUIT] section:
+  316/54"RCP       YI#34Over        YI#36            316.00     0.0130     700.95     697.38     0          0
+
+  
+  ERROR 209: undefined object Spillway at line 193 of [WEIR] section:
+  12/18"RCP        Spillway         WendCulv         TRANSVERSE 669.40     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 0 at line 202 of [XSECT] section:
+  Op17-18          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 209 of [XSECT] section:
+  Op24-25          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 221 of [XSECT] section:
+  Op6-7            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 223 of [XSECT] section:
+  Op11-12          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 224 of [XSECT] section:
+  Op12-13          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 225 of [XSECT] section:
+  Op13-14          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 228 of [XSECT] section:
+  11/Ellipse       CUSTOM       0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 229 of [XSECT] section:
+  Op18-19          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 230 of [XSECT] section:
+  Op#21-23         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 231 of [XSECT] section:
+  Op23-24          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 232 of [XSECT] section:
+  Op27-28          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 245 of [XSECT] section:
+  368.1            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 247 of [XSECT] section:
+  Op23012259       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 249 of [XSECT] section:
+  Op2259-39        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 250 of [XSECT] section:
+  Op40-39          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 251 of [XSECT] section:
+  Op39-2251        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 253 of [XSECT] section:
+  Op2251-41        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 254 of [XSECT] section:
+  Op42-41          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 255 of [XSECT] section:
+  Op41-2243        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 257 of [XSECT] section:
+  Op2243-43        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 258 of [XSECT] section:
+  Op43-Wren        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 260 of [XSECT] section:
+  OpWren-44        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 261 of [XSECT] section:
+  OpWend-49        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 262 of [XSECT] section:
+  Op49-Chad        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 264 of [XSECT] section:
+  OpChad-50        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 265 of [XSECT] section:
+  Op44-Wend        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 277 of [XSECT] section:
+  224              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 278 of [XSECT] section:
+  12/18"RCP        RECT_OPEN    0          20.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

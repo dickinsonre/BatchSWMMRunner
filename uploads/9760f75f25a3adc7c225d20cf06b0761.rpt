@@ -1,0 +1,76 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 68 of [XSECT] section:
+  8072             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 69 of [XSECT] section:
+  8070             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 70 of [XSECT] section:
+  8062             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 71 of [XSECT] section:
+  8060             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 72 of [XSECT] section:
+  8054             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 73 of [XSECT] section:
+  8052             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 74 of [XSECT] section:
+  8050             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 75 of [XSECT] section:
+  8042             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 76 of [XSECT] section:
+  8040             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 77 of [XSECT] section:
+  8032             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  8030             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  8024             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  8022             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  8020             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 82 of [XSECT] section:
+  8014             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 83 of [XSECT] section:
+  8012             TRAPEZOIDAL  30.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 84 of [XSECT] section:
+  8010             TRAPEZOIDAL  30.00      0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

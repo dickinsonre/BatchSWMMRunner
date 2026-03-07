@@ -1,0 +1,160 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 225 of [CONDUIT] section:
+  c10              ?                Node_1201326     387.00     0.0150     680.50     679.33     0          0
+
+  
+  ERROR 209: undefined object ? at line 265 of [CONDUIT] section:
+  m4               ?                Node_11641166    29.26      0.0140     687.54     687.47     0          0
+
+  
+  ERROR 209: undefined object ? at line 266 of [CONDUIT] section:
+  m5               ?                Node_11661168    129.24     0.0140     687.16     687.00     0          0
+
+  
+  ERROR 209: undefined object ? at line 267 of [CONDUIT] section:
+  m7               ?                Node_11681171    77.00      0.0140     687.00     686.88     0          0
+
+  
+  ERROR 209: undefined object ? at line 268 of [CONDUIT] section:
+  m8               ?                Node_11711173    226.77     0.0140     686.73     685.82     0          0
+
+  
+  ERROR 209: undefined object ? at line 269 of [CONDUIT] section:
+  m9               ?                Node_11731175    48.76      0.0140     685.82     684.85     0          0
+
+  
+  ERROR 209: undefined object ? at line 270 of [CONDUIT] section:
+  m10              ?                Node_11751177    209.70     0.0140     684.85     684.29     0          0
+
+  
+  ERROR 209: undefined object ? at line 271 of [CONDUIT] section:
+  m11              ?                Node_11771180    96.59      0.0140     684.29     684.07     0          0
+
+  
+  ERROR 209: undefined object ? at line 272 of [CONDUIT] section:
+  m12              ?                Node_11801182    49.00      0.0140     684.07     682.09     0          0
+
+  
+  ERROR 209: undefined object ? at line 273 of [CONDUIT] section:
+  m13              ?                Node_11821184    104.00     0.0140     682.09     681.31     0          0
+
+  
+  ERROR 209: undefined object ? at line 274 of [CONDUIT] section:
+  m14              ?                Node_1184324     24.87      0.0140     681.31     680.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 275 of [CONDUIT] section:
+  m1               ?                Node_11871188    3.00       0.0140     688.71     688.70     0          0
+
+  
+  ERROR 209: undefined object ? at line 276 of [CONDUIT] section:
+  m2               ?                Node_11881190    52.57      0.0140     688.45     688.35     0          0
+
+  
+  ERROR 209: undefined object ? at line 277 of [CONDUIT] section:
+  m3               ?                Node_11901171    128.02     0.0140     688.18     687.35     0          0
+
+  
+  ERROR 209: undefined object ? at line 278 of [CONDUIT] section:
+  m6a              ?                Node_1194301     252.98     0.0140     685.21     683.70     0          0
+
+  
+  ERROR 209: undefined object ? at line 279 of [CONDUIT] section:
+  m6               ?                Node_11941166    10.00      0.0140     685.21     687.77     0          0
+
+  
+  ERROR 209: undefined object ? at line 281 of [CONDUIT] section:
+  m1a              ?                Node_1187312     154.99     0.0140     685.75     685.43     0          0
+
+  
+  ERROR 209: undefined object ? at line 282 of [CONDUIT] section:
+  c3b              ?                Node_12041209    27.00      0.0140     682.25     682.25     0          0
+
+  
+  ERROR 209: undefined object ? at line 283 of [CONDUIT] section:
+  c5b              ?                Node_12061211    22.00      0.0140     682.50     682.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 284 of [CONDUIT] section:
+  c5a              ?                Node_12061213    12.30      0.0140     681.99     681.99     0          0
+
+  
+  ERROR 209: undefined object ? at line 285 of [CONDUIT] section:
+  c3a              ?                Node_12041215    12.00      0.0140     681.36     681.36     0          0
+
+  
+  ERROR 209: undefined object ? at line 286 of [CONDUIT] section:
+  bypass           ?                Node_12221201    6.03       0.0140     680.50     680.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 287 of [CONDUIT] section:
+  H1A              ?                Node_12671268    75.50      0.0140     688.48     688.17     0          0
+
+  
+  ERROR 209: undefined object ? at line 288 of [CONDUIT] section:
+  H1               ?                Node_12681270    302.70     0.0140     688.17     687.52     0          0
+
+  
+  ERROR 209: undefined object ? at line 289 of [CONDUIT] section:
+  H2               ?                Node_12701272    11.00      0.0140     687.52     687.42     0          0
+
+  
+  ERROR 209: undefined object ? at line 290 of [CONDUIT] section:
+  H3               ?                Node_1272268     4.50       0.0140     687.42     687.41     0          0
+
+  
+  ERROR 209: undefined object ? at line 291 of [CONDUIT] section:
+  1283             ?                ?                22.00      0.0140     682.50     682.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 292 of [CONDUIT] section:
+  1284             ?                ?                27.00      0.0140     682.25     682.25     0          0
+
+  
+  ERROR 209: undefined object ? at line 297 of [ORIFICE] section:
+  c8               ?                Node_12131201    SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object ? at line 298 of [ORIFICE] section:
+  c7               ?                Node_12151201    SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object ? at line 305 of [WEIR] section:
+  c2a              ?                Node_12021204    TRANSVERSE 683.99     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 306 of [WEIR] section:
+  c2b              ?                Node_12021206    TRANSVERSE 685.40     1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 441 of [XSECT] section:
+  c8               RECT_CLOSED  0.30       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 442 of [XSECT] section:
+  c7               RECT_CLOSED  0.30       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 443 of [XSECT] section:
+  c1b              RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 444 of [XSECT] section:
+  c1a              RECT_OPEN    0          16.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 445 of [XSECT] section:
+  c2a              RECT_OPEN    0          16.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 446 of [XSECT] section:
+  c2b              RECT_OPEN    0          7.20       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

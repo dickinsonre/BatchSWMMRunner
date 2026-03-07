@@ -1,0 +1,64 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 5487 at line 77 of [CONDUIT] section:
+  5487             5487 ll          J2339            1681.00    0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object ? at line 79 of [CONDUIT] section:
+  332              ?                ?                1397.00    0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object 2339 at line 80 of [CONDUIT] section:
+  2339             2339 ll          J3339            2581.00    0.0120     5.00       5.00       0          0
+
+  
+  ERROR 211: invalid number -7.17 at line 89 of [PUMP] section:
+  8333             S333             J333             PC_8333    ON       -7.17      -8.17     
+
+  
+  ERROR 211: invalid number -3.83 at line 90 of [PUMP] section:
+  8339             S339             J339             PC_8339    ON       -3.83      -6.67     
+
+  
+  ERROR 211: invalid number -7.17 at line 91 of [PUMP] section:
+  8335             S335             J335             PC_8335    ON       -7.17      -9.50     
+
+  
+  ERROR 211: invalid number -4.83 at line 92 of [PUMP] section:
+  8341             S341             J341             PC_8341    ON       -4.83      -6.83     
+
+  
+  ERROR 211: invalid number -8.58 at line 93 of [PUMP] section:
+  8433             S433             J433             PC_8433    ON       -8.58      -10.42    
+
+  
+  ERROR 211: invalid number -6.67 at line 94 of [PUMP] section:
+  8337             S337             J337             PC_8337    ON       -6.67      -8.50     
+
+  
+  ERROR 211: invalid number -6.42 at line 95 of [PUMP] section:
+  8487             S487             J487             PC_8487    ON       -6.42      -8.59     
+
+  
+  ERROR 211: invalid number -1.83 at line 96 of [PUMP] section:
+  8332             S332             J332             PC_8332    ON       -1.83      -3.67     
+
+  
+  ERROR 211: invalid number -9.96 at line 97 of [PUMP] section:
+  8329             S329             J329             PC_8329    ON       -9.96      -10.79    
+
+  
+  ERROR 211: invalid number -4.50 at line 98 of [PUMP] section:
+  8330             S330             J330             PC_8330    ON       -4.50      -5.34     
+
+  
+  ERROR 211: invalid number -5.67 at line 99 of [PUMP] section:
+  8331             S331             J331             PC_8331    ON       -5.67      -8.67     
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

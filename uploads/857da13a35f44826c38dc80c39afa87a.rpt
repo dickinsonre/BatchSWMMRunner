@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object C. at line 271 of [CONDUIT] section:
+  Snell C.         Snell R.         65398            36.80      0.0340     467.00     467.00     0          0
+
+  
+  ERROR 209: undefined object Main880A2 at line 274 of [CONDUIT] section:
+  Main880A1        Main880A2        Fox R.           224.80     0.0140     447.50     446.50     0          0
+
+  
+  ERROR 209: undefined object AM850B2 at line 282 of [CONDUIT] section:
+  AM850B1          AM850B2          50110            114.00     0.0190     594.00     590.00     0          0
+
+  
+  ERROR 209: undefined object C. at line 289 of [CONDUIT] section:
+  Will C.          Will R.          50238            127.90     0.0210     558.00     551.70     0          0
+
+  
+  ERROR 209: undefined object C. at line 291 of [CONDUIT] section:
+  Braeb C.         Braeb R.         66910            59.00      0.0240     619.00     618.00     0          0
+
+  
+  ERROR 209: undefined object B. at line 319 of [CONDUIT] section:
+  30th B.          30th R.          71001            79.00      0          426.80     426.70     0          0
+
+  
+  ERROR 209: undefined object C. at line 321 of [CONDUIT] section:
+  29th C.          29th R.          71052            80.00      0.0480     425.00     425.00     0          0
+
+  
+  ERROR 209: undefined object AM690J-S at line 328 of [CONDUIT] section:
+  AM690J-N         AM690J-S         51306            250.70     0.0140     436.00     435.50     0          0
+
+  
+  ERROR 209: undefined object AM690K-S at line 329 of [CONDUIT] section:
+  AM690K-N         AM690K-S         51307            277.40     0.0140     435.50     433.60     0          0
+
+  
+  ERROR 209: undefined object East at line 347 of [CONDUIT] section:
+  42" East         24" West         54271            231.70     0.0180     458.00     455.07     0          0
+
+  
+  ERROR 209: undefined object North at line 355 of [CONDUIT] section:
+  60" North        60" South        54172            961.30     0.0150     421.00     419.50     0          0
+
+  
+  ERROR 209: undefined object Elps at line 356 of [CONDUIT] section:
+  83" Elps         42" South        54353            486.00     0.0150     422.90     422.05     0          0
+
+  
+  ERROR 209: undefined object West at line 394 of [CONDUIT] section:
+  48" West         60" East         52689            1092.40    0.0150     413.60     411.40     0          0
+
+  
+  ERROR 209: undefined object DB#2 at line 485 of [CONDUIT] section:
+  DB#1             DB#2             71054            46.00      0.0130     417.20     417.20     0          0
+
+  
+  ERROR 209: undefined object B. at line 486 of [CONDUIT] section:
+  19th B.          19th R.          71056            53.00      0          410.80     410.80     0          0
+
+  
+  ERROR 209: undefined object B. at line 487 of [CONDUIT] section:
+  18th B.          18th R.          71058            63.00      0.0140     410.20     410.20     0          0
+
+  
+  ERROR 209: undefined object B. at line 488 of [CONDUIT] section:
+  Pearl B.         Pearl R.         71060            75.00      0          409.60     409.60     0          0
+
+  
+  ERROR 209: undefined object R. at line 489 of [CONDUIT] section:
+  Oak R.           Oak B.           71062            60.00      0.0130     420.00     420.00     0          0
+
+  
+  ERROR 209: undefined object B. at line 490 of [CONDUIT] section:
+  16th B.          16th R.          71064            120.00     0          409.00     409.00     0          0
+
+  
+  ERROR 209: undefined object B. at line 491 of [CONDUIT] section:
+  Olive B.         Olive R.         71066            50.00      0          408.70     408.70     0          0
+
+  
+  ERROR 209: undefined object B. at line 492 of [CONDUIT] section:
+  15th B.          15th R.          71068            45.00      0          408.40     408.40     0          0
+
+  
+  ERROR 209: undefined object B. at line 493 of [CONDUIT] section:
+  Charnel B.       Charnel R.       71070            60.00      0          408.20     408.10     0          0
+
+  
+  ERROR 209: undefined object B. at line 494 of [CONDUIT] section:
+  Lincoln B.       Lincoln R.       71072            55.00      0          407.80     407.70     0          0
+
+  
+  ERROR 209: undefined object B. at line 495 of [CONDUIT] section:
+  Lawr B.          Lawr R.          71074            40.00      0          407.30     407.30     0          0
+
+  
+  ERROR 209: undefined object B. at line 496 of [CONDUIT] section:
+  Wash B.          Wash R.          71076            40.00      0          407.10     407.00     0          0
+
+  
+  ERROR 209: undefined object B. at line 497 of [CONDUIT] section:
+  Jefrsn B.        Jefrsn R.        71078            50.00      0          406.67     406.55     0          0
+
+  
+  ERROR 209: undefined object AM690C-S at line 498 of [CONDUIT] section:
+  AM690C-N         AM690C-S         51314            30.60      0.0190     435.90     436.00     0          0
+
+  
+  ERROR 209: undefined object AM690B-S at line 499 of [CONDUIT] section:
+  AM690B-N         AM690B-S         68667            182.40     0.0150     436.00     435.40     0          0
+
+  
+  ERROR 209: undefined object AM690D-S at line 501 of [CONDUIT] section:
+  AM690D-N         AM690D-S         51313            489.20     0.0140     436.96     435.90     0          0
+
+  
+  ERROR 209: undefined object AM890A-S at line 503 of [CONDUIT] section:
+  AM890A-N         AM890A-S         65370            400.90     0.0150     461.70     457.00     0          0
+
+  
+  ERROR 209: undefined object 9.40 at line 518 of [XSECT] section:
+  Main920B         IRREGULAR    9.40       0          0          0          1
+
+  
+  ERROR 205: invalid keyword C. at line 519 of [XSECT] section:
+  Snell C.         CIRCULAR     6.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.10 at line 520 of [XSECT] section:
+  Main910A         IRREGULAR    8.10       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 521 of [XSECT] section:
+  Main880B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 528 of [XSECT] section:
+  AM860D           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 529 of [XSECT] section:
+  AM860C           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 531 of [XSECT] section:
+  Main800B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 532 of [XSECT] section:
+  Main800A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword C. at line 537 of [XSECT] section:
+  Will C.          CIRCULAR     3.50       0          0          0          1
+
+  
+  ERROR 205: invalid keyword C. at line 539 of [XSECT] section:
+  Braeb C.         CIRCULAR     3.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 540 of [XSECT] section:
+  AM860A           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 541 of [XSECT] section:
+  AM850A           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 544 of [XSECT] section:
+  AM780D           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 546 of [XSECT] section:
+  Main770          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 559 of [XSECT] section:
+  AM750A           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 562 of [XSECT] section:
+  AM750C           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 563 of [XSECT] section:
+  Main730B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 564 of [XSECT] section:
+  Main730A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 566 of [XSECT] section:
+  Main720C         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword B. at line 567 of [XSECT] section:
+  30th B.          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 568 of [XSECT] section:
+  Main720A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword C. at line 569 of [XSECT] section:
+  29th C.          HORSESHOE    7.50       15.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 584 of [XSECT] section:
+  Main670          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 585 of [XSECT] section:
+  Main710          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 586 of [XSECT] section:
+  Main660          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 587 of [XSECT] section:
+  Main620          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword East at line 595 of [XSECT] section:
+  42" East         CIRCULAR     3.50       0          0          0          1
+
+  
+  ERROR 205: invalid keyword North at line 603 of [XSECT] section:
+  60" North        CIRCULAR     5.00       0          0          0          1
+
+  
+  ERROR 205: invalid keyword Elps at line 604 of [XSECT] section:
+  83" Elps         HORSESHOE    6.92       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 605 of [XSECT] section:
+  Main610C         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 606 of [XSECT] section:
+  Main610A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 607 of [XSECT] section:
+  Main600A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 608 of [XSECT] section:
+  Main580M         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 609 of [XSECT] section:
+  Main580K         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 610 of [XSECT] section:
+  Main580I         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 611 of [XSECT] section:
+  Main580G         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 612 of [XSECT] section:
+  Main580E         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 613 of [XSECT] section:
+  Main580C         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 614 of [XSECT] section:
+  Main580A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 615 of [XSECT] section:
+  Main560F         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 616 of [XSECT] section:
+  Main560D         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 617 of [XSECT] section:
+  Main560B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 618 of [XSECT] section:
+  293              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 619 of [XSECT] section:
+  295              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 620 of [XSECT] section:
+  297              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 621 of [XSECT] section:
+  299              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 622 of [XSECT] section:
+  301              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 623 of [XSECT] section:
+  303              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 624 of [XSECT] section:
+  305              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword West at line 642 of [XSECT] section:
+  48" West         CIRCULAR     4.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 654 of [XSECT] section:
+  367              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 655 of [XSECT] section:
+  369              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 656 of [XSECT] section:
+  371              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 669 of [XSECT] section:
+  396              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 673 of [XSECT] section:
+  403              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 674 of [XSECT] section:
+  405              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 675 of [XSECT] section:
+  407              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 676 of [XSECT] section:
+  409              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 680 of [XSECT] section:
+  417              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 681 of [XSECT] section:
+  419              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 682 of [XSECT] section:
+  421              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 683 of [XSECT] section:
+  423              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 684 of [XSECT] section:
+  429              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 685 of [XSECT] section:
+  431              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 686 of [XSECT] section:
+  433              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 704 of [XSECT] section:
+  476              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 708 of [XSECT] section:
+  AM130B           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 710 of [XSECT] section:
+  488              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 721 of [XSECT] section:
+  511              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 722 of [XSECT] section:
+  512              CIRCULAR     0          0          0          0          1
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

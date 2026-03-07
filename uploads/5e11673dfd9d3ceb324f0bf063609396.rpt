@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name plant at line 541 of [JUNC] section:
+  plant            592.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PLANT at line 677 of [STORAGE] section:
+  PLANT            591.00     0          0          FUNCTIONAL 22.00 0          0
+
+  
+  ERROR 207: duplicate ID name RI at line 1061 of [CONDUIT] section:
+  RI               ?                Node_44313924    72.00      0.0190     576.71     576.62     0          0
+
+  
+  ERROR 207: duplicate ID name plant at line 1362 of [PUMP] section:
+  plant pump       ?                Node_56695735    PC_plant pump ON       0          0         
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,164 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name Ex at line 51 of [JUNC] section:
+  Ex               20.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name X-50 at line 85 of [JUNC] section:
+  X-50             17.98      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 100 of [CONDUIT] section:
+  Chn              X-27             X-26             475.00     0          18.94      17.22      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 101 of [CONDUIT] section:
+  Chn              X-26             X-25             325.00     0          17.22      17.17      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 102 of [CONDUIT] section:
+  Chn              X-25             X-24             425.00     0          17.17      15.77      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 103 of [CONDUIT] section:
+  Chn              X-24             EW-3             120.00     0.0350     14.33      14.27      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 111 of [CONDUIT] section:
+  Chn              X-36             X-35             700.00     0.0350     16.98      16.31      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 112 of [CONDUIT] section:
+  Chn              X-35             X-34             750.00     0.0350     16.31      15.60      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 113 of [CONDUIT] section:
+  Chn              X-34             X-33             500.00     0.0350     15.60      15.13      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 114 of [CONDUIT] section:
+  Chn              X-33             X-32             175.00     0.0350     15.13      14.96      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 115 of [CONDUIT] section:
+  Chn              X-32             X-31             375.00     0.0350     14.96      14.77      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 116 of [CONDUIT] section:
+  Chn              X-31             X-30             500.00     0.0350     14.77      14.52      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 118 of [CONDUIT] section:
+  Chn              EW-2             X-24             225.00     0.0350     14.45      14.33      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 119 of [CONDUIT] section:
+  Chn              X-30             EW-1             44.00      0.0350     14.52      14.50      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 127 of [CONDUIT] section:
+  Chn              X-10             X-11             400.00     0          18.78      18.10      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 128 of [CONDUIT] section:
+  Chn              X-11             X-12             520.00     0          18.10      18.00      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 129 of [CONDUIT] section:
+  Chn              X-12             X-13             600.00     0          18.00      18.38      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 130 of [CONDUIT] section:
+  Chn              X-13             X-14             360.00     0          18.38      17.49      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 131 of [CONDUIT] section:
+  Chn              X-14             X-15             150.00     0          17.49      16.87      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 134 of [CONDUIT] section:
+  Chn              EW-6             X-5              645.00     0          17.88      17.87      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 136 of [CONDUIT] section:
+  Chn              EW-X41           X-42             180.00     0.0300     16.20      16.11      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 137 of [CONDUIT] section:
+  Chn              X-39             X-40             400.00     0.0300     16.50      16.30      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 138 of [CONDUIT] section:
+  Chn              X-8              X-9              225.00     0.0300     16.76      16.65      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 139 of [CONDUIT] section:
+  Chn              X-9              X-39             300.00     0.0300     16.65      16.50      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 140 of [CONDUIT] section:
+  Chn              EW-10            X-7              325.00     0.0300     18.00      17.33      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 141 of [CONDUIT] section:
+  Chn              X-7              X-8              125.00     0.0300     16.83      16.76      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 143 of [CONDUIT] section:
+  Chn              X-1              EW-5             40.00      0          18.94      17.70      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 144 of [CONDUIT] section:
+  Chn              X-37             EW-9             25.00      0          21.01      21.01      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 145 of [CONDUIT] section:
+  Chn              X-40             EW-X40           95.00      0.0300     16.30      16.25      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 147 of [CONDUIT] section:
+  Chn              X-3              X-4              300.00     0.0300     17.74      17.59      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 148 of [CONDUIT] section:
+  Chn              X-4              X-5              580.00     0.0300     17.59      17.30      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 149 of [CONDUIT] section:
+  Chn              X-5              X-6              150.00     0.0300     17.30      17.23      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 150 of [CONDUIT] section:
+  Chn              X-42             EW               75.00      0.0300     16.11      16.08      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 152 of [CONDUIT] section:
+  Chn              X-54             X-50             70.00      0          12.20      14.81      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 153 of [CONDUIT] section:
+  Chn              X-51             X-52             130.00     0          14.27      14.08      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 154 of [CONDUIT] section:
+  Chn              X-52             36"CMP           115.00     0.0140     14.08      14.30      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 155 of [CONDUIT] section:
+  Chn              Mallard          I-55             148.00     0.0150     12.70      13.00      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 156 of [CONDUIT] section:
+  Chn              X-50             X-50             50.00      0          14.81      15.23      0          0
+
+  
+  ERROR 207: duplicate ID name Chn at line 157 of [CONDUIT] section:
+  Chn              X-50             X-51             10.00      0          15.23      14.27      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

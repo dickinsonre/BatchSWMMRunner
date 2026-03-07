@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object DI-PR at line 243 of [CONDUIT] section:
+  SC-PR            DI-PR            PS11-N10         434.90     0.0150     1.69       2.79       0          0
+
+  
+  ERROR 209: undefined object PS6LAG at line 261 of [PUMP] section:
+  PS6LEAD          PS6LAG           PS11-N60         PC_PS6LEAD ON       0.76       0.23      
+
+  
+  ERROR 209: undefined object PS5LAG at line 262 of [PUMP] section:
+  PS5LEAD          PS5LAG           PS11-N70         PC_PS5LEAD ON       0.09       -0.52     
+
+  
+  ERROR 209: undefined object PS7LAG at line 263 of [PUMP] section:
+  PS7LEAD          PS7LAG           PS11-N1          PC_PS7LEAD ON       0.16       -0.69     
+
+  
+  ERROR 209: undefined object PS8LAG at line 264 of [PUMP] section:
+  PS8LEAD          PS8LAG           PS7-N1           PC_PS8LEAD ON       0          -0.52     
+
+  
+  ERROR 209: undefined object PS9LAG at line 265 of [PUMP] section:
+  PS9LEAD          PS9LAG           PS8-N1           PC_PS9LEAD ON       2.36       2.03      
+
+
+  Analysis begun on:  Sat Mar  7 21:51:26 2026
+  Analysis ended on:  Sat Mar  7 21:51:26 2026
+  Total elapsed time: < 1 sec

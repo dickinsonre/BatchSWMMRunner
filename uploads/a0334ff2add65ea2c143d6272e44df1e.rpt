@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 40 of [WEIR] section:
+  349              ?                ?                TRANSVERSE 287.99     1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 47 of [XSECT] section:
+  349              RECT_OPEN    0          6.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

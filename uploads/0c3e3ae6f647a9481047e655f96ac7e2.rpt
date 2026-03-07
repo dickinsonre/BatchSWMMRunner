@@ -1,0 +1,140 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name Null at line 44 of [JUNC] section:
+  Null             245.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 46 of [JUNC] section:
+  Outfall          228.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 47 of [JUNC] section:
+  Outfall          228.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 48 of [JUNC] section:
+  Outfall          246.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 49 of [JUNC] section:
+  Outfall          248.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 50 of [JUNC] section:
+  Outfall          262.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 51 of [JUNC] section:
+  Outfall          253.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 52 of [JUNC] section:
+  Outfall          252.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 53 of [JUNC] section:
+  Outfall          250.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 54 of [JUNC] section:
+  Outfall          234.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 55 of [JUNC] section:
+  Outfall          209.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Ditch at line 62 of [CONDUIT] section:
+  Ditch            Null             K                1364.00    0.0240     241.50     227.00     0          0
+
+  
+  ERROR 207: duplicate ID name Outfall at line 69 of [WEIR] section:
+  Outfall I        Outfall          O                TRANSVERSE 246.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Ditch at line 70 of [WEIR] section:
+  Ditch            Outfall E        H                TRANSVERSE 258.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Ditch at line 71 of [WEIR] section:
+  Ditch            Outfall H        F                TRANSVERSE 248.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Ditch at line 72 of [WEIR] section:
+  Ditch            Outfall G        Null             TRANSVERSE 245.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Ditch at line 73 of [WEIR] section:
+  Ditch            Outfall B        K                TRANSVERSE 242.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Ditch at line 74 of [WEIR] section:
+  Ditch            Ditch A          J                TRANSVERSE 231.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Outfall at line 75 of [WEIR] section:
+  Outfall M        Outfall          Null             TRANSVERSE 242.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Ditch at line 76 of [WEIR] section:
+  Ditch            Outfall L        Null             TRANSVERSE 224.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Outfall at line 78 of [WEIR] section:
+  Outfall O        Outfall          64               TRANSVERSE 202.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 80 of [WEIR] section:
+  Str J            ?                ?                TRANSVERSE 219.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 81 of [WEIR] section:
+  Str N            ?                ?                TRANSVERSE 228.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 82 of [WEIR] section:
+  Str I            ?                ?                TRANSVERSE 248.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 83 of [WEIR] section:
+  Str CD           ?                ?                V-NOTCH    254.50     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 84 of [WEIR] section:
+  Str G            ?                ?                TRANSVERSE 250.50     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 85 of [WEIR] section:
+  Str H            ?                ?                TRANSVERSE 251.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 86 of [WEIR] section:
+  Str E            ?                ?                TRANSVERSE 258.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 87 of [WEIR] section:
+  Str F            ?                ?                TRANSVERSE 250.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 88 of [WEIR] section:
+  Str M            ?                ?                TRANSVERSE 243.80     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 89 of [WEIR] section:
+  Str B            ?                ?                TRANSVERSE 242.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 90 of [WEIR] section:
+  Str O            ?                ?                TRANSVERSE 202.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name Str at line 91 of [WEIR] section:
+  Str L            ?                ?                TRANSVERSE 223.00     1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,408 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name GL-1 at line 26 of [JUNC] section:
+  GL-1             945.00     0          0.99       0          0
+
+  
+  ERROR 207: duplicate ID name SLL-1 at line 31 of [JUNC] section:
+  SLL-1            940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name GL-1 at line 32 of [JUNC] section:
+  GL-1             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ML-1 at line 33 of [JUNC] section:
+  ML-1             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SLL-1 at line 34 of [JUNC] section:
+  SLL-1            945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LW-1 at line 36 of [JUNC] section:
+  LW-1             1025.00    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CL-1 at line 42 of [JUNC] section:
+  CL-1             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CL-5 at line 44 of [JUNC] section:
+  CL-5             940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name BB-4 at line 49 of [JUNC] section:
+  BB-4             946.00     0          9.00       0          0
+
+  
+  ERROR 207: duplicate ID name CRS-1 at line 70 of [JUNC] section:
+  CRS-1            962.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CRS-2 at line 71 of [JUNC] section:
+  CRS-2            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name EU-1 at line 76 of [JUNC] section:
+  EU-1             972.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CLC-5 at line 79 of [JUNC] section:
+  CLC-5            940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CLC-5 at line 80 of [JUNC] section:
+  CLC-5            940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CLC-5 at line 81 of [JUNC] section:
+  CLC-5            940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CLC-5 at line 82 of [JUNC] section:
+  CLC-5            946.85     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CLC-5 at line 83 of [JUNC] section:
+  CLC-5            964.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CLC-5a at line 88 of [JUNC] section:
+  CLC-5a           986.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-7 at line 90 of [JUNC] section:
+  DL-7             1000.00    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-7 at line 91 of [JUNC] section:
+  DL-7             1000.00    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-7 at line 92 of [JUNC] section:
+  DL-7             1000.00    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-5 at line 94 of [JUNC] section:
+  DL-5             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-5 at line 95 of [JUNC] section:
+  DL-5             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-5 at line 96 of [JUNC] section:
+  DL-5             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-5 at line 97 of [JUNC] section:
+  DL-5             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-5 at line 98 of [JUNC] section:
+  DL-5             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-5 at line 99 of [JUNC] section:
+  DL-5             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DL-7 at line 100 of [JUNC] section:
+  DL-7             1000.00    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LMC-9 at line 117 of [JUNC] section:
+  LMC-9            957.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 119 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 120 of [JUNC] section:
+  LV-4             955.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 121 of [JUNC] section:
+  LV-4             955.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 122 of [JUNC] section:
+  LV-4             953.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 123 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 124 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 125 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LMC-10 at line 126 of [JUNC] section:
+  LMC-10           955.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 127 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 128 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 129 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 130 of [JUNC] section:
+  LV-4             949.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 131 of [JUNC] section:
+  LV-4             940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 132 of [JUNC] section:
+  LV-4             940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 133 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LV-4 at line 134 of [JUNC] section:
+  LV-4             945.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SL-4 at line 139 of [JUNC] section:
+  SL-4             955.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SL-4 at line 140 of [JUNC] section:
+  SL-4             955.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LL-3 at line 154 of [JUNC] section:
+  LL-3             950.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LL-3 at line 159 of [JUNC] section:
+  LL-3             954.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LL-3 at line 160 of [JUNC] section:
+  LL-3             955.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LL-1 at line 161 of [JUNC] section:
+  LL-1             959.62     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-25 at line 208 of [JUNC] section:
+  LLC-25           992.53     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-22 at line 210 of [JUNC] section:
+  LLC-22           998.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-11 at line 211 of [JUNC] section:
+  LLC-11           992.37     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-9 at line 212 of [JUNC] section:
+  LLC-9            980.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-9 at line 213 of [JUNC] section:
+  LLC-9            981.69     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-1 at line 215 of [JUNC] section:
+  LLC-1            1005.92    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-2 at line 216 of [JUNC] section:
+  LLC-2            995.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-4 at line 217 of [JUNC] section:
+  LLC-4            970.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-6 at line 218 of [JUNC] section:
+  LLC-6            970.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-38 at line 219 of [JUNC] section:
+  LLC-38           947.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-45 at line 221 of [JUNC] section:
+  LLC-45           2000.00    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 222 of [JUNC] section:
+  LLC-41           953.68     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 223 of [JUNC] section:
+  LLC-41           953.27     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 224 of [JUNC] section:
+  LLC-41           955.90     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 225 of [JUNC] section:
+  LLC-41           971.31     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-43 at line 226 of [JUNC] section:
+  LLC-43           957.44     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 227 of [JUNC] section:
+  LLC-47           953.74     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-43 at line 228 of [JUNC] section:
+  LLC-43           950.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-43 at line 229 of [JUNC] section:
+  LLC-43           955.90     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-43 at line 231 of [JUNC] section:
+  LLC-43           957.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 232 of [JUNC] section:
+  LLC-41           955.65     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 233 of [JUNC] section:
+  LLC-41           956.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 234 of [JUNC] section:
+  LLC-41           957.60     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 235 of [JUNC] section:
+  LLC-41           956.70     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 236 of [JUNC] section:
+  LLC-47           953.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 237 of [JUNC] section:
+  LLC-47           955.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-30 at line 242 of [JUNC] section:
+  LLC-30           987.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-38 at line 243 of [JUNC] section:
+  LLC-38           958.42     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-28 at line 245 of [JUNC] section:
+  LLC-28           1005.59    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-30 at line 247 of [JUNC] section:
+  LLC-30           1001.70    0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-41 at line 249 of [JUNC] section:
+  LLC-41           954.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 250 of [JUNC] section:
+  LLC-47           952.54     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 251 of [JUNC] section:
+  LLC-47           949.31     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 252 of [JUNC] section:
+  LLC-47           950.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLC-47 at line 253 of [JUNC] section:
+  LLC-47           948.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name LLc-47 at line 254 of [JUNC] section:
+  LLc-47           950.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-2 at line 274 of [JUNC] section:
+  PC-2             980.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-2 at line 275 of [JUNC] section:
+  PC-2             980.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-3 at line 276 of [JUNC] section:
+  PC-3             985.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-3 at line 277 of [JUNC] section:
+  PC-3             985.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-3 at line 278 of [JUNC] section:
+  PC-3             988.31     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-3 at line 279 of [JUNC] section:
+  PC-3             990.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-8 at line 281 of [JUNC] section:
+  PC-8             995.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-8 at line 282 of [JUNC] section:
+  PC-8             970.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-8 at line 286 of [JUNC] section:
+  PC-8             971.35     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-8 at line 287 of [JUNC] section:
+  PC-8             970.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-11 at line 289 of [JUNC] section:
+  PC-11            972.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-14 at line 293 of [JUNC] section:
+  PC-14            955.27     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name PC-20 at line 305 of [JUNC] section:
+  PC-20            956.66     0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,56 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CS at line 85 of [CONDUIT] section:
+  CS               17-17.3          16-17            385.00     0          892.70     892.20     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 86 of [CONDUIT] section:
+  CS               16-17            28               285.00     0          892.20     891.95     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 88 of [CONDUIT] section:
+  CS               30               15-15.3          165.00     0          891.80     891.70     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 89 of [CONDUIT] section:
+  CS               15-15.3          14-15            190.00     0          891.70     891.40     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 90 of [CONDUIT] section:
+  CS               14-15            13-14            270.00     0          891.40     891.30     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 91 of [CONDUIT] section:
+  CS               13-14            12-13            275.00     0          891.30     890.80     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 92 of [CONDUIT] section:
+  CS               12-13            11-12            260.00     0          890.80     890.70     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 93 of [CONDUIT] section:
+  CS               11-12            10-11            180.00     0          890.80     890.80     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 94 of [CONDUIT] section:
+  CS               10-11            9-10             200.00     0          890.80     890.40     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 95 of [CONDUIT] section:
+  CS               9-10             8-9              120.00     0          890.40     890.10     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 98 of [CONDUIT] section:
+  CS               133              135              300.00     0          894.20     893.90     0          0
+
+  
+  ERROR 207: duplicate ID name CS at line 99 of [CONDUIT] section:
+  CS               135              137              400.00     0          893.90     893.80     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

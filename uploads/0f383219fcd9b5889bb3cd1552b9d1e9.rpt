@@ -1,0 +1,116 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 930001 at line 76 of [CONDUIT] section:
+  900001           930001           900500           370.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930003 at line 78 of [CONDUIT] section:
+  900003           930003           900503           330.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930005 at line 79 of [CONDUIT] section:
+  900005           930005           900505           690.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930007 at line 80 of [CONDUIT] section:
+  900007           930007           900507           320.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930009 at line 81 of [CONDUIT] section:
+  900009           930009           900509           370.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930011 at line 82 of [CONDUIT] section:
+  900011           930011           900511           1200.00    0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930013 at line 83 of [CONDUIT] section:
+  900013           930013           900513           240.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 930015 at line 84 of [CONDUIT] section:
+  900015           930015           900515           750.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 931009 at line 89 of [CONDUIT] section:
+  901009           931009           901507           640.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 933001 at line 92 of [CONDUIT] section:
+  903001           933001           900511           300.00     0.0150     0.05       0          0          0
+
+  
+  ERROR 209: undefined object 904001 at line 94 of [CONDUIT] section:
+  904001           904001           900511           150.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 904003 at line 95 of [CONDUIT] section:
+  904003           904003           904501           180.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 904005 at line 96 of [CONDUIT] section:
+  904005           904005           904503           340.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 904009 at line 98 of [CONDUIT] section:
+  904009           904009           904507           300.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 904011 at line 99 of [CONDUIT] section:
+  904011           904011           904509           400.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 904013 at line 100 of [CONDUIT] section:
+  904013           904013           904511           780.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 905001 at line 101 of [CONDUIT] section:
+  905001           905001           904505           600.00     0.0150     0          0.72       0          0
+
+  
+  ERROR 209: undefined object 905003 at line 102 of [CONDUIT] section:
+  905003           905003           905501           180.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 905005 at line 103 of [CONDUIT] section:
+  905005           905005           905503           600.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 940007 at line 109 of [CONDUIT] section:
+  910007           940007           910507           450.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 940009 at line 110 of [CONDUIT] section:
+  910009           940009           910509           430.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 940011 at line 111 of [CONDUIT] section:
+  910011           940011           910511           350.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 941001 at line 112 of [CONDUIT] section:
+  911001           941001           910505           810.00     0.0150     0          0.60       0          0
+
+  
+  ERROR 209: undefined object 941003 at line 113 of [CONDUIT] section:
+  911003           941003           911503           560.00     0.0150     0          0.16       0          0
+
+  
+  ERROR 209: undefined object 941005 at line 114 of [CONDUIT] section:
+  911005           941005           911505           280.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object 942001 at line 115 of [CONDUIT] section:
+  912001           942001           910507           450.00     0.0150     0          1.40       0          0
+
+  
+  ERROR 211: invalid number  at line 167 of [XSECT] section:
+  MUL27            RECT_OPEN    0          28.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:26 2026
+  Analysis ended on:  Sat Mar  7 21:51:26 2026
+  Total elapsed time: < 1 sec

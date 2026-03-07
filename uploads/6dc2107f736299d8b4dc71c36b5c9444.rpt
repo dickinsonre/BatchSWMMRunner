@@ -1,0 +1,408 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CSO at line 39 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 40 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 41 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 42 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 43 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r3 at line 57 of [JUNC] section:
+  r3               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 58 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 59 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 72 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 94 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 104 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 105 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 106 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 107 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 108 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 109 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 110 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 111 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 112 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 113 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 115 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 116 of [JUNC] section:
+  CSO              50.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 146 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 149 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 152 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name cso at line 155 of [JUNC] section:
+  cso              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 160 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d2 at line 165 of [JUNC] section:
+  d2               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d3 at line 167 of [JUNC] section:
+  d3               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 170 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d7 at line 172 of [JUNC] section:
+  d7               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 179 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DIV at line 180 of [JUNC] section:
+  DIV              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 181 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 182 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 190 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 214 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name cso at line 215 of [JUNC] section:
+  cso              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 216 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 231 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 232 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 233 of [JUNC] section:
+  CSO              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r1 at line 241 of [JUNC] section:
+  r1               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Sr8 at line 242 of [JUNC] section:
+  Sr8              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r360 at line 243 of [JUNC] section:
+  r360             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r134 at line 244 of [JUNC] section:
+  r134             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d131 at line 245 of [JUNC] section:
+  d131             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d128 at line 246 of [JUNC] section:
+  d128             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d126 at line 247 of [JUNC] section:
+  d126             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d122 at line 248 of [JUNC] section:
+  d122             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r117 at line 249 of [JUNC] section:
+  r117             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d115 at line 250 of [JUNC] section:
+  d115             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r111 at line 251 of [JUNC] section:
+  r111             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r107 at line 254 of [JUNC] section:
+  r107             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r100 at line 255 of [JUNC] section:
+  r100             50.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d39 at line 256 of [JUNC] section:
+  d39              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r42 at line 257 of [JUNC] section:
+  r42              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r47 at line 258 of [JUNC] section:
+  r47              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r37 at line 259 of [JUNC] section:
+  r37              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name REG at line 260 of [JUNC] section:
+  REG              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DIV at line 261 of [JUNC] section:
+  DIV              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name GRR at line 262 of [JUNC] section:
+  GRR              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r365 at line 263 of [JUNC] section:
+  r365             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name BA1 at line 264 of [JUNC] section:
+  BA1              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r36 at line 265 of [JUNC] section:
+  r36              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name rNA at line 266 of [JUNC] section:
+  rNA              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r24 at line 267 of [JUNC] section:
+  r24              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r22 at line 268 of [JUNC] section:
+  r22              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d15 at line 269 of [JUNC] section:
+  d15              0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name d413 at line 270 of [JUNC] section:
+  d413             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r8 at line 271 of [JUNC] section:
+  r8               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r3 at line 272 of [JUNC] section:
+  r3               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name r238 at line 274 of [JUNC] section:
+  r238             0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name B1 at line 275 of [JUNC] section:
+  B1               0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name p at line 282 of [CONDUIT] section:
+  p                BA1              ovfl1a           174.00     0.0130     48.20      47.99      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 283 of [CONDUIT] section:
+  p                BA3              BA4a             978.00     0.0130     43.20      40.27      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 284 of [CONDUIT] section:
+  p                BA2a             BA2b             504.00     0.0130     47.68      46.17      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 285 of [CONDUIT] section:
+  p                BA2b             BA2c             123.00     0.0130     46.17      46.06      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 286 of [CONDUIT] section:
+  p                BA2c             BA3              943.00     0.0130     46.06      43.20      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 287 of [CONDUIT] section:
+  p                BA4a             BA4b             711.00     0.0130     40.27      38.13      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 289 of [CONDUIT] section:
+  p                ovfl1a           ovfl1b           300.00     0.0130     47.99      44.72      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 290 of [CONDUIT] section:
+  p                ovfl1b           ovfl2            1275.00    0.0130     43.20      32.87      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 292 of [CONDUIT] section:
+  to               r365             BA4a             89.00      0.0130     46.50      42.38      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 293 of [CONDUIT] section:
+  to               r36              CSO              75.00      0.0130     44.23      43.48      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 294 of [CONDUIT] section:
+  to               r36              A1c              140.00     0.0130     44.23      36.98      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 295 of [CONDUIT] section:
+  to               rNA              CSO              20.00      0.0130     29.50      28.30      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 296 of [CONDUIT] section:
+  to               rNA              A3b              50.00      0.0130     29.50      28.00      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 297 of [CONDUIT] section:
+  to               r24              CSO              150.00     0.0130     30.08      29.70      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 298 of [CONDUIT] section:
+  to               r24              A4               50.00      0.0130     28.75      27.10      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 299 of [CONDUIT] section:
+  to               r22              CSO              550.00     0.0130     26.93      13.18      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 300 of [CONDUIT] section:
+  to               r22              A5               50.00      0.0130     26.93      26.08      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 301 of [CONDUIT] section:
+  to               d15              A6e              50.00      0.0130     24.33      22.46      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 302 of [CONDUIT] section:
+  to               d15              CSO              70.00      0.0130     25.39      24.89      0          0
+
+  
+  ERROR 207: duplicate ID name to at line 303 of [CONDUIT] section:
+  to               r8               CSO              260.00     0.0130     10.34      9.40       0          0
+
+  
+  ERROR 207: duplicate ID name to at line 304 of [CONDUIT] section:
+  to               r8               A7e              50.00      0.0130     9.40       8.13       0          0
+
+  
+  ERROR 207: duplicate ID name to at line 305 of [CONDUIT] section:
+  to               r3               r3               198.00     0.0130     10.72      9.87       0          0
+
+  
+  ERROR 207: duplicate ID name to at line 306 of [CONDUIT] section:
+  to               r3               CSO              30.00      0.0130     9.87       9.83       0          0
+
+  
+  ERROR 207: duplicate ID name to at line 307 of [CONDUIT] section:
+  to               r3               A8               50.00      0.0130     7.40       5.40       0          0
+
+  
+  ERROR 207: duplicate ID name p at line 309 of [CONDUIT] section:
+  p                A3b              A4               844.00     0.0130     28.00      26.82      0          0
+
+  
+  ERROR 207: duplicate ID name p at line 310 of [CONDUIT] section:
+  p                A1c              A2               1742.00    0.0130     33.40      29.22      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

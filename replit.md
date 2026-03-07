@@ -6,6 +6,11 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Mar 2026**: Added shared `AppHeader` component (`client/src/components/AppHeader.tsx`) with consistent navigation tabs (Batch Processing | Folder View | ReSWMM | Docs), SWMM5 status badge with tooltip, and ThemeToggle; used across all pages
+- **Mar 2026**: Added 4 university color themes: Auburn (orange/navy), Autodesk (black/teal), UF (orange/blue), OSU (orange/black) with light/dark variants in `index.css`; `ThemeToggle` upgraded to dropdown with theme selection + dark mode toggle, persisted via localStorage
+- **Mar 2026**: Added ReSWMM conduit discretization page (`/reswmm`) with client-side INP parser, Fixed Interval and Δx/D Ratio methods, CFL time step analysis, before/after comparison charts, and modified file download
+- **Mar 2026**: Added Folder View page (`/folder`) for browsing directories of .inp files with SVG network map visualization, element stats cards, conduit length histogram, and multi-file support
+- **Mar 2026**: Added client-side INP file parser (`client/src/lib/inpParser.ts`) extracting junctions, conduits, subcatchments, xsections, coordinates, losses, options from .inp files
 - **Mar 2026**: Added Results Dashboard page (`/dashboard`) with Recharts bar/pie charts for continuity errors, flooding, precipitation/runoff, processing status; detailed metrics table; "Open in Results Dashboard" button in results summary
 - **Mar 2026**: Compiled EPA SWMM 5.2.4 engine from source (C code from EPA GitHub) into `swmm-engine/runswmm` binary; app now runs in live mode with real SWMM simulations
 - **Mar 2026**: Fixed file path bug: multer hashed filenames had no `.inp` extension, causing report/output paths to collide with input path; now uses suffix append

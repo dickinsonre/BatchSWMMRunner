@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object OLND1 at line 40 of [CONDUIT] section:
+  PIPE1            OLND1            123E             13.00      0.0120     39.40      37.40      0          0
+
+  
+  ERROR 209: undefined object OLND2 at line 41 of [CONDUIT] section:
+  PIPE2            OLND2            123F             56.00      0.0120     37.40      36.70      0          0
+
+  
+  ERROR 211: invalid number  at line 55 of [XSECT] section:
+  ETOB             RECT_OPEN    0          25.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 56 of [XSECT] section:
+  FTOB             RECT_OPEN    0          45.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

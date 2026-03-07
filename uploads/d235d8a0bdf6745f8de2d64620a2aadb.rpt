@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object gm1p2 at line 375 of [PUMP] section:
+  gm1p1            gm1p2            14               PC_gm1p1   ON       954.00     946.60    
+
+  
+  ERROR 209: undefined object gm2p2 at line 376 of [PUMP] section:
+  gm2p1            gm2p2            46               PC_gm2p1   ON       1070.00    1065.00   
+
+  
+  ERROR 209: undefined object gm3p2 at line 377 of [PUMP] section:
+  gm3p1            gm3p2            303              PC_gm3p1   ON       1217.00    1213.50   
+
+  
+  ERROR 209: undefined object sm1p2 at line 378 of [PUMP] section:
+  sm1p1            sm1p2            409              PC_sm1p1   ON       1284.80    1284.00   
+
+  
+  ERROR 209: undefined object sm2p2 at line 379 of [PUMP] section:
+  sm2p1            sm2p2            434              PC_sm2p1   ON       1417.80    1417.00   
+
+  
+  ERROR 211: invalid number  at line 560 of [XSECT] section:
+  STZ-OutG         RECT_OPEN    0          0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

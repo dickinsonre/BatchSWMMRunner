@@ -1,0 +1,116 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number -14.50 at line 353 of [PUMP] section:
+  383.1            WW-V             VDS              PC_383.1   ON       -14.50     -15.00    
+
+  
+  ERROR 211: invalid number  at line 492 of [XSECT] section:
+  232.1            RECT_CLOSED  7.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 493 of [XSECT] section:
+  335.1            RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 494 of [XSECT] section:
+  338.1            RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 495 of [XSECT] section:
+  SG-R6            RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 496 of [XSECT] section:
+  443.1            RECT_CLOSED  4.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 497 of [XSECT] section:
+  SG-5             RECT_CLOSED  1.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 498 of [XSECT] section:
+  SG-4             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 499 of [XSECT] section:
+  SG-3             RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 500 of [XSECT] section:
+  SG-2             RECT_CLOSED  1.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 501 of [XSECT] section:
+  SG-1             RECT_CLOSED  4.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 502 of [XSECT] section:
+  OF-V             RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 503 of [XSECT] section:
+  W-1              RECT_OPEN    0          19.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 504 of [XSECT] section:
+  W-2              RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 505 of [XSECT] section:
+  W-3              RECT_OPEN    0          11.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 506 of [XSECT] section:
+  W-4              RECT_OPEN    0          4.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 507 of [XSECT] section:
+  W-5              RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 508 of [XSECT] section:
+  W-9A-BTM         RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 509 of [XSECT] section:
+  W-9A-TOP         RECT_OPEN    0          29.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 510 of [XSECT] section:
+  W-9B             RECT_OPEN    0          11.30      0          0          
+
+  
+  ERROR 211: invalid number  at line 511 of [XSECT] section:
+  427.1            RECT_OPEN    0          14.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 512 of [XSECT] section:
+  W-9C-BTM         RECT_OPEN    0          35.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 513 of [XSECT] section:
+  W-6C             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 514 of [XSECT] section:
+  W-7A             RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 515 of [XSECT] section:
+  W-7C             RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 516 of [XSECT] section:
+  W-7B             RECT_OPEN    0          4.67       0          0          
+
+  
+  ERROR 211: invalid number  at line 517 of [XSECT] section:
+  W-V              RECT_OPEN    0          10.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

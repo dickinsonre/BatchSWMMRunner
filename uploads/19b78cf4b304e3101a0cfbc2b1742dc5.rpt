@@ -1,0 +1,20 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number -5.42 at line 60 of [PUMP] section:
+  8128             S128             J128             PC_8128    ON       -5.42      -10.42    
+
+  
+  ERROR 211: invalid number -1.68 at line 61 of [PUMP] section:
+  8126             S126             J126             PC_8126    ON       -1.68      -2.60     
+
+  
+  ERROR 211: invalid number -1.19 at line 63 of [PUMP] section:
+  8125             S125             J125             PC_8125    ON       -1.19      -3.75     
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

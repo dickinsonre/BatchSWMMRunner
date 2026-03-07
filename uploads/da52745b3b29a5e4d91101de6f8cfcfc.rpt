@@ -1,0 +1,84 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 319 of [CONDUIT] section:
+  525              ?                ?                532.00     0.0130     567.69     568.15     0          0
+
+  
+  ERROR 209: undefined object ? at line 320 of [CONDUIT] section:
+  527              ?                ?                515.00     0.0130     568.15     568.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 321 of [CONDUIT] section:
+  538              ?                ?                600.00     0.0130     574.10     573.62     0          0
+
+  
+  ERROR 209: undefined object ? at line 322 of [CONDUIT] section:
+  539              ?                ?                600.00     0.0130     573.62     573.28     0          0
+
+  
+  ERROR 209: undefined object ? at line 323 of [CONDUIT] section:
+  545              ?                ?                861.00     0.0130     569.80     570.80     0          0
+
+  
+  ERROR 209: undefined object ? at line 329 of [ORIFICE] section:
+  505              ?                ?                SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object ? at line 330 of [ORIFICE] section:
+  509              ?                ?                SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object ? at line 331 of [ORIFICE] section:
+  513              ?                ?                SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object ? at line 336 of [WEIR] section:
+  507              ?                ?                TRANSVERSE 576.10     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 337 of [WEIR] section:
+  511              ?                ?                TRANSVERSE 571.72     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object ? at line 338 of [WEIR] section:
+  515              ?                ?                TRANSVERSE 585.08     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 5 at line 339 of [WEIR] section:
+  OLD 5 FT         ?                ?                TRANSVERSE 585.09     1.840      NO       0        0          YES
+
+  
+  ERROR 211: invalid number  at line 488 of [XSECT] section:
+  505              RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 489 of [XSECT] section:
+  509              RECT_CLOSED  0.75       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 490 of [XSECT] section:
+  513              RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 491 of [XSECT] section:
+  507              RECT_OPEN    0          48.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 492 of [XSECT] section:
+  511              RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 493 of [XSECT] section:
+  515              RECT_OPEN    0          19.00      0          0          
+
+  
+  ERROR 205: invalid keyword 5 at line 494 of [XSECT] section:
+  OLD 5 FT         RECT_OPEN    0          5.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,152 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Node_486 at line 110 of [CONDUIT] section:
+  486              Node_486         Node_20131934    785.00     0.0090     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_490 at line 112 of [CONDUIT] section:
+  490              Node_490         Node_2015764     1217.00    0.0110     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_498 at line 114 of [CONDUIT] section:
+  498              Node_498         Node_2017765     2402.00    0.0060     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_485 at line 127 of [CONDUIT] section:
+  485              Node_485         Node_2011760     1217.00    0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object 406-a at line 138 of [CONDUIT] section:
+  406              406-a            Node_2024803     1208.00    0.0105     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_404 at line 149 of [CONDUIT] section:
+  404              Node_404         Node_2019781     2627.00    0.0180     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_1305 at line 152 of [CONDUIT] section:
+  1305             Node_1305        Node_19321934    1500.00    0.0160     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_11305 at line 153 of [CONDUIT] section:
+  11305            Node_11305       Node_1934759     2040.00    0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_409 at line 155 of [CONDUIT] section:
+  409              Node_409         Node_19811948    817.00     0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_1409 at line 156 of [CONDUIT] section:
+  1409             Node_1409        Node_1948781     3250.00    0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_437 at line 157 of [CONDUIT] section:
+  437              Node_437         Node_1953801     100.00     0.0120     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_403 at line 160 of [CONDUIT] section:
+  403              Node_403         Node_1962803     650.00     0.0300     5.00       5.00       0          0
+
+  
+  ERROR 209: undefined object Node_483 at line 161 of [CONDUIT] section:
+  483              Node_483         Node_1983815     183.00     0.0120     5.00       5.00       0          0
+
+  
+  ERROR 211: invalid number -12.86 at line 167 of [PUMP] section:
+  8486             S486             J486             PC_8486    ON       -12.86     -15.36    
+
+  
+  ERROR 211: invalid number -6.60 at line 168 of [PUMP] section:
+  8490             S490             J490             PC_8490    ON       -6.60      -9.26     
+
+  
+  ERROR 211: invalid number -10.88 at line 169 of [PUMP] section:
+  8498             S498             J498             PC_8498    ON       -10.88     -13.63    
+
+  
+  ERROR 211: invalid number -12.69 at line 170 of [PUMP] section:
+  8479             S479             J479             PC_8479    ON       -12.69     -17.44    
+
+  
+  ERROR 211: invalid number -9.39 at line 171 of [PUMP] section:
+  8476             S476             J476             PC_8476    ON       -9.39      -11.72    
+
+  
+  ERROR 211: invalid number -7.13 at line 172 of [PUMP] section:
+  8410             S410             J410             PC_8410    ON       -7.13      -8.21     
+
+  
+  ERROR 209: undefined object Node_8408 at line 173 of [PUMP] section:
+  8408             Node_8408        Node_2027784     PC_8408    ON       -6.28      -7.53     
+
+  
+  ERROR 211: invalid number -9.46 at line 174 of [PUMP] section:
+  8485             S485             J485             PC_8485    ON       -9.46      -12.96    
+
+  
+  ERROR 211: invalid number -8.50 at line 175 of [PUMP] section:
+  8431             S431             J431             PC_8431    ON       -8.50      -11.25    
+
+  
+  ERROR 211: invalid number -9.03 at line 176 of [PUMP] section:
+  8436             S436             J436             PC_8436    ON       -9.03      -13.36    
+
+  
+  ERROR 211: invalid number -8.92 at line 177 of [PUMP] section:
+  8430             S430             J430             PC_8430    ON       -8.92      -11.58    
+
+  
+  ERROR 211: invalid number -8.70 at line 178 of [PUMP] section:
+  8437             S437             J437             PC_8437    ON       -8.70      -13.03    
+
+  
+  ERROR 211: invalid number -3.76 at line 179 of [PUMP] section:
+  8413P            S413             J413             PC_8413P   ON       -3.76      -5.10     
+
+  
+  ERROR 211: invalid number -6.79 at line 180 of [PUMP] section:
+  8390             S390             J390             PC_8390    ON       -6.79      -9.12     
+
+  
+  ERROR 211: invalid number -7.74 at line 181 of [PUMP] section:
+  8483             S483             J483             PC_8483    ON       -7.74      -10.24    
+
+  
+  ERROR 211: invalid number -10.55 at line 182 of [PUMP] section:
+  8429             S429             J429             PC_8429    ON       -10.55     -13.21    
+
+  
+  ERROR 211: invalid number -6.65 at line 183 of [PUMP] section:
+  8404             S404             J404             PC_8404    ON       -6.65      -7.15     
+
+  
+  ERROR 211: invalid number -10.85 at line 184 of [PUMP] section:
+  8428             S428             J428             PC_8428    ON       -10.85     -13.35    
+
+  
+  ERROR 211: invalid number -10.45 at line 185 of [PUMP] section:
+  8465             S465             J465             PC_8465    ON       -10.45     -13.86    
+
+  
+  ERROR 209: undefined object Node_81305 at line 186 of [PUMP] section:
+  81305            Node_81305       Node_19311932    PC_81305   ON       -12.83     -17.67    
+
+  
+  ERROR 209: undefined object Node_8403 at line 187 of [PUMP] section:
+  8403             Node_8403        Node_19611962    PC_8403    ON       -2.91      -3.75     
+
+  
+  ERROR 209: undefined object Node_8406 at line 188 of [PUMP] section:
+  8406             Node_8406        Node_19372024    PC_8406    ON       -6.28      -8.79     
+
+  
+  ERROR 209: undefined object Node_8409 at line 189 of [PUMP] section:
+  8409             Node_8409        Node_20301981    PC_8409    ON       -5.13      -5.96     
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

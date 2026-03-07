@@ -1,0 +1,340 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Pier at line 116 of [CONDUIT] section:
+  US41 Pier        US41 Deck        13350            106.00     0.0140     -4.70      -4.70      0          0
+
+  
+  ERROR 209: undefined object BR at line 152 of [CONDUIT] section:
+  BonGr BR         BonGr Deck       42781            37.00      0.0140     3.15       3.15       0          0
+
+  
+  ERROR 209: undefined object Opening at line 159 of [CONDUIT] section:
+  RR Opening       RR Deck          23816            18.00      0.0140     -5.60      -5.60      0          0
+
+  
+  ERROR 209: undefined object Opn. at line 160 of [CONDUIT] section:
+  Old41 Opn.       Old41Deck        24183            34.00      0.0140     -6.10      -6.10      0          0
+
+  
+  ERROR 209: undefined object Mth at line 162 of [CONDUIT] section:
+  MathesonBR       Mth Deck         27532            36.00      0.0140     -8.55      -8.55      0          0
+
+  
+  ERROR 209: undefined object Bridge at line 164 of [CONDUIT] section:
+  IBE Bridge       IBE Deck         33741            18.00      0.0140     -7.50      -7.50      0          0
+
+  
+  ERROR 209: undefined object BR at line 166 of [CONDUIT] section:
+  I-75 BR          I-75 Deck        37235            204.00     0.0140     1.60       1.60       0          0
+
+  
+  ERROR 209: undefined object BR at line 168 of [CONDUIT] section:
+  Orr BR           Orr Deck         37894            11.00      0.0140     0.10       0.10       0          0
+
+  
+  ERROR 209: undefined object Culv at line 170 of [CONDUIT] section:
+  BBRd Culv        324              320              120.00     0.0012     8.00       7.50       0          0
+
+  
+  ERROR 209: undefined object Pump at line 175 of [PUMP] section:
+  B14 Pump         367              322              PC_B14 Pump ON       13.50      8.00      
+
+  
+  ERROR 205: invalid keyword Pump at line 180 of [CURVE] section:
+  PC_B14 Pump      Pump3      0          0
+
+  
+  ERROR 209: undefined object 0 at line 186 of [XSECT] section:
+  101              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 187 of [XSECT] section:
+  103              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 188 of [XSECT] section:
+  104              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 189 of [XSECT] section:
+  106              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 190 of [XSECT] section:
+  107              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 191 of [XSECT] section:
+  108              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 192 of [XSECT] section:
+  109              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 193 of [XSECT] section:
+  111              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 194 of [XSECT] section:
+  112              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 195 of [XSECT] section:
+  113              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 196 of [XSECT] section:
+  114              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 197 of [XSECT] section:
+  115              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 198 of [XSECT] section:
+  116              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 199 of [XSECT] section:
+  139              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword Pier at line 200 of [XSECT] section:
+  US41 Pier        RECT_CLOSED  24.40      68.00      0          0          12
+
+  
+  ERROR 209: undefined object 0 at line 201 of [XSECT] section:
+  96               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 202 of [XSECT] section:
+  97               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 203 of [XSECT] section:
+  118              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 204 of [XSECT] section:
+  119              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 205 of [XSECT] section:
+  120              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 206 of [XSECT] section:
+  121              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 207 of [XSECT] section:
+  122              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 208 of [XSECT] section:
+  123              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 209 of [XSECT] section:
+  124              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 210 of [XSECT] section:
+  125              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 211 of [XSECT] section:
+  129              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 212 of [XSECT] section:
+  130              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 213 of [XSECT] section:
+  131              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 214 of [XSECT] section:
+  132              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 215 of [XSECT] section:
+  133              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 216 of [XSECT] section:
+  134              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 217 of [XSECT] section:
+  135              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 218 of [XSECT] section:
+  136              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 219 of [XSECT] section:
+  142              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 220 of [XSECT] section:
+  143              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 221 of [XSECT] section:
+  144              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 222 of [XSECT] section:
+  145              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 223 of [XSECT] section:
+  146              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 224 of [XSECT] section:
+  147              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 225 of [XSECT] section:
+  148              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 226 of [XSECT] section:
+  149              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 227 of [XSECT] section:
+  150              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 228 of [XSECT] section:
+  151              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 229 of [XSECT] section:
+  152              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 234 of [XSECT] section:
+  332              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 235 of [XSECT] section:
+  333              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword BR at line 236 of [XSECT] section:
+  BonGr BR         RECT_CLOSED  13.20      20.00      0          0          2
+
+  
+  ERROR 209: undefined object 0 at line 237 of [XSECT] section:
+  342              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 238 of [XSECT] section:
+  344              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 239 of [XSECT] section:
+  345              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 240 of [XSECT] section:
+  346              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 241 of [XSECT] section:
+  348              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 242 of [XSECT] section:
+  349              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword Opening at line 243 of [XSECT] section:
+  RR Opening       RECT_CLOSED  12.50      93.00      0          0          1
+
+  
+  ERROR 205: invalid keyword Opn. at line 244 of [XSECT] section:
+  Old41 Opn.       RECT_CLOSED  16.00      31.00      0          0          3
+
+  
+  ERROR 209: undefined object 0 at line 245 of [XSECT] section:
+  353              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 247 of [XSECT] section:
+  356              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword Bridge at line 248 of [XSECT] section:
+  IBE Bridge       RECT_CLOSED  18.90      14.70      0          0          3
+
+  
+  ERROR 209: undefined object 0 at line 249 of [XSECT] section:
+  359              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword BR at line 250 of [XSECT] section:
+  I-75 BR          RECT_CLOSED  15.70      50.00      0          0          6
+
+  
+  ERROR 209: undefined object 0 at line 251 of [XSECT] section:
+  362              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword BR at line 252 of [XSECT] section:
+  Orr BR           RECT_CLOSED  12.20      7.60       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 253 of [XSECT] section:
+  365              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 205: invalid keyword Culv at line 254 of [XSECT] section:
+  BBRd Culv        CIRCULAR     6.00       0          0          0          3
+
+  
+  ERROR 211: invalid number Pier at line 273 of [LOSS] section:
+  US41 Pier        0          0          0          NO
+
+  
+  ERROR 211: invalid number BR at line 309 of [LOSS] section:
+  BonGr BR         0          0          0          NO
+
+  
+  ERROR 211: invalid number Opening at line 316 of [LOSS] section:
+  RR Opening       0          0          0          NO
+
+  
+  ERROR 211: invalid number Opn. at line 317 of [LOSS] section:
+  Old41 Opn.       0          0          0          NO
+
+  
+  ERROR 211: invalid number Bridge at line 321 of [LOSS] section:
+  IBE Bridge       0          0          0          NO
+
+  
+  ERROR 211: invalid number BR at line 323 of [LOSS] section:
+  I-75 BR          0          0          0          NO
+
+  
+  ERROR 211: invalid number BR at line 325 of [LOSS] section:
+  Orr BR           0          0          0          NO
+
+  
+  ERROR 211: invalid number Culv at line 327 of [LOSS] section:
+  BBRd Culv        0          0          0          NO
+
+
+  Analysis begun on:  Sat Mar  7 21:51:26 2026
+  Analysis ended on:  Sat Mar  7 21:51:26 2026
+  Total elapsed time: < 1 sec

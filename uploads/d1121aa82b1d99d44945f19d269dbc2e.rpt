@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name C. at line 76 of [CONDUIT] section:
+  C.               3                NYA-5            70.00      0.0140     982.20     982.00     0          0
+
+  
+  ERROR 207: duplicate ID name C. at line 83 of [CONDUIT] section:
+  C.               NYA-7/10         NYA-1/2/51       60.00      0.0130     975.10     975.00     0          0
+
+  
+  ERROR 207: duplicate ID name C. at line 85 of [CONDUIT] section:
+  C.               7                (NYA-0001)       75.00      0.0230     970.60     970.50     0          0
+
+  
+  ERROR 207: duplicate ID name C. at line 96 of [CONDUIT] section:
+  C.               B3               (BRL-0002)       68.00      0.0140     970.50     970.40     0          0
+
+  
+  ERROR 207: duplicate ID name C. at line 98 of [CONDUIT] section:
+  C.               B2               BRL-7            115.00     0.0130     977.40     975.60     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

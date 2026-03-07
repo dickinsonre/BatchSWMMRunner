@@ -1,0 +1,92 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CSO at line 153 of [JUNC] section:
+  CSO              836.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 155 of [JUNC] section:
+  CSO              838.75     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 556 of [CONDUIT] section:
+  CSO              543              OF-8             100.00     0.0140     808.70     805.00     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 563 of [CONDUIT] section:
+  CSO              575              OF-11            740.00     0.0140     815.50     806.61     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 592 of [CONDUIT] section:
+  CSO              of21             645              20.00      0.0140     817.73     816.50     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 611 of [CONDUIT] section:
+  CSO              682              672              50.00      0.0140     831.90     822.40     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 612 of [CONDUIT] section:
+  CSO              692              694              50.00      0.0140     843.80     843.30     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 616 of [CONDUIT] section:
+  CSO              711              OF-13            790.00     0.0140     815.85     813.15     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 623 of [CONDUIT] section:
+  CSO              731              OF-14            650.00     0.0140     809.00     808.00     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 635 of [CONDUIT] section:
+  CSO              754              OF-33            650.00     0.0140     808.40     808.00     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 654 of [CONDUIT] section:
+  CSO              654              642              33.00      0.0140     820.75     820.50     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 690 of [CONDUIT] section:
+  CSO              499              OF-9             560.00     0.0140     812.50     806.00     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 705 of [CONDUIT] section:
+  CSO              565              910              50.00      0.0140     831.00     830.71     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 709 of [CONDUIT] section:
+  CSO              ?                810              50.00      0.0400     806.80     806.70     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 713 of [CONDUIT] section:
+  CSO              Node_1027        Node_1130682     550.00     0.0140     810.32     804.50     0          0
+
+  
+  ERROR 207: duplicate ID name infl at line 887 of [CONDUIT] section:
+  infl 2           375              377              430.00     0.0140     799.70     799.50     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 891 of [CONDUIT] section:
+  CSO              Node_1012        Node_1477916     700.00     0.0140     813.10     812.65     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 924 of [CONDUIT] section:
+  CSO              Node_1034        Node_15431548    100.00     0.0140     805.50     800.00     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 941 of [CONDUIT] section:
+  CSO              ?                Node_15721592    1800.00    0.0140     812.93     804.16     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 943 of [CONDUIT] section:
+  CSO              Node_1030        Node_15941572    100.00     0.0140     816.30     816.25     0          0
+
+  
+  ERROR 207: duplicate ID name CSO at line 957 of [CONDUIT] section:
+  CSO              Node_1005        Node_15781623    50.00      0.0140     804.00     800.00     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

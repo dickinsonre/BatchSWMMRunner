@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 2.35 at line 72 of [XSECT] section:
+  30               IRREGULAR    2.35       3.80       0          0          1
+
+  
+  ERROR 209: undefined object 2.50 at line 75 of [XSECT] section:
+  16               IRREGULAR    2.50       6.30       0          0          1
+
+  
+  ERROR 209: undefined object 2.00 at line 76 of [XSECT] section:
+  2                IRREGULAR    2.00       9.20       0          0          1
+
+  
+  ERROR 209: undefined object 2.00 at line 77 of [XSECT] section:
+  4                IRREGULAR    2.00       6138.90    0          0          1
+
+  
+  ERROR 209: undefined object 2.85 at line 78 of [XSECT] section:
+  6                IRREGULAR    2.85       5.60       0          0          1
+
+  
+  ERROR 209: undefined object 3.50 at line 79 of [XSECT] section:
+  8                IRREGULAR    3.50       5899.80    0          0          1
+
+  
+  ERROR 209: undefined object 4.10 at line 80 of [XSECT] section:
+  10               IRREGULAR    4.10       2.60       0          0          1
+
+  
+  ERROR 209: undefined object 2.50 at line 82 of [XSECT] section:
+  18               IRREGULAR    2.50       2.00       0          0          1
+
+  
+  ERROR 209: undefined object 2.49 at line 83 of [XSECT] section:
+  20               IRREGULAR    2.49       1.50       0          0          1
+
+  
+  ERROR 209: undefined object 2.40 at line 84 of [XSECT] section:
+  22               IRREGULAR    2.40       4.60       0          0          1
+
+  
+  ERROR 209: undefined object 2.50 at line 85 of [XSECT] section:
+  24               IRREGULAR    2.50       2.80       0          0          1
+
+  
+  ERROR 209: undefined object 2.40 at line 86 of [XSECT] section:
+  26               IRREGULAR    2.40       2.20       0          0          1
+
+  
+  ERROR 209: undefined object 1.70 at line 87 of [XSECT] section:
+  28               IRREGULAR    1.70       5.80       0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

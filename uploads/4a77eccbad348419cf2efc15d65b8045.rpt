@@ -1,0 +1,260 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 135 of [CONDUIT] section:
+  N2               ?                Node_1156535     18.00      0.0150     685.23     684.43     0          0
+
+  
+  ERROR 209: undefined object ? at line 191 of [CONDUIT] section:
+  N1A              ?                Node_1153533     110.00     0.0015     689.26     689.26     0          0
+
+  
+  ERROR 209: undefined object ? at line 192 of [CONDUIT] section:
+  N1B              ?                Node_11531156    39.00      0.1250     689.57     685.23     0          0
+
+  
+  ERROR 209: undefined object Node_71081 at line 195 of [CONDUIT] section:
+  71081            Node_71081       Node_1228641     41.00      0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_61081 at line 196 of [CONDUIT] section:
+  61081            Node_61081       Node_1230641     101.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_71071 at line 197 of [CONDUIT] section:
+  71071            Node_71071       Node_1232637     153.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_71051 at line 198 of [CONDUIT] section:
+  71051            Node_71051       Node_1234617     229.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_71001 at line 199 of [CONDUIT] section:
+  71001            Node_71001       Node_1236609     222.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7991 at line 200 of [CONDUIT] section:
+  7991             Node_7991        Node_1238603     190.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7981 at line 201 of [CONDUIT] section:
+  7981             Node_7981        Node_1240599     117.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7971 at line 202 of [CONDUIT] section:
+  7971             Node_7971        Node_1242598     133.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7831 at line 203 of [CONDUIT] section:
+  7831             Node_7831        Node_1244526     103.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7841 at line 204 of [CONDUIT] section:
+  7841             Node_7841        Node_1246527     72.00      0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7851 at line 205 of [CONDUIT] section:
+  7851             Node_7851        Node_1248539     97.00      0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7861 at line 206 of [CONDUIT] section:
+  7861             Node_7861        Node_1250541     172.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7891 at line 207 of [CONDUIT] section:
+  7891             Node_7891        Node_1252549     70.00      0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7921 at line 208 of [CONDUIT] section:
+  7921             Node_7921        Node_1254565     129.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_71031 at line 209 of [CONDUIT] section:
+  71031            Node_71031       Node_1256619     91.00      0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7941 at line 210 of [CONDUIT] section:
+  7941             Node_7941        Node_1258575     108.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_7951 at line 211 of [CONDUIT] section:
+  7951             Node_7951        Node_1260587     91.00      0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_79531 at line 212 of [CONDUIT] section:
+  79531            Node_79531       Node_1262593     138.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_69531 at line 213 of [CONDUIT] section:
+  69531            Node_69531       Node_1264593     105.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_61071 at line 214 of [CONDUIT] section:
+  61071            Node_61071       Node_1266637     105.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object Node_71080 at line 219 of [ORIFICE] section:
+  71080            Node_71080       Node_1229641     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_61080 at line 220 of [ORIFICE] section:
+  61080            Node_61080       Node_1231641     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_71070 at line 221 of [ORIFICE] section:
+  71070            Node_71070       Node_1233637     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_61051 at line 222 of [ORIFICE] section:
+  61051            Node_61051       Node_1235617     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_71000 at line 223 of [ORIFICE] section:
+  71000            Node_71000       Node_1237609     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7990 at line 224 of [ORIFICE] section:
+  7990             Node_7990        Node_1239603     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7980 at line 225 of [ORIFICE] section:
+  7980             Node_7980        Node_1241599     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7970 at line 226 of [ORIFICE] section:
+  7970             Node_7970        Node_1243598     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7830 at line 227 of [ORIFICE] section:
+  7830             Node_7830        Node_1245526     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7840 at line 228 of [ORIFICE] section:
+  7840             Node_7840        Node_1247527     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7850 at line 229 of [ORIFICE] section:
+  7850             Node_7850        Node_1249539     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7860 at line 230 of [ORIFICE] section:
+  7860             Node_7860        Node_1251541     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7890 at line 231 of [ORIFICE] section:
+  7890             Node_7890        Node_1253549     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7920 at line 232 of [ORIFICE] section:
+  7920             Node_7920        Node_1255565     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_71030 at line 233 of [ORIFICE] section:
+  71030            Node_71030       Node_1257619     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7940 at line 234 of [ORIFICE] section:
+  7940             Node_7940        Node_1259575     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_7950 at line 235 of [ORIFICE] section:
+  7950             Node_7950        Node_1261587     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_79530 at line 236 of [ORIFICE] section:
+  79530            Node_79530       Node_1263593     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_69530 at line 237 of [ORIFICE] section:
+  69530            Node_69530       Node_1265593     SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object Node_61070 at line 238 of [ORIFICE] section:
+  61070            Node_61070       Node_1267637     SIDE       0          0.650      NO       0
+
+  
+  ERROR 211: invalid number  at line 326 of [XSECT] section:
+  71080            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 327 of [XSECT] section:
+  61080            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 328 of [XSECT] section:
+  71070            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 329 of [XSECT] section:
+  61051            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 330 of [XSECT] section:
+  71000            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 331 of [XSECT] section:
+  7990             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 332 of [XSECT] section:
+  7980             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 333 of [XSECT] section:
+  7970             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 334 of [XSECT] section:
+  7830             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 335 of [XSECT] section:
+  7840             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 336 of [XSECT] section:
+  7850             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 337 of [XSECT] section:
+  7860             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 338 of [XSECT] section:
+  7890             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 339 of [XSECT] section:
+  7920             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 340 of [XSECT] section:
+  71030            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 341 of [XSECT] section:
+  7940             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 342 of [XSECT] section:
+  7950             RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 343 of [XSECT] section:
+  79530            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 344 of [XSECT] section:
+  69530            RECT_CLOSED  0.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 345 of [XSECT] section:
+  61070            RECT_CLOSED  0.50       0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

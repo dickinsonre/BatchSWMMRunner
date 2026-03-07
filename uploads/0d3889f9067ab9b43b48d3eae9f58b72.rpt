@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 79 of [WEIR] section:
+  Link_1           ?                ?                TRANSVERSE 16.87      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 13.60 at line 84 of [XSECT] section:
+  490              IRREGULAR    13.60      0          0          0          1
+
+  
+  ERROR 209: undefined object 16.00 at line 85 of [XSECT] section:
+  501              IRREGULAR    16.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 16.60 at line 86 of [XSECT] section:
+  504              IRREGULAR    16.60      0          0          0          1
+
+  
+  ERROR 209: undefined object 16.00 at line 87 of [XSECT] section:
+  506              IRREGULAR    16.00      0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 106 of [XSECT] section:
+  Link_1           RECT_OPEN    0          100.00     0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:34 2026
+  Analysis ended on:  Sat Mar  7 21:51:34 2026
+  Total elapsed time: < 1 sec

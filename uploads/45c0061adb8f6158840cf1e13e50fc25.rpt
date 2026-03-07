@@ -1,0 +1,410 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object NA-N4-B4 at line 210 of [WEIR] section:
+  C102-W-N-4       NA-N4-B4         B4-W             TRANSVERSE 10.20      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NA-S4-B4 at line 211 of [WEIR] section:
+  C102-W-S-4       NA-S4-B4         B4-W             TRANSVERSE 7.70       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NA-N6-B7 at line 216 of [WEIR] section:
+  C102-W-N-6       NA-N6-B7         B7-N             TRANSVERSE 9.30       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NA-N7-B8 at line 218 of [WEIR] section:
+  C102-W-N-7       NA-N7-B8         B8-N             TRANSVERSE 10.00      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NA at line 223 of [WEIR] section:
+  C102NW-S-1       NA NS1-U3        U3-N             TRANSVERSE 9.50       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C102N-S-13 at line 233 of [WEIR] section:
+  C102W-S-13       C102N-S-13       S13-C102-2       TRANSVERSE 5.70       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C102N-S-12 at line 234 of [WEIR] section:
+  C102W-S-12       C102N-S-12       PR03             TRANSVERSE 7.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C102N-S-11 at line 235 of [WEIR] section:
+  C102W-S-11       C102N-S-11       B13-W            TRANSVERSE 5.30       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C102N-S-10 at line 236 of [WEIR] section:
+  C102W-S-10       C102N-S-10       C102-1           TRANSVERSE 8.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object N15C102-2 at line 243 of [WEIR] section:
+  C102W-N-15       N15C102-2        C102-2           TRANSVERSE 5.30       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C102N-N-14 at line 244 of [WEIR] section:
+  407.1            C102N-N-14       PR03             TRANSVERSE 7.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object C102N-N-13 at line 245 of [WEIR] section:
+  C102W-N-13       C102N-N-13       B13-W            TRANSVERSE 5.30       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object PIPIS-N at line 248 of [WEIR] section:
+  GOULDS-WN2       PIPIS-N          U5-W             TRANSVERSE 5.92       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object PIPES at line 249 of [WEIR] section:
+  GOULDS-S2        PIPES            U5-W             TRANSVERSE 0          1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object GOULDSN-S3 at line 250 of [WEIR] section:
+  GLDS-W-S-3       GOULDSN-S3       GLDS-3           TRANSVERSE 3.50       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NA-N5-N6 at line 259 of [WEIR] section:
+  WN-5-6           NA-N5-N6         C102-N-6         TRANSVERSE 10.50      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NA-N6-U1 at line 270 of [WEIR] section:
+  WN-6-N1          NA-N6-U1         U1-N             TRANSVERSE 8.50       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object WN-13-14.1 at line 282 of [WEIR] section:
+  WN-13-14         WN-13-14.1       C102-N-14        TRANSVERSE 5.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NS-11-12 at line 283 of [WEIR] section:
+  WS-11-12         NS-11-12         C102-S-12        TRANSVERSE 4.10       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NS-12-13 at line 284 of [WEIR] section:
+  WS-12-13         NS-12-13         C102-S-13        TRANSVERSE 3.70       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NN-14-15 at line 285 of [WEIR] section:
+  WN-14-15         NN-14-15         C102-N-15        TRANSVERSE 3.20       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NS-15-14 at line 286 of [WEIR] section:
+  WS-15-14         NS-15-14         C102-S-14        TRANSVERSE 2.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NS-14-13 at line 287 of [WEIR] section:
+  WS-14-13         NS-14-13         C102-S-13        TRANSVERSE 2.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NN-14-GS-2 at line 289 of [WEIR] section:
+  WN-14-GS-2       NN-14-GS-2       GOULDS-S-2       TRANSVERSE 3.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NN-15-GS-2 at line 290 of [WEIR] section:
+  WN-15-GS-2       NN-15-GS-2       GOULDS-S-2       TRANSVERSE 2.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object NGLD-S2-E2 at line 291 of [WEIR] section:
+  GLDSS2L316       NGLD-S2-E2       L31E-6           TRANSVERSE 2.30       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 0 at line 296 of [XSECT] section:
+  C102-C-1         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 297 of [XSECT] section:
+  B1               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 298 of [XSECT] section:
+  C102-C-2         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 299 of [XSECT] section:
+  B2               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 300 of [XSECT] section:
+  C102-C-3         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 301 of [XSECT] section:
+  B3               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 302 of [XSECT] section:
+  C102-C-4         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 304 of [XSECT] section:
+  C102-C-5         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 305 of [XSECT] section:
+  B4               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 306 of [XSECT] section:
+  C102-C-6         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 307 of [XSECT] section:
+  B5               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 308 of [XSECT] section:
+  C102-C-7         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 309 of [XSECT] section:
+  B6               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 310 of [XSECT] section:
+  C102-C-8         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 311 of [XSECT] section:
+  B7               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 312 of [XSECT] section:
+  C102-C-9         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 313 of [XSECT] section:
+  B8               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 314 of [XSECT] section:
+  C102-C-10        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 316 of [XSECT] section:
+  C102-C-11        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 317 of [XSECT] section:
+  B9               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 318 of [XSECT] section:
+  C102-C-11A       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 319 of [XSECT] section:
+  B10              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 320 of [XSECT] section:
+  C102-C-12        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 321 of [XSECT] section:
+  B11              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 322 of [XSECT] section:
+  C102-C-13        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 323 of [XSECT] section:
+  B12              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 324 of [XSECT] section:
+  C102-C-14        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 325 of [XSECT] section:
+  C102-C-15        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 326 of [XSECT] section:
+  B13              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 327 of [XSECT] section:
+  C102-C-16        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 328 of [XSECT] section:
+  B14              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 329 of [XSECT] section:
+  C102-C-17        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 27.00 at line 330 of [XSECT] section:
+  S21A-C           IRREGULAR    27.00      100.00     0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 331 of [XSECT] section:
+  C102N-C-6        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 332 of [XSECT] section:
+  B16              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 333 of [XSECT] section:
+  C102N-C-5        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 334 of [XSECT] section:
+  B15              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 335 of [XSECT] section:
+  C102N-C-4        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 337 of [XSECT] section:
+  C102N-C-3        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 339 of [XSECT] section:
+  C102N-C-2        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 341 of [XSECT] section:
+  C102N-C-1        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 343 of [XSECT] section:
+  C102-C-5A        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 344 of [XSECT] section:
+  L31-E-7          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 345 of [XSECT] section:
+  L31-E-8          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 346 of [XSECT] section:
+  GOULDS-C-1       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 347 of [XSECT] section:
+  GOULDS-C-2       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 349 of [XSECT] section:
+  GOULDS-C-3       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 350 of [XSECT] section:
+  L31-E-10         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 351 of [XSECT] section:
+  L31-E-9          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 352 of [XSECT] section:
+  C102-W-N-1       RECT_OPEN    0          5667.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 353 of [XSECT] section:
+  C102-W-S-1       RECT_OPEN    0          5667.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 354 of [XSECT] section:
+  C102-W-N-3       RECT_OPEN    0          5333.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 355 of [XSECT] section:
+  WS-C1-1          RECT_OPEN    0          1330.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 356 of [XSECT] section:
+  C102-W-N-2       RECT_OPEN    0          4096.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 357 of [XSECT] section:
+  WS-C2-2          RECT_OPEN    0          3960.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 358 of [XSECT] section:
+  C102-W-S-2       RECT_OPEN    0          2565.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 359 of [XSECT] section:
+  WS-C3-3          RECT_OPEN    0          5280.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 360 of [XSECT] section:
+  C102-W-S-3       RECT_OPEN    0          5333.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 361 of [XSECT] section:
+  C102-W-N-4       RECT_OPEN    0          8962.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 362 of [XSECT] section:
+  C102-W-S-4       RECT_OPEN    0          8962.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 363 of [XSECT] section:
+  260#1            RECT_OPEN    0          5316.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 364 of [XSECT] section:
+  261#1            RECT_OPEN    0          5316.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 365 of [XSECT] section:
+  WSC-4-5          RECT_OPEN    0          10560.00   0          0          
+
+  
+  ERROR 211: invalid number  at line 366 of [XSECT] section:
+  WNC1-5           RECT_OPEN    0          7000.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 367 of [XSECT] section:
+  C102-W-N-6       RECT_OPEN    0          4152.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 368 of [XSECT] section:
+  278#1            RECT_OPEN    0          7609.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 369 of [XSECT] section:
+  C102-W-N-7       RECT_OPEN    0          7609.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 370 of [XSECT] section:
+  295#1            RECT_OPEN    0          927.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 371 of [XSECT] section:
+  296#1            RECT_OPEN    0          927.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 372 of [XSECT] section:
+  C103NW-N-2       RECT_OPEN    0          1150.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 373 of [XSECT] section:
+  C102N-W-N5       RECT_OPEN    0          3972.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 374 of [XSECT] section:
+  C102NW-S-1       RECT_OPEN    0          3972.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 375 of [XSECT] section:
+  351#1            RECT_OPEN    0          3135.00    0          0          
+
+  
+  ERROR 211: invalid number  at line 376 of [XSECT] section:
+  352#1            RECT_OPEN    0          3135.00    0          0          
+
+  
+  Maximum error count exceeded.
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

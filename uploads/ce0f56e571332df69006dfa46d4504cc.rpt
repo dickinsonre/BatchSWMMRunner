@@ -1,0 +1,108 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object APW1 at line 81 of [CONDUIT] section:
+  APC1             APW1             2450             350.00     0.0120     55.24      53.54      0          0
+
+  
+  ERROR 209: undefined object MAGW1 at line 82 of [CONDUIT] section:
+  MAGC1            MAGW1            2250             40.00      0.0120     59.14      58.24      0          0
+
+  
+  ERROR 209: undefined object putw1 at line 93 of [WEIR] section:
+  putc1            putw1            2750             TRANSVERSE 0          1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 4.00 at line 98 of [XSECT] section:
+  1011             IRREGULAR    4.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.00 at line 99 of [XSECT] section:
+  1112             IRREGULAR    6.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 5.50 at line 100 of [XSECT] section:
+  1213             IRREGULAR    5.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.00 at line 101 of [XSECT] section:
+  1314             IRREGULAR    4.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 3.00 at line 102 of [XSECT] section:
+  1415             IRREGULAR    3.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.00 at line 103 of [XSECT] section:
+  1516             IRREGULAR    6.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.00 at line 104 of [XSECT] section:
+  1617             IRREGULAR    6.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.00 at line 105 of [XSECT] section:
+  1718             IRREGULAR    4.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 5.00 at line 106 of [XSECT] section:
+  1819             IRREGULAR    5.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.20 at line 107 of [XSECT] section:
+  1920             IRREGULAR    4.20       0          0          0          1
+
+  
+  ERROR 209: undefined object 5.30 at line 108 of [XSECT] section:
+  2021             IRREGULAR    5.30       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.70 at line 109 of [XSECT] section:
+  2122             IRREGULAR    4.70       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.50 at line 110 of [XSECT] section:
+  2224             IRREGULAR    8.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 5.90 at line 111 of [XSECT] section:
+  2425             IRREGULAR    5.90       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.70 at line 112 of [XSECT] section:
+  2526             IRREGULAR    6.70       0          0          0          1
+
+  
+  ERROR 209: undefined object 10.50 at line 113 of [XSECT] section:
+  2627             IRREGULAR    10.50      0          0          0          1
+
+  
+  ERROR 209: undefined object 13.20 at line 114 of [XSECT] section:
+  2728             IRREGULAR    13.20      0          0          0          1
+
+  
+  ERROR 209: undefined object 10.90 at line 115 of [XSECT] section:
+  2829             IRREGULAR    10.90      0          0          0          1
+
+  
+  ERROR 209: undefined object 7.80 at line 116 of [XSECT] section:
+  2930             IRREGULAR    7.80       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.00 at line 117 of [XSECT] section:
+  2322             IRREGULAR    6.00       3.00       0          0          1
+
+  
+  ERROR 211: invalid number  at line 121 of [XSECT] section:
+  weir1            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 122 of [XSECT] section:
+  putc1            RECT_OPEN    0          0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,340 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object WCEA060Ird at line 86 of [CONDUIT] section:
+  WCEA060I         WCEA060Ird       Node_14211422    24.00      0.0320     468.70     468.10     0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 87 of [CONDUIT] section:
+  WCEA060H         Node_60          Node_14221423    400.00     0          466.30     458.10     0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 88 of [CONDUIT] section:
+  WCEA060G         Node_60          Node_14231424    100.00     0          458.10     456.00     0          0
+
+  
+  ERROR 209: undefined object WCEA060Frd at line 89 of [CONDUIT] section:
+  WCEA060F         WCEA060Frd       Node_14241425    41.00      0.0330     456.80     456.30     0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 90 of [CONDUIT] section:
+  WCEA060E         Node_60          Node_14251426    228.00     0.0600     452.30     450.10     0          0
+
+  
+  ERROR 209: undefined object WCEA060D#2 at line 91 of [CONDUIT] section:
+  WCEA060D#1       WCEA060D#2       WCEA060D#3       23.00      0          450.10     450.00     0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 92 of [CONDUIT] section:
+  WCEA060C         Node_60          Node_14271428    600.00     0.0600     450.00     436.80     0          0
+
+  
+  ERROR 209: undefined object WCEA060Brd at line 93 of [CONDUIT] section:
+  WCEA060B         WCEA060Brd       Node_14291430    82.00      0.0210     448.70     446.60     0          0
+
+  
+  ERROR 209: undefined object Node_60 at line 94 of [CONDUIT] section:
+  WCEA060A         Node_60          Node_14301428    647.00     0          445.60     436.80     0          0
+
+  
+  ERROR 209: undefined object Node_50 at line 95 of [CONDUIT] section:
+  WCEA050D         Node_50          Node_14281431    250.00     0.0800     436.80     435.10     0          0
+
+  
+  ERROR 209: undefined object WCEA050Crd at line 96 of [CONDUIT] section:
+  WCEA050C         WCEA050Crd       Node_14321433    51.00      0.0310     448.00     446.90     0          0
+
+  
+  ERROR 209: undefined object Node_50 at line 97 of [CONDUIT] section:
+  WCEA050B         Node_50          Node_14331431    364.00     0.0600     442.60     435.10     0          0
+
+  
+  ERROR 209: undefined object Node_50 at line 98 of [CONDUIT] section:
+  1050.1           Node_50          Node_14311434    414.00     0.0600     435.10     427.60     0          0
+
+  
+  ERROR 209: undefined object ? at line 99 of [CONDUIT] section:
+  WCEA030E         ?                Node_14341435    35.00      0.0140     427.60     426.70     0          0
+
+  
+  ERROR 209: undefined object WCEA030Dfp at line 100 of [CONDUIT] section:
+  WCEA030D         WCEA030Dfp       Node_14351436    2000.00    0          426.70     418.00     0          0
+
+  
+  ERROR 209: undefined object WC030C-fp at line 101 of [CONDUIT] section:
+  WC030C           WC030C-fp        Node_14361437    1200.00    0          418.00     405.00     0          0
+
+  
+  ERROR 209: undefined object WCEA030Brd at line 102 of [CONDUIT] section:
+  WCEA030B         WCEA030Brd       Node_14381439    164.00     0.0160     439.10     435.80     0          0
+
+  
+  ERROR 209: undefined object ? at line 103 of [CONDUIT] section:
+  WCEA030A         ?                Node_14391437    1774.00    0          435.80     405.00     0          0
+
+  
+  ERROR 209: undefined object WCMN010G#2 at line 104 of [CONDUIT] section:
+  WCMN010G#1       WCMN010G#2       WCMN010Grd       64.00      0.0380     392.20     390.60     0          0
+
+  
+  ERROR 209: undefined object WCWE130Drd at line 105 of [CONDUIT] section:
+  WCWE130D         WCWE130Drd       Node_14431444    31.00      0.0400     457.00     456.30     0          0
+
+  
+  ERROR 209: undefined object Node_130 at line 106 of [CONDUIT] section:
+  WCWE130C         Node_130         Node_14441445    500.00     0          454.00     443.10     0          0
+
+  
+  ERROR 209: undefined object Node_130 at line 107 of [CONDUIT] section:
+  WCWE130B         Node_130         Node_14451446    30.00      0.0400     443.10     442.30     0          0
+
+  
+  ERROR 209: undefined object Node_130 at line 108 of [CONDUIT] section:
+  WCWE130A         Node_130         Node_14461447    700.00     0          439.80     432.20     0          0
+
+  
+  ERROR 209: undefined object WCWE120D#2 at line 109 of [CONDUIT] section:
+  WCWE120D#1       WCWE120D#2       WCWE120Drd       20.00      0.0240     432.20     431.60     0          0
+
+  
+  ERROR 209: undefined object Node_120 at line 110 of [CONDUIT] section:
+  WCWE120C         Node_120         Node_14481449    320.00     0          431.60     425.10     0          0
+
+  
+  ERROR 209: undefined object WCWE120Brd at line 111 of [CONDUIT] section:
+  WCWE120B         WCWE120Brd       Node_14491450    32.00      0.0310     425.10     426.30     0          0
+
+  
+  ERROR 209: undefined object Node_120 at line 112 of [CONDUIT] section:
+  WCWE120A         Node_120         Node_14501451    1300.00    0          424.40     413.60     0          0
+
+  
+  ERROR 209: undefined object WCWE110C#2 at line 113 of [CONDUIT] section:
+  WCWE110C#1       WCWE110C#2       WCWE110Crd       19.00      0.0210     413.70     413.70     0          0
+
+  
+  ERROR 209: undefined object Node_110 at line 114 of [CONDUIT] section:
+  WCWE110B         Node_110         Node_14521453    800.00     0          411.60     407.10     0          0
+
+  
+  ERROR 209: undefined object Node_110 at line 115 of [CONDUIT] section:
+  WCWE110A         Node_110         Node_14531454    450.00     0          407.10     404.50     0          0
+
+  
+  ERROR 209: undefined object WCWE100Frd at line 116 of [CONDUIT] section:
+  WCWE100F         WCWE100Frd       Node_14541455    32.00      0.0340     404.60     403.40     0          0
+
+  
+  ERROR 209: undefined object Node_100 at line 117 of [CONDUIT] section:
+  WCWE100E         Node_100         Node_14551456    1200.00    0          402.70     396.00     0          0
+
+  
+  ERROR 209: undefined object Node_100 at line 118 of [CONDUIT] section:
+  WCWE100D         Node_100         Node_14561457    417.00     0          396.00     394.00     0          0
+
+  
+  ERROR 209: undefined object WCWE100C#2 at line 119 of [CONDUIT] section:
+  WCWE100C#1       WCWE100C#2       WCWE100Crd       47.00      0.0350     400.60     400.60     0          0
+
+  
+  ERROR 209: undefined object Node_100 at line 120 of [CONDUIT] section:
+  WCWE100B         Node_100         Node_14591457    960.00     0          400.50     394.00     0          0
+
+  
+  ERROR 209: undefined object Node_100 at line 121 of [CONDUIT] section:
+  WCWE100A         Node_100         Node_14571460    676.00     0          394.00     390.40     0          0
+
+  
+  ERROR 209: undefined object WCMN010E#2 at line 122 of [CONDUIT] section:
+  WCMN010E#1       WCMN010E#2       WCMN010Erd       24.00      0.0350     390.00     390.00     0          0
+
+  
+  ERROR 209: undefined object WC010Dfp at line 123 of [CONDUIT] section:
+  WC010D           WC010Dfp         Node_14421461    3000.00    0.0450     390.10     383.30     0          0
+
+  
+  ERROR 209: undefined object ? at line 124 of [CONDUIT] section:
+  WCMN010C         ?                Node_14611462    900.00     0.0350     383.30     381.40     0          0
+
+  
+  ERROR 209: undefined object WCMN010Brd at line 125 of [CONDUIT] section:
+  WCMN010B         WCMN010Brd       Node_14621463    34.00      0.0400     381.40     381.39     0          0
+
+  
+  ERROR 209: undefined object ? at line 126 of [CONDUIT] section:
+  WCEA10A2         ?                Node_14371464    1322.00    0          405.00     398.65     0          0
+
+  
+  ERROR 209: undefined object ? at line 127 of [CONDUIT] section:
+  WCEA10A1         ?                Node_14641440    1300.00    0          398.65     392.20     0          0
+
+  
+  ERROR 209: undefined object ? at line 128 of [CONDUIT] section:
+  WCMN10F2         ?                Node_14411465    535.00     0          390.60     390.30     0          0
+
+  
+  ERROR 209: undefined object ? at line 129 of [CONDUIT] section:
+  WCMN10F1         ?                Node_14651442    290.00     0          390.30     390.10     0          0
+
+  
+  ERROR 209: undefined object ? at line 130 of [CONDUIT] section:
+  WCEA005B         ?                Node_14671466    550.00     0          395.38     392.10     0          0
+
+  
+  ERROR 209: undefined object WCEA005Ard at line 131 of [CONDUIT] section:
+  WCEA005A         WCEA005Ard       Node_14661465    50.00      0.0300     392.10     391.20     0          0
+
+  
+  ERROR 209: undefined object WCMN020Brd at line 132 of [CONDUIT] section:
+  WCMN020B         WCMN020Brd       Node_14681469    450.00     0.0150     399.10     396.40     0          0
+
+  
+  ERROR 209: undefined object WCMN020Ard at line 133 of [CONDUIT] section:
+  WCMN020A         WCMN020Ard       Node_14691470    125.00     0.0190     396.40     398.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 134 of [CONDUIT] section:
+  WCMN010H         ?                Node_14701442    1500.00    0.0400     398.50     392.10     0          0
+
+  
+  ERROR 209: undefined object ? at line 135 of [CONDUIT] section:
+  WCMN010A         ?                Node_1463813     400.00     0.1000     381.40     376.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 140 of [PUMP] section:
+  HIGHFLOW         ?                Node_14641467    PC_HIGHFLOW ON       0          0         
+
+  
+  ERROR 209: undefined object 0 at line 152 of [XSECT] section:
+  WCEA060H         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 153 of [XSECT] section:
+  WCEA060G         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 155 of [XSECT] section:
+  WCEA060E         IRREGULAR    0          11.20      0          0          1
+
+  
+  ERROR 211: invalid number  at line 156 of [XSECT] section:
+  WCEA060D#1       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 157 of [XSECT] section:
+  WCEA060C         IRREGULAR    0          6.00       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 159 of [XSECT] section:
+  WCEA060A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 160 of [XSECT] section:
+  WCEA050D         IRREGULAR    0          3.60       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 162 of [XSECT] section:
+  WCEA050B         IRREGULAR    0          5.00       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 163 of [XSECT] section:
+  1050.1           IRREGULAR    0          14.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 164 of [XSECT] section:
+  WCEA030E         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 165 of [XSECT] section:
+  WCEA030D         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 166 of [XSECT] section:
+  WC030C           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 168 of [XSECT] section:
+  WCEA030A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 171 of [XSECT] section:
+  WCWE130C         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 173 of [XSECT] section:
+  WCWE130A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 175 of [XSECT] section:
+  WCWE120C         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 177 of [XSECT] section:
+  WCWE120A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 179 of [XSECT] section:
+  WCWE110B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 180 of [XSECT] section:
+  WCWE110A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 182 of [XSECT] section:
+  WCWE100E         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 183 of [XSECT] section:
+  WCWE100D         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 185 of [XSECT] section:
+  WCWE100B         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 186 of [XSECT] section:
+  WCWE100A         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 187 of [XSECT] section:
+  WCMN010E#1       CUSTOM       0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 188 of [XSECT] section:
+  WC010D           IRREGULAR    0          22.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 189 of [XSECT] section:
+  WCMN010C         IRREGULAR    0          15.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 190 of [XSECT] section:
+  WCMN010B         CUSTOM       8.30       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 191 of [XSECT] section:
+  WCEA10A2         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 192 of [XSECT] section:
+  WCEA10A1         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 193 of [XSECT] section:
+  WCMN10F2         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 194 of [XSECT] section:
+  WCMN10F1         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 195 of [XSECT] section:
+  WCEA005B         IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

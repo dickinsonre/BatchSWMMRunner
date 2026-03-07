@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name SE-133 at line 167 of [JUNC] section:
+  SE-133           26.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SE-133 at line 168 of [JUNC] section:
+  SE-133           9.76       0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SE-133 at line 169 of [JUNC] section:
+  SE-133           12.16      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SE-133 at line 326 of [CONDUIT] section:
+  SE-133           Node_133         Node_10671068    1422.00    0.0140     -4.04      -4.68      0          0
+
+  
+  ERROR 207: duplicate ID name SE-133 at line 327 of [CONDUIT] section:
+  SE-133           Node_133         Node_10681069    1351.00    0.0140     -4.68      -5.28      0          0
+
+  
+  ERROR 207: duplicate ID name SE-133 at line 328 of [CONDUIT] section:
+  SE-133           Node_133         Node_1069932     1346.00    0.0140     -5.28      -5.85      0          0
+
+  
+  ERROR 207: duplicate ID name 383.1 at line 370 of [PUMP] section:
+  383.1            ?                Node_10411056    PC_383.1   ON       -14.00     -15.00    
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

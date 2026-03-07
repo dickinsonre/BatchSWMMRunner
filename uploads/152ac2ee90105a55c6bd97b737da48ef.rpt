@@ -1,0 +1,48 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 54 of [XSECT] section:
+  S1-S2            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 55 of [XSECT] section:
+  S3-S4            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 56 of [XSECT] section:
+  S5-S6            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 57 of [XSECT] section:
+  S2-S4            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 58 of [XSECT] section:
+  S4-S6            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 59 of [XSECT] section:
+  S6-S7            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 60 of [XSECT] section:
+  S7-S8            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 61 of [XSECT] section:
+  S8-S10           CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 62 of [XSECT] section:
+  S10-S11          CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 63 of [XSECT] section:
+  S11-S9           CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

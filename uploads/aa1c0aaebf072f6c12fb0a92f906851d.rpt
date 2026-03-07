@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object AGROUND at line 88 of [CONDUIT] section:
+  UGROUND          AGROUND          ODA7             100.00     0.0140     24.96      24.11      0          0
+
+  
+  ERROR 209: undefined object LCBA2AG at line 89 of [CONDUIT] section:
+  LCBA2BG          LCBA2AG          CBA1             33.00      0.0140     25.91      25.77      0          0
+
+  
+  ERROR 209: undefined object ? at line 92 of [CONDUIT] section:
+  276              ?                ?                100.00     0.0140     25.58      25.58      0          0
+
+  
+  ERROR 209: undefined object ? at line 93 of [CONDUIT] section:
+  282              ?                ?                77.00      0.0140     25.58      25.42      0          0
+
+  
+  ERROR 211: invalid number  at line 149 of [XSECT] section:
+  ORIF             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 150 of [XSECT] section:
+  orif2.2          RECT_CLOSED  0          0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

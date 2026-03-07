@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name sanitary at line 45 of [CONDUIT] section:
+  sanitary         infl             san              33.00      0.0140     100.00     99.00      0          0
+
+  
+  ERROR 207: duplicate ID name sanitary at line 47 of [CONDUIT] section:
+  sanitary         san              WWTP             33.00      0.0140     99.00      98.00      0          0
+
+  
+  ERROR 207: duplicate ID name storm at line 48 of [CONDUIT] section:
+  storm            stormjunc        wet              33.00      0.0140     99.00      98.00      0          0
+
+  
+  ERROR 207: duplicate ID name storm at line 50 of [CONDUIT] section:
+  storm            cb               wet              20.00      0.0140     98.40      98.00      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

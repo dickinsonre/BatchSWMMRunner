@@ -1,0 +1,76 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name RIVER at line 218 of [JUNC] section:
+  RIVER            596.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name RIVER at line 219 of [JUNC] section:
+  RIVER            582.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name RIVER at line 220 of [JUNC] section:
+  RIVER            583.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name TAPIN at line 228 of [JUNC] section:
+  TAPIN            590.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name TAPIN at line 235 of [JUNC] section:
+  TAPIN            589.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DROP at line 245 of [STORAGE] section:
+  DROP             581.50     0          0          FUNCTIONAL 63.60 0          0
+
+  
+  ERROR 207: duplicate ID name DROP at line 246 of [STORAGE] section:
+  DROP             581.00     0          0          FUNCTIONAL 19.60 0          0
+
+  
+  ERROR 207: duplicate ID name DEAIR at line 438 of [CONDUIT] section:
+  DEAIR            DROP             002              90.00      0.0130     425.71     425.69     0          0
+
+  
+  ERROR 207: duplicate ID name DEAIR at line 440 of [CONDUIT] section:
+  DEAIR            DROP             003              140.00     0.0130     426.00     425.98     0          0
+
+  
+  ERROR 207: duplicate ID name INLET at line 453 of [CONDUIT] section:
+  INLET            TAPIN            DROP             100.00     0.0130     565.13     564.93     0          0
+
+  
+  ERROR 207: duplicate ID name INLET at line 455 of [CONDUIT] section:
+  INLET            TAPIN            DROP             100.00     0.0130     567.40     567.22     0          0
+
+  
+  ERROR 207: duplicate ID name SCREEN at line 457 of [CONDUIT] section:
+  SCREEN           1                2                100.00     0.0140     575.00     574.98     0          0
+
+  
+  ERROR 207: duplicate ID name ORIFICE at line 469 of [ORIFICE] section:
+  ORIFICE          300              033              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name ORIFICE at line 470 of [ORIFICE] section:
+  ORIFICE          900              099              SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name WEIR at line 477 of [WEIR] section:
+  WEIR 13          300              031              TRANSVERSE 571.72     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 478 of [WEIR] section:
+  WEIR 9           900              091              TRANSVERSE 585.08     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name WEIR at line 480 of [WEIR] section:
+  WEIR 15          500              051              TRANSVERSE 575.63     1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

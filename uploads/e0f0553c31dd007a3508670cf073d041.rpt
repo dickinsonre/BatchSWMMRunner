@@ -1,0 +1,124 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Taitag at line 87 of [CONDUIT] section:
+  Taitbg           Taitag           40WR             32.60      0.0110     42.90      42.80      0          0
+
+  
+  ERROR 209: undefined object O65ag at line 89 of [CONDUIT] section:
+  O65bg            O65ag            65WR             22.90      0.0130     39.64      39.38      0          0
+
+  
+  ERROR 209: undefined object BraeAG at line 90 of [CONDUIT] section:
+  BraeBG           BraeAG           75WRDROP         27.00      0.0130     35.90      35.78      0          0
+
+  
+  ERROR 209: undefined object SevAG at line 94 of [CONDUIT] section:
+  SevBG            SevAG            100WR            35.00      0.0110     28.00      27.90      0          0
+
+  
+  ERROR 209: undefined object LakeAG at line 99 of [CONDUIT] section:
+  LakeBG           LakeAG           155WR            53.00      0.0110     21.00      20.94      0          0
+
+  
+  ERROR 209: undefined object P32WRAG at line 103 of [CONDUIT] section:
+  P32WRBG          P32WRAG          34WRGLAD         460.00     0.0120     46.70      45.20      0          0
+
+  
+  ERROR 209: undefined object P34WRAG at line 104 of [CONDUIT] section:
+  P34WRBG          P34WRAG          35WRRUPE         250.00     0.0120     45.20      43.80      0          0
+
+  
+  ERROR 209: undefined object P52WRAG at line 106 of [CONDUIT] section:
+  P52WRBG          P52WRAG          65WR             520.00     0.0120     41.25      39.38      0          0
+
+  
+  ERROR 209: undefined object P67WRag at line 114 of [CONDUIT] section:
+  P67WRbg          P67WRag          70WRBRAE         150.00     0.0110     36.50      36.05      0          0
+
+  
+  ERROR 209: undefined object P117WRag at line 118 of [CONDUIT] section:
+  P117WRbg         P117WRag         120WRHES         300.00     0.0110     25.20      24.50      0          0
+
+  
+  ERROR 209: undefined object p147ag at line 119 of [CONDUIT] section:
+  p147bg           p147ag           150WRFAL         300.00     0.0110     21.80      21.60      0          0
+
+  
+  ERROR 209: undefined object O160ag at line 121 of [CONDUIT] section:
+  O160bg           O160ag           165WR            80.00      0.0300     20.78      20.66      0          0
+
+  
+  ERROR 209: undefined object O165ag at line 122 of [CONDUIT] section:
+  O165bg           O165ag           170WR            56.00      0.0300     20.66      20.58      0          0
+
+  
+  ERROR 211: invalid number  at line 136 of [XSECT] section:
+  O5WR             TRAPEZOIDAL  1.10       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 143 of [XSECT] section:
+  O75WR            TRAPEZOIDAL  1.50       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 144 of [XSECT] section:
+  O80WR            TRAPEZOIDAL  1.64       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 145 of [XSECT] section:
+  O85WR            TRAPEZOIDAL  1.50       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 147 of [XSECT] section:
+  O105WR           TRAPEZOIDAL  1.57       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 148 of [XSECT] section:
+  O135WR           TRAPEZOIDAL  1.70       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 149 of [XSECT] section:
+  O140WR           TRAPEZOIDAL  1.90       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 150 of [XSECT] section:
+  O145WR           TRAPEZOIDAL  1.86       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 159 of [XSECT] section:
+  O90WR            TRAPEZOIDAL  1.80       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 160 of [XSECT] section:
+  O94WR            TRAPEZOIDAL  1.50       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 161 of [XSECT] section:
+  O110WR           TRAPEZOIDAL  1.90       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 162 of [XSECT] section:
+  O115WR           TRAPEZOIDAL  2.30       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 177 of [XSECT] section:
+  O100WR           TRAPEZOIDAL  1.44       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 178 of [XSECT] section:
+  O102WR           TRAPEZOIDAL  1.40       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 179 of [XSECT] section:
+  O34WRag          TRAPEZOIDAL  0.30       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 182 of [XSECT] section:
+  O52WRag          TRAPEZOIDAL  0.30       0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

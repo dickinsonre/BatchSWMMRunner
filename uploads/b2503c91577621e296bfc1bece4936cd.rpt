@@ -1,0 +1,40 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 74 of [XSECT] section:
+  drainloss1       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 75 of [XSECT] section:
+  drainloss2       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 76 of [XSECT] section:
+  drainloss3       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 77 of [XSECT] section:
+  drainloss4       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  drainloss5       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  drainloss6       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  drainloss7       CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  drainloss8       CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

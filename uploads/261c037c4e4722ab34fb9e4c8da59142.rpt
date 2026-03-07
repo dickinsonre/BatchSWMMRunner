@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 077 at line 1556 of [CONDUIT] section:
+  077              J77              J1077            50.00      0.0140     0.08       0.08       0          0
+
+  
+  ERROR 207: duplicate ID name 8002.1 at line 1946 of [PUMP] section:
+  8002.1           S2               J2.2             PC_8002.1  ON       -13.46     -16.12    
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

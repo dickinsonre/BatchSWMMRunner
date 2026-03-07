@@ -1,0 +1,108 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object OF34639 at line 61 of [CONDUIT] section:
+  PI34639          OF34639          YI34594          160.00     0.0240     672.50     672.00     0          0
+
+  
+  ERROR 209: undefined object OF34641 at line 62 of [CONDUIT] section:
+  PI34641          OF34641          YI34602          211.00     0.0150     672.00     667.00     0          0
+
+  
+  ERROR 209: undefined object OF34649 at line 63 of [CONDUIT] section:
+  PI34649          OF34649          DI34604          172.00     0.0140     670.00     667.00     0          0
+
+  
+  ERROR 209: undefined object OF34651 at line 64 of [CONDUIT] section:
+  PI34651          OF34651          CI34606          105.00     0.0150     665.50     665.00     0          0
+
+  
+  ERROR 209: undefined object OF34653 at line 65 of [CONDUIT] section:
+  PI34653          OF34653          CI34608          176.00     0.0150     665.00     662.00     0          0
+
+  
+  ERROR 209: undefined object OF34657 at line 66 of [CONDUIT] section:
+  PI34657          OF34657          CI34612          196.00     0.0150     662.00     658.00     0          0
+
+  
+  ERROR 209: undefined object OF34667 at line 67 of [CONDUIT] section:
+  PI34667          OF34667          YI34622          144.00     0.0240     658.00     653.00     0          0
+
+  
+  ERROR 209: undefined object OF34789 at line 68 of [CONDUIT] section:
+  PI34789          OF34789          YI34564          80.00      0.0240     653.00     650.00     0          0
+
+  
+  ERROR 209: undefined object OF34611 at line 69 of [CONDUIT] section:
+  PI34611          OF34611          YI34566          82.00      0.0150     650.00     649.00     0          0
+
+  
+  ERROR 209: undefined object OF34615 at line 70 of [CONDUIT] section:
+  PI34615          OF34615          CI20921          132.00     0.0150     649.00     647.40     0          0
+
+  
+  ERROR 209: undefined object OF21214 at line 71 of [CONDUIT] section:
+  PI21214          OF21214          CI20923          24.00      0.0150     647.40     647.30     0          0
+
+  
+  ERROR 209: undefined object OF21216 at line 72 of [CONDUIT] section:
+  PI21216          OF21216          CI20925          24.00      0.0150     647.30     646.20     0          0
+
+  
+  ERROR 209: undefined object OF21218 at line 73 of [CONDUIT] section:
+  PI21218          OF21218          CI20927          430.00     0.0150     646.30     642.30     0          0
+
+  
+  ERROR 209: undefined object OF57715 at line 74 of [CONDUIT] section:
+  PI57715          OF57715          YI57904          56.00      0.0240     639.80     639.20     0          0
+
+  
+  ERROR 209: undefined object OF57717 at line 75 of [CONDUIT] section:
+  PI57717          OF57717          YI57906          88.00      0.0240     639.20     639.10     0          0
+
+  
+  ERROR 209: undefined object OF57719 at line 76 of [CONDUIT] section:
+  PI57719          OF57719          YI57908          88.00      0.0150     639.10     639.00     0          0
+
+  
+  ERROR 209: undefined object OF57721 at line 77 of [CONDUIT] section:
+  PI57721          OF57721          YI57910          88.00      0.0150     639.00     638.80     0          0
+
+  
+  ERROR 209: undefined object OF57725 at line 78 of [CONDUIT] section:
+  PI57725          OF57725          YI57914          86.00      0.0150     638.30     637.00     0          0
+
+  
+  ERROR 209: undefined object OF57731 at line 79 of [CONDUIT] section:
+  PI57731          OF57731          EW57894          108.00     0.0150     635.50     634.80     0          0
+
+  
+  ERROR 209: undefined object OF21220 at line 80 of [CONDUIT] section:
+  PI21220          OF21220          CI20929          24.00      0.0150     642.30     642.20     0          0
+
+  
+  ERROR 209: undefined object OF21224 at line 81 of [CONDUIT] section:
+  PI21224          OF21224          YI57902          130.00     0.0150     642.20     639.80     0          0
+
+  
+  ERROR 209: undefined object OF57723 at line 82 of [CONDUIT] section:
+  PI57723          OF57723          YI57912          113.00     0.0150     638.80     638.30     0          0
+
+  
+  ERROR 209: undefined object OF57727 at line 83 of [CONDUIT] section:
+  PI57727          OF57727          MH57916          204.00     0.0240     637.00     636.60     0          0
+
+  
+  ERROR 209: undefined object OF57729 at line 84 of [CONDUIT] section:
+  PI57729          OF57729          MH57918          42.00      0.0150     636.60     635.50     0          0
+
+  
+  ERROR 211: invalid number  at line 118 of [XSECT] section:
+  DUMMYORF         RECT_CLOSED  10.00      0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

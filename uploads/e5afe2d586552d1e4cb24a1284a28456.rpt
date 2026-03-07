@@ -1,0 +1,96 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 0 at line 94 of [XSECT] section:
+  JEFF             CUSTOM       3.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 96 of [XSECT] section:
+  144              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 97 of [XSECT] section:
+  146              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 98 of [XSECT] section:
+  Tyler-           CUSTOM       3.75       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 99 of [XSECT] section:
+  150              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 100 of [XSECT] section:
+  152              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 101 of [XSECT] section:
+  Van              CUSTOM       3.75       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 102 of [XSECT] section:
+  156              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 103 of [XSECT] section:
+  158              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 104 of [XSECT] section:
+  161              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 105 of [XSECT] section:
+  17=5             CUSTOM       3.00       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 107 of [XSECT] section:
+  17=5a            CUSTOM       2.67       0          0          0          2
+
+  
+  ERROR 211: invalid number 0 at line 108 of [XSECT] section:
+  ClvPrkw          CUSTOM       0          0          0          0          2
+
+  
+  ERROR 209: undefined object 0 at line 110 of [XSECT] section:
+  34.3             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number 0 at line 111 of [XSECT] section:
+  Pierce           CUSTOM       0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 113 of [XSECT] section:
+  34               IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 114 of [XSECT] section:
+  206              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 115 of [XSECT] section:
+  207              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 116 of [XSECT] section:
+  208              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 117 of [XSECT] section:
+  209              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 118 of [XSECT] section:
+  210              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 119 of [XSECT] section:
+  211              IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

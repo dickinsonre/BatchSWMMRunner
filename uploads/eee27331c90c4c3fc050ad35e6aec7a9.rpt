@@ -1,0 +1,68 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 1702100 at line 69 of [CONDUIT] section:
+  1702000          1702100          1700510          615.00     0.0132     98.00      96.00      0          0
+
+  
+  ERROR 209: undefined object 1702102 at line 70 of [CONDUIT] section:
+  1702002          1702102          1700510          140.00     0.0140     97.00      96.00      0          0
+
+  
+  ERROR 209: undefined object 1701102 at line 71 of [CONDUIT] section:
+  1701002          1701102          1701003          705.00     0.0140     97.25      97.00      0          0
+
+  
+  ERROR 209: undefined object 1702104 at line 72 of [CONDUIT] section:
+  1702004          1702104          1702502          470.00     0.0250     99.00      97.00      0          0
+
+  
+  ERROR 209: undefined object 1702106 at line 73 of [CONDUIT] section:
+  1702006          1702106          1702504          400.00     0.0250     100.00     99.00      0          0
+
+  
+  ERROR 209: undefined object 1702108 at line 74 of [CONDUIT] section:
+  1702008          1702108          1702009          300.00     0.0130     107.85     106.72     0          0
+
+  
+  ERROR 209: undefined object 1702110 at line 75 of [CONDUIT] section:
+  1702010          1702110          1702508          290.00     0.0130     109.40     108.00     0          0
+
+  
+  ERROR 209: undefined object 1700014 at line 76 of [CONDUIT] section:
+  1700015          1700014          1700014o         620.00     0.0140     96.80      96.20      0          0
+
+  
+  ERROR 209: undefined object 1700012 at line 77 of [CONDUIT] section:
+  1700013          1700012          1700012o         320.00     0.0140     96.20      96.00      0          0
+
+  
+  ERROR 209: undefined object 1700011 at line 82 of [WEIR] section:
+  1700010          1700011          1700111          TRANSVERSE 105.51     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 0.20 at line 91 of [XSECT] section:
+  872504           CUSTOM       6.00       0.20       0          0          1
+
+  
+  ERROR 209: undefined object 0.20 at line 92 of [XSECT] section:
+  872502           CUSTOM       10.00      0.20       0          0          1
+
+  
+  ERROR 209: undefined object 0.20 at line 93 of [XSECT] section:
+  870510           CUSTOM       10.00      0.20       0          0          1
+
+  
+  ERROR 209: undefined object 0.20 at line 99 of [XSECT] section:
+  870512           CUSTOM       6.00       0.20       0          0          1
+
+  
+  ERROR 211: invalid number  at line 110 of [XSECT] section:
+  1700010          RECT_OPEN    0          50.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,20 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 38 of [XSECT] section:
+  3                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 39 of [XSECT] section:
+  6                CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 40 of [XSECT] section:
+  8                CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

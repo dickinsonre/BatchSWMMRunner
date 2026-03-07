@@ -1,0 +1,68 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object AMHW020Crd at line 48 of [CONDUIT] section:
+  AMHW020C         AMHW020Crd       65295            593.00     0.0150     556.40     526.20     0          0
+
+  
+  ERROR 209: undefined object AMHW020Brd at line 49 of [CONDUIT] section:
+  AMHW020B         AMHW020Brd       66776            353.00     0.0150     526.20     516.10     0          0
+
+  
+  ERROR 209: undefined object AMHW020Ard at line 50 of [CONDUIT] section:
+  AMHW020A         AMHW020Ard       65344            174.00     0.0150     514.80     510.60     0          0
+
+  
+  ERROR 209: undefined object AMHW010Brd at line 51 of [CONDUIT] section:
+  AMHW010B         AMHW010Brd       66656            352.00     0.0160     510.50     504.70     0          0
+
+  
+  ERROR 209: undefined object AMHW010Ard at line 52 of [CONDUIT] section:
+  AMHW010A         AMHW010Ard       66656            79.00      0.0180     510.70     506.60     0          0
+
+  
+  ERROR 209: undefined object Martinrd at line 53 of [CONDUIT] section:
+  Martin           Martinrd         65379            45.00      0.0220     504.80     502.40     0          0
+
+  
+  ERROR 209: undefined object Snellrd at line 54 of [CONDUIT] section:
+  Snell            Snellrd          65398            36.80      0.0340     467.00     467.00     0          0
+
+  
+  ERROR 209: undefined object AMUP040Drd at line 58 of [CONDUIT] section:
+  AMUP040D         AMUP040Drd       50602            844.60     0.0150     542.40     510.00     0          0
+
+  
+  ERROR 209: undefined object AMUP040A#2 at line 60 of [CONDUIT] section:
+  AMUP040A#1       AMUP040A#2       AMUP040Ard       400.90     0.0150     461.70     457.00     0          0
+
+  
+  ERROR 209: undefined object canyon-rd at line 61 of [CONDUIT] section:
+  canyon           canyon-rd        Node_1524864     50.00      0.0160     511.50     510.50     0          0
+
+  
+  ERROR 209: undefined object ? at line 63 of [CONDUIT] section:
+  MainUP030b       ?                Node_1526868     1700.00    0          495.70     467.00     0          0
+
+  
+  ERROR 209: undefined object 0 at line 76 of [XSECT] section:
+  MainUP020        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 77 of [XSECT] section:
+  MainUP050        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 83 of [XSECT] section:
+  MainUP30a        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 84 of [XSECT] section:
+  MainUP030b       IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

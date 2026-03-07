@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name XJ3_1 at line 49 of [CONDUIT] section:
+  XJ3_1            C3               bypass           10.00      0.0150     17.02      16.96      0          0
+
+  
+  ERROR 207: duplicate ID name XJ3_1 at line 50 of [CONDUIT] section:
+  XJ3_1            bypass           C2               10.00      0.0150     16.96      16.90      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

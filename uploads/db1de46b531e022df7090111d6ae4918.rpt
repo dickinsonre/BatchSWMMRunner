@@ -1,0 +1,120 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object CS12-WEIR at line 79 of [WEIR] section:
+  CS12-WEIR        CS12-WEIR        C14-8            TRANSVERSE 9.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object CM7-C14_GW at line 81 of [WEIR] section:
+  CM7-C14_GW       CM7-C14_GW       C14-6            TRANSVERSE 9.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object CS49-WEIR at line 83 of [WEIR] section:
+  CS49-W           CM7              CS49-WEIR        TRANSVERSE 9.00       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object CS34-BLEED at line 88 of [PUMP] section:
+  CS-34            CS34-BLEED       CS34-WEIR        PC_CS-34   ON       11.50      9.50      
+
+  
+  ERROR 209: undefined object PT-TR_GW at line 89 of [PUMP] section:
+  CS-50            PT-TR_GW         CS50-BLEED       PC_CS-50   ON       11.00      10.00     
+
+  
+  ERROR 211: invalid number  at line 108 of [XSECT] section:
+  CM24_GW          CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 109 of [XSECT] section:
+  CM4-5_GW         CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 110 of [XSECT] section:
+  CM5-6_GW         CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 111 of [XSECT] section:
+  CM-TR_CLV        CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 112 of [XSECT] section:
+  CM5-7_GW         CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 113 of [XSECT] section:
+  TR-C7_GW         CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 114 of [XSECT] section:
+  CM-Lyons1        CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 115 of [XSECT] section:
+  CM-Lyons2        CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 116 of [XSECT] section:
+  CM4-PT_GW        CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 117 of [XSECT] section:
+  CM2-PT_GW        CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 118 of [XSECT] section:
+  CM7C14_GW        CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 119 of [XSECT] section:
+  PT-HC_GW         CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 120 of [XSECT] section:
+  CS-PT            RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 121 of [XSECT] section:
+  CS46-P           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 122 of [XSECT] section:
+  CS46-WEIR        RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 123 of [XSECT] section:
+  CS45-W           RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 124 of [XSECT] section:
+  CS45-PUMP        RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 125 of [XSECT] section:
+  CS-12PUMP        RECT_OPEN    0          16.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 126 of [XSECT] section:
+  CS12-WEIR        RECT_OPEN    0          16.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 127 of [XSECT] section:
+  CM8-12_GW        RECT_OPEN    0          16.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 128 of [XSECT] section:
+  CM7-C14_GW       RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 129 of [XSECT] section:
+  CS49-P           RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 130 of [XSECT] section:
+  CS49-W           RECT_OPEN    0          20.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

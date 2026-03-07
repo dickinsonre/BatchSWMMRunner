@@ -1,0 +1,108 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object Node_1420 at line 858 of [CONDUIT] section:
+  1420             Node_1420        Node_1000998     44.70      0.0130     0.22       0.18       0          0
+
+  
+  ERROR 209: undefined object Node_1421 at line 859 of [CONDUIT] section:
+  1421             Node_1421        Node_1002996     39.50      0.0110     0.85       0.82       0          0
+
+  
+  ERROR 209: undefined object Node_1422 at line 860 of [CONDUIT] section:
+  1422             Node_1422        Node_1004996     41.20      0.0130     0.75       0.61       0          0
+
+  
+  ERROR 209: undefined object Node_1423 at line 861 of [CONDUIT] section:
+  1423             Node_1423        Node_10061002    16.70      0.0110     0.91       0.85       0          0
+
+  
+  ERROR 209: undefined object Node_1424 at line 862 of [CONDUIT] section:
+  1424             Node_1424        Node_10081004    37.20      0.0110     1.04       0.91       0          0
+
+  
+  ERROR 209: undefined object Node_1425 at line 863 of [CONDUIT] section:
+  1425             Node_1425        Node_10101008    21.20      0.0110     1.10       1.04       0          0
+
+  
+  ERROR 209: undefined object Node_1426 at line 864 of [CONDUIT] section:
+  1426             Node_1426        Node_10121000    58.20      0.0130     0.27       0.22       0          0
+
+  
+  ERROR 209: undefined object Node_1428 at line 866 of [CONDUIT] section:
+  1428             Node_1428        Node_10151012    48.70      0.0130     0.35       0.27       0          0
+
+  
+  ERROR 209: undefined object Node_1429 at line 867 of [CONDUIT] section:
+  1429             Node_1429        Node_10171015    30.40      0.0130     0.45       0.35       0          0
+
+  
+  ERROR 209: undefined object Node_1430 at line 868 of [CONDUIT] section:
+  1430             Node_1430        Node_1017889     21.50      0.0130     0.28       0.28       0          0
+
+  
+  ERROR 209: undefined object Node_1431 at line 869 of [CONDUIT] section:
+  1431             Node_1431        Node_10201017    13.40      0.0130     0.33       0.28       0          0
+
+  
+  ERROR 209: undefined object Node_1432 at line 870 of [CONDUIT] section:
+  1432             Node_1432        Node_10221020    41.90      0.0130     0.42       0.33       0          0
+
+  
+  ERROR 209: undefined object Node_1433 at line 871 of [CONDUIT] section:
+  1433             Node_1433        Node_10241020    38.60      0.0130     0.36       0.33       0          0
+
+  
+  ERROR 209: undefined object Node_1434 at line 872 of [CONDUIT] section:
+  1434             Node_1434        Node_10261022    46.80      0.0130     0.49       0.42       0          0
+
+  
+  ERROR 209: undefined object Node_1435 at line 873 of [CONDUIT] section:
+  1435             Node_1435        Node_10281024    41.70      0.0130     0.46       0.36       0          0
+
+  
+  ERROR 209: undefined object Node_1436 at line 874 of [CONDUIT] section:
+  1436             Node_1436        Node_10301028    33.20      0.0130     0.51       0.46       0          0
+
+  
+  ERROR 209: undefined object Node_1437 at line 875 of [CONDUIT] section:
+  1437             Node_1437        Node_10301032    50.20      0.0130     0.51       0.43       0          0
+
+  
+  ERROR 209: undefined object Node_1438 at line 876 of [CONDUIT] section:
+  1438             Node_1438        Node_10321034    26.10      0.0130     0.45       0.44       0          0
+
+  
+  ERROR 209: undefined object Node_1439 at line 877 of [CONDUIT] section:
+  1439             Node_1439        Node_1032208     47.90      0.0130     0.43       0.35       0          0
+
+  
+  ERROR 209: undefined object Node_1440 at line 878 of [CONDUIT] section:
+  1440             Node_1440        Node_10371034    45.20      0.0130     0.56       0.44       0          0
+
+  
+  ERROR 209: undefined object Node_1441 at line 879 of [CONDUIT] section:
+  1441             Node_1441        Node_10391037    14.40      0.0110     0.60       0.56       0          0
+
+  
+  ERROR 211: invalid number  at line 1340 of [XSECT] section:
+  MUL1             RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 1341 of [XSECT] section:
+  MUL2             RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1342 of [XSECT] section:
+  MUL3             RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1343 of [XSECT] section:
+  MUL4             RECT_OPEN    0          1.36       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

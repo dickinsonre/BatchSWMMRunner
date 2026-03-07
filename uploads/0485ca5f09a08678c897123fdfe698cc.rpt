@@ -1,0 +1,136 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object C08979 at line 386 of [CONDUIT] section:
+  C11613b          C08979           11613b           60.00      0.0130     0          0          0          0
+
+  
+  ERROR 209: undefined object C151R6-AG at line 398 of [CONDUIT] section:
+  C112R6A          C151R6-AG        112R6a           80.00      0.0092     0          0          0          0
+
+  
+  ERROR 209: undefined object C13461 at line 407 of [CONDUIT] section:
+  C13462           C13461           66333            60.00      0.0130     0          0          0          0
+
+  
+  ERROR 209: undefined object C08954b at line 553 of [CONDUIT] section:
+  C08954a          C08954b          08954a           110.00     0.0104     0          0.58       0          0
+
+  
+  ERROR 209: undefined object C220 at line 569 of [CONDUIT] section:
+  C50500b          C220             50500a           81.00      0.0140     0          0.15       0          0
+
+  
+  ERROR 209: undefined object C51018 at line 609 of [CONDUIT] section:
+  C08959a          C51018           08959a           970.00     0.0130     0          0          0          0
+
+  
+  ERROR 209: undefined object C08439 at line 610 of [CONDUIT] section:
+  C08441           C08439           51018            1227.00    0.0130     0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 1016 of [XSECT] section:
+  MUL8             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1017 of [XSECT] section:
+  MUL9             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1018 of [XSECT] section:
+  MUL10            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 1019 of [XSECT] section:
+  C084M6B-S        RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1020 of [XSECT] section:
+  MUL11            RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 1021 of [XSECT] section:
+  MUL12            RECT_OPEN    0          4.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 1022 of [XSECT] section:
+  MUL14            RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1023 of [XSECT] section:
+  MUL15            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1024 of [XSECT] section:
+  MUL16            RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1025 of [XSECT] section:
+  MUL17            RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1026 of [XSECT] section:
+  MUL18            RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1027 of [XSECT] section:
+  MUL19            RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1028 of [XSECT] section:
+  MUL20            RECT_OPEN    0          5.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1029 of [XSECT] section:
+  MUL21            RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1030 of [XSECT] section:
+  MUL22            RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 1031 of [XSECT] section:
+  MUL23            RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1032 of [XSECT] section:
+  MUL24            RECT_OPEN    0          5.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1033 of [XSECT] section:
+  MUL25            RECT_OPEN    0          5.17       0          0          
+
+  
+  ERROR 211: invalid number  at line 1034 of [XSECT] section:
+  MUL26            RECT_OPEN    0          7.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1035 of [XSECT] section:
+  CSO188           RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1036 of [XSECT] section:
+  CSO187           RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1037 of [XSECT] section:
+  CSO180           RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 1038 of [XSECT] section:
+  cso183           RECT_OPEN    0          1.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 1039 of [XSECT] section:
+  cso205           RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 1040 of [XSECT] section:
+  CSO185           RECT_OPEN    0          4.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

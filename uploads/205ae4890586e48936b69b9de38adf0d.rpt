@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 103-W-S-1 at line 517 of [WEIR] section:
+  103-W-S-1        103-T-S-1        B7-W             TRANSVERSE 6.50       1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name 103N-W-S-1 at line 583 of [WEIR] section:
+  103N-W-S-1       103N-T-S-1       Node_10171121    TRANSVERSE 6.50       1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

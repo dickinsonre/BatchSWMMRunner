@@ -1,0 +1,76 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 81st-rd at line 77 of [CONDUIT] section:
+  81st             81st-rd          1070             25.00      0.0130     282.80     279.70     0          0
+
+  
+  ERROR 209: undefined object 0 at line 85 of [XSECT] section:
+  BU2-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 86 of [XSECT] section:
+  BU8-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 87 of [XSECT] section:
+  BU7-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 92 of [XSECT] section:
+  BU1-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 93 of [XSECT] section:
+  BU2-C            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 94 of [XSECT] section:
+  BU2-B            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 95 of [XSECT] section:
+  BU2-E            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 96 of [XSECT] section:
+  BU2-D            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 97 of [XSECT] section:
+  BU5-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 98 of [XSECT] section:
+  81stSD-BU4       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 100 of [XSECT] section:
+  BU4-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 102 of [XSECT] section:
+  BU6-A            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 103 of [XSECT] section:
+  BU7-B            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 105 of [XSECT] section:
+  81stSD           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 106 of [XSECT] section:
+  83rdSDBU9B       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 107 of [XSECT] section:
+  83rdSDBU9A       IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

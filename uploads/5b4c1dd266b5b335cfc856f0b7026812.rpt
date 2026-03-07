@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ROADWEIR at line 134 of [WEIR] section:
+  CHANNEL          ROADWEIR         PFRWST           TRANSVERSE 449.60     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 30.00 at line 149 of [XSECT] section:
+  SB-B6            IRREGULAR    30.00      200.00     0          0          1
+
+  
+  ERROR 209: undefined object 30.00 at line 150 of [XSECT] section:
+  JC-CS            IRREGULAR    30.00      300.00     0          0          1
+
+  
+  ERROR 209: undefined object 30.00 at line 163 of [XSECT] section:
+  LK-GW            IRREGULAR    30.00      300.00     0          0          1
+
+  
+  ERROR 211: invalid number  at line 193 of [XSECT] section:
+  CHANNEL          RECT_OPEN    0          500.00     0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,180 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 110600 at line 146 of [CONDUIT] section:
+  110600           110600           930              200.00     0.0130     0          0          0          0
+
+  
+  ERROR 209: undefined object 120100 at line 157 of [CONDUIT] section:
+  120100           120100           91               200.00     0.0065     0          10.95      0          0
+
+  
+  ERROR 209: undefined object 130000 at line 170 of [CONDUIT] section:
+  130000           130000           131              200.00     0.0065     0          0          0          0
+
+  
+  ERROR 209: undefined object 140000 at line 184 of [CONDUIT] section:
+  140000           140000           140000           149.20     0.0065     0          0.27       0          0
+
+  
+  ERROR 209: undefined object 150100 at line 191 of [CONDUIT] section:
+  150100           150100           281              228.00     0.0065     0          0          0          0
+
+  
+  ERROR 209: undefined object 150000 at line 192 of [CONDUIT] section:
+  150000           150000           150000           200.00     0.0065     0          0          0          0
+
+  
+  ERROR 209: undefined object 190100 at line 196 of [CONDUIT] section:
+  190100           190100           51               400.00     0.0046     0          0          0          0
+
+  
+  ERROR 209: undefined object 6.80 at line 214 of [XSECT] section:
+  950101           IRREGULAR    6.80       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.80 at line 215 of [XSECT] section:
+  950102           IRREGULAR    6.80       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.77 at line 216 of [XSECT] section:
+  950001           IRREGULAR    6.77       0          0          0          1
+
+  
+  ERROR 209: undefined object 11.20 at line 217 of [XSECT] section:
+  913200           IRREGULAR    11.20      0          0          0          1
+
+  
+  ERROR 209: undefined object 7.64 at line 218 of [XSECT] section:
+  913100           IRREGULAR    7.64       0          0          0          1
+
+  
+  ERROR 209: undefined object 7.64 at line 219 of [XSECT] section:
+  910700           IRREGULAR    7.64       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.47 at line 220 of [XSECT] section:
+  913000           IRREGULAR    8.47       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.47 at line 221 of [XSECT] section:
+  910500           IRREGULAR    8.47       0          0          0          1
+
+  
+  ERROR 209: undefined object 17.20 at line 222 of [XSECT] section:
+  912900           IRREGULAR    17.20      0          0          0          1
+
+  
+  ERROR 209: undefined object 12.80 at line 223 of [XSECT] section:
+  910400           IRREGULAR    12.80      0          0          0          1
+
+  
+  ERROR 209: undefined object 7.50 at line 224 of [XSECT] section:
+  910300           IRREGULAR    7.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 7.50 at line 225 of [XSECT] section:
+  912800           IRREGULAR    7.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.20 at line 226 of [XSECT] section:
+  910200           IRREGULAR    8.20       0          0          0          1
+
+  
+  ERROR 209: undefined object 12.58 at line 227 of [XSECT] section:
+  910100           IRREGULAR    12.58      0          0          0          1
+
+  
+  ERROR 209: undefined object 13.60 at line 228 of [XSECT] section:
+  910101           IRREGULAR    13.60      0          0          0          1
+
+  
+  ERROR 209: undefined object 11.20 at line 229 of [XSECT] section:
+  911000           IRREGULAR    11.20      0          0          0          1
+
+  
+  ERROR 209: undefined object 8.86 at line 230 of [XSECT] section:
+  970200           IRREGULAR    8.86       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.50 at line 231 of [XSECT] section:
+  970100           IRREGULAR    8.50       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.47 at line 232 of [XSECT] section:
+  970000           IRREGULAR    8.47       0          0          0          1
+
+  
+  ERROR 209: undefined object 10.29 at line 233 of [XSECT] section:
+  920201           IRREGULAR    10.29      0          0          0          1
+
+  
+  ERROR 209: undefined object 8.07 at line 234 of [XSECT] section:
+  920202           IRREGULAR    8.07       0          0          0          1
+
+  
+  ERROR 209: undefined object 12.00 at line 235 of [XSECT] section:
+  920101           IRREGULAR    12.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 12.00 at line 236 of [XSECT] section:
+  920000           IRREGULAR    12.00      0          0          0          1
+
+  
+  ERROR 209: undefined object 8.53 at line 237 of [XSECT] section:
+  911101           IRREGULAR    8.53       0          0          0          1
+
+  
+  ERROR 209: undefined object 10.70 at line 261 of [XSECT] section:
+  930105           IRREGULAR    10.70      0          0          0          1
+
+  
+  ERROR 209: undefined object 7.59 at line 263 of [XSECT] section:
+  930107           IRREGULAR    7.59       0          0          0          1
+
+  
+  ERROR 209: undefined object 6.20 at line 266 of [XSECT] section:
+  930003           IRREGULAR    6.20       0          0          0          1
+
+  
+  ERROR 209: undefined object 4.77 at line 279 of [XSECT] section:
+  940001           IRREGULAR    4.77       0          0          0          1
+
+  
+  ERROR 209: undefined object 8.07 at line 284 of [XSECT] section:
+  950207           IRREGULAR    8.07       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 293 of [XSECT] section:
+  MUL8             RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 294 of [XSECT] section:
+  MUL9             RECT_OPEN    0          25.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 295 of [XSECT] section:
+  MUL10            RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 296 of [XSECT] section:
+  MUL11            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 297 of [XSECT] section:
+  MUL12            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 298 of [XSECT] section:
+  MUL13            RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 299 of [XSECT] section:
+  MUL14            RECT_OPEN    0          10.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

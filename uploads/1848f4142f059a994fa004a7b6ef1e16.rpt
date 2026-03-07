@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CH at line 40 of [CONDUIT] section:
+  CH               204              206              115.00     0          25.90      24.56      0          0
+
+  
+  ERROR 207: duplicate ID name CH at line 41 of [CONDUIT] section:
+  CH               206              208              435.00     0          24.56      23.43      0          0
+
+  
+  ERROR 207: duplicate ID name CH at line 42 of [CONDUIT] section:
+  CH               210              211              321.00     0.0140     26.92      25.49      0          0
+
+  
+  ERROR 207: duplicate ID name CH at line 43 of [CONDUIT] section:
+  CH               211              206              196.00     0          25.49      24.56      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

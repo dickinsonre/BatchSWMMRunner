@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getDashboardResults } from "@/lib/resultsStore";
 import type { ProcessResult } from "@/components/ResultsDisplay";
-import ThemeToggle from "@/components/ThemeToggle";
+import AppHeader from "@/components/AppHeader";
 import {
   BarChart,
   Bar,
@@ -121,24 +121,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 flex-wrap">
-            <Button variant="ghost" size="sm" onClick={() => setLocation('/')} data-testid="button-back-home">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back
-            </Button>
-            <h1 className="text-lg font-semibold" data-testid="text-dashboard-title">Results Dashboard</h1>
-            {elapsedTime && (
-              <Badge variant="outline" className="font-mono text-xs">
-                <Clock className="h-3 w-3 mr-1" />
-                {elapsedTime}
-              </Badge>
-            )}
-          </div>
-          <ThemeToggle />
-        </div>
-      </header>
+      <AppHeader />
 
       <main className="container mx-auto px-4 py-6 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4" data-testid="section-dashboard-stats">

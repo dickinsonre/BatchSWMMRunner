@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 50 of [CONDUIT] section:
+  206              ?                ?                500.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 52 of [CONDUIT] section:
+  211              ?                ?                250.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 53 of [CONDUIT] section:
+  213              ?                ?                250.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 54 of [CONDUIT] section:
+  215              ?                ?                250.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 56 of [CONDUIT] section:
+  218              ?                ?                0          0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 57 of [CONDUIT] section:
+  219              ?                ?                0          0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 62 of [CONDUIT] section:
+  231              ?                ?                125.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 63 of [CONDUIT] section:
+  233              ?                ?                125.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 64 of [CONDUIT] section:
+  235              ?                ?                125.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 66 of [CONDUIT] section:
+  238              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  218              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  219              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 88 of [XSECT] section:
+  238              CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

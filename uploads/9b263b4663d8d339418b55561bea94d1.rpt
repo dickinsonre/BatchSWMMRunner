@@ -1,0 +1,20 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name Inlet at line 26 of [JUNC] section:
+  Inlet            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Inlet at line 28 of [JUNC] section:
+  Inlet            25.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Pipe at line 37 of [CONDUIT] section:
+  Pipe             Inlet            Inlet            120.00     0.0130     13.70      12.50      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

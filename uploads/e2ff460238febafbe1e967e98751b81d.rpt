@@ -1,0 +1,128 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object pipe at line 85 of [WEIR] section:
+  48" pipe         HW               RD1-1            TRANSVERSE 62.07      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1 at line 88 of [WEIR] section:
+  weir 1           weir2            weir3            TRANSVERSE 54.30      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 0 at line 98 of [XSECT] section:
+  OUT-3            IRREGULAR    0          1000.00    0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 99 of [XSECT] section:
+  RD1-25           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 100 of [XSECT] section:
+  RD5-1            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 101 of [XSECT] section:
+  RD5-28           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 102 of [XSECT] section:
+  RD4-24           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 103 of [XSECT] section:
+  RD4-8            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 104 of [XSECT] section:
+  RD4-16           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 105 of [XSECT] section:
+  RD5-8            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 106 of [XSECT] section:
+  RD1-5            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 107 of [XSECT] section:
+  RD1-15           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 108 of [XSECT] section:
+  RD4-32           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 109 of [XSECT] section:
+  OUT-5            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 110 of [XSECT] section:
+  W6BC             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 111 of [XSECT] section:
+  RD8-2            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 112 of [XSECT] section:
+  RD8-3            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 113 of [XSECT] section:
+  RD8-1            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 114 of [XSECT] section:
+  W6AC             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 115 of [XSECT] section:
+  W6C-1            IRREGULAR    0          20.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 116 of [XSECT] section:
+  W4-1             IRREGULAR    0          20.00      0          0          1
+
+  
+  ERROR 205: invalid keyword pipe at line 117 of [XSECT] section:
+  48" pipe         RECT_OPEN    0          50.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 118 of [XSECT] section:
+  W1W6             RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 119 of [XSECT] section:
+  rd1-w1           RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 205: invalid keyword 1 at line 120 of [XSECT] section:
+  weir 1           RECT_OPEN    0          8.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 121 of [XSECT] section:
+  out4weir         RECT_OPEN    0          400.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 122 of [XSECT] section:
+  rd1-10w          RECT_OPEN    0          20.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 123 of [XSECT] section:
+  w6b-1            RECT_OPEN    0          4.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 124 of [XSECT] section:
+  W6B-2            RECT_OPEN    0          4.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 125 of [XSECT] section:
+  W6-2             RECT_OPEN    0          17.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

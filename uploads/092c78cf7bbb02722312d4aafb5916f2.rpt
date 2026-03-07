@@ -1,0 +1,172 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 272 of [CONDUIT] section:
+  1451             ?                ?                250.00     0.0050     -1.70      -11.53     0          0
+
+  
+  ERROR 209: undefined object ? at line 326 of [ORIFICE] section:
+  Link_1           ?                ?                SIDE       0          0.650      NO       0
+
+  
+  ERROR 211: invalid number  at line 497 of [XSECT] section:
+  Link_1           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 498 of [XSECT] section:
+  OF03             RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 499 of [XSECT] section:
+  OF05             RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 500 of [XSECT] section:
+  OF06             RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 501 of [XSECT] section:
+  OF06A            RECT_CLOSED  0.92       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 502 of [XSECT] section:
+  OF07             RECT_CLOSED  1.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 503 of [XSECT] section:
+  OF08             RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 504 of [XSECT] section:
+  OF09             RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 505 of [XSECT] section:
+  OF10             RECT_CLOSED  0.63       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 506 of [XSECT] section:
+  OF17             RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 507 of [XSECT] section:
+  OF16             RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 508 of [XSECT] section:
+  OF15             RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 509 of [XSECT] section:
+  OF14             RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 510 of [XSECT] section:
+  OF13             RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 511 of [XSECT] section:
+  OF12             RECT_CLOSED  1.33       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 512 of [XSECT] section:
+  OF11             RECT_CLOSED  0.83       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 513 of [XSECT] section:
+  OF02             RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 514 of [XSECT] section:
+  OF01             RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 515 of [XSECT] section:
+  OFQ1             RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 516 of [XSECT] section:
+  PUMP             RECT_CLOSED  9.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 517 of [XSECT] section:
+  W15              RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 518 of [XSECT] section:
+  569.1            RECT_CLOSED  1.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 519 of [XSECT] section:
+  W17              RECT_OPEN    0          6.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 520 of [XSECT] section:
+  W16              RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 521 of [XSECT] section:
+  W14              RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 522 of [XSECT] section:
+  W13              RECT_OPEN    0          2.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 523 of [XSECT] section:
+  W12              RECT_OPEN    0          9.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 524 of [XSECT] section:
+  W11              RECT_OPEN    0          2.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 525 of [XSECT] section:
+  W02              RECT_OPEN    0          3.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 526 of [XSECT] section:
+  W01              RECT_OPEN    0          39.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 527 of [XSECT] section:
+  WQ1              RECT_OPEN    0          16.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 528 of [XSECT] section:
+  W04              RECT_OPEN    0          26.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 529 of [XSECT] section:
+  W05              RECT_OPEN    0          12.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 530 of [XSECT] section:
+  W06              RECT_OPEN    0          16.50      0          0          
+
+  
+  ERROR 211: invalid number  at line 531 of [XSECT] section:
+  W07              RECT_OPEN    0          6.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 532 of [XSECT] section:
+  W08              RECT_OPEN    0          3.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 533 of [XSECT] section:
+  W09              RECT_OPEN    0          22.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 534 of [XSECT] section:
+  W10              RECT_OPEN    0          7.50       0          0          
+
+  
+  ERROR 211: invalid number  at line 535 of [XSECT] section:
+  574.1            RECT_OPEN    0          3.50       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

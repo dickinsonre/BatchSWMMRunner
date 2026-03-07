@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name etloss at line 102 of [PUMP] section:
+  etloss           W1               etout            *          ON       0          0         
+
+  
+  ERROR 207: duplicate ID name etloss at line 103 of [PUMP] section:
+  etloss           W6-C             etout            *          ON       0          0         
+
+  
+  ERROR 207: duplicate ID name etloss at line 104 of [PUMP] section:
+  etloss           W4               etout            *          ON       0          0         
+
+  
+  ERROR 207: duplicate ID name etloss at line 105 of [PUMP] section:
+  etloss           W6-B             etout            *          ON       0          0         
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

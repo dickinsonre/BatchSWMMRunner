@@ -1,0 +1,40 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name JUNCT at line 29 of [JUNC] section:
+  JUNCT            565.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name JUNCT at line 30 of [JUNC] section:
+  JUNCT            579.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name JUNCT at line 32 of [JUNC] section:
+  JUNCT            573.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Vault at line 35 of [JUNC] section:
+  Vault            566.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name JUNCT at line 36 of [JUNC] section:
+  JUNCT            587.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Vault at line 37 of [JUNC] section:
+  Vault            591.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name vault at line 38 of [JUNC] section:
+  vault            565.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name ARV at line 44 of [JUNC] section:
+  ARV              599.50     0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

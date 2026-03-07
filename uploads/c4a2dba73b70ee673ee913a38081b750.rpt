@@ -1,0 +1,140 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 115110RD at line 68 of [CONDUIT] section:
+  115110           115110RD         N110             155.00     0.0200     147.35     145.45     0          0
+
+  
+  ERROR 209: undefined object 110100RD at line 69 of [CONDUIT] section:
+  110100           110100RD         N100             300.00     0          100.00     90.00      0          0
+
+  
+  ERROR 209: undefined object 116115RD at line 72 of [CONDUIT] section:
+  116115           116115RD         N115             155.00     0.0200     147.35     145.45     0          0
+
+  
+  ERROR 209: undefined object 8070-W at line 77 of [ORIFICE] section:
+  8070             8070-W           N70              SIDE       102.00     0.650      NO       0
+
+  
+  ERROR 209: undefined object 6050RD at line 82 of [WEIR] section:
+  6050             6050RD           N50              TRANSVERSE 106.87     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 4030-W2 at line 83 of [WEIR] section:
+  4030-W1          4030-W2          4030-W3          TRANSVERSE 86.53      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 2520RD at line 84 of [WEIR] section:
+  2520             2520RD           N20              TRANSVERSE 84.80      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 4241RD at line 85 of [WEIR] section:
+  4241             4241RD           N41              TRANSVERSE 102.00     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 4140RD at line 86 of [WEIR] section:
+  4140             4140RD           N40              TRANSVERSE 95.50      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 3025RD at line 87 of [WEIR] section:
+  3025             3025RD           N25              TRANSVERSE 84.40      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 2014DR at line 88 of [WEIR] section:
+  2014             2014DR           N14              TRANSVERSE 84.80      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1413DR at line 89 of [WEIR] section:
+  1413             1413DR           N13              TRANSVERSE 84.80      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1312DR at line 90 of [WEIR] section:
+  1312             1312DR           N12              TRANSVERSE 84.80      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1211DR at line 91 of [WEIR] section:
+  1211             1211DR           N11              TRANSVERSE 84.80      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 1110DR at line 92 of [WEIR] section:
+  1110             1110DR           N10              TRANSVERSE 84.80      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 120116W at line 93 of [WEIR] section:
+  120116P          120116W          N116             TRANSVERSE 157.00     1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 9.60 at line 103 of [XSECT] section:
+  5040             IRREGULAR    9.60       1.00       0          0          1
+
+  
+  ERROR 209: undefined object 7.50 at line 104 of [XSECT] section:
+  10OUT            IRREGULAR    7.50       6.00       0          0          1
+
+  
+  ERROR 209: undefined object 0.16 at line 106 of [XSECT] section:
+  110100           IRREGULAR    0.16       0          0          0          2
+
+  
+  ERROR 209: undefined object 6.00 at line 107 of [XSECT] section:
+  10090            IRREGULAR    6.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 110 of [XSECT] section:
+  8070             RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 111 of [XSECT] section:
+  6050             RECT_OPEN    0          100.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 112 of [XSECT] section:
+  4030-W1          RECT_OPEN    0          1.70       0          0          
+
+  
+  ERROR 211: invalid number  at line 113 of [XSECT] section:
+  2520             RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 114 of [XSECT] section:
+  4241             RECT_OPEN    0          100.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 115 of [XSECT] section:
+  4140             RECT_OPEN    0          100.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 116 of [XSECT] section:
+  3025             RECT_OPEN    0          13.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 117 of [XSECT] section:
+  2014             RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 118 of [XSECT] section:
+  1413             RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 119 of [XSECT] section:
+  1312             RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 120 of [XSECT] section:
+  1211             RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 121 of [XSECT] section:
+  1110             RECT_OPEN    0          30.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 122 of [XSECT] section:
+  120116P          RECT_OPEN    0          20.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

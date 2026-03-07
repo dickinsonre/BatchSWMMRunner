@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object P1 at line 40 of [PUMP] section:
+  Ski P1           Ski P2           8/3              PC_Ski P1  ON       2.75       2.45      
+
+  
+  ERROR 205: invalid keyword P1 at line 45 of [CURVE] section:
+  PC_Ski P1        Pump3      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

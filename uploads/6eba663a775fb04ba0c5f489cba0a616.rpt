@@ -1,0 +1,20 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name dummy at line 34 of [CONDUIT] section:
+  dummy            202              204              10.00      0.0150     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Dummy at line 35 of [CONDUIT] section:
+  Dummy            204              206              10.00      0.0150     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name DUMMY at line 37 of [CONDUIT] section:
+  DUMMY            202              210              10.00      0.0150     0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:24 2026
+  Analysis ended on:  Sat Mar  7 21:51:24 2026
+  Total elapsed time: < 1 sec

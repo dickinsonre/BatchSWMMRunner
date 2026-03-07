@@ -1,0 +1,52 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number -0.35 at line 61 of [PUMP] section:
+  PUMP             N-SEABOARD       N-C8-020         PC_PUMP    ON       2.40       -0.35     
+
+  
+  ERROR 209: undefined object 0 at line 72 of [XSECT] section:
+  C821400          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 73 of [XSECT] section:
+  C819100          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 74 of [XSECT] section:
+  C815600          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 75 of [XSECT] section:
+  C810000          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 76 of [XSECT] section:
+  SPC01200         IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 77 of [XSECT] section:
+  213              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  215              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  217              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  219              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  296              CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

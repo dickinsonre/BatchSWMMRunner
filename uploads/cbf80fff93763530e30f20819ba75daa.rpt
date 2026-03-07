@@ -1,0 +1,408 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name MC-50 at line 91 of [JUNC] section:
+  MC-50            918.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-51 at line 92 of [JUNC] section:
+  MC-51            917.20     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-50 at line 93 of [JUNC] section:
+  MC-50            918.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-71 at line 101 of [JUNC] section:
+  MC-71            993.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-76 at line 103 of [JUNC] section:
+  MC-76            897.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-76 at line 104 of [JUNC] section:
+  MC-76            896.90     0          1.35       0          0
+
+  
+  ERROR 207: duplicate ID name MC-76 at line 105 of [JUNC] section:
+  MC-76            896.50     0          1.85       0          0
+
+  
+  ERROR 207: duplicate ID name MC-76 at line 106 of [JUNC] section:
+  MC-76            900.00     0          0.35       0          0
+
+  
+  ERROR 207: duplicate ID name MC-77 at line 107 of [JUNC] section:
+  MC-77            895.90     0          1.55       0          0
+
+  
+  ERROR 207: duplicate ID name MC-65 at line 108 of [JUNC] section:
+  MC-65            918.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-66 at line 109 of [JUNC] section:
+  MC-66            892.20     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-67 at line 110 of [JUNC] section:
+  MC-67            898.80     0          4.49       0          0
+
+  
+  ERROR 207: duplicate ID name MC-67 at line 111 of [JUNC] section:
+  MC-67            898.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-67 at line 112 of [JUNC] section:
+  MC-67            896.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-64 at line 113 of [JUNC] section:
+  MC-64            909.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-65 at line 114 of [JUNC] section:
+  MC-65            904.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-65 at line 115 of [JUNC] section:
+  MC-65            910.20     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-65 at line 116 of [JUNC] section:
+  MC-65            910.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-65 at line 117 of [JUNC] section:
+  MC-65            910.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 118 of [JUNC] section:
+  MC-62            911.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 119 of [JUNC] section:
+  MC-62            909.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 120 of [JUNC] section:
+  MC-62            910.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 121 of [JUNC] section:
+  MC-62            909.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 122 of [JUNC] section:
+  MC-62            909.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 123 of [JUNC] section:
+  MC-62            912.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 124 of [JUNC] section:
+  MC-62            912.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 125 of [JUNC] section:
+  MC-62            908.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 126 of [JUNC] section:
+  MC-62            908.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 127 of [JUNC] section:
+  MC-62            912.90     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 128 of [JUNC] section:
+  MC-62            912.90     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 129 of [JUNC] section:
+  MC-62            911.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 130 of [JUNC] section:
+  MC-62            910.00     0          0.60       0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 131 of [JUNC] section:
+  MC-62            910.60     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-62 at line 132 of [JUNC] section:
+  MC-62            910.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-61 at line 133 of [JUNC] section:
+  MC-61            912.66     0          0.50       0          0
+
+  
+  ERROR 207: duplicate ID name MC-61 at line 134 of [JUNC] section:
+  MC-61            910.90     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-61 at line 135 of [JUNC] section:
+  MC-61            912.76     0          0.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-58 at line 136 of [JUNC] section:
+  MC-58            915.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-58 at line 137 of [JUNC] section:
+  MC-58            914.30     0          1.50       0          0
+
+  
+  ERROR 207: duplicate ID name MC-57 at line 138 of [JUNC] section:
+  MC-57            918.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-57 at line 139 of [JUNC] section:
+  MC-57            906.90     0          1.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-57 at line 140 of [JUNC] section:
+  MC-57            918.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-57 at line 141 of [JUNC] section:
+  MC-57            909.30     0          0.90       0          0
+
+  
+  ERROR 207: duplicate ID name MC-57 at line 142 of [JUNC] section:
+  MC-57            906.90     0          2.30       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 143 of [JUNC] section:
+  MC-56            910.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 144 of [JUNC] section:
+  MC-56            915.00     0          0.70       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 145 of [JUNC] section:
+  MC-56            908.10     0          1.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 146 of [JUNC] section:
+  MC-56            914.00     0          1.20       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 147 of [JUNC] section:
+  MC-56            911.30     0          1.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 148 of [JUNC] section:
+  MC-56            910.60     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 149 of [JUNC] section:
+  MC-56            920.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 150 of [JUNC] section:
+  MC-56            916.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 151 of [JUNC] section:
+  MC-56            916.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 152 of [JUNC] section:
+  MC-56            915.60     0          0.10       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 153 of [JUNC] section:
+  MC-56            914.90     0          0.10       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 154 of [JUNC] section:
+  MC-56            920.00     0          0.10       0          0
+
+  
+  ERROR 207: duplicate ID name MC-56 at line 155 of [JUNC] section:
+  MC-56            921.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 156 of [JUNC] section:
+  MC-41            941.50     0          0.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 157 of [JUNC] section:
+  MC-41            941.80     0          0.10       0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 158 of [JUNC] section:
+  MC-41            938.00     0          0.10       0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 159 of [JUNC] section:
+  MC-41            921.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 160 of [JUNC] section:
+  MC-41            941.50     0          0.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 161 of [JUNC] section:
+  MC-41            921.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-41 at line 162 of [JUNC] section:
+  MC-41            920.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-37 at line 163 of [JUNC] section:
+  MC-37            941.50     0          0.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-37 at line 164 of [JUNC] section:
+  MC-37            941.50     0          0.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-37 at line 165 of [JUNC] section:
+  MC-37            921.90     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-37 at line 166 of [JUNC] section:
+  MC-37            921.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-37 at line 167 of [JUNC] section:
+  MC-37            918.60     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-32 at line 168 of [JUNC] section:
+  MC-32            920.40     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-32 at line 169 of [JUNC] section:
+  MC-32            927.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-32 at line 170 of [JUNC] section:
+  MC-32            920.00     0          0.40       0          0
+
+  
+  ERROR 207: duplicate ID name MC-32 at line 171 of [JUNC] section:
+  MC-32            924.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-32 at line 172 of [JUNC] section:
+  MC-32            928.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-31 at line 174 of [JUNC] section:
+  MC-31            930.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-31 at line 175 of [JUNC] section:
+  MC-31            930.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-31 at line 176 of [JUNC] section:
+  MC-31            942.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-31 at line 177 of [JUNC] section:
+  MC-31            941.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 178 of [JUNC] section:
+  MC-28            938.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 179 of [JUNC] section:
+  MC-28            930.00     0          0.10       0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 180 of [JUNC] section:
+  MC-28            931.70     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 181 of [JUNC] section:
+  MC-28            931.10     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 182 of [JUNC] section:
+  MC-28            940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 183 of [JUNC] section:
+  MC-28            930.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 184 of [JUNC] section:
+  MC-28            930.00     0          0.20       0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 185 of [JUNC] section:
+  MC-28            936.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 186 of [JUNC] section:
+  MC-28            930.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 187 of [JUNC] section:
+  MC-28            946.60     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 188 of [JUNC] section:
+  MC-28            946.50     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 189 of [JUNC] section:
+  MC-28            932.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 190 of [JUNC] section:
+  MC-28            932.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 191 of [JUNC] section:
+  MC-28            931.30     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 192 of [JUNC] section:
+  MC-28            930.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-28 at line 193 of [JUNC] section:
+  MC-28            930.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-17 at line 194 of [JUNC] section:
+  MC-17            944.00     0          0.80       0          0
+
+  
+  ERROR 207: duplicate ID name MC-17 at line 195 of [JUNC] section:
+  MC-17            944.80     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-17 at line 196 of [JUNC] section:
+  MC-17            940.00     0          0          0          0
+
+  
+  ERROR 207: duplicate ID name MC-17 at line 197 of [JUNC] section:
+  MC-17            956.00     0          0.50       0          0
+
+  
+  ERROR 207: duplicate ID name MC-17 at line 198 of [JUNC] section:
+  MC-17            956.00     0          0.50       0          0
+
+  
+  ERROR 207: duplicate ID name MC-17 at line 199 of [JUNC] section:
+  MC-17            944.00     0          0.80       0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

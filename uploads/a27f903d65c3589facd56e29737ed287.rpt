@@ -1,0 +1,372 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 10091 at line 149 of [CONDUIT] section:
+  1009             10091            1003n            1275.00    0.0196     0          0          0          0
+
+  
+  ERROR 209: undefined object 10111 at line 150 of [CONDUIT] section:
+  1011             10111            9                1154.00    0.0200     0          0          0          0
+
+  
+  ERROR 209: undefined object 10171 at line 154 of [CONDUIT] section:
+  1017             10171            1015n            700.00     0.0219     0          0          0          0
+
+  
+  ERROR 209: undefined object 10191 at line 155 of [CONDUIT] section:
+  1019             10191            1017n            678.00     0.0221     0          0          0          0
+
+  
+  ERROR 209: undefined object 10251 at line 158 of [CONDUIT] section:
+  1025             10251            1023n            900.00     0.0194     0          0          0          0
+
+  
+  ERROR 209: undefined object 10291 at line 159 of [CONDUIT] section:
+  1029             10291            1025n            1893.00    0.0169     0          0          0          0
+
+  
+  ERROR 209: undefined object 10311 at line 160 of [CONDUIT] section:
+  1031             10311            1029n            1257.00    0.0174     0          0          0          0
+
+  
+  ERROR 209: undefined object 10331 at line 161 of [CONDUIT] section:
+  1033             10331            1031n            1086.00    0.0178     0          0          0          0
+
+  
+  ERROR 209: undefined object 10351 at line 162 of [CONDUIT] section:
+  1035             10351            1033n            364.00     0.0219     0          0          0          0
+
+  
+  ERROR 209: undefined object 10431 at line 167 of [CONDUIT] section:
+  1043             10431            1042n            308.00     0.0241     0          0          0          0
+
+  
+  ERROR 209: undefined object 10471 at line 169 of [CONDUIT] section:
+  1047             10471            1045n            209.00     0.0209     0          0          0          0
+
+  
+  ERROR 209: undefined object 10521 at line 173 of [CONDUIT] section:
+  1052             10521            1051n            171.00     0.0225     0          0          0          0
+
+  
+  ERROR 209: undefined object 10701 at line 179 of [CONDUIT] section:
+  1070             10701            1025n            191.00     0.0212     0          0          0          0
+
+  
+  ERROR 209: undefined object 10731 at line 181 of [CONDUIT] section:
+  1073             10731            1072n            191.00     0.0260     0          0          0          0
+
+  
+  ERROR 209: undefined object 10751 at line 183 of [CONDUIT] section:
+  1075             10751            1074n            195.00     0.0254     0          0          0          0
+
+  
+  ERROR 209: undefined object 10781 at line 185 of [CONDUIT] section:
+  1078             10781            1077n            191.00     0.0265     0          0          0          0
+
+  
+  ERROR 209: undefined object 10811 at line 188 of [CONDUIT] section:
+  1081             10811            1080n            191.00     0.0271     0          0          0          0
+
+  
+  ERROR 209: undefined object 10841 at line 190 of [CONDUIT] section:
+  1084             10841            1083n            435.00     0.0221     0          0          0          0
+
+  
+  ERROR 209: undefined object 10871 at line 192 of [CONDUIT] section:
+  1087             10871            1086n            171.00     0.0259     0          0          0          0
+
+  
+  ERROR 209: undefined object 10921 at line 197 of [CONDUIT] section:
+  1092             10921            1091n            142.00     0.0215     0          0          0          0
+
+  
+  ERROR 209: undefined object 11011 at line 203 of [CONDUIT] section:
+  1101             11011            1100n            335.00     0.0213     0          0          0          0
+
+  
+  ERROR 209: undefined object 11201 at line 207 of [CONDUIT] section:
+  1120             11201            1056n            171.00     0.0233     0          0          0          0
+
+  
+  ERROR 209: undefined object 11231 at line 209 of [CONDUIT] section:
+  1123             11231            1122n            209.00     0.0208     0          0          0          0
+
+  
+  ERROR 209: undefined object 11261 at line 211 of [CONDUIT] section:
+  1126             11261            1125n            209.00     0.0252     0          0          0          0
+
+  
+  ERROR 209: undefined object 11291 at line 213 of [CONDUIT] section:
+  1129             11291            1128n            191.00     0.0241     0          0          0          0
+
+  
+  ERROR 209: undefined object 11521 at line 221 of [CONDUIT] section:
+  1152             11521            1019n            1330.00    0.0171     0          0          0          0
+
+  
+  ERROR 209: undefined object 11561 at line 222 of [CONDUIT] section:
+  1156             11561            1152n            1990.00    0.0164     0          0          0          0
+
+  
+  ERROR 209: undefined object 11581 at line 223 of [CONDUIT] section:
+  1158             11581            1156n            360.00     0.0217     0          0          0          0
+
+  
+  ERROR 209: undefined object 11621 at line 226 of [CONDUIT] section:
+  1162             11621            1160n            1050.00    0.0169     0          0          0          0
+
+  
+  ERROR 209: undefined object 11661 at line 229 of [CONDUIT] section:
+  1166             11661            1164n            530.00     0.0177     0          0          0          0
+
+  
+  ERROR 209: undefined object 11721 at line 230 of [CONDUIT] section:
+  1172             11721            1166n            2175.00    0.0157     0          0          0          0
+
+  
+  ERROR 209: undefined object 11741 at line 231 of [CONDUIT] section:
+  1174             11741            1172n            910.00     0.0159     0          0          0          0
+
+  
+  ERROR 209: undefined object 11761 at line 232 of [CONDUIT] section:
+  1176             11761            1174n            1210.00    0.0157     0          0          0          0
+
+  
+  ERROR 209: undefined object 11822 at line 234 of [CONDUIT] section:
+  1182             11822            1162n            1960.00    0.0158     0          0          0          0
+
+  
+  ERROR 209: undefined object 11861 at line 236 of [CONDUIT] section:
+  1186             11861            1182n            1220.00    0.0164     0          0          0          0
+
+  
+  ERROR 209: undefined object 11881 at line 237 of [CONDUIT] section:
+  1188             11881            1186n            710.00     0.0167     0          0          0          0
+
+  
+  ERROR 209: undefined object 11921 at line 238 of [CONDUIT] section:
+  1192             11921            1188n            1435.00    0.0157     1.00       0          0          0
+
+  
+  ERROR 209: undefined object 11961 at line 239 of [CONDUIT] section:
+  1196             11961            1192n            1640.00    0.0154     0          1.00       0          0
+
+  
+  ERROR 209: undefined object 12101 at line 240 of [CONDUIT] section:
+  1210             12101            1152n            540.00     0.0168     0          0          0          0
+
+  
+  ERROR 209: undefined object 12121 at line 241 of [CONDUIT] section:
+  1212             12121            1210n            1400.00    0.0156     0          0          0          0
+
+  
+  ERROR 209: undefined object 12161 at line 242 of [CONDUIT] section:
+  1216             12161            1212n            2160.00    0.0153     0          0          0          0
+
+  
+  ERROR 209: undefined object 12321 at line 245 of [CONDUIT] section:
+  1232             12321            1230n            1071.00    0.0172     0          0          0          0
+
+  
+  ERROR 209: undefined object 12361 at line 246 of [CONDUIT] section:
+  1236             12361            1232n            1605.00    0.0163     0          0          0          0
+
+  
+  ERROR 209: undefined object 12381 at line 247 of [CONDUIT] section:
+  1238             12381            1236n            850.00     0.0174     0          0          0          0
+
+  
+  ERROR 209: undefined object 12401 at line 248 of [CONDUIT] section:
+  1240             12401            1238n            700.00     0.0179     0          0          0          0
+
+  
+  ERROR 209: undefined object 12421 at line 249 of [CONDUIT] section:
+  1242             12421            1240n            1370.00    0.0165     0          0          0          0
+
+  
+  ERROR 209: undefined object 12441 at line 250 of [CONDUIT] section:
+  1244             12441            1242n            435.00     0.0182     0          0          0          0
+
+  
+  ERROR 209: undefined object 12481 at line 251 of [CONDUIT] section:
+  1248             12481            1244n            1410.00    0.0154     2.60       0          0          0
+
+  
+  ERROR 209: undefined object 12501 at line 252 of [CONDUIT] section:
+  1250             12501            1248n            350.00     0.0164     0          2.60       0          0
+
+  
+  ERROR 209: undefined object 12601 at line 254 of [CONDUIT] section:
+  1260             12601            1011n            1800.00    0.0159     0          0          0          0
+
+  
+  ERROR 209: undefined object 12621 at line 255 of [CONDUIT] section:
+  1262             12621            1260n            610.00     0.0174     0          0          0          0
+
+  
+  ERROR 209: undefined object 12661 at line 256 of [CONDUIT] section:
+  1266             12661            1262n            1260.00    0.0158     0          0          0          0
+
+  
+  ERROR 209: undefined object 12681 at line 257 of [CONDUIT] section:
+  1268             12681            1266n            400.00     0.0171     0          0          0          0
+
+  
+  ERROR 209: undefined object 12701 at line 258 of [CONDUIT] section:
+  1270             12701            1268n            875.00     0.0159     0          0          0          0
+
+  
+  ERROR 209: undefined object 12941 at line 266 of [CONDUIT] section:
+  1294             12941            1292n            672.00     0.0178     0          0          0          0
+
+  
+  ERROR 209: undefined object 12961 at line 267 of [CONDUIT] section:
+  1296             12961            1294n            378.00     0.0192     0          0          0          0
+
+  
+  ERROR 209: undefined object 0 at line 272 of [XSECT] section:
+  1000             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 274 of [XSECT] section:
+  1003             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 289 of [XSECT] section:
+  1037             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 290 of [XSECT] section:
+  1039             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 292 of [XSECT] section:
+  1042             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 294 of [XSECT] section:
+  1045             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 298 of [XSECT] section:
+  1051             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 300 of [XSECT] section:
+  1054             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 301 of [XSECT] section:
+  1056             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 302 of [XSECT] section:
+  1058             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 304 of [XSECT] section:
+  1061             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 306 of [XSECT] section:
+  1072             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 308 of [XSECT] section:
+  1074             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 310 of [XSECT] section:
+  1077             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 313 of [XSECT] section:
+  1080             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 315 of [XSECT] section:
+  1083             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 317 of [XSECT] section:
+  1086             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 322 of [XSECT] section:
+  1091             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 324 of [XSECT] section:
+  1094             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 326 of [XSECT] section:
+  1097             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 328 of [XSECT] section:
+  1100             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 330 of [XSECT] section:
+  1103             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 332 of [XSECT] section:
+  1106             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 334 of [XSECT] section:
+  1122             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 336 of [XSECT] section:
+  1125             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 338 of [XSECT] section:
+  1128             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 340 of [XSECT] section:
+  1131             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 341 of [XSECT] section:
+  1139             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 343 of [XSECT] section:
+  1142             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 344 of [XSECT] section:
+  1144             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 346 of [XSECT] section:
+  1147             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 351 of [XSECT] section:
+  11601            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 359 of [XSECT] section:
+  1178             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 361 of [XSECT] section:
+  11821            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 370 of [XSECT] section:
+  12301            IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

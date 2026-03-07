@@ -1,0 +1,16 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name REACT at line 40 of [WEIR] section:
+  REACT            3                outlet           TRANSVERSE 100.00     1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name REACT at line 41 of [WEIR] section:
+  REACT            2                3                TRANSVERSE 100.00     1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,100 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 2-24RC at line 117 of [CONDUIT] section:
+  1-36RC           2-24RC           P6-Out           201.00     0.0130     12.82      13.04      0          0
+
+  
+  ERROR 209: undefined object 36"RCP at line 122 of [CONDUIT] section:
+  60"RCP           36"RCP           P7-Out           40.00      0.0130     12.72      12.80      0          0
+
+  
+  ERROR 209: undefined object 2-36"RCP at line 141 of [CONDUIT] section:
+  1-36"RCP         2-36"RCP         P2-Out           76.00      0.0130     13.81      13.40      0          0
+
+  
+  ERROR 209: undefined object 0 at line 192 of [XSECT] section:
+  Chn-11A          IRREGULAR    0          7.00       0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 201 of [XSECT] section:
+  Chn-14           IRREGULAR    0          10.00      0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 202 of [XSECT] section:
+  Chn-15           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 203 of [XSECT] section:
+  Chn-15A          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 205 of [XSECT] section:
+  Chn-16           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 206 of [XSECT] section:
+  Chn-17           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 207 of [XSECT] section:
+  Chn-18           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 209 of [XSECT] section:
+  Chn-11           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 210 of [XSECT] section:
+  Chn-10           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 211 of [XSECT] section:
+  Chn-9            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 214 of [XSECT] section:
+  Chn-8            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 215 of [XSECT] section:
+  Chn-7            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 217 of [XSECT] section:
+  Chn-5            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 218 of [XSECT] section:
+  Chn-5A           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 219 of [XSECT] section:
+  Chn-6            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 220 of [XSECT] section:
+  Chn-3            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 221 of [XSECT] section:
+  Chn-4            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 222 of [XSECT] section:
+  Chn-4A           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 225 of [XSECT] section:
+  Chn-2            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 226 of [XSECT] section:
+  Chn-1            IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

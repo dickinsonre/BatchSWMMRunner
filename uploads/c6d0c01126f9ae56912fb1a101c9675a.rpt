@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 2411 at line 113 of [CONDUIT] section:
+  2410             2411             2360_2400        420.00     0.0150     -7.27      -7.30      0          0
+
+  
+  ERROR 209: undefined object 2401 at line 114 of [CONDUIT] section:
+  2400             2401             E2390            360.00     0.0150     -7.30      -7.35      0          0
+
+  
+  ERROR 209: undefined object 2391A at line 115 of [CONDUIT] section:
+  2390             2391A            2391B            0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object 2381 at line 116 of [CONDUIT] section:
+  2380             2381             2350_2370        430.00     0.0150     -7.40      -7.45      0          0
+
+  
+  ERROR 209: undefined object 2371 at line 117 of [CONDUIT] section:
+  2370             2371             E2360            340.00     0.0150     -7.45      -7.50      0          0
+
+  
+  ERROR 209: undefined object 2361 at line 118 of [CONDUIT] section:
+  2360             2361             E2350            450.00     0.0180     -7.50      -8.00      0          0
+
+  
+  ERROR 209: undefined object 2501 at line 119 of [CONDUIT] section:
+  2500             2501             E2490            370.00     0.0130     -4.71      -4.77      0          0
+
+  
+  ERROR 209: undefined object 2721 at line 139 of [CONDUIT] section:
+  2720             2721             E2010            1000.00    0.0150     -4.50      -4.20      0          0
+
+  
+  ERROR 209: undefined object 0 at line 178 of [XSECT] section:
+  L2010            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 183 of [XSECT] section:
+  2390             CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 192 of [XSECT] section:
+  L2350            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 193 of [XSECT] section:
+  L2340            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 196 of [XSECT] section:
+  L2310            IRREGULAR    0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:22 2026
+  Analysis ended on:  Sat Mar  7 21:51:22 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,84 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name SB at line 28 of [JUNC] section:
+  SB               12.00      0          1.00       0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 29 of [JUNC] section:
+  SB               12.00      0          1.00       0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 30 of [JUNC] section:
+  SB               12.00      0          1.00       0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 33 of [JUNC] section:
+  SB               12.00      0          1.00       0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 176 of [JUNC] section:
+  SB               18.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 177 of [JUNC] section:
+  SB               12.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 178 of [JUNC] section:
+  SB               16.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 179 of [JUNC] section:
+  SB               12.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 180 of [JUNC] section:
+  SB               13.62      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 181 of [JUNC] section:
+  SB               16.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 182 of [JUNC] section:
+  SB               16.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 183 of [JUNC] section:
+  SB               13.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 184 of [JUNC] section:
+  SB               15.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 185 of [JUNC] section:
+  SB               10.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 186 of [JUNC] section:
+  SB               20.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 187 of [JUNC] section:
+  SB               16.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name SB at line 188 of [JUNC] section:
+  SB               15.93      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Canal at line 424 of [CONDUIT] section:
+  Canal            SB               250              320.00     0.0140     4.93       2.93       0          0
+
+  
+  ERROR 207: duplicate ID name Waters at line 467 of [CONDUIT] section:
+  Waters           ?                Node_10361038    70.00      0.0200     3.00       2.90       0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

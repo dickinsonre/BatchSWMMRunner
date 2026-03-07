@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 502 of [CONDUIT] section:
+  662              ?                ?                10.00      0.0140     126.00     125.00     0          0
+
+  
+  ERROR 209: undefined object PS at line 518 of [PUMP] section:
+  WS PS 1          WS PS 2          WS PS 3          PC_WS PS 1 ON       105.45     104.20    
+
+  
+  ERROR 209: undefined object NLANDPS2 at line 519 of [PUMP] section:
+  NLANDPS1         NLANDPS2         ?                PC_NLANDPS1 ON       0          0         
+
+  
+  ERROR 205: invalid keyword PS at line 524 of [CURVE] section:
+  PC_WS PS 1       Pump3      0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

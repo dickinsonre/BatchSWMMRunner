@@ -1,0 +1,280 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object B60700 at line 95 of [CONDUIT] section:
+  B6070C           B60700           B6060            680.00     0.0162     0          0.05       0          0
+
+  
+  ERROR 209: undefined object B60900 at line 97 of [CONDUIT] section:
+  B6090C           B60900           B6080            510.00     0.0153     0          0.65       0          0
+
+  
+  ERROR 209: undefined object B61200 at line 100 of [CONDUIT] section:
+  B6120C           B61200           B6110            470.00     0.0155     0.04       0.47       0          0
+
+  
+  ERROR 209: undefined object B61300 at line 101 of [CONDUIT] section:
+  B6130C           B61300           B6120            440.00     0.0149     0.07       0          0          0
+
+  
+  ERROR 209: undefined object B61400 at line 102 of [CONDUIT] section:
+  B6140C           B61400           B6130            520.00     0.0146     0          0          0          0
+
+  
+  ERROR 209: undefined object B61500 at line 103 of [CONDUIT] section:
+  B6150C           B61500           B6140            810.00     0.0144     0          0.03       0          0
+
+  
+  ERROR 209: undefined object B61600 at line 104 of [CONDUIT] section:
+  B6160C           B61600           B6080            440.00     0.0147     0          0.75       0          0
+
+  
+  ERROR 209: undefined object B61700 at line 105 of [CONDUIT] section:
+  B6170C           B61700           B6160            400.00     0.0141     0          0          0          0
+
+  
+  ERROR 209: undefined object B61800 at line 106 of [CONDUIT] section:
+  B6180C           B61800           B6080            390.00     0.0155     0          0.75       0          0
+
+  
+  ERROR 209: undefined object B61802 at line 107 of [CONDUIT] section:
+  B6190C           B61802           B6180            390.00     0.0145     0          0          0          0
+
+  
+  ERROR 209: undefined object B60904 at line 108 of [CONDUIT] section:
+  B6200C           B60904           B6090            380.00     0.0153     0          2.00       0          0
+
+  
+  ERROR 209: undefined object B62200 at line 110 of [CONDUIT] section:
+  B6220C           B62200           B6210            380.00     0.0145     0          0.32       0          0
+
+  
+  ERROR 209: undefined object B62300 at line 111 of [CONDUIT] section:
+  B6230C           B62300           B6220            410.00     0.0143     0          0.40       0          0
+
+  
+  ERROR 209: undefined object B62500 at line 113 of [CONDUIT] section:
+  B6250C           B62500           B6105            440.00     0.0146     0          1.78       0          0
+
+  
+  ERROR 209: undefined object B62600 at line 114 of [CONDUIT] section:
+  B6260C           B62600           B6250            370.00     0.0146     0          0.15       0          0
+
+  
+  ERROR 209: undefined object B62700 at line 115 of [CONDUIT] section:
+  B6270C           B62700           B6260            440.00     0.0154     0.02       0.02       0          0
+
+  
+  ERROR 209: undefined object B62800 at line 116 of [CONDUIT] section:
+  B6280C           B62800           B6270            380.00     0.0146     0          0          0          0
+
+  
+  ERROR 209: undefined object B62900 at line 117 of [CONDUIT] section:
+  B6290C           B62900           B6110            420.00     0.0143     0          1.97       0          0
+
+  
+  ERROR 209: undefined object B63000 at line 118 of [CONDUIT] section:
+  B6300C           B63000           B6290            820.00     0.0144     0          0.15       0          0
+
+  
+  ERROR 209: undefined object B65100 at line 119 of [CONDUIT] section:
+  B6510C           B65100           B6500            280.00     0.0196     0          0          0          0
+
+  
+  ERROR 209: undefined object B65200 at line 120 of [CONDUIT] section:
+  B6520C           B65200           B6510            730.00     0.0157     0          0          0          0
+
+  
+  ERROR 209: undefined object B65300 at line 121 of [CONDUIT] section:
+  B6530C           B65300           B6520            470.00     0.0150     0          0.13       0          0
+
+  
+  ERROR 209: undefined object B65400 at line 122 of [CONDUIT] section:
+  B6540C           B65400           B6530            220.00     0.0183     0          0          0          0
+
+  
+  ERROR 209: undefined object B65500 at line 123 of [CONDUIT] section:
+  B6550C           B65500           B6540            320.00     0.0152     0          0.49       0          0
+
+  
+  ERROR 209: undefined object B65600 at line 124 of [CONDUIT] section:
+  B6560C           B65600           B6550            280.00     0.0151     0          0.20       0          0
+
+  
+  ERROR 209: undefined object B65700 at line 125 of [CONDUIT] section:
+  B6570C           B65700           B6560            420.00     0.0148     0          0.07       0          0
+
+  
+  ERROR 209: undefined object B65800 at line 126 of [CONDUIT] section:
+  B6580C           B65800           B6570            780.00     0.0144     0          0.20       0          0
+
+  
+  ERROR 209: undefined object B66300 at line 127 of [CONDUIT] section:
+  B6630C           B66300           B6620            80.00      0.0240     0.10       0.09       0          0
+
+  
+  ERROR 209: undefined object B66400 at line 128 of [CONDUIT] section:
+  B6640C           B66400           B6630            140.00     0.0160     0          3.00       0          0
+
+  
+  ERROR 209: undefined object B66500 at line 129 of [CONDUIT] section:
+  B6650C           B66500           B6630            390.00     0.0150     0          0          0          0
+
+  
+  ERROR 209: undefined object B66600 at line 130 of [CONDUIT] section:
+  B6660C           B66600           B6650            190.00     0.0160     0          0.03       0          0
+
+  
+  ERROR 209: undefined object B66700 at line 131 of [CONDUIT] section:
+  B6670C           B66700           B6650            430.00     0.0148     0          0.27       0          0
+
+  
+  ERROR 209: undefined object B68102 at line 133 of [CONDUIT] section:
+  B6815C           B68102           B6810            170.00     0.0175     1.50       0          0          0
+
+  
+  ERROR 209: undefined object B68200 at line 134 of [CONDUIT] section:
+  B6820C           B68200           B6815            50.00      0.0175     0.15       2.09       0          0
+
+  
+  ERROR 209: undefined object B68300 at line 137 of [CONDUIT] section:
+  B6830C           B68300           B6820            330.00     0.0152     0.09       0          0          0
+
+  
+  ERROR 209: undefined object B68100 at line 138 of [CONDUIT] section:
+  B6850C           B68100           B6810            480.00     0.0153     0          0.06       0          0
+
+  
+  ERROR 209: undefined object B68302 at line 139 of [CONDUIT] section:
+  B6831C           B68302           B6900            780.00     0.0155     0          0          0          0
+
+  
+  ERROR 211: invalid number -3.86 at line 178 of [PUMP] section:
+  MUL44            B6050            B6052            PC_MUL44   ON       -3.86      -4.80     
+
+  
+  ERROR 209: undefined object 0 at line 235 of [XSECT] section:
+  B67000           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 236 of [XSECT] section:
+  B67002           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 237 of [XSECT] section:
+  B60600           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 238 of [XSECT] section:
+  B60702           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 239 of [XSECT] section:
+  B60902           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 240 of [XSECT] section:
+  B61100           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 241 of [XSECT] section:
+  B61302           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 242 of [XSECT] section:
+  B61602           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 243 of [XSECT] section:
+  B61702           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 244 of [XSECT] section:
+  B61704           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 245 of [XSECT] section:
+  B62000           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 246 of [XSECT] section:
+  B62100           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 247 of [XSECT] section:
+  B63002           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 248 of [XSECT] section:
+  B65602           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 249 of [XSECT] section:
+  B65702           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 250 of [XSECT] section:
+  B65802           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 251 of [XSECT] section:
+  B65804           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 252 of [XSECT] section:
+  B65806           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 253 of [XSECT] section:
+  B68402           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 254 of [XSECT] section:
+  B69990           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 255 of [XSECT] section:
+  B69992           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 256 of [XSECT] section:
+  B69994           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 257 of [XSECT] section:
+  B69996           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 258 of [XSECT] section:
+  B69998           IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 259 of [XSECT] section:
+  B6105C           RECT_OPEN    0          100.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 260 of [XSECT] section:
+  B6622C           RECT_OPEN    0          300.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 261 of [XSECT] section:
+  MUL40            RECT_OPEN    0          200.00     0          0          
+
+  
+  ERROR 211: invalid number  at line 262 of [XSECT] section:
+  MUL41            RECT_OPEN    0          2.25       0          0          
+
+  
+  ERROR 211: invalid number  at line 263 of [XSECT] section:
+  MUL42            RECT_OPEN    0          1.00       0          0          
+
+  
+  ERROR 211: invalid number  at line 264 of [XSECT] section:
+  MUL43            RECT_OPEN    0          300.00     0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

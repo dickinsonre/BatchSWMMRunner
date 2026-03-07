@@ -1,0 +1,136 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 48 of [CONDUIT] section:
+  216              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 49 of [CONDUIT] section:
+  218              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 50 of [CONDUIT] section:
+  221              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 51 of [CONDUIT] section:
+  223              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 52 of [CONDUIT] section:
+  225              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 53 of [CONDUIT] section:
+  228              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 54 of [CONDUIT] section:
+  230              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 55 of [CONDUIT] section:
+  232              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 56 of [CONDUIT] section:
+  235              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 57 of [CONDUIT] section:
+  237              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 58 of [CONDUIT] section:
+  239              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 59 of [CONDUIT] section:
+  242              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 60 of [CONDUIT] section:
+  245              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 61 of [CONDUIT] section:
+  247              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 62 of [CONDUIT] section:
+  249              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 63 of [CONDUIT] section:
+  250              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 68 of [XSECT] section:
+  216              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 69 of [XSECT] section:
+  218              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 70 of [XSECT] section:
+  221              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 71 of [XSECT] section:
+  223              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 72 of [XSECT] section:
+  225              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 73 of [XSECT] section:
+  228              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 74 of [XSECT] section:
+  230              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 75 of [XSECT] section:
+  232              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 76 of [XSECT] section:
+  235              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 77 of [XSECT] section:
+  237              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 78 of [XSECT] section:
+  239              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 79 of [XSECT] section:
+  242              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 80 of [XSECT] section:
+  245              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 81 of [XSECT] section:
+  247              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 82 of [XSECT] section:
+  249              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 83 of [XSECT] section:
+  250              CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:32 2026
+  Analysis ended on:  Sat Mar  7 21:51:32 2026
+  Total elapsed time: < 1 sec

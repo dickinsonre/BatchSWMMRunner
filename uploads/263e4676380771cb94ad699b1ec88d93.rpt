@@ -1,0 +1,120 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name CB at line 28 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 29 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 30 of [JUNC] section:
+  CB               19.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 31 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 32 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 33 of [JUNC] section:
+  CB               19.10      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 34 of [JUNC] section:
+  CB               19.56      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 35 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 36 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 37 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name JB at line 39 of [JUNC] section:
+  JB               20.50      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name JB at line 40 of [JUNC] section:
+  JB               20.50      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Wetland at line 43 of [JUNC] section:
+  Wetland          20.00      0          0.80       0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 44 of [JUNC] section:
+  CB               19.00      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 45 of [JUNC] section:
+  CB               19.21      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 46 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 47 of [JUNC] section:
+  CB               19.53      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name CB at line 48 of [JUNC] section:
+  CB               18.94      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name OF at line 49 of [JUNC] section:
+  OF               18.99      0          0          0          0
+
+  
+  ERROR 207: duplicate ID name Wetland at line 55 of [STORAGE] section:
+  Wetland          20.00      0          0.80       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name DA at line 56 of [STORAGE] section:
+  DA               20.00      0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name DA at line 57 of [STORAGE] section:
+  DA               20.00      0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name Wetland at line 58 of [STORAGE] section:
+  Wetland          20.00      0          0.80       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name Wetland at line 59 of [STORAGE] section:
+  Wetland          20.00      0          2.80       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name DA at line 60 of [STORAGE] section:
+  DA               20.00      0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name Weir at line 83 of [CONDUIT] section:
+  Weir             DA               Wetland          5.00       0.0300     19.00      19.00      0          0
+
+  
+  ERROR 207: duplicate ID name Weir at line 84 of [CONDUIT] section:
+  Weir             DA               Wetland          5.00       0.0300     19.00      19.00      0          0
+
+  
+  ERROR 207: duplicate ID name Control at line 96 of [ORIFICE] section:
+  Control 2        DA               OF               SIDE       0          0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

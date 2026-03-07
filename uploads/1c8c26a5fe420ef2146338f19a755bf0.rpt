@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name road at line 45 of [CONDUIT] section:
+  road             inflo2           inflo3           10.00      0.0140     99.30      99.25      0          0
+
+  
+  ERROR 207: duplicate ID name road at line 46 of [CONDUIT] section:
+  road             inflo3           roadjunc         55.00      0.0140     99.25      99.10      0          0
+
+  
+  ERROR 207: duplicate ID name road at line 48 of [CONDUIT] section:
+  road             roadjunc         outletrd         103.00     0.0140     99.10      99.00      0          0
+
+  
+  ERROR 207: duplicate ID name inlet at line 54 of [ORIFICE] section:
+  inlet            inflo1           1                SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name inlet at line 55 of [ORIFICE] section:
+  inlet            inflo3           3                SIDE       0          0.650      NO       0
+
+  
+  ERROR 207: duplicate ID name inlet at line 56 of [ORIFICE] section:
+  inlet            roadjunc         4                SIDE       0          0.650      NO       0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

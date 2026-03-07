@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 18 at line 142 of [CONDUIT] section:
+  18               S-17             S-18             50.00      0.0140     97.50      97.00      0          0
+
+  
+  ERROR 207: duplicate ID name 18 at line 146 of [CONDUIT] section:
+  18               S-22             S-21             50.00      0.0140     107.09     106.47     0          0
+
+  
+  ERROR 207: duplicate ID name 18 at line 148 of [CONDUIT] section:
+  18               S-24             S-23             50.00      0.0140     111.25     110.75     0          0
+
+  
+  ERROR 207: duplicate ID name 24 at line 161 of [CONDUIT] section:
+  24               S-36A            S-36B            87.00      0.0140     105.14     104.13     0          0
+
+  
+  ERROR 207: duplicate ID name 24 at line 163 of [CONDUIT] section:
+  24               S-36B            S-38A            97.00      0.0140     104.13     103.25     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:28 2026
+  Analysis ended on:  Sat Mar  7 21:51:28 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,56 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 50 of [CONDUIT] section:
+  215              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 51 of [CONDUIT] section:
+  217              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 52 of [CONDUIT] section:
+  219              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 53 of [CONDUIT] section:
+  221              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 54 of [CONDUIT] section:
+  223              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 55 of [CONDUIT] section:
+  225              ?                ?                0          0          0          0          0          0
+
+  
+  ERROR 211: invalid number  at line 62 of [XSECT] section:
+  215              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 63 of [XSECT] section:
+  217              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 64 of [XSECT] section:
+  219              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 65 of [XSECT] section:
+  221              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 66 of [XSECT] section:
+  223              CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 67 of [XSECT] section:
+  225              CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

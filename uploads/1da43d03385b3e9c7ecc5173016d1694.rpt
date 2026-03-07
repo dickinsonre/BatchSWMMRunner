@@ -1,0 +1,28 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object LH030weir at line 74 of [CONDUIT] section:
+  LH030culv        LH030weir        LH020C           40.00      0.0210     96.53      94.72      0          0
+
+  
+  ERROR 209: undefined object LH040weir at line 75 of [CONDUIT] section:
+  LH040culv        LH040weir        LH030B           500.00     0.0160     122.99     119.10     0          0
+
+  
+  ERROR 209: undefined object LH124Bweir at line 88 of [CONDUIT] section:
+  LH124Bculv       LH124Bweir       LH124A           31.00      0.0140     128.08     127.19     0          0
+
+  
+  ERROR 211: invalid number  at line 124 of [XSECT] section:
+  LH220GW          CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 125 of [XSECT] section:
+  LH125GW          CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:27 2026
+  Analysis ended on:  Sat Mar  7 21:51:27 2026
+  Total elapsed time: < 1 sec

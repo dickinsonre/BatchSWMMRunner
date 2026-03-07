@@ -1,0 +1,24 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 244 of [CONDUIT] section:
+  LK972042         ?                Node_97          87.00      0.0130     611.10     610.92     0          0
+
+  
+  ERROR 209: undefined object LK1044060A at line 276 of [CONDUIT] section:
+  LK1044060        LK1044060A       104-4-059        497.50     0.0130     547.91     546.64     0          0
+
+  
+  ERROR 209: undefined object ? at line 446 of [CONDUIT] section:
+  LK964025A        ?                ?                546.00     0.0130     576.68     574.61     0          0
+
+  
+  ERROR 209: undefined object LK1044068A at line 453 of [CONDUIT] section:
+  LK1044068        LK1044068A       104-4-067        178.60     0.0130     549.26     549.05     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

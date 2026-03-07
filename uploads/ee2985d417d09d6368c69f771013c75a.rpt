@@ -1,0 +1,40 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 420.1 at line 246 of [CONDUIT] section:
+  420.1            REN6             REN5             104.00     0          9.22       9.25       0          0
+
+  
+  ERROR 207: duplicate ID name 510.1 at line 276 of [CONDUIT] section:
+  510.1            CARN3            GARD2            190.00     0          9.68       6.79       0          0
+
+  
+  ERROR 207: duplicate ID name 603.1 at line 318 of [CONDUIT] section:
+  603.1            REN9             REN10            114.00     0          8.07       7.74       0          0
+
+  
+  ERROR 207: duplicate ID name 603.1 at line 319 of [CONDUIT] section:
+  603.1            KJ5              REN9             76.00      0          8.30       8.07       0          0
+
+  
+  ERROR 207: duplicate ID name 603.1 at line 346 of [CONDUIT] section:
+  603.1            FUL9             REN10            70.00      0          9.66       7.74       0          0
+
+  
+  ERROR 207: duplicate ID name 274.1 at line 352 of [CONDUIT] section:
+  274.1            ANN4             ANZAC6           48.00      0          8.41       8.32       0          0
+
+  
+  ERROR 207: duplicate ID name TAYST1 at line 372 of [WEIR] section:
+  TAYST1           TAYLDRN1         HERB1            TRANSVERSE 0          1.840      NO       0        0          YES
+
+  
+  ERROR 207: duplicate ID name TAYST1 at line 373 of [WEIR] section:
+  TAYST1           TAYLDRN1         BRUCE2           TRANSVERSE 0          1.840      NO       0        0          YES
+
+
+  Analysis begun on:  Sat Mar  7 21:51:33 2026
+  Analysis ended on:  Sat Mar  7 21:51:33 2026
+  Total elapsed time: < 1 sec

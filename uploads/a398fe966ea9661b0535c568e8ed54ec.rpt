@@ -1,0 +1,84 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object SIP2 at line 162 of [CONDUIT] section:
+  SIP1             SIP2             SIP3             150.00     0.0040     566.54     566.36     0          0
+
+  
+  ERROR 209: undefined object ? at line 163 of [CONDUIT] section:
+  440              ?                ?                150.00     0.0130     562.44     561.93     0          0
+
+  
+  ERROR 209: undefined object lag1 at line 200 of [PUMP] section:
+  lead1            lag1             lag2             PC_lead1   ON       563.90     562.40    
+
+  
+  ERROR 209: undefined object P10H at line 201 of [PUMP] section:
+  P10L             P10H             exit1            PC_P10L    ON       564.50     562.00    
+
+  
+  ERROR 209: undefined object 0 at line 240 of [XSECT] section:
+  RWEIR2           CUSTOM       4.50       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 283 of [XSECT] section:
+  GLK-10           RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 284 of [XSECT] section:
+  GLK2             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 285 of [XSECT] section:
+  GLP2             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 286 of [XSECT] section:
+  GLW-S2           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 287 of [XSECT] section:
+  GLZ1             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 288 of [XSECT] section:
+  GLAA15           RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 289 of [XSECT] section:
+  LGJ2             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 290 of [XSECT] section:
+  GLV44            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 291 of [XSECT] section:
+  GLV17            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 292 of [XSECT] section:
+  GLAA1            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 293 of [XSECT] section:
+  GLW2             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 294 of [XSECT] section:
+  GLW8             RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 295 of [XSECT] section:
+  GLT16            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 296 of [XSECT] section:
+  GLU4             RECT_CLOSED  0          0          0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:23 2026
+  Analysis ended on:  Sat Mar  7 21:51:23 2026
+  Total elapsed time: < 1 sec

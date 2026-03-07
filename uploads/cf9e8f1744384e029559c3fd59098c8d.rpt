@@ -1,0 +1,68 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name x-sec at line 181 of [CONDUIT] section:
+  x-sec            150              C1-2             137.00     0          684.41     684.31     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 182 of [CONDUIT] section:
+  x-sec            C1-2             155              199.00     0          684.31     684.21     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 183 of [CONDUIT] section:
+  x-sec            155              157              195.00     0          684.21     684.11     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 184 of [CONDUIT] section:
+  x-sec            157              163              155.00     0          684.11     684.01     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 185 of [CONDUIT] section:
+  x-sec            163              146              135.00     0          684.01     683.91     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 186 of [CONDUIT] section:
+  x-sec            147              167              50.00      0          683.54     683.60     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 187 of [CONDUIT] section:
+  x-sec            167              169              144.00     0          683.60     683.60     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 188 of [CONDUIT] section:
+  x-sec            169              171              191.00     0          683.60     683.10     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 189 of [CONDUIT] section:
+  x-sec            171              173              188.00     0          683.10     682.70     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 190 of [CONDUIT] section:
+  x-sec            173              C1-4             223.00     0          682.70     682.30     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 191 of [CONDUIT] section:
+  x-sec            C1-4             177              288.00     0          682.30     681.20     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 192 of [CONDUIT] section:
+  x-sec            177              179              207.00     0          681.20     680.50     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 193 of [CONDUIT] section:
+  x-sec            179              181              90.00      0          680.50     680.20     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 194 of [CONDUIT] section:
+  x-sec            181              183              207.00     0          680.20     679.30     0          0
+
+  
+  ERROR 207: duplicate ID name x-sec at line 195 of [CONDUIT] section:
+  x-sec            183              185              212.00     0          679.30     678.30     0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:26 2026
+  Analysis ended on:  Sat Mar  7 21:51:26 2026
+  Total elapsed time: < 1 sec

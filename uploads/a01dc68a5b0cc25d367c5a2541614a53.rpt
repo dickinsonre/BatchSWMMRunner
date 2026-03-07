@@ -1,0 +1,64 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object O/F at line 101 of [CONDUIT] section:
+  A-A020           A O/F            A020/B           279.40     0.0130     32.16      20.12      0          0
+
+  
+  ERROR 209: undefined object A20O/F at line 102 of [CONDUIT] section:
+  A20-19           A20O/F           A019/C           81.90      0.0130     20.06      16.16      0          0
+
+  
+  ERROR 209: undefined object A19O/F at line 103 of [CONDUIT] section:
+  A19-18           A19O/F           A018             48.90      0.0130     16.15      15.10      0          0
+
+  
+  ERROR 209: undefined object A18O/F at line 104 of [CONDUIT] section:
+  A18-17           A18O/F           A017/D           129.10     0.0130     15.02      12.97      0          0
+
+  
+  ERROR 209: undefined object A17O/F at line 105 of [CONDUIT] section:
+  A17-16           A17O/F           A016/E           121.20     0.0130     12.56      12.18      0          0
+
+  
+  ERROR 209: undefined object A16O/F at line 106 of [CONDUIT] section:
+  A016-F           A16O/F           F                116.40     0.0130     12.15      11.61      0          0
+
+  
+  ERROR 209: undefined object O/F at line 107 of [CONDUIT] section:
+  F-A015           F O/F            A015             73.10      0.0130     11.61      11.27      0          0
+
+  
+  ERROR 209: undefined object ? at line 110 of [CONDUIT] section:
+  541              ?                ?                50.00      0.0140     3.60       3.10       0          0
+
+  
+  ERROR 209: undefined object EquivWeir at line 116 of [ORIFICE] section:
+  Orifice          EquivWeir        A10Dum           SIDE       0          0.650      NO       0
+
+  
+  ERROR 209: undefined object O/F at line 121 of [WEIR] section:
+  CB O/F           X001CB           A010/K           TRANSVERSE 5.80       1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 2.40 at line 162 of [XSECT] section:
+  RATING1          CUSTOM       1.50       2.40       0          0          1
+
+  
+  ERROR 209: undefined object 2.40 at line 164 of [XSECT] section:
+  RATING2          CUSTOM       1.50       2.40       0          0          1
+
+  
+  ERROR 211: invalid number  at line 165 of [XSECT] section:
+  Orifice          RECT_CLOSED  0.30       0          0          0          
+
+  
+  ERROR 205: invalid keyword O/F at line 166 of [XSECT] section:
+  CB O/F           RECT_OPEN    0          30.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:25 2026
+  Analysis ended on:  Sat Mar  7 21:51:25 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,152 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object i-MO.o at line 77 of [CONDUIT] section:
+  l-MO.p           i-MO.o           MO               320.00     0.0240     743.02     738.38     0          0
+
+  
+  ERROR 209: undefined object h-f.o at line 83 of [CONDUIT] section:
+  h-f.p            h-f.o            f                620.00     0.0130     746.24     741.03     0          0
+
+  
+  ERROR 209: undefined object p-DR.o at line 84 of [CONDUIT] section:
+  p-DR.p           p-DR.o           DR               460.00     0.0110     729.00     725.20     0          0
+
+  
+  ERROR 209: undefined object b-DO.o at line 86 of [CONDUIT] section:
+  b-DO.p           b-DO.o           DO               240.00     0.0240     743.30     742.92     0          0
+
+  
+  ERROR 209: undefined object 6-TH.o at line 89 of [CONDUIT] section:
+  6-TH.p           6-TH.o           TH               770.00     0.0130     719.80     705.50     0          0
+
+  
+  ERROR 209: undefined object 10-s.o at line 92 of [CONDUIT] section:
+  10-s.p           10-s.o           s                235.00     0.0130     728.00     727.50     0          0
+
+  
+  ERROR 209: undefined object o-WO.o at line 93 of [CONDUIT] section:
+  o-WO.p           o-WO.o           WO               720.00     0.0240     738.74     728.00     0          0
+
+  
+  ERROR 209: undefined object 9-m.o at line 96 of [CONDUIT] section:
+  9-m.p            9-m.o            m                365.00     0.0100     733.70     732.50     0          0
+
+  
+  ERROR 209: undefined object ig-9.o at line 97 of [CONDUIT] section:
+  ig-9.p           ig-9.o           9                105.00     0.0100     734.00     733.70     0          0
+
+  
+  ERROR 209: undefined object DR-8.o at line 98 of [CONDUIT] section:
+  DR-8.p           DR-8.o           8                20.00      0.0100     717.36     717.20     0          0
+
+  
+  ERROR 209: undefined object WO-DR.o at line 100 of [CONDUIT] section:
+  WO-DR.o          WO-DR.o          DR               250.00     0          738.72     720.00     0          0
+
+  
+  ERROR 209: undefined object 1-BR.o at line 101 of [CONDUIT] section:
+  1-BR.p           1-BR.o           BR               85.00      0.0240     741.95     741.35     0          0
+
+  
+  ERROR 209: undefined object f-11.o at line 102 of [CONDUIT] section:
+  f-11.p           f-11.o           11               165.00     0.0100     734.80     734.30     0          0
+
+  
+  ERROR 209: undefined object 11-ig.o at line 103 of [CONDUIT] section:
+  11-ig.p          11-ig.o          ig               87.00      0.0100     734.30     734.00     0          0
+
+  
+  ERROR 209: undefined object n-o.o at line 104 of [CONDUIT] section:
+  n-o.p            n-o.o            o                480.00     0.0240     741.96     738.36     0          0
+
+  
+  ERROR 209: undefined object m-12.o at line 106 of [CONDUIT] section:
+  M-12.p           m-12.o           12               120.00     0.0100     732.50     731.50     0          0
+
+  
+  ERROR 209: undefined object 12-10.o at line 107 of [CONDUIT] section:
+  12-10.p          12-10.o          10               325.00     0.0130     729.50     728.50     0          0
+
+  
+  ERROR 209: undefined object MO-12.o at line 108 of [CONDUIT] section:
+  MO-12.p          MO-12.o          12               490.00     0.0100     737.00     731.50     0          0
+
+  
+  ERROR 209: undefined object DT2-6.o at line 110 of [CONDUIT] section:
+  DT2-6.p          DT2-6.o          6                65.00      0.0100     720.00     719.80     0          0
+
+  
+  ERROR 209: undefined object DO-3.P2 at line 118 of [ORIFICE] section:
+  DO-3.P1          DO-3.P2          3                SIDE       739.90     0.650      NO       0
+
+  
+  ERROR 209: undefined object 0 at line 133 of [XSECT] section:
+  3-BR             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 137 of [XSECT] section:
+  4-b              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 138 of [XSECT] section:
+  j-5              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 145 of [XSECT] section:
+  5-l              IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 148 of [XSECT] section:
+  8-SW             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 156 of [XSECT] section:
+  BR-f             IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 157 of [XSECT] section:
+  WO-DR.o          IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 166 of [XSECT] section:
+  s-DT2            IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 1.00 at line 170 of [XSECT] section:
+  BU-1             IRREGULAR    1.00       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 171 of [XSECT] section:
+  DO-3.P1          RECT_CLOSED  2.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 172 of [XSECT] section:
+  WO-WO.p          RECT_CLOSED  0.67       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 173 of [XSECT] section:
+  TH-TH            RECT_CLOSED  0          0          0          0          
+
+  
+  ERROR 211: invalid number  at line 174 of [XSECT] section:
+  e-p.o            RECT_OPEN    0          10.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 175 of [XSECT] section:
+  e-BR             RECT_OPEN    0          25.00      0          0          
+
+  
+  ERROR 211: invalid number  at line 176 of [XSECT] section:
+  BR-BR            RECT_OPEN    0          2.25       0          0          
+
+  
+  ERROR 211: invalid number  at line 177 of [XSECT] section:
+  BU-FAIR          RECT_OPEN    0          4.00       0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

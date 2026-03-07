@@ -1,0 +1,88 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object O23F4257C at line 500 of [CONDUIT] section:
+  23F4257C1        O23F4257C        23F4386C         362.24     0.0100     454.39     450.41     0          0
+
+  
+  ERROR 209: undefined object O23F4345C at line 544 of [CONDUIT] section:
+  23F4345C1        O23F4345C        23F4334C         324.81     0.0100     476.25     467.42     0          0
+
+  
+  ERROR 209: undefined object O25G2113C at line 629 of [CONDUIT] section:
+  25G2113C1        O25G2113C        25G2114C         111.16     0.0100     419.21     418.95     0          0
+
+  
+  ERROR 209: undefined object O24G3311C at line 632 of [CONDUIT] section:
+  24G3311C1        O24G3311C        25G2135C         225.14     0.0100     423.40     419.95     0          0
+
+  
+  ERROR 209: undefined object O26G2428C at line 662 of [CONDUIT] section:
+  G26G2428C        O26G2428C        26G2606C         495.81     0.0100     401.90     400.31     0          0
+
+  
+  ERROR 209: undefined object 24G2272CS at line 708 of [CONDUIT] section:
+  24G2272CAR       24G2272CS        24G2272C         235.43     0.0140     434.30     434.10     0          0
+
+  
+  ERROR 209: undefined object New at line 823 of [CONDUIT] section:
+  Existing         New              US72             50.00      0.0130     434.50     434.13     0          0
+
+  
+  ERROR 209: undefined object 0 at line 1156 of [XSECT] section:
+  O23G3389C        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1157 of [XSECT] section:
+  O23G3279C        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1160 of [XSECT] section:
+  O24G2272CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1162 of [XSECT] section:
+  O24F1389CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1164 of [XSECT] section:
+  O24G2323CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1166 of [XSECT] section:
+  O24G3200CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1193 of [XSECT] section:
+  OGRANDBTS        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1227 of [XSECT] section:
+  O25G2108CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1229 of [XSECT] section:
+  O25G2121CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0.16 at line 1231 of [XSECT] section:
+  O24G3301CA       IRREGULAR    0.16       0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1233 of [XSECT] section:
+  O24G3286CA       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 1235 of [XSECT] section:
+  O24G3364C        IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 1286 of [XSECT] section:
+  Weir             RECT_OPEN    0          15.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object ? at line 46 of [CONDUIT] section:
+  SeepageU19       ?                Node_1069561     0          0          0          0          0          0
+
+  
+  ERROR 209: undefined object ? at line 47 of [CONDUIT] section:
+  seep_flap        ?                Node_10661069    100.00     0.0140     0          0          0          0
+
+  
+  ERROR 209: undefined object 0 at line 53 of [XSECT] section:
+  C100C-C-15       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 55 of [XSECT] section:
+  C100C-C-16       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 209: undefined object 0 at line 57 of [XSECT] section:
+  C100C-C-17       IRREGULAR    0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 58 of [XSECT] section:
+  SeepageU19       CIRCULAR     0          0          0          0          1
+
+
+  Analysis begun on:  Sat Mar  7 21:51:30 2026
+  Analysis ended on:  Sat Mar  7 21:51:30 2026
+  Total elapsed time: < 1 sec

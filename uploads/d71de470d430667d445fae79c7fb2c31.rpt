@@ -1,0 +1,60 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object 24inch at line 111 of [CONDUIT] section:
+  30inch           24inch           63050            850.00     0.0140     122.40     108.30     0          0
+
+  
+  ERROR 209: undefined object 36-RCP at line 130 of [CONDUIT] section:
+  24-RCP           36-RCP           64040            540.00     0.0120     100.05     87.70      0          0
+
+  
+  ERROR 209: undefined object 30"RCP at line 143 of [CONDUIT] section:
+  2-3ftRCP         30"RCP           63005            325.00     0.0120     81.90      79.50      0          0
+
+  
+  ERROR 209: undefined object O-LAND1 at line 149 of [CONDUIT] section:
+  2-12X5CBC        O-LAND1          94-CHAN          280.00     0.0120     74.17      73.51      0          0
+
+  
+  ERROR 209: undefined object O-LAND2 at line 150 of [CONDUIT] section:
+  12X10CBC         O-LAND2          94CHAN           310.00     0.0120     73.50      73.44      0          0
+
+  
+  ERROR 209: undefined object 1*30RCP at line 153 of [CONDUIT] section:
+  2*36RCP          1*30RCP          64031            140.00     0.0120     81.44      79.76      0          0
+
+  
+  ERROR 209: undefined object 1-2.5RCP at line 154 of [CONDUIT] section:
+  2-3RCP           1-2.5RCP         64020            295.00     0.0120     79.76      76.67      0          0
+
+  
+  ERROR 209: undefined object ORIFICE at line 165 of [ORIFICE] section:
+  WEIR1            ORIFICE          60601            SIDE       75.24      0.650      NO       0
+
+  
+  ERROR 209: undefined object WEIR2 at line 170 of [WEIR] section:
+  D2WEIR           WEIR2            60602            TRANSVERSE 77.37      1.840      NO       0        0          YES
+
+  
+  ERROR 209: undefined object 3.58 at line 234 of [XSECT] section:
+  DEWEY-ROT        IRREGULAR    3.58       0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 237 of [XSECT] section:
+  Ghost            CIRCULAR     0          0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 238 of [XSECT] section:
+  WEIR1            RECT_CLOSED  3.00       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 239 of [XSECT] section:
+  D2WEIR           RECT_OPEN    0          21.00      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

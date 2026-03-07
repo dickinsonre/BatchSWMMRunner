@@ -1,0 +1,36 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 12T-4 at line 440 of [JUNC] section:
+  12T-4            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 12T-4 at line 442 of [JUNC] section:
+  12T-4            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 12T-4 at line 445 of [JUNC] section:
+  12T-4            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 12T-1 at line 447 of [JUNC] section:
+  12T-1            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 12T-5 at line 449 of [JUNC] section:
+  12T-5            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 12T-5 at line 451 of [JUNC] section:
+  12T-5            0          0          0          0          0
+
+  
+  ERROR 207: duplicate ID name 12T-1 at line 452 of [JUNC] section:
+  12T-1            0          0          0          0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:21 2026
+  Analysis ended on:  Sat Mar  7 21:51:21 2026
+  Total elapsed time: < 1 sec

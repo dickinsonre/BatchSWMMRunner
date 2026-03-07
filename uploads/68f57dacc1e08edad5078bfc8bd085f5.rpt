@@ -1,0 +1,32 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 209: undefined object BarrelB at line 61 of [CONDUIT] section:
+  BarrelA          BarrelB          BarrelC          750.00     0.0140     -12.02     -12.03     0          0
+
+  
+  ERROR 211: invalid number -12.00 at line 80 of [PUMP] section:
+  pump             SC2              pumpback         PC_pump    ON       -12.00     -12.03    
+
+  
+  ERROR 211: invalid number  at line 106 of [XSECT] section:
+  27ORIF           RECT_CLOSED  2.50       0          0          0          
+
+  
+  ERROR 211: invalid number  at line 107 of [XSECT] section:
+  CSO27WEIR        RECT_OPEN    0          50.67      0          0          
+
+  
+  ERROR 211: invalid number  at line 108 of [XSECT] section:
+  27A1WEIR         RECT_OPEN    0          20.67      0          0          
+
+  
+  ERROR 211: invalid number  at line 109 of [XSECT] section:
+  27A2WEIR         RECT_OPEN    0          11.50      0          0          
+
+
+  Analysis begun on:  Sat Mar  7 21:51:29 2026
+  Analysis ended on:  Sat Mar  7 21:51:29 2026
+  Total elapsed time: < 1 sec

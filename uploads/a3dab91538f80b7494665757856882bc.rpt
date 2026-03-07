@@ -1,0 +1,104 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 207: duplicate ID name 0 at line 27 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 28 of [STORAGE] section:
+  0                120.00     -15.70     2.00       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 29 of [STORAGE] section:
+  0                200.00     0          0.83       FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 30 of [STORAGE] section:
+  0                120.00     0          1.75       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 31 of [STORAGE] section:
+  0                200.00     0          0.50       FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 32 of [STORAGE] section:
+  0                120.00     0          4.20       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 33 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 34 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 35 of [STORAGE] section:
+  0                120.00     0          4.00       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 36 of [STORAGE] section:
+  0                120.00     0          1.00       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 37 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 38 of [STORAGE] section:
+  0                120.00     0          2.00       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 39 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 40 of [STORAGE] section:
+  0                120.00     0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 41 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 42 of [STORAGE] section:
+  0                120.00     0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 43 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 44 of [STORAGE] section:
+  0                120.00     0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 45 of [STORAGE] section:
+  0                200.00     0          0.42       FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 46 of [STORAGE] section:
+  0                120.00     0          0          FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 47 of [STORAGE] section:
+  0                120.00     0          2.80       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 48 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 49 of [STORAGE] section:
+  0                120.00     0          2.20       FUNCTIONAL 0 0          0
+
+  
+  ERROR 207: duplicate ID name 0 at line 50 of [STORAGE] section:
+  0                200.00     0          0          FUNCTIONAL 50.00 0          0
+
+
+  Analysis begun on:  Sat Mar  7 21:51:31 2026
+  Analysis ended on:  Sat Mar  7 21:51:31 2026
+  Total elapsed time: < 1 sec
