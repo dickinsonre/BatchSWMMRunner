@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 import { spawn, execSync } from "child_process";
 import { storage } from "./storage";
-import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus } from "@shared/schema";
+import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus, type SweepResult, type SweepConfig, type DesignStormConfig } from "@shared/schema";
 import { z } from "zod";
 
 const upload = multer({

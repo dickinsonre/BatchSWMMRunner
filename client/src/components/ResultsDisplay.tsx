@@ -1,14 +1,16 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, ExternalLink } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, ExternalLink, FileDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
 import { setDashboardResults } from "@/lib/resultsStore";
+import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
 
 const MAX_PREVIEW_LINES = 2000;
 
@@ -341,6 +343,42 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
               <Download className="h-4 w-4 mr-2" />
               Export CSV
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  data-testid="button-generate-report"
+                >
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Generate Report
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => generateAndDownloadReport(results, "html")}
+                  data-testid="menu-report-html"
+                >
+                  <Globe className="h-4 w-4 mr-2" />
+                  HTML Report
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => generateAndDownloadReport(results, "markdown")}
+                  data-testid="menu-report-markdown"
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Markdown Report
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => generateAndDownloadReport(results, "csv")}
+                  data-testid="menu-report-csv"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  CSV Report
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant="default"
               size="sm"

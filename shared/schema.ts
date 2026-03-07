@@ -63,3 +63,33 @@ export const swmmStatusSchema = z.object({
 });
 
 export type SwmmStatus = z.infer<typeof swmmStatusSchema>;
+
+export const sweepConfigSchema = z.object({
+  parameterName: z.string(),
+  values: z.array(z.number()),
+});
+
+export type SweepConfig = z.infer<typeof sweepConfigSchema>;
+
+export const designStormEntrySchema = z.object({
+  returnPeriod: z.string(),
+  depth: z.number(),
+  selected: z.boolean(),
+});
+
+export type DesignStormEntry = z.infer<typeof designStormEntrySchema>;
+
+export const designStormConfigSchema = z.object({
+  storms: z.array(designStormEntrySchema),
+  rainfallDistribution: z.enum(['SCS Type I', 'SCS Type IA', 'SCS Type II', 'SCS Type III']),
+  duration: z.enum(['1hr', '2hr', '6hr', '12hr', '24hr']),
+});
+
+export type DesignStormConfig = z.infer<typeof designStormConfigSchema>;
+
+export const sweepResultSchema = processResultSchema.extend({
+  parameterValue: z.number().optional(),
+  stormLabel: z.string().optional(),
+});
+
+export type SweepResult = z.infer<typeof sweepResultSchema>;

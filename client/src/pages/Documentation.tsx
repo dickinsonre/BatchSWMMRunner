@@ -2,9 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Activity, ExternalLink } from "lucide-react";
-import { Link } from "wouter";
-import ThemeToggle from "@/components/ThemeToggle";
+import { ExternalLink } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
 
 const SWMM_INTEGRATION_CODE = `import { spawn } from "child_process";
 import fs from "fs";
@@ -345,31 +344,7 @@ function CodeBlock({ code, language = "typescript" }: { code: string; language?:
 export default function Documentation() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b">
-        <div className="container max-w-6xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-primary p-2">
-                <Activity className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-semibold">BatchSWMM</h1>
-                <p className="text-sm text-muted-foreground">
-                  Batch EPA SWMM Processing Tool
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <Link href="/" data-testid="link-back-to-tool">
-                <Badge variant="outline" className="cursor-pointer">
-                  Back to Tool
-                </Badge>
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
         <div className="space-y-8">
