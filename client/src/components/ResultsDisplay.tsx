@@ -166,6 +166,9 @@ function reportToHtml(content: string): string {
         if (htmlLines.length > 0) htmlLines.pop();
       }
 
+      const lastHeaderCells = splitTableRow(headerLines[headerLines.length - 1]);
+      const numCols = lastHeaderCells.length;
+
       const tableRows: string[] = [];
       tableRows.push('<div style="overflow-x:auto;margin:0.5em 0 1em;">');
       tableRows.push('<table style="border-collapse:collapse;width:100%;font-family:monospace;font-size:0.8em;">');
@@ -186,6 +189,7 @@ function reportToHtml(content: string): string {
       tableRows.push('<tbody>');
       li++;
 
+      const collectedRows: string[][] = [];
       let rowIdx = 0;
       while (li < lines.length) {
         const dataLine = lines[li];
@@ -194,6 +198,7 @@ function reportToHtml(content: string): string {
         if (/^\s*-{10,}/.test(dataLine)) { li++; continue; }
 
         const cells = splitTableRow(dataLine);
+        collectedRows.push(cells);
         const bgColor = rowIdx % 2 === 0 ? 'transparent' : 'hsl(var(--muted) / 0.3)';
         tableRows.push(`<tr style="background:${bgColor};">`);
 
@@ -209,6 +214,59 @@ function reportToHtml(content: string): string {
       }
       tableRows.push('</tbody></table></div>');
       htmlLines.push(tableRows.join('\n'));
+
+      if (collectedRows.length >= 2 && numCols >= 2) {
+        const chartColors = ['#3b82f6','#ef4444','#22c55e','#f59e0b','#8b5cf6','#06b6d4','#ec4899','#f97316','#14b8a6','#6366f1'];
+        const numericColIndices: number[] = [];
+        for (let ci = 1; ci < numCols; ci++) {
+          let numericCount = 0;
+          for (const row of collectedRows) {
+            if (ci < row.length && /^[-+]?\d*\.?\d+%?$/.test(row[ci])) numericCount++;
+          }
+          if (numericCount >= collectedRows.length * 0.5) numericColIndices.push(ci);
+        }
+
+        if (numericColIndices.length > 0 && collectedRows.length <= 100) {
+          const histHtml: string[] = [];
+          histHtml.push('<div style="display:flex;flex-wrap:wrap;gap:1.5em;margin:0.5em 0 1.5em;">');
+
+          for (const ci of numericColIndices) {
+            const colName = ci < lastHeaderCells.length ? lastHeaderCells[ci] : `Col ${ci}`;
+            const vals: { label: string; value: number }[] = [];
+            for (const row of collectedRows) {
+              const label = row[0] || '';
+              const raw = ci < row.length ? row[ci].replace('%', '') : '';
+              const num = parseFloat(raw);
+              if (!isNaN(num)) vals.push({ label, value: num });
+            }
+            if (vals.length < 2) continue;
+
+            const maxVal = Math.max(...vals.map(v => Math.abs(v.value)));
+            if (maxVal === 0) continue;
+
+            const barColor = chartColors[numericColIndices.indexOf(ci) % chartColors.length];
+            const chartWidth = vals.length <= 15 ? '100%' : '48%';
+
+            histHtml.push(`<div style="flex:1;min-width:300px;max-width:${chartWidth};">`);
+            histHtml.push(`<div style="font-size:0.8em;font-weight:600;margin-bottom:0.4em;color:hsl(var(--foreground) / 0.7);">${colName}</div>`);
+
+            for (const item of vals) {
+              const pct = maxVal > 0 ? (Math.abs(item.value) / maxVal) * 100 : 0;
+              const shortLabel = item.label.length > 12 ? item.label.substring(0, 12) : item.label;
+              histHtml.push(`<div style="display:flex;align-items:center;gap:0.3em;margin-bottom:1px;font-size:0.7em;font-family:monospace;">`);
+              histHtml.push(`<div style="width:80px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${item.label}">${shortLabel}</div>`);
+              histHtml.push(`<div style="flex:1;height:14px;background:hsl(var(--muted) / 0.3);border-radius:2px;overflow:hidden;">`);
+              histHtml.push(`<div style="height:100%;width:${pct.toFixed(1)}%;background:${barColor};border-radius:2px;min-width:${item.value !== 0 ? '2px' : '0'};"></div>`);
+              histHtml.push(`</div>`);
+              histHtml.push(`<div style="width:55px;text-align:right;flex-shrink:0;color:hsl(var(--foreground) / 0.6);">${item.value.toFixed(2)}</div>`);
+              histHtml.push(`</div>`);
+            }
+            histHtml.push('</div>');
+          }
+          histHtml.push('</div>');
+          htmlLines.push(histHtml.join('\n'));
+        }
+      }
       continue;
     }
 
