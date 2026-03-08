@@ -1,0 +1,40 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  ERROR 211: invalid number  at line 792 of [XSECT] section:
+  TW01330          HORIZ_ELLIPSE17               0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 857 of [XSECT] section:
+  TW04110_1        HORIZ_ELLIPSE9                0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 858 of [XSECT] section:
+  TW04110_2        HORIZ_ELLIPSE9                0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 862 of [XSECT] section:
+  TW06005          HORIZ_ELLIPSE11               0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 901 of [XSECT] section:
+  TW08010_1        HORIZ_ELLIPSE10               0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 902 of [XSECT] section:
+  TW08010_2        HORIZ_ELLIPSE10               0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 903 of [XSECT] section:
+  TW08010_3        HORIZ_ELLIPSE10               0          0          0          1
+
+  
+  ERROR 211: invalid number  at line 904 of [XSECT] section:
+  TW08010_4        HORIZ_ELLIPSE10               0          0          0          1
+
+
+  Analysis begun on:  Sun Mar  8 09:29:29 2026
+  Analysis ended on:  Sun Mar  8 09:29:29 2026
+  Total elapsed time: < 1 sec
