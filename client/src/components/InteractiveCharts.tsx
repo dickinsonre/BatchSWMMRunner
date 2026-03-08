@@ -182,8 +182,24 @@ function ChartView({ allSeries }: ChartViewProps) {
     });
   };
 
-  const selectAllElements = () => setSelectedElements(new Set(allElements));
-  const selectAllColumns = () => setSelectedColumns(new Set(allColumns.filter(c => !c.allZero).map(c => c.name)));
+  const allElementsSelected = selectedElements.size === allElements.length && allElements.length > 0;
+  const toggleAllElements = () => {
+    if (allElementsSelected) {
+      setSelectedElements(new Set());
+    } else {
+      setSelectedElements(new Set(allElements));
+    }
+  };
+
+  const selectableColumns = allColumns.filter(c => !c.allZero).map(c => c.name);
+  const allColumnsSelected = selectedColumns.size === selectableColumns.length && selectableColumns.length > 0;
+  const toggleAllColumns = () => {
+    if (allColumnsSelected) {
+      setSelectedColumns(new Set());
+    } else {
+      setSelectedColumns(new Set(selectableColumns));
+    }
+  };
 
   const chartData = useMemo(() => {
     const activeSeries = sectionSeries.filter(s => selectedElements.has(s.element));
@@ -303,8 +319,8 @@ function ChartView({ allSeries }: ChartViewProps) {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between gap-2">
                 <CardTitle className="text-sm">Elements</CardTitle>
-                <Button variant="ghost" size="sm" onClick={selectAllElements} data-testid="button-select-all-elements">
-                  All
+                <Button variant="ghost" size="sm" onClick={toggleAllElements} data-testid="button-select-all-elements">
+                  {allElementsSelected ? 'None' : 'All'}
                 </Button>
               </div>
             </CardHeader>
@@ -329,8 +345,8 @@ function ChartView({ allSeries }: ChartViewProps) {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between gap-2">
                 <CardTitle className="text-sm">Values</CardTitle>
-                <Button variant="ghost" size="sm" onClick={selectAllColumns} data-testid="button-select-all-values">
-                  All
+                <Button variant="ghost" size="sm" onClick={toggleAllColumns} data-testid="button-select-all-values">
+                  {allColumnsSelected ? 'None' : 'All'}
                 </Button>
               </div>
             </CardHeader>
