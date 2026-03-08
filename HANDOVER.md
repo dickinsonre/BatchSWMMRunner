@@ -27,6 +27,7 @@
 17. [Planned Features (Not Yet Implemented)](#17-planned-features-not-yet-implemented)
 18. [Build and Deployment](#18-build-and-deployment)
 19. [Dependencies](#19-dependencies)
+20. [Improvement Roadmap](#20-improvement-roadmap)
 
 ---
 
@@ -784,6 +785,324 @@ The `Start application` workflow runs `npm run dev`. It auto-restarts on file ch
 | `tsx` | (via config) | TypeScript execution |
 | `tailwindcss` | (via config) | CSS framework |
 | `@replit/vite-plugin-*` | Various | Dev tooling plugins |
+
+---
+
+## 20. Improvement Roadmap
+
+### Current Assessment: A- / 88 out of 100
+
+```
+CATEGORY                          MAX    SCORE
+------------------------------------------------------
+Core Batch Processing              15      14
+  Real SWMM 5.2.4 binary bundled
+  WebSocket real-time per-file progress
+  Parallel/sequential + stop-on-error
+  -1: no parameter sweep yet
+
+File Inspection (Folder View)      10       9
+  Client-side INP parser
+  SVG network map (nodes, conduits, subcatchments)
+  Conduit length statistics
+  Element count grid
+  -1: no hover/click on map elements
+
+ReSWMM Discretization              12      11
+  Fixed Interval + dx/D Ratio methods
+  CFL analysis per conduit
+  Conduit lengthening
+  Before/after simulation comparison
+  INP rebuild with proper formatting
+  -1: no batch discretization (one file at a time)
+
+Results & Visualization            12      10
+  Interactive time-series charts (Recharts)
+  Continuity error traffic lights
+  Flooding summary
+  Dashboard with 4 chart types
+  Per-file expandable RPT viewer
+  -2: no cross-model comparison charts in batch
+
+Report Generation                   8       8
+  HTML with color-coded tables
+  Markdown export
+  CSV export
+  Analysis + recommendations engine
+
+Real-Time Communication             8       8
+  WebSocket with 6 message types
+  Per-file progress (0-100%)
+  Message buffering for race conditions
+  Graceful fallback for edge cases
+
+Setup & Onboarding                  8       8
+  SWMM engine auto-detected and bundled
+  5 sample models
+  Zero configuration needed
+  Simulation mode fallback
+
+UI / UX                            10       9
+  5 university themes + dark mode
+  Shared navigation header
+  Drag-and-drop + file picker + directory picker
+  Consistent shadcn/ui components
+  -1: some large page files (ReswmmPage 1323 lines)
+
+Documentation                       7       7
+  Full technical docs tab
+  WebSocket protocol docs
+  ReSWMM engine docs with worked examples
+  SWMM5 C source references
+
+Ecosystem Integration              10       4
+  -6: No links to INP MAKER, Engine,
+  Rain Canvas, Rosetta Stone, Miner
+  "Open in Results Dashboard" is internal only
+------------------------------------------------------
+TOTAL                             100      88
+```
+
+---
+
+### Tier 1: Quick Wins (< 1 week each)
+
+#### Improvement 1: Parameter Sweep Mode
+
+**Status:** Schema types already exist in `shared/schema.ts` (`SweepConfig`, `SweepResult`)
+**Effort:** 3-5 days
+**Impact:** +4 points
+
+The most-requested feature for stormwater engineers. Run a single model multiple times with varying parameter values and compare results.
+
+**What to build:**
+- New mode toggle on the Home page: "Batch Files" vs "Parameter Sweep"
+- Upload one base `.inp` file
+- Select sweep parameter (Manning's n, Imperviousness, Conduit Slope, etc.)
+- Enter array of values to test
+- Click "Start Sweep" -- generates modified `.inp` variants client-side, uploads all, runs through existing batch pipeline
+
+**Implementation approach:**
+- `modifyParameter(inpContent, paramName, value)` function modifies specific sections of the INP file
+  - `manning_n`: Replace roughness values in `[CONDUITS]` section
+  - `imperviousness`: Replace `%Imperv` in `[SUBCATCHMENTS]`
+  - `conduit_slope`: Modify invert elevations to achieve target slope
+- Each variant becomes a virtual `.inp` file uploaded to the existing `/api/upload` endpoint
+- Existing WebSocket + batch pipeline handles the rest
+- Results display: table of parameter value vs. peak flow, CE, flooding + line charts
+
+**Key files to modify:**
+- `client/src/pages/Home.tsx` -- add sweep mode UI
+- `client/src/lib/inpParser.ts` -- may need parameter modification helpers
+- `client/src/components/ResultsDisplay.tsx` -- add sweep-specific visualization
+
+---
+
+#### Improvement 2: Design Storm Sweep
+
+**Status:** Schema types already exist in `shared/schema.ts` (`DesignStormEntry`, `DesignStormConfig`)
+**Effort:** 3-5 days
+**Impact:** +3 points
+
+Automates the most common SWMM workflow: run a model against multiple design storms to determine system capacity.
+
+**What to build:**
+- Standalone section or new page
+- Upload one base `.inp` file
+- Select storms to run (checkboxes):
+  - 2-year, 6-hour (1.5 inches) SCS Type II
+  - 10-year, 6-hour (2.8 inches) SCS Type II
+  - 25-year, 6-hour (3.5 inches) SCS Type II
+  - 100-year, 6-hour (5.0 inches) SCS Type II
+- Select rainfall distribution (SCS Type I, IA, II, III)
+- Select storm duration (1hr, 2hr, 6hr, 12hr, 24hr)
+
+**Implementation approach:**
+- `generateStormTimeseries(totalDepth, durationHours, distribution)` creates incremental rainfall data
+- SCS Type II normalized cumulative distribution (18 time-fraction/precipitation-fraction pairs)
+- For each storm, replace the `[TIMESERIES]` and `[RAINGAGES]` sections in the `.inp` file
+- Upload all variants to existing batch pipeline
+- Results table: Storm vs. Peak Flow vs. Flooding vs. Surcharged vs. CE
+- Key output: "System handles up to X-year storm without flooding"
+
+**SCS Type II distribution data (normalized cumulative):**
+```
+Time Fraction:  0.0   0.1   0.2   0.3   0.35  0.4   0.42  0.44  0.46  0.48  0.50  0.52  0.55  0.6   0.7   0.8   0.9   1.0
+Precip Fraction: 0.000 0.022 0.048 0.080 0.120 0.181 0.235 0.332 0.500 0.668 0.765 0.819 0.880 0.920 0.952 0.973 0.989 1.000
+```
+
+---
+
+#### Improvement 3: Ecosystem Integration Buttons
+
+**Effort:** 1 day
+**Impact:** +3 points
+
+BatchSWMM currently has no links to any other app in the SWMM suite.
+
+**Ecosystem apps to link:**
+
+| App | URL | Where to Link |
+|-----|-----|---------------|
+| INP MAKER | `https://swmm-inp-maker.replit.app` | Home page ("Need models?"), Folder View |
+| Simulation Engine | `https://swmm-engine--robertdickinson.replit.app` | Results (per-file "Analyze"), ReSWMM |
+| Rain Canvas Studio | `https://rain-canvas-studio.lovable.app` | Home page, Design Storm Sweep |
+| Rosetta Stone | `https://code-rosetta-stone.replit.app` | ReSWMM (theory), Documentation |
+| Model Miner | `https://swmm-filebase--robertdickinson.replit.app` | Results (per-file "Inspect"), Folder View |
+
+**Implementation:** Reusable `EcosystemButton` component that opens external apps, optionally passing model data via `postMessage`.
+
+**Placement:**
+- Before processing (Home page): "Need models to test?" links
+- After processing (Results): Per-file "Analyze in Engine" / "Inspect in Miner" buttons
+- In Folder View: "Enhance in INP MAKER" / "Change Rainfall via Rain Canvas"
+- In ReSWMM: "See theory in Rosetta Stone" / "Run in Simulation Engine"
+
+---
+
+#### Improvement 4: RPT Summary Dashboard (Cross-Model Comparison)
+
+**Effort:** 2-3 days
+**Impact:** +2 points
+
+**Current state:** Results show pass/fail + raw metrics per file. `parseReportMetrics()` already extracts 11 metrics.
+
+**What to add:**
+- Sortable comparison table across all batch files (Model / Status / Runoff CE / Routing CE / Peak Flow / Flooding)
+- Warning callouts for models exceeding thresholds
+- Cross-model comparison bar charts (Peak Flow, CE, Flooding across all models)
+- "Compare All" button for side-by-side visualization
+
+---
+
+### Tier 2: Medium Effort (1-2 weeks each)
+
+#### Improvement 5: Clickable SVG Network Map
+
+**Effort:** 2-3 days
+**Impact:** +2 points
+
+**Current state:** SVG network map in Folder View shows nodes and conduits but they are not interactive.
+
+**What to add:**
+- Hover tooltips on conduits: name, diameter, length, roughness
+- Hover tooltips on nodes: name, elevation, max depth
+- Click to select and show full properties panel
+- Color scheme selector: Default / By Diameter / By Slope / By Length / By Manning's n
+- Legend showing color scale
+- Highlight connected elements on selection
+
+**Key file:** `client/src/components/NetworkMap.tsx` -- add event handlers to SVG elements
+
+---
+
+#### Improvement 6: WASM Engine Option (Browser-Side Simulation)
+
+**Effort:** 2-3 weeks
+**Impact:** +3 points
+
+For small models (< 500 nodes), running SWMM in the browser via WebAssembly eliminates server round-trips and works offline.
+
+**What to add:**
+- Toggle: "Server (SWMM 5.2.4 binary)" vs "Browser (WASM)"
+- Compile SWMM 5.2.4 C source with Emscripten to `.wasm`
+- Run via Web Workers for non-blocking execution
+- Parallel runs possible (one worker per file)
+- Automatic fallback when server engine is unavailable
+
+---
+
+#### Improvement 7: Persistent Job History (PostgreSQL)
+
+**Effort:** 1-2 days
+**Impact:** +1 point
+
+**Current state:** In-memory `Map<string, BatchJob>` -- data lost on restart. Drizzle ORM and `DATABASE_URL` are already configured but unused.
+
+**What to add:**
+- `batch_jobs` table: id, status, created_at, completed_at, file_count, success_count, failed_count, total_time_seconds, results_json (JSONB)
+- Swap `MemStorage` for `DatabaseStorage` implementing the same `IStorage` interface
+- "Recent Jobs" list on Home page
+- Re-download results from past jobs
+- Analytics: "You've processed N models this month"
+
+---
+
+### Tier 3: Advanced Features (2-4 weeks each)
+
+#### Improvement 8: Rain Canvas Integration for Design Storms
+
+**Effort:** 1-2 weeks
+**Impact:** +2 points
+
+Instead of hardcoded SCS Type II, connect to Rain Canvas Studio's 66 rainfall distributions:
+- SCS Type I, IA, II, III
+- Euler Type I, Type II
+- Chicago Design Storm
+- Huff 1st-4th Quartile
+- Australian ARR
+- Japan JMA
+- And 55+ more
+
+Either embed distributions as a local JSON file or call Rain Canvas API.
+
+---
+
+#### Improvement 9: Batch ReSWMM (Discretize All Files)
+
+**Effort:** 1 week
+**Impact:** +2 points
+
+**Current state:** ReSWMM works on one file at a time.
+
+**What to add:**
+- Load multiple `.inp` files
+- Apply same discretization config to all
+- Run all original + all discretized through SWMM
+- Results table: File / Original CE / Discretized CE / Delta CE / Improvement %
+- Summary: "Average CE improvement: -52%"
+
+The `reswmmEngine.ts` already handles single-file discretization. Batch is a loop around it.
+
+---
+
+#### Improvement 10: Model Comparison Report Generator
+
+**Effort:** 1 week
+**Impact:** +1 point
+
+Already listed in Planned Features (Section 17). The `reportGenerator.ts` (360 lines) already does most of the analysis. Additions needed:
+- Cross-model comparison table with sortable columns
+- Best/worst model identification per metric
+- Side-by-side hydrograph overlay charts
+- Automated recommendations based on comparative performance
+- Export as standalone HTML with embedded charts
+
+---
+
+### Projected Grade Trajectory
+
+```
+CURRENT STATE:                                   A- (88)
+
+After Tier 1 (1-2 weeks total):
+  + Parameter Sweep .................. +4 -> 92
+  + Design Storm Sweep .............. +1 -> 93
+  + Ecosystem Integration ........... +3 -> 96
+  + RPT Summary Dashboard ........... +2 -> 98
+
+After Tier 2 (3-5 additional weeks):
+  + Clickable Network Map ........... +1 -> 99
+  + WASM Engine Option .............. to be evaluated
+  + Persistent Job History ........... to be evaluated
+
+After Tier 3 (additional 4-7 weeks):
+  + Rain Canvas Integration ......... to be evaluated
+  + Batch ReSWMM .................... to be evaluated
+  + Model Comparison Reports ........ to be evaluated
+```
+
+**Bottom line:** Tier 1 alone (roughly 2 weeks of work) would bring the score from 88 to approximately 98, primarily because the Zod schemas and batch pipeline already exist -- the work is mostly frontend UI and INP file manipulation, both of which are well-established patterns in this codebase.
 
 ---
 
