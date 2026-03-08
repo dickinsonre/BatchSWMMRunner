@@ -53,8 +53,7 @@ function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
 
           while (i < lines.length) {
             if (/^\s*\*{3,}\s*$/.test(lines[i])) {
-              const peekTitle = i + 1 < lines.length ? lines[i + 1].trim() : '';
-              if (!/Time Series$/i.test(peekTitle)) break;
+              break;
             }
 
             const elemMatch = lines[i].match(/<<<\s*(.*?)\s*>>>/);
