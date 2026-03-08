@@ -68,6 +68,162 @@ function detectSwmmPath(): SwmmStatus {
   return { found: false, mode: 'simulation', searchedPaths };
 }
 
+function parseSwmmOutputBinary(outPath: string): string {
+  try {
+    if (!fs.existsSync(outPath)) return '';
+    const buf = fs.readFileSync(outPath);
+    if (buf.length < 40) return '';
+
+    const magic = buf.readInt32LE(0);
+    if (magic !== 516114522) return '';
+
+    const fileSize = buf.length;
+    const nSub = buf.readInt32LE(12);
+    const nNode = buf.readInt32LE(16);
+    const nLink = buf.readInt32LE(20);
+    const nPoll = buf.readInt32LE(24);
+    const idStart = buf.readInt32LE(fileSize - 6 * 4);
+    const propStart = buf.readInt32LE(fileSize - 5 * 4);
+    const resultStart = buf.readInt32LE(fileSize - 4 * 4);
+    const numPeriods = buf.readInt32LE(fileSize - 3 * 4);
+    const errorCode = buf.readInt32LE(fileSize - 2 * 4);
+
+    if (errorCode !== 0 || numPeriods < 1) return '';
+    if (resultStart <= 0 || resultStart >= fileSize) return '';
+
+    let pos = idStart;
+    const subNames: string[] = [];
+    const nodeNames: string[] = [];
+    const linkNames: string[] = [];
+    for (let i = 0; i < nSub; i++) { const len = buf.readInt32LE(pos); pos += 4; subNames.push(buf.toString('utf8', pos, pos + len)); pos += len; }
+    for (let i = 0; i < nNode; i++) { const len = buf.readInt32LE(pos); pos += 4; nodeNames.push(buf.toString('utf8', pos, pos + len)); pos += len; }
+    for (let i = 0; i < nLink; i++) { const len = buf.readInt32LE(pos); pos += 4; linkNames.push(buf.toString('utf8', pos, pos + len)); pos += len; }
+
+    pos = propStart;
+    const nSubProps = buf.readInt32LE(pos); pos += 4;
+    pos += nSubProps * 4 + nSub * nSubProps * 4;
+    const nNodeProps = buf.readInt32LE(pos); pos += 4;
+    pos += nNodeProps * 4 + nNode * nNodeProps * 4;
+    const nLinkProps = buf.readInt32LE(pos); pos += 4;
+    pos += nLinkProps * 4 + nLink * nLinkProps * 4;
+
+    const nSubVars = buf.readInt32LE(pos); pos += 4; pos += nSubVars * 4;
+    const nNodeVars = buf.readInt32LE(pos); pos += 4; pos += nNodeVars * 4;
+    const nLinkVars = buf.readInt32LE(pos); pos += 4; pos += nLinkVars * 4;
+    const nSysVars = buf.readInt32LE(pos); pos += 4; pos += nSysVars * 4;
+
+    const startDateOLE = buf.readDoubleLE(pos); pos += 8;
+    const reportStep = buf.readInt32LE(pos); pos += 4;
+
+    if (pos !== resultStart) return '';
+
+    const bytesPerPeriod = 8 + 4 * (nSub * nSubVars + nNode * nNodeVars + nLink * nLinkVars + nSysVars);
+    const expectedEnd = resultStart + bytesPerPeriod * numPeriods;
+    if (expectedEnd > fileSize) return '';
+
+    const oleEpochMs = new Date(1899, 11, 30).getTime();
+    const msPerDay = 86400000;
+
+    function oleToDateStr(oleDate: number): { date: string; time: string } {
+      const d = new Date(oleEpochMs + oleDate * msPerDay);
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      const hh = String(d.getHours()).padStart(2, '0');
+      const min = String(d.getMinutes()).padStart(2, '0');
+      return { date: `${mm}/${dd}/${yyyy}`, time: `${hh}:${min}` };
+    }
+
+    const maxPeriods = Math.min(numPeriods, 2000);
+    const lines: string[] = [];
+
+    const baseNodeVarNames = ['Depth', 'Head', 'Volume', 'Lat.Inflow', 'Total Inflow', 'Flooding'];
+    const baseNodeVarUnits = ['ft', 'ft', 'ft3', 'CFS', 'CFS', 'CFS'];
+    const baseLinkVarNames = ['Flow', 'Depth', 'Velocity', 'Volume', 'Capacity'];
+    const baseLinkVarUnits = ['CFS', 'ft', 'ft/sec', 'ft3', ''];
+
+    const nodeVarLabels: string[] = [];
+    const nodeVarUnitLabels: string[] = [];
+    for (let v = 0; v < nNodeVars; v++) {
+      nodeVarLabels.push(v < baseNodeVarNames.length ? baseNodeVarNames[v] : `Pollutant_${v - baseNodeVarNames.length + 1}`);
+      nodeVarUnitLabels.push(v < baseNodeVarUnits.length ? baseNodeVarUnits[v] : 'mg/L');
+    }
+    const linkVarLabels: string[] = [];
+    const linkVarUnitLabels: string[] = [];
+    for (let v = 0; v < nLinkVars; v++) {
+      linkVarLabels.push(v < baseLinkVarNames.length ? baseLinkVarNames[v] : `Pollutant_${v - baseLinkVarNames.length + 1}`);
+      linkVarUnitLabels.push(v < baseLinkVarUnits.length ? baseLinkVarUnits[v] : 'mg/L');
+    }
+
+    if (nNode > 0 && nNodeVars > 0) {
+      lines.push('');
+      lines.push('  **************');
+      lines.push('  Node Results Time Series');
+      lines.push('  **************');
+      lines.push('');
+
+      for (let n = 0; n < nNode; n++) {
+        lines.push(`  <<< ${nodeNames[n]} >>>`);
+        lines.push('');
+        const cols = ['Date', 'Time', ...nodeVarLabels];
+        lines.push('  ' + cols.map(c => c.padEnd(16)).join(''));
+        const units = ['Day', 'Hour:Min', ...nodeVarUnitLabels];
+        lines.push('  ' + units.map(u => u.padEnd(16)).join(''));
+        lines.push('  ' + '-'.repeat(cols.length * 16));
+
+        for (let p = 0; p < maxPeriods; p++) {
+          const periodStart = resultStart + p * bytesPerPeriod;
+          const dateVal = buf.readDoubleLE(periodStart);
+          const { date, time } = oleToDateStr(dateVal);
+          const nodeDataStart = periodStart + 8 + nSub * nSubVars * 4 + n * nNodeVars * 4;
+          const vals: string[] = [date.padEnd(16), time.padEnd(16)];
+          for (let v = 0; v < nNodeVars; v++) {
+            vals.push(buf.readFloatLE(nodeDataStart + v * 4).toFixed(3).padStart(12).padEnd(16));
+          }
+          lines.push('  ' + vals.join(''));
+        }
+        lines.push('');
+      }
+    }
+
+    if (nLink > 0 && nLinkVars > 0) {
+      lines.push('');
+      lines.push('  **************');
+      lines.push('  Link Results Time Series');
+      lines.push('  **************');
+      lines.push('');
+
+      for (let l = 0; l < nLink; l++) {
+        lines.push(`  <<< ${linkNames[l]} >>>`);
+        lines.push('');
+        const cols = ['Date', 'Time', ...linkVarLabels];
+        lines.push('  ' + cols.map(c => c.padEnd(16)).join(''));
+        const units = ['Day', 'Hour:Min', ...linkVarUnitLabels];
+        lines.push('  ' + units.map(u => u.padEnd(16)).join(''));
+        lines.push('  ' + '-'.repeat(cols.length * 16));
+
+        for (let p = 0; p < maxPeriods; p++) {
+          const periodStart = resultStart + p * bytesPerPeriod;
+          const dateVal = buf.readDoubleLE(periodStart);
+          const { date, time } = oleToDateStr(dateVal);
+          const linkDataStart = periodStart + 8 + nSub * nSubVars * 4 + nNode * nNodeVars * 4 + l * nLinkVars * 4;
+          const vals: string[] = [date.padEnd(16), time.padEnd(16)];
+          for (let v = 0; v < actualLinkVarCount; v++) {
+            vals.push(buf.readFloatLE(linkDataStart + v * 4).toFixed(3).padStart(12).padEnd(16));
+          }
+          lines.push('  ' + vals.join(''));
+        }
+        lines.push('');
+      }
+    }
+
+    return lines.join('\n');
+  } catch (e) {
+    console.warn(`Could not parse SWMM output binary: ${outPath}`, e);
+    return '';
+  }
+}
+
 function parseReportMetrics(reportContent: string): ParsedMetrics {
   const metrics: ParsedMetrics = {};
 
@@ -790,6 +946,15 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
             }
           } catch (e) {
             console.warn(`Could not read report file: ${reportPath}`);
+          }
+
+          try {
+            const timeSeriesData = parseSwmmOutputBinary(outputPath);
+            if (timeSeriesData) {
+              reportContent = (reportContent || '') + '\n' + timeSeriesData;
+            }
+          } catch (e) {
+            console.warn(`Could not parse SWMM output binary: ${outputPath}`);
           }
 
           if (!reportContent) {

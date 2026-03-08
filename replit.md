@@ -6,6 +6,7 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Mar 2026**: Added SWMM `.out` binary parser (`parseSwmmOutputBinary()` in `server/routes.ts`) that extracts node/link time series data from the binary output file and appends formatted text to `reportContent`, enabling the RPT Graphs tab to display real time series charts from actual SWMM simulations
 - **Mar 2026**: Added "Run SWMM" feature to ReSWMM page — after discretization, users can run both the original and discretized models through SWMM and view results using the same ResultsDisplay component; includes before/after comparison
 - **Mar 2026**: Added "Run SWMM" button to Folder View file detail panel — uploads selected .inp file to server, runs SWMM simulation via WebSocket, and displays full results output
 - **Mar 2026**: Added ReSWMM Conduit Lengthening documentation tab to Documentation page with CFL calculation method, worked example, SWMM5 C source reference, and relationship to discretization
