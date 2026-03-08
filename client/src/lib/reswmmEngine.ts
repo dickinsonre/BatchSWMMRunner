@@ -8,6 +8,8 @@ export interface ReswmmConfig {
   fixedMaxLength: number;
   dxDRatio: number;
   mnsa: number;
+  lengtheningEnabled: boolean;
+  lengtheningStep: number;
 }
 
 export const DEFAULT_RESWMM_CONFIG: ReswmmConfig = {
@@ -16,6 +18,8 @@ export const DEFAULT_RESWMM_CONFIG: ReswmmConfig = {
   fixedMaxLength: 200,
   dxDRatio: 5,
   mnsa: 12.566,
+  lengtheningEnabled: false,
+  lengtheningStep: 0,
 };
 
 export interface DiscretizationStats {
@@ -347,6 +351,30 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
           outputLines.push(lines[i]);
           i++;
         }
+        continue;
+      }
+
+      if (sName === 'OPTIONS' && sInfo) {
+        const optionLines: string[] = [];
+        let hasLengthening = false;
+        for (let li = sInfo.startLine; li < sInfo.endLine; li++) {
+          const optLine = lines[li];
+          const optParts = optLine.trim().split(/\s+/).filter(Boolean);
+          if (optParts.length >= 1 && optParts[0].toUpperCase() === 'LENGTHENING_STEP') {
+            hasLengthening = true;
+            if (config.lengtheningEnabled && config.lengtheningStep > 0) {
+              optionLines.push(`LENGTHENING_STEP  ${config.lengtheningStep}`);
+            }
+          } else {
+            optionLines.push(optLine);
+          }
+        }
+        if (!hasLengthening && config.lengtheningEnabled && config.lengtheningStep > 0) {
+          const insertIdx = optionLines.length;
+          optionLines.splice(insertIdx, 0, `LENGTHENING_STEP  ${config.lengtheningStep}`);
+        }
+        outputLines.push(...optionLines);
+        i = sInfo.endLine;
         continue;
       }
 

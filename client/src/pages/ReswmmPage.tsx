@@ -573,6 +573,54 @@ export default function ReswmmPage() {
                     />
                   </div>
 
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-xs text-muted-foreground mb-2 block">Automatic Conduit Lengthening (Short Pipes)</Label>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        SWMM5 can automatically lengthen short conduits to satisfy the Courant condition during dynamic wave routing.
+                        Set LENGTHENING_STEP in the output .inp to enable this.
+                      </p>
+                      <ToggleGroup
+                        type="single"
+                        value={config.lengtheningEnabled ? 'on' : 'off'}
+                        onValueChange={(v) => v && setConfig(prev => ({ ...prev, lengtheningEnabled: v === 'on' }))}
+                        data-testid="reswmm-lengthening-toggle"
+                      >
+                        <ToggleGroupItem value="off" data-testid="toggle-lengthening-off">
+                          Off
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="on" data-testid="toggle-lengthening-on">
+                          On
+                        </ToggleGroupItem>
+                      </ToggleGroup>
+                    </div>
+
+                    {config.lengtheningEnabled && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <Label className="text-xs">LENGTHENING_STEP (seconds)</Label>
+                          <span className="text-xs text-muted-foreground" data-testid="text-reswmm-lengthening-step">
+                            {config.lengtheningStep} s
+                          </span>
+                        </div>
+                        <Slider
+                          min={0}
+                          max={60}
+                          step={0.5}
+                          value={[config.lengtheningStep]}
+                          onValueChange={([v]) => setConfig(prev => ({ ...prev, lengtheningStep: +v.toFixed(1) }))}
+                          data-testid="slider-reswmm-lengthening"
+                        />
+                        <p className="text-xs text-muted-foreground mt-2">
+                          A value of 0 disables lengthening. Typical values are 1-10 seconds. SWMM will lengthen conduits
+                          whose travel time is less than this value.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   <Button onClick={handleDiscretize} data-testid="button-discretize">
                     <Scissors className="h-4 w-4 mr-2" />
                     Discretize
