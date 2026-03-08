@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo, useRef } from "react";
-import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, MapIcon } from "lucide-react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, MapIcon, Play, Loader2, ArrowLeft } from "lucide-react";
 import type { CoordinateData, ConduitData, PolygonData } from "@/lib/inpParser";
 import AppHeader from "@/components/AppHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, Legend,
 } from "recharts";
+import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
+import { useToast } from "@/hooks/use-toast";
 
 interface MiniMapProps {
   coordinates: CoordinateData[];
@@ -189,6 +191,15 @@ function buildOverlaidHistogram(beforeValues: number[], afterValues: number[], b
   return bins.filter(b => b.before > 0 || b.after > 0);
 }
 
+type SimRunState = 'idle' | 'uploading' | 'processing' | 'completed';
+
+function formatRunTime(seconds: number): string {
+  if (seconds < 60) return `${seconds.toFixed(1)}s`;
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}m ${secs.toFixed(0)}s`;
+}
+
 export default function ReswmmPage() {
   const [fileName, setFileName] = useState<string>('');
   const [originalContent, setOriginalContent] = useState<string>('');
@@ -198,11 +209,151 @@ export default function ReswmmPage() {
   const [cflBefore, setCflBefore] = useState<CflAnalysis[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [beforeRunState, setBeforeRunState] = useState<SimRunState>('idle');
+  const [beforeRunResults, setBeforeRunResults] = useState<ProcessResult[]>([]);
+  const [beforeRunElapsed, setBeforeRunElapsed] = useState('');
+  const [beforeRunProgress, setBeforeRunProgress] = useState('');
+  const wsBeforeRef = useRef<WebSocket | null>(null);
+  const beforeStartRef = useRef<number | null>(null);
+
+  const [afterRunState, setAfterRunState] = useState<SimRunState>('idle');
+  const [afterRunResults, setAfterRunResults] = useState<ProcessResult[]>([]);
+  const [afterRunElapsed, setAfterRunElapsed] = useState('');
+  const [afterRunProgress, setAfterRunProgress] = useState('');
+  const wsAfterRef = useRef<WebSocket | null>(null);
+  const afterStartRef = useRef<number | null>(null);
+
+  const [showingResults, setShowingResults] = useState<'before' | 'after' | null>(null);
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    return () => {
+      if (wsBeforeRef.current) { wsBeforeRef.current.close(); wsBeforeRef.current = null; }
+      if (wsAfterRef.current) { wsAfterRef.current.close(); wsAfterRef.current = null; }
+    };
+  }, []);
+
+  const runInpContent = async (
+    content: string,
+    runFileName: string,
+    which: 'before' | 'after',
+  ) => {
+    const setRunState = which === 'before' ? setBeforeRunState : setAfterRunState;
+    const setRunResults = which === 'before' ? setBeforeRunResults : setAfterRunResults;
+    const setRunElapsed = which === 'before' ? setBeforeRunElapsed : setAfterRunElapsed;
+    const setRunProgress = which === 'before' ? setBeforeRunProgress : setAfterRunProgress;
+    const wsRef = which === 'before' ? wsBeforeRef : wsAfterRef;
+    const startRef = which === 'before' ? beforeStartRef : afterStartRef;
+
+    try {
+      setRunState('uploading');
+      setRunResults([]);
+      setRunElapsed('');
+      setRunProgress('Uploading...');
+      startRef.current = Date.now();
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const formData = new FormData();
+      formData.append('files', blob, runFileName);
+
+      const uploadResponse = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!uploadResponse.ok) throw new Error('Failed to upload file');
+
+      const batchJob = await uploadResponse.json();
+      setRunState('processing');
+      setRunProgress('Running SWMM...');
+
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(`${protocol}//${window.location.host}/api/ws?jobId=${batchJob.id}`);
+
+      let collectedResult: ProcessResult | null = null;
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'progress') {
+          setRunProgress(`Processing ${data.fileName}...`);
+        } else if (data.type === 'file_progress') {
+          setRunProgress(`${data.percentage}%`);
+        } else if (data.type === 'result') {
+          collectedResult = data.result;
+          setRunResults([data.result]);
+        } else if (data.type === 'completed') {
+          const finalResult = collectedResult || {
+            id: 'unknown',
+            fileName: runFileName,
+            filePath: '',
+            status: 'failed' as const,
+            error: 'No result received from server',
+          };
+          setRunResults([finalResult]);
+          setRunState('completed');
+          if (startRef.current) {
+            setRunElapsed(formatRunTime((Date.now() - startRef.current) / 1000));
+          }
+          ws.close();
+          wsRef.current = null;
+          setShowingResults(which);
+          toast({ title: "Simulation Complete", description: `${runFileName} has been processed.` });
+        }
+      };
+
+      ws.onerror = () => {
+        setRunState('idle');
+        setRunProgress('');
+        wsRef.current = null;
+        toast({ title: "Error", description: "WebSocket connection failed.", variant: "destructive" });
+      };
+
+      wsRef.current = ws;
+
+      const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, { method: 'POST' });
+      if (!startResponse.ok) throw new Error('Failed to start simulation');
+    } catch (error) {
+      console.error('Run error:', error);
+      setRunState('idle');
+      setRunProgress('');
+      if (wsRef.current) { wsRef.current.close(); wsRef.current = null; }
+      toast({ title: "Error", description: "Failed to run simulation.", variant: "destructive" });
+    }
+  };
+
+  const handleRunBefore = () => {
+    if (!originalContent || !fileName) return;
+    runInpContent(originalContent, fileName, 'before');
+  };
+
+  const handleRunAfter = () => {
+    if (!parsed || !result || !originalContent) return;
+    const rebuilt = rebuildInpFile(originalContent, parsed, result, config);
+    const baseName = fileName.replace(/\.inp$/i, '');
+    runInpContent(rebuilt, `ReSWMM_${baseName}.inp`, 'after');
+  };
+
+  const handleBackFromRunResults = () => {
+    setShowingResults(null);
+  };
+
+  const resetRunStates = () => {
+    setBeforeRunState('idle');
+    setBeforeRunResults([]);
+    setBeforeRunElapsed('');
+    setBeforeRunProgress('');
+    setAfterRunState('idle');
+    setAfterRunResults([]);
+    setAfterRunElapsed('');
+    setAfterRunProgress('');
+    setShowingResults(null);
+    if (wsBeforeRef.current) { wsBeforeRef.current.close(); wsBeforeRef.current = null; }
+    if (wsAfterRef.current) { wsAfterRef.current.close(); wsAfterRef.current = null; }
+  };
+
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
     setResult(null);
+    resetRunStates();
     const reader = new FileReader();
     reader.onload = (ev) => {
       const content = ev.target?.result as string;
@@ -233,6 +384,7 @@ export default function ReswmmPage() {
 
   const handleDiscretize = useCallback(() => {
     if (!parsed) return;
+    resetRunStates();
     const r = discretizeConduits(parsed, config);
     setResult(r);
   }, [parsed, config]);
@@ -631,7 +783,33 @@ export default function ReswmmPage() {
                 </CardContent>
               </Card>
 
-              {result && (
+              {showingResults && (
+                <>
+                  <Separator />
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleBackFromRunResults}
+                        data-testid="button-back-from-run-results"
+                      >
+                        <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+                        Back to ReSWMM
+                      </Button>
+                      <span className="text-sm text-muted-foreground">
+                        {showingResults === 'before' ? 'Original Model' : 'Discretized Model'} Results
+                      </span>
+                    </div>
+                    <ResultsDisplay
+                      results={showingResults === 'before' ? beforeRunResults : afterRunResults}
+                      elapsedTime={showingResults === 'before' ? beforeRunElapsed : afterRunElapsed}
+                    />
+                  </div>
+                </>
+              )}
+
+              {!showingResults && result && (
                 <>
                   <Separator />
 
@@ -841,10 +1019,106 @@ export default function ReswmmPage() {
                       </Card>
                     </div>
 
-                    <Button onClick={handleDownload} data-testid="button-download-reswmm">
-                      <Download className="h-4 w-4 mr-2" />
-                      Download ReSWMM_{fileName.replace(/\.inp$/i, '')}.inp
-                    </Button>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Button onClick={handleDownload} data-testid="button-download-reswmm">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download ReSWMM_{fileName.replace(/\.inp$/i, '')}.inp
+                      </Button>
+                    </div>
+
+                    <Separator className="my-6" />
+
+                    <h3 className="text-lg font-semibold mb-4" data-testid="text-run-heading">Run Simulations</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Run SWMM on the original and discretized models to compare simulation results side by side.
+                    </p>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <Card data-testid="card-run-before">
+                        <CardContent className="p-4 space-y-3">
+                          <div>
+                            <p className="text-sm font-medium">Original Model</p>
+                            <p className="text-xs text-muted-foreground">{fileName} — {result.stats.originalConduitCount} conduits</p>
+                          </div>
+                          {(beforeRunState === 'uploading' || beforeRunState === 'processing') ? (
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                              <span className="text-sm text-muted-foreground" data-testid="text-before-run-progress">{beforeRunProgress}</span>
+                            </div>
+                          ) : beforeRunState === 'completed' && beforeRunResults.length > 0 ? (
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Badge variant="default" data-testid="badge-before-run-done">
+                                {beforeRunResults[0].status === 'success' ? 'Success' : 'Failed'}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">{beforeRunElapsed}</span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setShowingResults('before')}
+                                data-testid="button-view-before-results"
+                              >
+                                View Results
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleRunBefore}
+                                data-testid="button-rerun-before"
+                              >
+                                Re-run
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button onClick={handleRunBefore} data-testid="button-run-before">
+                              <Play className="h-4 w-4 mr-1.5" />
+                              Run Original
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+
+                      <Card data-testid="card-run-after">
+                        <CardContent className="p-4 space-y-3">
+                          <div>
+                            <p className="text-sm font-medium">Discretized Model</p>
+                            <p className="text-xs text-muted-foreground">ReSWMM_{fileName.replace(/\.inp$/i, '')}.inp — {result.stats.newConduitCount} conduits</p>
+                          </div>
+                          {(afterRunState === 'uploading' || afterRunState === 'processing') ? (
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                              <span className="text-sm text-muted-foreground" data-testid="text-after-run-progress">{afterRunProgress}</span>
+                            </div>
+                          ) : afterRunState === 'completed' && afterRunResults.length > 0 ? (
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Badge variant="default" data-testid="badge-after-run-done">
+                                {afterRunResults[0].status === 'success' ? 'Success' : 'Failed'}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">{afterRunElapsed}</span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setShowingResults('after')}
+                                data-testid="button-view-after-results"
+                              >
+                                View Results
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleRunAfter}
+                                data-testid="button-rerun-after"
+                              >
+                                Re-run
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button onClick={handleRunAfter} data-testid="button-run-after">
+                              <Play className="h-4 w-4 mr-1.5" />
+                              Run Discretized
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </div>
                   </div>
                 </>
               )}
