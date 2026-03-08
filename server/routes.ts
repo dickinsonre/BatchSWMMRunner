@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
@@ -1096,7 +1097,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
     baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
   });
 
-  app.post('/api/chat-report', async (req, res) => {
+  app.post('/api/chat-report', express.json({ limit: '50mb' }), async (req, res) => {
     try {
       const { messages, reportContent, inpContent } = req.body;
       if (!messages || !Array.isArray(messages)) {
