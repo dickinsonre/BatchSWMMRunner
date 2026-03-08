@@ -581,9 +581,9 @@ export default function ReswmmPage() {
                     <div>
                       <Label className="text-xs text-muted-foreground mb-2 block">Automatic Conduit Lengthening (Short Pipes)</Label>
                       <p className="text-xs text-muted-foreground mb-3">
-                        SWMM5 can automatically lengthen short conduits to satisfy the Courant condition during dynamic wave routing.
-                        When enabled, LENGTHENING_STEP is added or updated in the [OPTIONS] section of the output .inp file.
-                        When disabled or set to 0, any existing LENGTHENING_STEP line is removed from the output.
+                        Short conduits can violate the Courant condition during dynamic wave routing.
+                        When enabled, ReSWMM lengthens any conduit shorter than celerity x time step before discretization.
+                        The LENGTHENING_STEP value is also written to the [OPTIONS] section of the output .inp file.
                       </p>
                       <ToggleGroup
                         type="single"
@@ -639,7 +639,12 @@ export default function ReswmmPage() {
                     <h3 className="text-lg font-semibold mb-4" data-testid="text-results-heading">Discretization Results</h3>
 
                     <Card className="mb-4" data-testid="card-summary">
-                      <CardContent className="p-4">
+                      <CardContent className="p-4 space-y-1">
+                        {result.stats.lengtheningCount > 0 && (
+                          <p className="text-sm" data-testid="text-summary-lengthening">
+                            {result.stats.lengtheningCount} short conduit{result.stats.lengtheningCount !== 1 ? 's' : ''} lengthened (added {result.stats.lengtheningTotalAdded.toFixed(1)} {flowUnit} total).
+                          </p>
+                        )}
                         <p className="text-sm" data-testid="text-summary">
                           {result.stats.splitCount} conduit{result.stats.splitCount !== 1 ? 's' : ''} split into {result.stats.newConduitCount} segments, {result.stats.newJunctionCount} new junction{result.stats.newJunctionCount !== 1 ? 's' : ''} added.
                         </p>
@@ -750,6 +755,14 @@ export default function ReswmmPage() {
                                 <td className="text-right py-2 px-4" data-testid="text-after-junctions">{parsed.counts.junctions + result.stats.newJunctionCount}</td>
                                 <td className="text-right py-2 pl-4 text-muted-foreground">+{result.stats.newJunctionCount}</td>
                               </tr>
+                              {result.stats.lengtheningCount > 0 && (
+                                <tr className="border-b border-border/50">
+                                  <td className="py-2 pr-4 text-muted-foreground">Conduits Lengthened</td>
+                                  <td className="text-right py-2 px-4" data-testid="text-before-lengthened">-</td>
+                                  <td className="text-right py-2 px-4" data-testid="text-after-lengthened">{result.stats.lengtheningCount}</td>
+                                  <td className="text-right py-2 pl-4 text-muted-foreground">+{result.stats.lengtheningTotalAdded.toFixed(1)} {flowUnit}</td>
+                                </tr>
+                              )}
                               <tr className="border-b border-border/50">
                                 <td className="py-2 pr-4 text-muted-foreground">Total Length ({flowUnit})</td>
                                 <td className="text-right py-2 px-4 font-semibold" data-testid="text-before-total">{beforeTotalLength.toFixed(1)}</td>

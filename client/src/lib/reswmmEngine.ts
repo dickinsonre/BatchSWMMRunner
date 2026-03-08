@@ -28,6 +28,8 @@ export interface DiscretizationStats {
   splitCount: number;
   newJunctionCount: number;
   method: string;
+  lengtheningCount: number;
+  lengtheningTotalAdded: number;
 }
 
 export interface DiscretizedResult {
@@ -98,6 +100,29 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
     lossMap.set(l.link, l);
   }
 
+  let lengtheningCount = 0;
+  let lengtheningTotalAdded = 0;
+
+  const isUS = parsed.options.flowUnits === 'CFS' || parsed.options.flowUnits === 'GPM' || parsed.options.flowUnits === 'MGD';
+  const g = isUS ? 32.174 : 9.81;
+
+  const workingConduits: ConduitData[] = parsed.conduits.map(c => ({ ...c }));
+
+  if (config.lengtheningEnabled && config.lengtheningStep > 0) {
+    for (const conduit of workingConduits) {
+      const xs = xsMap.get(conduit.name);
+      const diameter = xs ? xs.geom1 : 1;
+      const celerity = Math.sqrt(g * diameter);
+      const minLength = +(celerity * config.lengtheningStep).toFixed(2);
+      if (conduit.length < minLength) {
+        const added = minLength - conduit.length;
+        lengtheningTotalAdded += added;
+        conduit.length = minLength;
+        lengtheningCount++;
+      }
+    }
+  }
+
   const newConduits: ConduitData[] = [];
   const newJunctions: JunctionData[] = [];
   const newXSections: XSectionData[] = [];
@@ -106,7 +131,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
   let splitCount = 0;
   let newJunctionCount = 0;
 
-  for (const conduit of parsed.conduits) {
+  for (const conduit of workingConduits) {
     const xs = xsMap.get(conduit.name);
     const diameter = xs ? xs.geom1 : 1;
 
@@ -232,6 +257,8 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
       splitCount,
       newJunctionCount,
       method: config.method,
+      lengtheningCount,
+      lengtheningTotalAdded: +lengtheningTotalAdded.toFixed(2),
     },
   };
 }
