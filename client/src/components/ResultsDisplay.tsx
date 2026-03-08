@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, FileDown } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, FileDown, BarChart2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -166,9 +166,6 @@ function reportToHtml(content: string): string {
         if (htmlLines.length > 0) htmlLines.pop();
       }
 
-      const lastHeaderCells = splitTableRow(headerLines[headerLines.length - 1]);
-      const numCols = lastHeaderCells.length;
-
       const tableRows: string[] = [];
       tableRows.push('<div style="overflow-x:auto;margin:0.5em 0 1em;">');
       tableRows.push('<table style="border-collapse:collapse;width:100%;font-family:monospace;font-size:0.8em;">');
@@ -189,7 +186,6 @@ function reportToHtml(content: string): string {
       tableRows.push('<tbody>');
       li++;
 
-      const collectedRows: string[][] = [];
       let rowIdx = 0;
       while (li < lines.length) {
         const dataLine = lines[li];
@@ -198,7 +194,6 @@ function reportToHtml(content: string): string {
         if (/^\s*-{10,}/.test(dataLine)) { li++; continue; }
 
         const cells = splitTableRow(dataLine);
-        collectedRows.push(cells);
         const bgColor = rowIdx % 2 === 0 ? 'transparent' : 'hsl(var(--muted) / 0.3)';
         tableRows.push(`<tr style="background:${bgColor};">`);
 
@@ -214,59 +209,6 @@ function reportToHtml(content: string): string {
       }
       tableRows.push('</tbody></table></div>');
       htmlLines.push(tableRows.join('\n'));
-
-      if (collectedRows.length >= 2 && numCols >= 2) {
-        const chartColors = ['#3b82f6','#ef4444','#22c55e','#f59e0b','#8b5cf6','#06b6d4','#ec4899','#f97316','#14b8a6','#6366f1'];
-        const numericColIndices: number[] = [];
-        for (let ci = 1; ci < numCols; ci++) {
-          let numericCount = 0;
-          for (const row of collectedRows) {
-            if (ci < row.length && /^[-+]?\d*\.?\d+%?$/.test(row[ci])) numericCount++;
-          }
-          if (numericCount >= collectedRows.length * 0.5) numericColIndices.push(ci);
-        }
-
-        if (numericColIndices.length > 0 && collectedRows.length <= 100) {
-          const histHtml: string[] = [];
-          histHtml.push('<div style="display:flex;flex-wrap:wrap;gap:1.5em;margin:0.5em 0 1.5em;">');
-
-          for (const ci of numericColIndices) {
-            const colName = ci < lastHeaderCells.length ? lastHeaderCells[ci] : `Col ${ci}`;
-            const vals: { label: string; value: number }[] = [];
-            for (const row of collectedRows) {
-              const label = row[0] || '';
-              const raw = ci < row.length ? row[ci].replace('%', '') : '';
-              const num = parseFloat(raw);
-              if (!isNaN(num)) vals.push({ label, value: num });
-            }
-            if (vals.length < 2) continue;
-
-            const maxVal = Math.max(...vals.map(v => Math.abs(v.value)));
-            if (maxVal === 0) continue;
-
-            const barColor = chartColors[numericColIndices.indexOf(ci) % chartColors.length];
-            const chartWidth = vals.length <= 15 ? '100%' : '48%';
-
-            histHtml.push(`<div style="flex:1;min-width:300px;max-width:${chartWidth};">`);
-            histHtml.push(`<div style="font-size:0.8em;font-weight:600;margin-bottom:0.4em;color:hsl(var(--foreground) / 0.7);">${colName}</div>`);
-
-            for (const item of vals) {
-              const pct = maxVal > 0 ? (Math.abs(item.value) / maxVal) * 100 : 0;
-              const shortLabel = item.label.length > 12 ? item.label.substring(0, 12) : item.label;
-              histHtml.push(`<div style="display:flex;align-items:center;gap:0.3em;margin-bottom:1px;font-size:0.7em;font-family:monospace;">`);
-              histHtml.push(`<div style="width:80px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${item.label}">${shortLabel}</div>`);
-              histHtml.push(`<div style="flex:1;height:14px;background:hsl(var(--muted) / 0.3);border-radius:2px;overflow:hidden;">`);
-              histHtml.push(`<div style="height:100%;width:${pct.toFixed(1)}%;background:${barColor};border-radius:2px;min-width:${item.value !== 0 ? '2px' : '0'};"></div>`);
-              histHtml.push(`</div>`);
-              histHtml.push(`<div style="width:55px;text-align:right;flex-shrink:0;color:hsl(var(--foreground) / 0.6);">${item.value.toFixed(2)}</div>`);
-              histHtml.push(`</div>`);
-            }
-            histHtml.push('</div>');
-          }
-          histHtml.push('</div>');
-          htmlLines.push(histHtml.join('\n'));
-        }
-      }
       continue;
     }
 
@@ -335,6 +277,167 @@ function reportToHtml(content: string): string {
   }
 
   return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}</div>`;
+}
+
+interface TableData {
+  sectionTitle: string;
+  headers: string[];
+  rows: string[][];
+}
+
+function extractTablesFromReport(content: string): TableData[] {
+  const lines = content.split('\n');
+  const tables: TableData[] = [];
+  let currentSection = '';
+  let i = 0;
+
+  while (i < lines.length) {
+    if (/^\s*\*{3,}/.test(lines[i])) {
+      const titleOnLine = lines[i].replace(/\*/g, '').trim();
+      if (titleOnLine) {
+        currentSection = titleOnLine;
+      } else if (i + 1 < lines.length) {
+        const mid = lines[i + 1].replace(/\*/g, '').trim();
+        if (mid && i + 2 < lines.length && /^\s*\*{3,}\s*$/.test(lines[i + 2])) {
+          currentSection = mid;
+          i += 2;
+        }
+      }
+      i++;
+      continue;
+    }
+
+    if (/^\s*-{10,}/.test(lines[i])) {
+      const headerLines: string[] = [];
+      let back = i - 1;
+      while (back >= 0 && lines[back].trim() !== '' && !/^\s*\*{3,}/.test(lines[back]) && !/^\s*-{5,}/.test(lines[back])) {
+        headerLines.unshift(lines[back]);
+        back--;
+      }
+
+      let peek = i + 1;
+      while (peek < lines.length && lines[peek].trim() === '') peek++;
+      const nextLine = peek < lines.length ? lines[peek].trim() : '';
+      const split = (s: string) => s.trim().split(/\s{2,}/).filter(x => x !== '');
+      const hasData = nextLine !== '' && !/^\s*\*{3,}/.test(lines[peek] || '') && split(nextLine).length >= 2;
+
+      if (!hasData || headerLines.length === 0) { i++; continue; }
+
+      const headers = split(headerLines[headerLines.length - 1]);
+      const rows: string[][] = [];
+      i++;
+
+      while (i < lines.length) {
+        const dl = lines[i];
+        if (dl.trim() === '' || /^\s*\*{3,}/.test(dl)) break;
+        if (/^\s*-{10,}/.test(dl)) { i++; continue; }
+        rows.push(split(dl));
+        i++;
+      }
+
+      if (rows.length >= 2 && headers.length >= 2) {
+        tables.push({ sectionTitle: currentSection, headers, rows });
+      }
+      continue;
+    }
+    i++;
+  }
+  return tables;
+}
+
+const HIST_COLORS = ['#3b82f6','#ef4444','#22c55e','#f59e0b','#8b5cf6','#06b6d4','#ec4899','#f97316','#14b8a6','#6366f1'];
+
+function ReportHistograms({ reportContent }: { reportContent: string }) {
+  const tables = useMemo(() => extractTablesFromReport(reportContent), [reportContent]);
+
+  if (tables.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-32 text-muted-foreground text-sm" data-testid="text-no-histograms">
+        No tables found in report to visualize.
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 p-4" data-testid="report-histograms">
+      {tables.map((table, tableIdx) => {
+        const numericCols: number[] = [];
+        for (let ci = 1; ci < table.headers.length; ci++) {
+          let count = 0;
+          for (const row of table.rows) {
+            if (ci < row.length && /^[-+]?\d*\.?\d+%?$/.test(row[ci])) count++;
+          }
+          if (count >= table.rows.length * 0.5) numericCols.push(ci);
+        }
+
+        if (numericCols.length === 0) return null;
+        const displayRows = table.rows.slice(0, 80);
+
+        return (
+          <Card key={tableIdx} data-testid={`card-histogram-${tableIdx}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm">{table.sectionTitle || `Table ${tableIdx + 1}`}</CardTitle>
+              <p className="text-xs text-muted-foreground">{table.rows.length} rows, {numericCols.length} numeric columns</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {numericCols.map((ci, colIdx) => {
+                  const colName = ci < table.headers.length ? table.headers[ci] : `Col ${ci}`;
+                  const vals: { label: string; value: number }[] = [];
+                  for (const row of displayRows) {
+                    const label = row[0] || '';
+                    const raw = ci < row.length ? row[ci].replace('%', '') : '';
+                    const num = parseFloat(raw);
+                    if (!isNaN(num)) vals.push({ label, value: num });
+                  }
+                  if (vals.length < 2) return null;
+
+                  const maxVal = Math.max(...vals.map(v => Math.abs(v.value)));
+                  if (maxVal === 0) return null;
+                  const color = HIST_COLORS[colIdx % HIST_COLORS.length];
+
+                  return (
+                    <div key={colIdx} data-testid={`histogram-col-${tableIdx}-${colIdx}`}>
+                      <div className="text-xs font-semibold mb-2 text-muted-foreground">{colName}</div>
+                      <div className="space-y-px">
+                        {vals.map((item, vi) => {
+                          const pct = (Math.abs(item.value) / maxVal) * 100;
+                          return (
+                            <div key={vi} className="flex items-center gap-1 text-xs font-mono" style={{ height: '18px' }}>
+                              <div
+                                className="text-right flex-shrink-0 overflow-hidden text-ellipsis whitespace-nowrap"
+                                style={{ width: '90px' }}
+                                title={item.label}
+                              >
+                                {item.label.length > 14 ? item.label.substring(0, 14) : item.label}
+                              </div>
+                              <div className="flex-1 h-3.5 rounded-sm overflow-hidden" style={{ background: 'hsl(var(--muted) / 0.4)' }}>
+                                <div
+                                  className="h-full rounded-sm"
+                                  style={{
+                                    width: `${pct.toFixed(1)}%`,
+                                    background: color,
+                                    minWidth: item.value !== 0 ? '2px' : '0',
+                                  }}
+                                />
+                              </div>
+                              <div className="text-right flex-shrink-0 text-muted-foreground" style={{ width: '60px' }}>
+                                {item.value.toFixed(2)}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </div>
+  );
 }
 
 export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayProps) {
@@ -757,6 +860,12 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                     </TabsTrigger>
                                   )}
                                   {result.reportContent && (
+                                    <TabsTrigger value="histograms" data-testid={`tab-report-histograms-${result.id}`}>
+                                      <BarChart2 className="h-3 w-3 mr-1" />
+                                      RPT Histograms
+                                    </TabsTrigger>
+                                  )}
+                                  {result.reportContent && (
                                     <TabsTrigger value="html" data-testid={`tab-report-html-${result.id}`}>
                                       <Globe className="h-3 w-3 mr-1" />
                                       RPT HTML
@@ -782,6 +891,13 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                     <div className="rounded border p-4 bg-background" data-testid={`graphs-report-content-${result.id}`}>
                                       <InteractiveCharts reportContent={result.reportContent} />
                                     </div>
+                                  </TabsContent>
+                                )}
+                                {result.reportContent && (
+                                  <TabsContent value="histograms">
+                                    <ScrollArea className="h-[800px] rounded border">
+                                      <ReportHistograms reportContent={result.reportContent} />
+                                    </ScrollArea>
                                   </TabsContent>
                                 )}
                                 {result.reportContent && (
