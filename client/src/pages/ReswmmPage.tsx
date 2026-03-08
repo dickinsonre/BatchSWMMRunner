@@ -580,7 +580,8 @@ export default function ReswmmPage() {
                       <Label className="text-xs text-muted-foreground mb-2 block">Automatic Conduit Lengthening (Short Pipes)</Label>
                       <p className="text-xs text-muted-foreground mb-3">
                         SWMM5 can automatically lengthen short conduits to satisfy the Courant condition during dynamic wave routing.
-                        Set LENGTHENING_STEP in the output .inp to enable this.
+                        When enabled, LENGTHENING_STEP is added or updated in the [OPTIONS] section of the output .inp file.
+                        When disabled or set to 0, any existing LENGTHENING_STEP line is removed from the output.
                       </p>
                       <ToggleGroup
                         type="single"
