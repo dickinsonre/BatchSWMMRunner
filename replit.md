@@ -6,40 +6,19 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
-- **Mar 2026**: Added SWMM `.out` binary parser (`parseSwmmOutputBinary()` in `server/routes.ts`) that extracts node/link time series data from the binary output file and appends formatted text to `reportContent`, enabling the RPT Graphs tab to display real time series charts from actual SWMM simulations
-- **Mar 2026**: Added "Run SWMM" feature to ReSWMM page — after discretization, users can run both the original and discretized models through SWMM and view results using the same ResultsDisplay component; includes before/after comparison
-- **Mar 2026**: Added "Run SWMM" button to Folder View file detail panel — uploads selected .inp file to server, runs SWMM simulation via WebSocket, and displays full results output
-- **Mar 2026**: Added ReSWMM Conduit Lengthening documentation tab to Documentation page with CFL calculation method, worked example, SWMM5 C source reference, and relationship to discretization
-- **Mar 2026**: Added shared `AppHeader` component (`client/src/components/AppHeader.tsx`) with consistent navigation tabs (Batch Processing | Folder View | ReSWMM | Docs), SWMM5 status badge with tooltip, and ThemeToggle; used across all pages
-- **Mar 2026**: Added 4 university color themes: Auburn (orange/navy), Autodesk (black/teal), UF (orange/blue), OSU (orange/black) with light/dark variants in `index.css`; `ThemeToggle` upgraded to dropdown with theme selection + dark mode toggle, persisted via localStorage
-- **Mar 2026**: Added ReSWMM conduit discretization page (`/reswmm`) with client-side INP parser, Fixed Interval and Δx/D Ratio methods, CFL time step analysis, before/after comparison charts, and modified file download
-- **Mar 2026**: Added Folder View page (`/folder`) for browsing directories of .inp files with SVG network map visualization, element stats cards, conduit length histogram, and multi-file support
-- **Mar 2026**: Added client-side INP file parser (`client/src/lib/inpParser.ts`) extracting junctions, conduits, subcatchments, xsections, coordinates, losses, options from .inp files
-- **Mar 2026**: Added Results Dashboard page (`/dashboard`) with Recharts bar/pie charts for continuity errors, flooding, precipitation/runoff, processing status; detailed metrics table; "Open in Results Dashboard" button in results summary
-- **Mar 2026**: Compiled EPA SWMM 5.2.4 engine from source (C code from EPA GitHub) into `swmm-engine/runswmm` binary; app now runs in live mode with real SWMM simulations
-- **Mar 2026**: Fixed file path bug: multer hashed filenames had no `.inp` extension, causing report/output paths to collide with input path; now uses suffix append
-- **Mar 2026**: Added `LargeTextViewer` component to handle large report files (76K+ lines) with truncation and "Show All" toggle
-- **Mar 2026**: Added "Load Directory" button using `webkitdirectory` attribute to load all `.inp` files from a folder
-- **Mar 2026**: Added auto-detection of SWMM engine path (scans common install dirs + PATH), `/api/swmm-status` endpoint, and dynamic SWMM status card in UI
-- **Mar 2026**: Added `.rpt` report parsing (`parseReportMetrics()`) extracting continuity errors, flooding, volumes, routing method into `ParsedMetrics` type
-- **Mar 2026**: Enhanced results summary table with continuity error color-coding (green ≤1%, yellow 1-5%, red >5%), flooding badges, and enriched CSV export
-- **Mar 2026**: Added per-file progress bars via `file_progress` WebSocket messages with real-time status icons (pending/running/success/failed)
-- **Mar 2026**: Enhanced processing log with collapse/expand, auto-scroll, stdout/stderr distinction, and per-file attribution
-- **Mar 2026**: Added `SwmmStatus` and `ParsedMetrics` types to shared schema
-- **Mar 2026**: Added time series data tables (subcatchment runoff, node results, link results) to simulated reports with SVG chart visualization in HTML view
-- **Mar 2026**: Enhanced `injectReportOptions()` to force `INPUT YES`, `SUBCATCHMENTS ALL`, `NODES ALL`, `LINKS ALL` in [REPORT] section
-- **Mar 2026**: Added report file viewer with Text and HTML tabs for each successful result
-- **Mar 2026**: Added dark mode toggle with localStorage persistence and system preference detection
-- **Mar 2026**: Added parallel processing, stop on error, and output format settings
-- **Mar 2026**: Created HANDOVER.md for project portability
-- **Jan 2026**: Added Simulation Settings panel with Report Step and Routing Method configuration options
-- **Jan 2026**: Added "What You'll Get" expected outputs panel showing .rpt, .out files and results summary
-- **Jan 2026**: Made processing button always visible (disabled until files uploaded) for clearer UX
-- **Jan 2026**: Added workflow steps visualization (Upload → Process → Results)
-- **Jan 2026**: Added "How to Use" instructions panel with 3-step guide
-- **Jan 2026**: Enhanced file upload with file size display and validation warnings
-- **Jan 2026**: Improved progress dashboard with elapsed time, ETA, and success/failure counters
-- **Jan 2026**: Added CSV export functionality to results display
+- **Mar 2026 (latest)**: Updated HANDOVER.md to 1,599 lines with accurate file line counts (routes.ts 1,018, total key files 8,484), dedicated binary output parser section, corrected architecture diagram, comprehensive 21-section table of contents
+- **Mar 2026**: Added SWMM `.out` binary parser (`parseSwmmOutputBinary()` in `server/routes.ts`) — reads EPA SWMM 5.2 binary format (magic 516114522), extracts node/link time series for interactive charts; max 2,000 periods, OLE date conversion
+- **Mar 2026**: Added "Run SWMM" feature to ReSWMM page with before/after SimulationComparison (side-by-side table + grouped bar charts)
+- **Mar 2026**: Added "Run SWMM" button to Folder View file detail panel
+- **Mar 2026**: Added shared `AppHeader` with navigation tabs, SWMM status badge, ThemeToggle
+- **Mar 2026**: Added 5 color themes (Default, Auburn, Autodesk, UF, OSU) with dark mode, persisted via localStorage
+- **Mar 2026**: Added ReSWMM page (`/reswmm`) with Fixed Interval + dx/D Ratio discretization, CFL analysis, lengthening
+- **Mar 2026**: Added Folder View (`/folder`) with SVG network map, element stats, conduit histogram
+- **Mar 2026**: Added client-side INP parser (15 sections: junctions, conduits, subcatchments, xsections, etc.)
+- **Mar 2026**: Added Results Dashboard (`/dashboard`) with 4 Recharts charts + metrics table
+- **Mar 2026**: Compiled EPA SWMM 5.2.4 into `swmm-engine/runswmm` (511KB ELF binary)
+- **Mar 2026**: WebSocket system with 7 message types, message buffering, 500ms delay
+- **Mar 2026**: Report generation: HTML/Markdown/CSV with analysis + recommendations
 
 ## User Preferences
 
