@@ -397,6 +397,18 @@ function ReportHistograms({ reportContent }: { reportContent: string }) {
                   if (maxVal === 0) return null;
                   const color = HIST_COLORS[colIdx % HIST_COLORS.length];
 
+                  const rawVals = vals.map(v => v.value);
+                  const n = rawVals.length;
+                  const sum = rawVals.reduce((a, b) => a + b, 0);
+                  const mean = sum / n;
+                  const sorted = [...rawVals].sort((a, b) => a - b);
+                  const median = n % 2 === 0 ? (sorted[n / 2 - 1] + sorted[n / 2]) / 2 : sorted[Math.floor(n / 2)];
+                  const minV = sorted[0];
+                  const maxV = sorted[n - 1];
+                  const variance = rawVals.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
+                  const stdDev = Math.sqrt(variance);
+                  const fmt = (v: number) => Math.abs(v) >= 100 ? v.toFixed(1) : v.toFixed(3);
+
                   return (
                     <div key={colIdx} data-testid={`histogram-col-${tableIdx}-${colIdx}`}>
                       <div className="text-xs font-semibold mb-2 text-muted-foreground">{colName}</div>
@@ -428,6 +440,14 @@ function ReportHistograms({ reportContent }: { reportContent: string }) {
                             </div>
                           );
                         })}
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] font-mono text-muted-foreground border-t pt-1.5" data-testid={`stats-col-${tableIdx}-${colIdx}`}>
+                        <span>n={n}</span>
+                        <span>min={fmt(minV)}</span>
+                        <span>max={fmt(maxV)}</span>
+                        <span>mean={fmt(mean)}</span>
+                        <span>median={fmt(median)}</span>
+                        <span>std={fmt(stdDev)}</span>
                       </div>
                     </div>
                   );
