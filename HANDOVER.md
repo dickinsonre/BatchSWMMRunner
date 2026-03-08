@@ -433,6 +433,71 @@ After a successful run, SWMM produces:
 
 Both are parsed server-side and combined into the `reportContent` field of `ProcessResult`.
 
+### EPA SWMM 5.2 Release Notes
+
+```
+=====================================================================
+EPA SWMM 5.2 RELEASE NOTES
+=====================================================================
+
+This file contains information about the 64-bit edition of version
+5.2 of the EPA Storm Water Management Model (SWMM). A complete Users
+Manual as well as full source code and other updates are available
+at www.epa.gov/water-research/storm-water-management-model-swmm.
+
+=====================================================================
+INSTALLATION
+
+To install 64-bit EPA SWMM 5.2 run the setup program named
+swmm52#(x64)_setup.exe (where "#" is the current build number),
+available from the aforementioned web site. It will place the
+following files into the application folder you designate:
+
+  epaswmm5.exe       -- the Windows user interface for SWMM 5
+  swmm5.dll          -- the SWMM 5 computational engine
+  vcomp140.dll       -- Microsoft C/C++ OpenMP Runtime
+  runswmm.exe        -- the command line version of SWMM 5
+  UserGuide.chm      -- the SWMM 5 User Guide as a Help file
+  BasicTutorial.chm  -- an introductory tutorial for SWMM 5
+  InletsTutorial.chm -- a tutorial on modeling street inlets
+  Notes.txt          -- this file
+
+The setup program will also create a Start Menu group named
+"EPA SWMM 5.2.# (64-bit)" where again "#" is the current build
+number. Select the item named "EPA SWMM 5.2" from it to launch
+the program.
+
+=====================================================================
+SAMPLE PROJECTS
+
+Several sample projects have been included with this package. They
+are placed in a sub-folder named EPA SWMM Projects\Samples in your
+Documents folder. Each project consists of a .INP file that holds
+the project's data and a .TXT file that describes the project. The
+Samples folder will not be deleted when SWMM 5.2 is uninstalled.
+
+=====================================================================
+TERMS OF USE
+
+EPA SWMM 5 is public domain software that may be freely copied and
+distributed.
+
+=====================================================================
+DISCLAIMER
+
+The software product is provided on an "as-is" basis. US EPA makes no
+representations or warranties of any kind and expressly disclaim all
+other warranties express or implied, including, without limitation,
+warranties of merchantability or fitness for a particular purpose.
+Although care has been used in preparing the software product, US EPA
+disclaim all liability for its accuracy or completeness, and the user
+shall be solely responsible for the selection, use, efficiency and
+suitability of the software product. Any person who uses this product
+does so at his sole risk and without liability to US EPA. US EPA shall
+have no liability to users for the infringement of proprietary rights
+by the software product or any portion thereof.
+```
+
 ---
 
 ## 8. SWMM Binary Output Parser
