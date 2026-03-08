@@ -138,6 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const clients = new Map<string, WebSocket>();
+  const messageBuffers = new Map<string, any[]>();
 
   cachedSwmmStatus = detectSwmmPath();
   console.log(`SWMM detection: mode=${cachedSwmmStatus.mode}, path=${cachedSwmmStatus.path || 'N/A'}`);
@@ -148,11 +149,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (jobId) {
       clients.set(jobId, ws);
       console.log(`WebSocket client connected for job: ${jobId}`);
+
+      const buffered = messageBuffers.get(jobId);
+      if (buffered && buffered.length > 0) {
+        console.log(`Flushing ${buffered.length} buffered messages for job: ${jobId}`);
+        for (const msg of buffered) {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(msg));
+          }
+        }
+        messageBuffers.delete(jobId);
+      }
     }
 
     ws.on('close', () => {
       if (jobId) {
         clients.delete(jobId);
+        messageBuffers.delete(jobId);
         console.log(`WebSocket client disconnected for job: ${jobId}`);
       }
     });
@@ -162,6 +175,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const client = clients.get(jobId);
     if (client && client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(data));
+    } else {
+      if (!messageBuffers.has(jobId)) {
+        messageBuffers.set(jobId, []);
+      }
+      messageBuffers.get(jobId)!.push(data);
     }
   }
 
@@ -255,7 +273,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ message: 'Processing started' });
 
-      processFilesSequentially(jobId, job.files);
+      setTimeout(() => {
+        processFilesSequentially(jobId, job.files);
+      }, 500);
     } catch (error) {
       console.error('Start processing error:', error);
       res.status(500).json({ error: 'Failed to start processing' });
