@@ -137,11 +137,21 @@ function parseSwmmOutputBinary(outPath: string): string {
     const maxPeriods = Math.min(numPeriods, 2000);
     const lines: string[] = [];
 
+    const baseSubVarNames = ['Rainfall', 'Snow Depth', 'Evaporation', 'Infiltration', 'Runoff', 'GW Outflow', 'GW Elev', 'Soil Moisture'];
+    const baseSubVarUnits = ['in/hr', 'in', 'in/day', 'in/hr', 'CFS', 'CFS', 'ft', ''];
     const baseNodeVarNames = ['Depth', 'Head', 'Volume', 'Lat.Inflow', 'Total Inflow', 'Flooding'];
     const baseNodeVarUnits = ['ft', 'ft', 'ft3', 'CFS', 'CFS', 'CFS'];
     const baseLinkVarNames = ['Flow', 'Depth', 'Velocity', 'Volume', 'Capacity'];
     const baseLinkVarUnits = ['CFS', 'ft', 'ft/sec', 'ft3', ''];
+    const baseSysVarNames = ['Temperature', 'Rainfall', 'Snow Depth', 'Evaporation', 'Runoff', 'Dry Weather Inflow', 'GW Inflow', 'RDII Inflow', 'Direct Inflow', 'Total Lateral Inflow', 'Flooding', 'Outflow', 'Storage Volume', 'Evaporation'];
+    const baseSysVarUnits = ['deg F', 'in/hr', 'in', 'in/day', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'ft3', 'CFS'];
 
+    const subVarLabels: string[] = [];
+    const subVarUnitLabels: string[] = [];
+    for (let v = 0; v < nSubVars; v++) {
+      subVarLabels.push(v < baseSubVarNames.length ? baseSubVarNames[v] : `Pollutant_${v - baseSubVarNames.length + 1}`);
+      subVarUnitLabels.push(v < baseSubVarUnits.length ? baseSubVarUnits[v] : 'mg/L');
+    }
     const nodeVarLabels: string[] = [];
     const nodeVarUnitLabels: string[] = [];
     for (let v = 0; v < nNodeVars; v++) {
@@ -153,6 +163,43 @@ function parseSwmmOutputBinary(outPath: string): string {
     for (let v = 0; v < nLinkVars; v++) {
       linkVarLabels.push(v < baseLinkVarNames.length ? baseLinkVarNames[v] : `Pollutant_${v - baseLinkVarNames.length + 1}`);
       linkVarUnitLabels.push(v < baseLinkVarUnits.length ? baseLinkVarUnits[v] : 'mg/L');
+    }
+    const sysVarLabels: string[] = [];
+    const sysVarUnitLabels: string[] = [];
+    for (let v = 0; v < nSysVars; v++) {
+      sysVarLabels.push(v < baseSysVarNames.length ? baseSysVarNames[v] : `Var_${v + 1}`);
+      sysVarUnitLabels.push(v < baseSysVarUnits.length ? baseSysVarUnits[v] : '');
+    }
+
+    if (nSub > 0 && nSubVars > 0) {
+      lines.push('');
+      lines.push('  **************');
+      lines.push('  Subcatchment Results Time Series');
+      lines.push('  **************');
+      lines.push('');
+
+      for (let s = 0; s < nSub; s++) {
+        lines.push(`  <<< ${subNames[s]} >>>`);
+        lines.push('');
+        const cols = ['Date', 'Time', ...subVarLabels];
+        lines.push('  ' + cols.map(c => c.padEnd(16)).join(''));
+        const units = ['Day', 'Hour:Min', ...subVarUnitLabels];
+        lines.push('  ' + units.map(u => u.padEnd(16)).join(''));
+        lines.push('  ' + '-'.repeat(cols.length * 16));
+
+        for (let p = 0; p < maxPeriods; p++) {
+          const periodStart = resultStart + p * bytesPerPeriod;
+          const dateVal = buf.readDoubleLE(periodStart);
+          const { date, time } = oleToDateStr(dateVal);
+          const subDataStart = periodStart + 8 + s * nSubVars * 4;
+          const vals: string[] = [date.padEnd(16), time.padEnd(16)];
+          for (let v = 0; v < nSubVars; v++) {
+            vals.push(buf.readFloatLE(subDataStart + v * 4).toFixed(3).padStart(12).padEnd(16));
+          }
+          lines.push('  ' + vals.join(''));
+        }
+        lines.push('');
+      }
     }
 
     if (nNode > 0 && nNodeVars > 0) {
@@ -215,6 +262,35 @@ function parseSwmmOutputBinary(outPath: string): string {
         }
         lines.push('');
       }
+    }
+
+    if (nSysVars > 0) {
+      lines.push('');
+      lines.push('  **************');
+      lines.push('  System Results Time Series');
+      lines.push('  **************');
+      lines.push('');
+
+      lines.push(`  <<< System >>>`);
+      lines.push('');
+      const cols = ['Date', 'Time', ...sysVarLabels];
+      lines.push('  ' + cols.map(c => c.padEnd(16)).join(''));
+      const units = ['Day', 'Hour:Min', ...sysVarUnitLabels];
+      lines.push('  ' + units.map(u => u.padEnd(16)).join(''));
+      lines.push('  ' + '-'.repeat(cols.length * 16));
+
+      for (let p = 0; p < maxPeriods; p++) {
+        const periodStart = resultStart + p * bytesPerPeriod;
+        const dateVal = buf.readDoubleLE(periodStart);
+        const { date, time } = oleToDateStr(dateVal);
+        const sysDataStart = periodStart + 8 + nSub * nSubVars * 4 + nNode * nNodeVars * 4 + nLink * nLinkVars * 4;
+        const vals: string[] = [date.padEnd(16), time.padEnd(16)];
+        for (let v = 0; v < nSysVars; v++) {
+          vals.push(buf.readFloatLE(sysDataStart + v * 4).toFixed(3).padStart(12).padEnd(16));
+        }
+        lines.push('  ' + vals.join(''));
+      }
+      lines.push('');
     }
 
     return lines.join('\n');
