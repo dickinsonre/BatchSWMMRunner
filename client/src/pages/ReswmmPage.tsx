@@ -254,6 +254,8 @@ export default function ReswmmPage() {
   const afterLengths = useMemo(() => result?.newConduits.map(c => c.length) || [], [result]);
   const beforeStats = useMemo(() => computeLengthStats(beforeLengths), [beforeLengths]);
   const afterStats = useMemo(() => computeLengthStats(afterLengths), [afterLengths]);
+  const beforeTotalLength = useMemo(() => beforeLengths.reduce((a, b) => a + b, 0), [beforeLengths]);
+  const afterTotalLength = useMemo(() => afterLengths.reduce((a, b) => a + b, 0), [afterLengths]);
   const beforeHist = useMemo(() => buildHistogram(beforeLengths), [beforeLengths]);
   const afterHist = useMemo(() => buildHistogram(afterLengths), [afterLengths]);
 
@@ -719,71 +721,70 @@ export default function ReswmmPage() {
                       </Card>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                      <Card data-testid="card-before">
-                        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Before - Length Stats</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Conduits</span>
-                            <span data-testid="text-before-conduits">{result.stats.originalConduitCount}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Junctions</span>
-                            <span data-testid="text-before-junctions">{parsed.counts.junctions}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Min Length</span>
-                            <span data-testid="text-before-min">{beforeStats.min.toFixed(1)} {flowUnit}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Max Length</span>
-                            <span data-testid="text-before-max">{beforeStats.max.toFixed(1)} {flowUnit}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Mean Length</span>
-                            <span data-testid="text-before-mean">{beforeStats.mean.toFixed(1)} {flowUnit}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Std Dev</span>
-                            <span data-testid="text-before-std">{beforeStats.stdDev.toFixed(1)} {flowUnit}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card data-testid="card-after">
-                        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">After - Length Stats</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Conduits</span>
-                            <span data-testid="text-after-conduits">{result.stats.newConduitCount}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Junctions</span>
-                            <span data-testid="text-after-junctions">{parsed.counts.junctions + result.stats.newJunctionCount}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Min Length</span>
-                            <span data-testid="text-after-min">{afterStats.min.toFixed(1)} {flowUnit}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Max Length</span>
-                            <span data-testid="text-after-max">{afterStats.max.toFixed(1)} {flowUnit}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Mean Length</span>
-                            <span data-testid="text-after-mean">{afterStats.mean.toFixed(1)} {flowUnit}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Std Dev</span>
-                            <span data-testid="text-after-std">{afterStats.stdDev.toFixed(1)} {flowUnit}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
+                    <Card className="mb-6" data-testid="card-comparison-table">
+                      <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Before / After Comparison</CardTitle>
+                        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm" data-testid="table-comparison">
+                            <thead>
+                              <tr className="border-b">
+                                <th className="text-left py-2 pr-4 text-muted-foreground font-medium">Metric</th>
+                                <th className="text-right py-2 px-4 text-muted-foreground font-medium">Before</th>
+                                <th className="text-right py-2 px-4 text-muted-foreground font-medium">After</th>
+                                <th className="text-right py-2 pl-4 text-muted-foreground font-medium">Change</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr className="border-b border-border/50">
+                                <td className="py-2 pr-4 text-muted-foreground">Conduits</td>
+                                <td className="text-right py-2 px-4" data-testid="text-before-conduits">{result.stats.originalConduitCount}</td>
+                                <td className="text-right py-2 px-4" data-testid="text-after-conduits">{result.stats.newConduitCount}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">+{result.stats.newConduitCount - result.stats.originalConduitCount}</td>
+                              </tr>
+                              <tr className="border-b border-border/50">
+                                <td className="py-2 pr-4 text-muted-foreground">Junctions</td>
+                                <td className="text-right py-2 px-4" data-testid="text-before-junctions">{parsed.counts.junctions}</td>
+                                <td className="text-right py-2 px-4" data-testid="text-after-junctions">{parsed.counts.junctions + result.stats.newJunctionCount}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">+{result.stats.newJunctionCount}</td>
+                              </tr>
+                              <tr className="border-b border-border/50">
+                                <td className="py-2 pr-4 text-muted-foreground">Total Length ({flowUnit})</td>
+                                <td className="text-right py-2 px-4 font-semibold" data-testid="text-before-total">{beforeTotalLength.toFixed(1)}</td>
+                                <td className="text-right py-2 px-4 font-semibold" data-testid="text-after-total">{afterTotalLength.toFixed(1)}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">{(afterTotalLength - beforeTotalLength) >= 0 ? '+' : ''}{(afterTotalLength - beforeTotalLength).toFixed(1)}</td>
+                              </tr>
+                              <tr className="border-b border-border/50">
+                                <td className="py-2 pr-4 text-muted-foreground">Min Length ({flowUnit})</td>
+                                <td className="text-right py-2 px-4" data-testid="text-before-min">{beforeStats.min.toFixed(1)}</td>
+                                <td className="text-right py-2 px-4" data-testid="text-after-min">{afterStats.min.toFixed(1)}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">{(afterStats.min - beforeStats.min) >= 0 ? '+' : ''}{(afterStats.min - beforeStats.min).toFixed(1)}</td>
+                              </tr>
+                              <tr className="border-b border-border/50">
+                                <td className="py-2 pr-4 text-muted-foreground">Max Length ({flowUnit})</td>
+                                <td className="text-right py-2 px-4" data-testid="text-before-max">{beforeStats.max.toFixed(1)}</td>
+                                <td className="text-right py-2 px-4" data-testid="text-after-max">{afterStats.max.toFixed(1)}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">{(afterStats.max - beforeStats.max) >= 0 ? '+' : ''}{(afterStats.max - beforeStats.max).toFixed(1)}</td>
+                              </tr>
+                              <tr className="border-b border-border/50">
+                                <td className="py-2 pr-4 text-muted-foreground">Mean Length ({flowUnit})</td>
+                                <td className="text-right py-2 px-4" data-testid="text-before-mean">{beforeStats.mean.toFixed(1)}</td>
+                                <td className="text-right py-2 px-4" data-testid="text-after-mean">{afterStats.mean.toFixed(1)}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">{(afterStats.mean - beforeStats.mean) >= 0 ? '+' : ''}{(afterStats.mean - beforeStats.mean).toFixed(1)}</td>
+                              </tr>
+                              <tr>
+                                <td className="py-2 pr-4 text-muted-foreground">Std Dev ({flowUnit})</td>
+                                <td className="text-right py-2 px-4" data-testid="text-before-std">{beforeStats.stdDev.toFixed(1)}</td>
+                                <td className="text-right py-2 px-4" data-testid="text-after-std">{afterStats.stdDev.toFixed(1)}</td>
+                                <td className="text-right py-2 pl-4 text-muted-foreground">{(afterStats.stdDev - beforeStats.stdDev) >= 0 ? '+' : ''}{(afterStats.stdDev - beforeStats.stdDev).toFixed(1)}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </CardContent>
+                    </Card>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                       <Card data-testid="card-length-distribution-combined">
