@@ -6,6 +6,9 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
+- **Mar 2026**: Added "Run SWMM" feature to ReSWMM page — after discretization, users can run both the original and discretized models through SWMM and view results using the same ResultsDisplay component; includes before/after comparison
+- **Mar 2026**: Added "Run SWMM" button to Folder View file detail panel — uploads selected .inp file to server, runs SWMM simulation via WebSocket, and displays full results output
+- **Mar 2026**: Added ReSWMM Conduit Lengthening documentation tab to Documentation page with CFL calculation method, worked example, SWMM5 C source reference, and relationship to discretization
 - **Mar 2026**: Added shared `AppHeader` component (`client/src/components/AppHeader.tsx`) with consistent navigation tabs (Batch Processing | Folder View | ReSWMM | Docs), SWMM5 status badge with tooltip, and ThemeToggle; used across all pages
 - **Mar 2026**: Added 4 university color themes: Auburn (orange/navy), Autodesk (black/teal), UF (orange/blue), OSU (orange/black) with light/dark variants in `index.css`; `ThemeToggle` upgraded to dropdown with theme selection + dark mode toggle, persisted via localStorage
 - **Mar 2026**: Added ReSWMM conduit discretization page (`/reswmm`) with client-side INP parser, Fixed Interval and Δx/D Ratio methods, CFL time step analysis, before/after comparison charts, and modified file download

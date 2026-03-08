@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo, useRef } from "react";
-import { FolderOpen, Upload, FileText, X, BarChart3, Network, Settings2, CircleDot, Triangle, Square, Droplets, MapPin, Activity, Pipette } from "lucide-react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { FolderOpen, Upload, FileText, X, BarChart3, Network, Settings2, CircleDot, Triangle, Square, Droplets, MapPin, Activity, Pipette, Play, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import AppHeader from "@/components/AppHeader";
 import { parseInpFile, type ParsedInpFile } from "@/lib/inpParser";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from "recharts";
+import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoadedFile {
   id: string;
@@ -207,7 +209,7 @@ function StatCard({ label, value, icon }: { label: string; value: number | strin
   );
 }
 
-function FileDetailPanel({ file }: { file: LoadedFile }) {
+function FileDetailPanel({ file, onRun, isRunning }: { file: LoadedFile; onRun?: (file: LoadedFile) => void; isRunning?: boolean }) {
   const { parsed } = file;
   const lengths = parsed.conduits.map(c => c.length);
   const stats = computeLengthStats(lengths);
@@ -215,10 +217,26 @@ function FileDetailPanel({ file }: { file: LoadedFile }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-1" data-testid="text-detail-filename">{file.name}</h3>
-        {parsed.title && (
-          <p className="text-sm text-muted-foreground" data-testid="text-detail-title">{parsed.title}</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h3 className="text-lg font-semibold mb-1" data-testid="text-detail-filename">{file.name}</h3>
+          {parsed.title && (
+            <p className="text-sm text-muted-foreground" data-testid="text-detail-title">{parsed.title}</p>
+          )}
+        </div>
+        {onRun && (
+          <Button
+            onClick={() => onRun(file)}
+            disabled={isRunning}
+            data-testid="button-run-swmm"
+          >
+            {isRunning ? (
+              <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
+            ) : (
+              <Play className="h-4 w-4 mr-1.5" />
+            )}
+            {isRunning ? 'Running...' : 'Run SWMM'}
+          </Button>
         )}
       </div>
 
@@ -425,6 +443,15 @@ function ComparePanel({ files }: { files: LoadedFile[] }) {
   );
 }
 
+type RunState = 'idle' | 'uploading' | 'processing' | 'completed';
+
+function formatTime(seconds: number): string {
+  if (seconds < 60) return `${seconds.toFixed(1)}s`;
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}m ${secs.toFixed(0)}s`;
+}
+
 export default function FolderView() {
   const [loadedFiles, setLoadedFiles] = useState<LoadedFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
@@ -432,6 +459,141 @@ export default function FolderView() {
   const [compareMode, setCompareMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dirInputRef = useRef<HTMLInputElement>(null);
+
+  const [runState, setRunState] = useState<RunState>('idle');
+  const [runResults, setRunResults] = useState<ProcessResult[]>([]);
+  const [runElapsedTime, setRunElapsedTime] = useState<string>('');
+  const [runProgress, setRunProgress] = useState<string>('');
+  const [runningFileId, setRunningFileId] = useState<string | null>(null);
+  const wsRunRef = useRef<WebSocket | null>(null);
+  const runStartRef = useRef<number | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    return () => {
+      if (wsRunRef.current) {
+        wsRunRef.current.close();
+        wsRunRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleRunFile = async (file: LoadedFile) => {
+    try {
+      setRunState('uploading');
+      setRunResults([]);
+      setRunElapsedTime('');
+      setRunProgress('Uploading...');
+      setRunningFileId(file.id);
+      runStartRef.current = Date.now();
+
+      const blob = new Blob([file.content], { type: 'text/plain' });
+      const formData = new FormData();
+      formData.append('files', blob, file.name);
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload file');
+      }
+
+      const batchJob = await uploadResponse.json();
+      setRunState('processing');
+      setRunProgress('Running SWMM...');
+
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(`${protocol}//${window.location.host}/api/ws?jobId=${batchJob.id}`);
+
+      let collectedResult: ProcessResult | null = null;
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'progress') {
+          setRunProgress(`Processing ${data.fileName}...`);
+        } else if (data.type === 'file_progress') {
+          setRunProgress(`${data.fileName}: ${data.percentage}%`);
+        } else if (data.type === 'result') {
+          collectedResult = data.result;
+          setRunResults([data.result]);
+        } else if (data.type === 'completed') {
+          const finalResult = collectedResult || {
+            id: 'unknown',
+            fileName: file.name,
+            filePath: '',
+            status: 'failed' as const,
+            error: 'No result received from server',
+          };
+          setRunResults([finalResult]);
+          setRunState('completed');
+          if (runStartRef.current) {
+            const elapsed = (Date.now() - runStartRef.current) / 1000;
+            setRunElapsedTime(formatTime(elapsed));
+          }
+          ws.close();
+          wsRunRef.current = null;
+          toast({
+            title: "Simulation Complete",
+            description: `${file.name} has been processed.`,
+          });
+        }
+      };
+
+      ws.onerror = () => {
+        setRunState('idle');
+        setRunProgress('');
+        setRunningFileId(null);
+        if (wsRunRef.current) {
+          wsRunRef.current.close();
+          wsRunRef.current = null;
+        }
+        toast({
+          title: "Error",
+          description: "WebSocket connection failed.",
+          variant: "destructive",
+        });
+      };
+
+      wsRunRef.current = ws;
+
+      const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
+        method: 'POST',
+      });
+
+      if (!startResponse.ok) {
+        throw new Error('Failed to start simulation');
+      }
+    } catch (error) {
+      console.error('Run error:', error);
+      setRunState('idle');
+      setRunProgress('');
+      setRunningFileId(null);
+      if (wsRunRef.current) {
+        wsRunRef.current.close();
+        wsRunRef.current = null;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to run simulation. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleBackFromResults = () => {
+    setRunState('idle');
+    setRunResults([]);
+    setRunElapsedTime('');
+    setRunProgress('');
+    setRunningFileId(null);
+    if (wsRunRef.current) {
+      wsRunRef.current.close();
+      wsRunRef.current = null;
+    }
+  };
 
   const loadFiles = useCallback(async (fileList: FileList) => {
     const inpFiles = Array.from(fileList).filter(f => f.name.toLowerCase().endsWith('.inp'));
@@ -701,10 +863,44 @@ export default function FolderView() {
               </div>
 
               <div className="lg:col-span-2">
-                {compareMode && compareFiles.length >= 2 ? (
+                {runState === 'completed' && runResults.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleBackFromResults}
+                        data-testid="button-back-from-results"
+                      >
+                        <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+                        Back to File Details
+                      </Button>
+                      {runningFileId && (
+                        <span className="text-sm text-muted-foreground">
+                          Results for {loadedFiles.find(f => f.id === runningFileId)?.name}
+                        </span>
+                      )}
+                    </div>
+                    <ResultsDisplay results={runResults} elapsedTime={runElapsedTime} />
+                  </div>
+                ) : (runState === 'uploading' || runState === 'processing') ? (
+                  <Card>
+                    <CardContent className="flex flex-col items-center justify-center gap-4 py-16">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                      <div className="text-center">
+                        <p className="font-medium" data-testid="text-run-status">
+                          {runState === 'uploading' ? 'Uploading file...' : 'Running SWMM simulation...'}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1" data-testid="text-run-progress">
+                          {runProgress}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : compareMode && compareFiles.length >= 2 ? (
                   <ComparePanel files={compareFiles} />
                 ) : selectedFile ? (
-                  <FileDetailPanel file={selectedFile} />
+                  <FileDetailPanel file={selectedFile} onRun={handleRunFile} isRunning={runState === 'uploading' || runState === 'processing'} />
                 ) : (
                   <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
                     <MapPin className="h-8 w-8 mb-3 opacity-50" />
