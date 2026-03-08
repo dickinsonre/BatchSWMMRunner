@@ -56,7 +56,9 @@ function NetworkMap({ parsed }: { parsed: ParsedInpFile }) {
   const outfallSet = useMemo(() => new Set(parsed.outfalls.map(o => o.name)), [parsed.outfalls]);
   const storageSet = useMemo(() => new Set(parsed.storage.map(s => s.name)), [parsed.storage]);
 
-  if (coordMap.size === 0) {
+  const polygons = parsed.polygons || [];
+
+  if (coordMap.size === 0 && polygons.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
         No coordinate data available for network map
@@ -64,8 +66,10 @@ function NetworkMap({ parsed }: { parsed: ParsedInpFile }) {
     );
   }
 
-  const allX = Array.from(coordMap.values()).map(c => c.x);
-  const allY = Array.from(coordMap.values()).map(c => c.y);
+  const polyXs = polygons.flatMap(p => p.vertices.map(v => v.x));
+  const polyYs = polygons.flatMap(p => p.vertices.map(v => v.y));
+  const allX = [...Array.from(coordMap.values()).map(c => c.x), ...polyXs];
+  const allY = [...Array.from(coordMap.values()).map(c => c.y), ...polyYs];
   const minX = Math.min(...allX);
   const maxX = Math.max(...allX);
   const minY = Math.min(...allY);
@@ -101,6 +105,27 @@ function NetworkMap({ parsed }: { parsed: ParsedInpFile }) {
         data-testid="svg-network-map"
       >
         <rect width={svgWidth} height={svgHeight} fill="none" />
+        {polygons.map((poly, i) => {
+          const points = poly.vertices
+            .map(v => {
+              const { sx, sy } = toSvg(v.x, v.y);
+              return `${sx},${sy}`;
+            })
+            .join(' ');
+          return (
+            <polygon
+              key={`poly-${i}`}
+              points={points}
+              fill="hsl(200, 60%, 55%)"
+              fillOpacity={0.15}
+              stroke="hsl(200, 60%, 55%)"
+              strokeWidth={0.8}
+              strokeOpacity={0.5}
+            >
+              <title>{poly.subcatchment}</title>
+            </polygon>
+          );
+        })}
         {allLinks.map((link, i) => {
           const fromCoord = coordMap.get(link.from);
           const toCoord = coordMap.get(link.to);
@@ -155,6 +180,12 @@ function NetworkMap({ parsed }: { parsed: ParsedInpFile }) {
           <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'hsl(30, 80%, 55%)' }} />
           Storage
         </span>
+        {polygons.length > 0 && (
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-2.5 h-2.5" style={{ backgroundColor: 'hsl(200, 60%, 55%)', opacity: 0.3, border: '1px solid hsl(200, 60%, 55%)' }} />
+            Subcatchments
+          </span>
+        )}
       </div>
     </div>
   );
