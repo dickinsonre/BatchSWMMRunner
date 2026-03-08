@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useRef } from "react";
-import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info } from "lucide-react";
+import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, Map } from "lucide-react";
+import type { CoordinateData, ConduitData, PolygonData } from "@/lib/inpParser";
 import AppHeader from "@/components/AppHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,122 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from "recharts";
+
+interface MiniMapProps {
+  coordinates: CoordinateData[];
+  conduits: ConduitData[];
+  polygons?: PolygonData[];
+  highlightNew?: Set<string>;
+  label: string;
+  testId: string;
+}
+
+function MiniNetworkMap({ coordinates, conduits, polygons = [], highlightNew, label, testId }: MiniMapProps) {
+  const coordMap = useMemo(() => {
+    const map = new Map<string, { x: number; y: number }>();
+    for (const c of coordinates) {
+      map.set(c.node, { x: c.x, y: c.y });
+    }
+    return map;
+  }, [coordinates]);
+
+  const polyXs = polygons.flatMap(p => p.vertices.map(v => v.x));
+  const polyYs = polygons.flatMap(p => p.vertices.map(v => v.y));
+  const allX = [...Array.from(coordMap.values()).map(c => c.x), ...polyXs];
+  const allY = [...Array.from(coordMap.values()).map(c => c.y), ...polyYs];
+
+  if (allX.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-48 text-muted-foreground text-xs">
+        No coordinate data
+      </div>
+    );
+  }
+
+  const minX = Math.min(...allX);
+  const maxX = Math.max(...allX);
+  const minY = Math.min(...allY);
+  const maxY = Math.max(...allY);
+
+  const padding = 20;
+  const svgWidth = 400;
+  const svgHeight = 300;
+  const rangeX = maxX - minX || 1;
+  const rangeY = maxY - minY || 1;
+  const scaleX = (svgWidth - 2 * padding) / rangeX;
+  const scaleY = (svgHeight - 2 * padding) / rangeY;
+  const scale = Math.min(scaleX, scaleY);
+
+  const toSvg = (x: number, y: number) => ({
+    sx: padding + (x - minX) * scale,
+    sy: svgHeight - padding - (y - minY) * scale,
+  });
+
+  return (
+    <div data-testid={testId}>
+      <svg
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        className="w-full h-auto"
+        style={{ maxHeight: 300 }}
+      >
+        <rect width={svgWidth} height={svgHeight} fill="none" />
+        {polygons.map((poly, i) => {
+          const points = poly.vertices
+            .map(v => { const { sx, sy } = toSvg(v.x, v.y); return `${sx},${sy}`; })
+            .join(' ');
+          return (
+            <polygon
+              key={`poly-${i}`}
+              points={points}
+              fill="hsl(200, 60%, 55%)"
+              fillOpacity={0.12}
+              stroke="hsl(200, 60%, 55%)"
+              strokeWidth={0.6}
+              strokeOpacity={0.4}
+            >
+              <title>{poly.subcatchment}</title>
+            </polygon>
+          );
+        })}
+        {conduits.map((c, i) => {
+          const fromCoord = coordMap.get(c.from);
+          const toCoord = coordMap.get(c.to);
+          if (!fromCoord || !toCoord) return null;
+          const f = toSvg(fromCoord.x, fromCoord.y);
+          const t = toSvg(toCoord.x, toCoord.y);
+          const isNew = highlightNew?.has(c.name);
+          return (
+            <line
+              key={`link-${i}`}
+              x1={f.sx} y1={f.sy} x2={t.sx} y2={t.sy}
+              stroke={isNew ? 'hsl(142, 60%, 50%)' : 'hsl(var(--muted-foreground))'}
+              strokeWidth={isNew ? 1.5 : 1}
+              strokeOpacity={isNew ? 0.8 : 0.5}
+            />
+          );
+        })}
+        {Array.from(coordMap.entries()).map(([name, coord]) => {
+          const { sx, sy } = toSvg(coord.x, coord.y);
+          const isNew = highlightNew?.has(name);
+          return (
+            <circle
+              key={`node-${name}`}
+              cx={sx} cy={sy}
+              r={isNew ? 2.5 : 2}
+              fill={isNew ? 'hsl(142, 60%, 50%)' : 'hsl(210, 70%, 50%)'}
+              stroke="none"
+            >
+              <title>{name}</title>
+            </circle>
+          );
+        })}
+        <text x={padding} y={14} fontSize={11} fill="hsl(var(--muted-foreground))" fontWeight="500">
+          {label}
+        </text>
+      </svg>
+    </div>
+  );
+}
 
 function computeLengthStats(lengths: number[]) {
   if (lengths.length === 0) return { min: 0, max: 0, mean: 0, stdDev: 0 };
@@ -145,6 +262,28 @@ export default function ReswmmPage() {
     const vals = cflAfterAnalysis.map(c => c.standardTimeStep).filter(v => isFinite(v));
     return buildHistogram(vals, 12);
   }, [cflAfterAnalysis]);
+
+  const afterCoordinates = useMemo(() => {
+    if (!parsed || !result) return [];
+    return [...parsed.coordinates, ...result.newCoordinates];
+  }, [parsed, result]);
+
+  const afterConduits = useMemo(() => {
+    if (!result) return [];
+    return result.newConduits;
+  }, [result]);
+
+  const newElementNames = useMemo(() => {
+    if (!result) return new Set<string>();
+    const names = new Set<string>();
+    for (const j of result.newJunctions) names.add(j.name);
+    for (const c of result.newCoordinates) names.add(c.node);
+    const originalNames = new Set(parsed?.conduits.map(c => c.name) || []);
+    for (const c of result.newConduits) {
+      if (!originalNames.has(c.name)) names.add(c.name);
+    }
+    return names;
+  }, [result, parsed]);
 
   const flowUnit = useMemo(() => {
     if (!parsed) return 'ft';
@@ -421,10 +560,85 @@ export default function ReswmmPage() {
                       </CardContent>
                     </Card>
 
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                      <Card data-testid="card-map-before">
+                        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">Before - Network Map</CardTitle>
+                          <Map className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <MiniNetworkMap
+                            coordinates={parsed.coordinates}
+                            conduits={parsed.conduits}
+                            polygons={parsed.polygons}
+                            label={`${result.stats.originalConduitCount} conduits, ${parsed.counts.junctions} junctions`}
+                            testId="svg-map-before"
+                          />
+                          <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+                            <div>
+                              <p className="text-xs text-muted-foreground">Conduits</p>
+                              <p className="text-sm font-semibold" data-testid="text-map-before-conduits">{result.stats.originalConduitCount}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Junctions</p>
+                              <p className="text-sm font-semibold" data-testid="text-map-before-junctions">{parsed.counts.junctions}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Avg Length</p>
+                              <p className="text-sm font-semibold" data-testid="text-map-before-avg">{beforeStats.mean.toFixed(0)} {flowUnit}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card data-testid="card-map-after">
+                        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                          <CardTitle className="text-sm font-medium">After - Network Map</CardTitle>
+                          <Map className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                          <MiniNetworkMap
+                            coordinates={afterCoordinates}
+                            conduits={afterConduits}
+                            polygons={parsed.polygons}
+                            highlightNew={newElementNames}
+                            label={`${result.stats.newConduitCount} conduits, ${parsed.counts.junctions + result.stats.newJunctionCount} junctions`}
+                            testId="svg-map-after"
+                          />
+                          <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+                            <div>
+                              <p className="text-xs text-muted-foreground">Conduits</p>
+                              <p className="text-sm font-semibold" data-testid="text-map-after-conduits">{result.stats.newConduitCount}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Junctions</p>
+                              <p className="text-sm font-semibold" data-testid="text-map-after-junctions">{parsed.counts.junctions + result.stats.newJunctionCount}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Avg Length</p>
+                              <p className="text-sm font-semibold" data-testid="text-map-after-avg">{afterStats.mean.toFixed(0)} {flowUnit}</p>
+                            </div>
+                          </div>
+                          {newElementNames.size > 0 && (
+                            <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground justify-center flex-wrap">
+                              <span className="flex items-center gap-1">
+                                <span className="inline-block w-2.5 h-0.5" style={{ backgroundColor: 'hsl(var(--muted-foreground))', opacity: 0.5 }} />
+                                Original
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <span className="inline-block w-2.5 h-0.5" style={{ backgroundColor: 'hsl(142, 60%, 50%)' }} />
+                                New segments
+                              </span>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                       <Card data-testid="card-before">
                         <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Before</CardTitle>
+                          <CardTitle className="text-sm font-medium">Before - Length Stats</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2 text-sm">
                           <div className="flex justify-between">
@@ -456,7 +670,7 @@ export default function ReswmmPage() {
 
                       <Card data-testid="card-after">
                         <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">After</CardTitle>
+                          <CardTitle className="text-sm font-medium">After - Length Stats</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2 text-sm">
                           <div className="flex justify-between">
