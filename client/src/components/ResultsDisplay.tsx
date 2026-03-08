@@ -106,77 +106,174 @@ function reportToHtml(content: string): string {
   if (tsStartIndices.size > 0) {
     tsSkipStart = Math.min(...tsStartIndices);
     const lastStart = Math.max(...tsStartIndices);
-    tsSkipEnd = lastStart + 2;
-    for (let si = tsSkipEnd; si < lines.length; si++) {
-      if (/^\s*\*{3,}/.test(lines[si]) && !/Time Series$/i.test(lines[si + 1]?.trim() || '')) {
-        break;
-      }
-      tsSkipEnd = si;
-    }
+    tsSkipEnd = lines.length - 1;
   }
 
-  for (let li = 0; li < lines.length; li++) {
+  function splitTableRow(line: string): string[] {
+    return line.trim().split(/\s{2,}/).filter(s => s !== '');
+  }
+
+  let li = 0;
+  while (li < lines.length) {
     const line = lines[li];
 
-    if (tsSkipStart >= 0 && li >= tsSkipStart && li <= tsSkipEnd) continue;
+    if (tsSkipStart >= 0 && li >= tsSkipStart && li <= tsSkipEnd) { li++; continue; }
 
     if (/^\s*\*{3,}/.test(line)) {
-      const title = line.replace(/\*/g, '').trim();
-      if (title) {
-        htmlLines.push(`<h2 style="color:hsl(210,95%,45%);margin:1.2em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:1px solid hsl(210,20%,80%);padding-bottom:0.2em;">${title}</h2>`);
+      const titleOnSameLine = line.replace(/\*/g, '').trim();
+      if (titleOnSameLine) {
+        const nextLine = li + 1 < lines.length ? lines[li + 1] : '';
+        const nextTitle = nextLine.replace(/\*/g, '').trim();
+        if (/^\s*\*{3,}\s*$/.test(nextLine) && nextTitle === '') {
+          htmlLines.push(`<h2 style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${titleOnSameLine}</h2>`);
+          li += 2;
+          continue;
+        }
+        htmlLines.push(`<h2 style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${titleOnSameLine}</h2>`);
+        li++;
+        continue;
       }
+      if (li + 2 < lines.length && /^\s*\*{3,}\s*$/.test(lines[li + 2])) {
+        const sectionTitle = lines[li + 1].replace(/\*/g, '').trim();
+        htmlLines.push(`<h2 style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${sectionTitle}</h2>`);
+        li += 3;
+        continue;
+      }
+      li++;
       continue;
     }
-    if (/^\s*-{5,}/.test(line)) {
-      htmlLines.push(`<hr style="border:none;border-top:1px solid hsl(0,0%,80%);margin:0.3em 0;" />`);
+
+    if (/^\s*-{10,}/.test(line)) {
+      const headerLines: string[] = [];
+      let scanBack = li - 1;
+      while (scanBack >= 0 && lines[scanBack].trim() !== '' && !/^\s*\*{3,}/.test(lines[scanBack]) && !/^\s*-{5,}/.test(lines[scanBack])) {
+        headerLines.unshift(lines[scanBack]);
+        scanBack--;
+      }
+
+      let peekIdx = li + 1;
+      while (peekIdx < lines.length && lines[peekIdx].trim() === '') peekIdx++;
+      const nextNonEmpty = peekIdx < lines.length ? lines[peekIdx].trim() : '';
+      const hasDataAfter = nextNonEmpty !== '' && !/^\s*\*{3,}/.test(lines[peekIdx] || '') && splitTableRow(nextNonEmpty).length >= 2;
+
+      if (!hasDataAfter || headerLines.length === 0) {
+        li++;
+        continue;
+      }
+
+      const removeCount = headerLines.length;
+      for (let r = 0; r < removeCount; r++) {
+        if (htmlLines.length > 0) htmlLines.pop();
+      }
+
+      const tableRows: string[] = [];
+      tableRows.push('<div style="overflow-x:auto;margin:0.5em 0 1em;">');
+      tableRows.push('<table style="border-collapse:collapse;width:100%;font-family:monospace;font-size:0.8em;">');
+
+      if (headerLines.length > 0) {
+        tableRows.push('<thead>');
+        for (const hLine of headerLines) {
+          const cells = splitTableRow(hLine);
+          tableRows.push('<tr>');
+          for (const cell of cells) {
+            tableRows.push(`<th style="padding:0.3em 0.6em;text-align:left;border-bottom:2px solid hsl(var(--primary) / 0.4);font-weight:600;white-space:nowrap;color:hsl(var(--foreground) / 0.8);">${cell}</th>`);
+          }
+          tableRows.push('</tr>');
+        }
+        tableRows.push('</thead>');
+      }
+
+      tableRows.push('<tbody>');
+      li++;
+
+      let rowIdx = 0;
+      while (li < lines.length) {
+        const dataLine = lines[li];
+        if (dataLine.trim() === '') break;
+        if (/^\s*\*{3,}/.test(dataLine)) break;
+        if (/^\s*-{10,}/.test(dataLine)) { li++; continue; }
+
+        const cells = splitTableRow(dataLine);
+        const bgColor = rowIdx % 2 === 0 ? 'transparent' : 'hsl(var(--muted) / 0.3)';
+        tableRows.push(`<tr style="background:${bgColor};">`);
+
+        for (let ci = 0; ci < cells.length; ci++) {
+          let cellVal = cells[ci];
+          const isNum = /^[-+]?\d*\.?\d+%?$/.test(cellVal);
+          const align = ci === 0 ? 'left' : isNum ? 'right' : 'left';
+          tableRows.push(`<td style="padding:0.3em 0.6em;text-align:${align};border-bottom:1px solid hsl(var(--border) / 0.5);white-space:nowrap;">${cellVal}</td>`);
+        }
+        tableRows.push('</tr>');
+        rowIdx++;
+        li++;
+      }
+      tableRows.push('</tbody></table></div>');
+      htmlLines.push(tableRows.join('\n'));
       continue;
     }
+
     if (/EPA STORM WATER MANAGEMENT MODEL/.test(line)) {
-      htmlLines.push(`<h1 style="color:hsl(210,95%,35%);font-size:1.2em;font-weight:700;margin-bottom:0.2em;">${line.trim()}</h1>`);
-      continue;
+      htmlLines.push(`<h1 style="color:hsl(var(--primary));font-size:1.3em;font-weight:700;margin-bottom:0.2em;">${line.trim()}</h1>`);
+      li++; continue;
     }
     if (/EPA SWMM/.test(line)) {
-      htmlLines.push(`<div style="font-weight:700;font-size:1.1em;color:hsl(210,95%,40%);margin:0.5em 0;">${line.trim()}</div>`);
-      continue;
+      htmlLines.push(`<div style="font-weight:700;font-size:1.1em;color:hsl(var(--primary));margin:0.5em 0;">${line.trim()}</div>`);
+      li++; continue;
     }
     if (/^\s*(Input File|Report File|Output File|Analysis Date|Analysis Time|Elapsed Time):/.test(line)) {
-      const [label, ...rest] = line.split(':');
-      htmlLines.push(`<div><strong>${label.trim()}:</strong> ${rest.join(':').trim()}</div>`);
-      continue;
+      const colonIdx = line.indexOf(':');
+      const label = line.substring(0, colonIdx).trim();
+      const val = line.substring(colonIdx + 1).trim();
+      htmlLines.push(`<div style="margin:0.15em 0;"><strong>${label}:</strong> ${val}</div>`);
+      li++; continue;
     }
     if (/Continuity Error/.test(line)) {
       const val = parseFloat(line.split(/\s+/).pop() || '0');
-      const color = Math.abs(val) > 0.1 ? 'hsl(0,84%,45%)' : 'hsl(142,60%,35%)';
-      htmlLines.push(`<div style="color:${color};font-weight:600;">${line}</div>`);
-      continue;
+      const color = Math.abs(val) > 5 ? 'hsl(0,84%,45%)' : Math.abs(val) > 1 ? 'hsl(30,90%,45%)' : 'hsl(142,60%,35%)';
+      htmlLines.push(`<div style="color:${color};font-weight:600;font-family:monospace;font-size:0.9em;">${line}</div>`);
+      li++; continue;
     }
     if (/Flooding was detected/.test(line)) {
-      htmlLines.push(`<div style="color:hsl(30,90%,45%);font-weight:600;">${line}</div>`);
-      continue;
+      htmlLines.push(`<div style="color:hsl(30,90%,45%);font-weight:600;padding:0.3em 0;">${line}</div>`);
+      li++; continue;
     }
     if (/No nodes were flooded|No conduits were surcharged/.test(line)) {
       htmlLines.push(`<div style="color:hsl(142,60%,35%);font-weight:500;">${line}</div>`);
-      continue;
+      li++; continue;
     }
-    if (/(JUNCTION|OUTFALL|CONDUIT)\s/.test(line)) {
-      htmlLines.push(`<div style="font-family:monospace;font-size:0.85em;">${line}</div>`);
-      continue;
+    if (/^\s*\.\.\.\s+\.+\s+/.test(line) || /\s+\.{3,}\s+/.test(line)) {
+      const match = line.match(/^\s*(.+?)\s+\.{2,}\s+(.+)$/);
+      if (match) {
+        const label = match[1].trim();
+        const value = match[2].trim();
+        let valueHtml = value;
+        if (/Continuity Error/.test(label)) {
+          const num = parseFloat(value);
+          if (!isNaN(num)) {
+            const color = Math.abs(num) > 5 ? 'hsl(0,84%,45%)' : Math.abs(num) > 1 ? 'hsl(30,90%,45%)' : 'hsl(142,60%,35%)';
+            valueHtml = `<span style="color:${color};font-weight:600;">${value}</span>`;
+          }
+        }
+        htmlLines.push(`<div style="display:flex;gap:0.5em;justify-content:space-between;font-family:monospace;font-size:0.85em;padding:0.1em 0;max-width:500px;"><span>${label}</span><span style="flex-shrink:0;">${valueHtml}</span></div>`);
+        li++; continue;
+      }
     }
     if (/&lt;&lt;&lt;/.test(line)) {
       const name = line.replace(/&lt;&lt;&lt;|&gt;&gt;&gt;/g, '').trim();
-      htmlLines.push(`<div style="font-weight:600;color:hsl(210,60%,40%);margin:0.8em 0 0.3em;font-size:0.95em;">${name}</div>`);
-      continue;
+      htmlLines.push(`<div style="font-weight:600;color:hsl(var(--primary));margin:0.8em 0 0.3em;font-size:0.95em;">${name}</div>`);
+      li++; continue;
     }
     if (/^\s*\[[\w]+\]/.test(line)) {
-      htmlLines.push(`<h3 style="color:hsl(210,95%,45%);margin:1em 0 0.3em;font-size:0.95em;font-weight:700;font-family:monospace;">${line.trim()}</h3>`);
-      continue;
+      htmlLines.push(`<h3 style="color:hsl(var(--primary));margin:1em 0 0.3em;font-size:0.95em;font-weight:700;font-family:monospace;">${line.trim()}</h3>`);
+      li++; continue;
     }
     if (/^\s*;;/.test(line)) {
-      htmlLines.push(`<div style="font-family:monospace;font-size:0.8em;color:hsl(0,0%,50%);white-space:pre;">${line}</div>`);
-      continue;
+      htmlLines.push(`<div style="font-family:monospace;font-size:0.8em;color:hsl(var(--muted-foreground));white-space:pre;">${line}</div>`);
+      li++; continue;
     }
-    if (line.trim() === '') { htmlLines.push('<div style="height:0.4em;"></div>'); continue; }
+    if (line.trim() === '') { htmlLines.push('<div style="height:0.4em;"></div>'); li++; continue; }
     htmlLines.push(`<div style="font-family:monospace;font-size:0.85em;white-space:pre;">${line}</div>`);
+    li++;
   }
 
   return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}</div>`;
