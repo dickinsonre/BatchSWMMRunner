@@ -571,7 +571,7 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
           <CardTitle className="text-lg" data-testid="text-results-title">Detailed Results</CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="max-h-96">
+          <ScrollArea className="max-h-[80vh]">
             <div className="space-y-2">
               {results.map((result) => (
                 <div
