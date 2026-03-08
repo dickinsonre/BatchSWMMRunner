@@ -331,6 +331,121 @@ const SWMM5_C_REFERENCE = `/*
  *   https://www.epa.gov/water-research/storm-water-management-model-swmm
  */`;
 
+const RESWMM_LENGTHENING_DOC = `ReSWMM Conduit Lengthening
+═══════════════════════════════════════════════════════════
+
+OVERVIEW
+────────
+ReSWMM applies conduit lengthening as a pre-processing step BEFORE
+discretization (splitting). This ensures that short conduits meet the
+Courant-Friedrichs-Lewy (CFL) stability criterion for dynamic wave
+routing in EPA SWMM5.
+
+The processing order is:
+  1. Lengthen short conduits  (if enabled)
+  2. Discretize long conduits (split into segments)
+  3. Write LENGTHENING_STEP to [OPTIONS] in the output .inp
+
+═══════════════════════════════════════════════════════════
+
+HOW THE MINIMUM LENGTH IS CALCULATED
+─────────────────────────────────────
+For each conduit, ReSWMM computes the gravity wave celerity from
+the conduit diameter (Geom1 in the [XSECTIONS] table):
+
+    celerity = sqrt(g × D)
+
+where:
+    g = gravitational acceleration
+        32.174 ft/s²  (US Customary: CFS, GPM, MGD)
+         9.810 m/s²   (SI: CMS, LPS, MLD)
+    D = conduit diameter or height (Geom1)
+
+The minimum allowable conduit length is then:
+
+    L_min = celerity × LENGTHENING_STEP
+
+where LENGTHENING_STEP is the user-specified time step (seconds).
+
+═══════════════════════════════════════════════════════════
+
+EXAMPLE
+───────
+Given:
+    Conduit diameter   D = 2.0 ft
+    LENGTHENING_STEP       = 5 s
+    Flow units             = CFS (US Customary)
+
+    celerity = sqrt(32.174 × 2.0) = 8.02 ft/s
+    L_min    = 8.02 × 5           = 40.1 ft
+
+Any conduit with length < 40.1 ft will be lengthened to 40.1 ft.
+
+═══════════════════════════════════════════════════════════
+
+WHAT HAPPENS TO LENGTHENED CONDUITS
+────────────────────────────────────
+• The conduit length is increased in the [CONDUITS] section.
+• Node coordinates, elevations, and cross-sections are unchanged.
+• The geometric distance between nodes stays the same — only the
+  hydraulic length used by the routing engine increases.
+• This is identical to how SWMM5's built-in LENGTHENING_STEP
+  option works at runtime (see link.c in the EPA source).
+
+═══════════════════════════════════════════════════════════
+
+SWMM5 INTERNAL REFERENCE
+─────────────────────────
+In the EPA SWMM5 C source code, automatic conduit lengthening
+is implemented in link.c:
+
+    // link.c — link_setParams()
+    //
+    // if (LengtheningStep > 0.0)
+    // {
+    //     celerity = sqrt(GRAVITY * xsect->yFull);
+    //     lengthFactor = celerity * LengtheningStep;
+    //     if (link->length < lengthFactor)
+    //         link->length = lengthFactor;
+    // }
+
+ReSWMM replicates this logic client-side so you can:
+  • See the effect before running SWMM
+  • Combine with discretization in a single step
+  • Review before/after stats and network maps
+
+═══════════════════════════════════════════════════════════
+
+RELATIONSHIP TO DISCRETIZATION
+──────────────────────────────
+Lengthening runs FIRST. This means:
+
+  1. A 10 ft conduit might be lengthened to 40 ft.
+  2. If the max discretization length is 200 ft, the 40 ft
+     conduit is now within range and will NOT be split further.
+  3. A 5000 ft conduit is already long enough — lengthening
+     does nothing, but discretization splits it into segments.
+
+This two-step approach ensures ALL conduits in the output model
+satisfy the CFL condition from both directions:
+  • Too short → lengthened
+  • Too long  → split
+
+═══════════════════════════════════════════════════════════
+
+OUTPUT .INP FILE
+────────────────
+When lengthening is enabled, ReSWMM also writes the LENGTHENING_STEP
+value into the [OPTIONS] section of the output .inp file:
+
+    [OPTIONS]
+    ...
+    LENGTHENING_STEP  5
+
+This tells SWMM5 to also apply its own runtime lengthening as a
+safety net, in case any conduits were added or modified after
+ReSWMM processing.`;
+
 function CodeBlock({ code, language = "typescript" }: { code: string; language?: string }) {
   return (
     <ScrollArea className="h-[500px] rounded border">
@@ -361,6 +476,7 @@ export default function Documentation() {
 
           <Tabs defaultValue="swmm5-c" data-testid="tabs-documentation">
             <TabsList className="flex flex-wrap gap-1" data-testid="tablist-documentation">
+              <TabsTrigger value="reswmm" data-testid="tab-reswmm">ReSWMM Lengthening</TabsTrigger>
               <TabsTrigger value="swmm5-c" data-testid="tab-swmm5-c">SWMM5 C Reference</TabsTrigger>
               <TabsTrigger value="integration" data-testid="tab-integration">SWMM Integration</TabsTrigger>
               <TabsTrigger value="batch" data-testid="tab-batch">Batch Processing</TabsTrigger>
@@ -368,6 +484,22 @@ export default function Documentation() {
               <TabsTrigger value="upload" data-testid="tab-upload">File Upload</TabsTrigger>
               <TabsTrigger value="schema" data-testid="tab-schema">Data Schema</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="reswmm">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">ReSWMM Conduit Lengthening</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    How ReSWMM automatically lengthens short conduits before discretization
+                    to satisfy the CFL stability criterion. Includes the calculation method,
+                    a worked example, and the corresponding SWMM5 C source reference.
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <CodeBlock code={RESWMM_LENGTHENING_DOC} />
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             <TabsContent value="swmm5-c">
               <Card>
