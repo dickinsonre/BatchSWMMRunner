@@ -143,7 +143,7 @@ function parseSwmmOutputBinary(outPath: string): string {
     const baseNodeVarUnits = ['ft', 'ft', 'ft3', 'CFS', 'CFS', 'CFS'];
     const baseLinkVarNames = ['Flow', 'Depth', 'Velocity', 'Volume', 'Capacity'];
     const baseLinkVarUnits = ['CFS', 'ft', 'ft/sec', 'ft3', ''];
-    const baseSysVarNames = ['Temperature', 'Rainfall', 'Snow Depth', 'Evaporation', 'Runoff', 'Dry Weather Inflow', 'GW Inflow', 'RDII Inflow', 'Direct Inflow', 'Total Lateral Inflow', 'Flooding', 'Outflow', 'Storage Volume', 'Evaporation'];
+    const baseSysVarNames = ['Temperature', 'Rainfall', 'Snow Depth', 'Evaporation', 'Runoff', 'Dry Weather Inflow', 'GW Inflow', 'RDII Inflow', 'Direct Inflow', 'Total Lateral Inflow', 'Flooding', 'Outflow', 'Storage Volume', 'Evap Rate'];
     const baseSysVarUnits = ['deg F', 'in/hr', 'in', 'in/day', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'ft3', 'CFS'];
 
     const subVarLabels: string[] = [];
