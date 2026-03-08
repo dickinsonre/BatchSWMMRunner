@@ -162,6 +162,15 @@ export default function ReswmmPage() {
             <p className="text-sm text-muted-foreground mt-1" data-testid="text-reswmm-subtitle">
               Split long conduits into shorter segments for improved numerical stability in SWMM dynamic wave routing.
             </p>
+            <p className="text-sm text-muted-foreground mt-2" data-testid="text-reswmm-description">
+              Long conduits in SWMM models can cause Courant-Friedrichs-Lewy (CFL) violations during dynamic wave routing,
+              leading to numerical instability, mass balance errors, and simulation crashes. ReSWMM automatically subdivides
+              conduits that exceed a target length by inserting intermediate junction nodes with interpolated elevations and
+              coordinates. Two discretization methods are available: Fixed Interval splits conduits based on a user-defined
+              minimum and maximum segment length, while the Δx/D Ratio method sizes segments relative to the conduit
+              diameter for hydraulically consistent discretization. The tool preserves all original network connectivity,
+              distributes entry/exit losses across new segments, and generates a modified .inp file ready for simulation.
+            </p>
           </div>
 
           {!parsed && (
