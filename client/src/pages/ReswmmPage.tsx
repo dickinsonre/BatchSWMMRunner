@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef } from "react";
-import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, Map } from "lucide-react";
+import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, MapIcon } from "lucide-react";
 import type { CoordinateData, ConduitData, PolygonData } from "@/lib/inpParser";
 import AppHeader from "@/components/AppHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -564,7 +564,7 @@ export default function ReswmmPage() {
                       <Card data-testid="card-map-before">
                         <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
                           <CardTitle className="text-sm font-medium">Before - Network Map</CardTitle>
-                          <Map className="h-4 w-4 text-muted-foreground" />
+                          <MapIcon className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                           <MiniNetworkMap
@@ -594,7 +594,7 @@ export default function ReswmmPage() {
                       <Card data-testid="card-map-after">
                         <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
                           <CardTitle className="text-sm font-medium">After - Network Map</CardTitle>
-                          <Map className="h-4 w-4 text-muted-foreground" />
+                          <MapIcon className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                           <MiniNetworkMap
