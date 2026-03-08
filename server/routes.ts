@@ -653,7 +653,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
   async function processSingleFile(jobId: string, file: { id: string; name: string; path: string }): Promise<ProcessResult> {
     return new Promise((resolve) => {
       const startTime = Date.now();
-      const swmmStatus = cachedSwmmStatus || detectSwmmPath();
+      let swmmStatus = cachedSwmmStatus || detectSwmmPath();
       const runswmmPath = swmmStatus.found ? swmmStatus.path! : 'runswmm.exe';
       const inputPath = file.path;
       const reportPath = inputPath + '.rpt';
@@ -666,6 +666,12 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         inpContent = fs.readFileSync(inputPath, 'utf-8');
       } catch (e) {
         console.warn(`Could not read inp file ${inputPath}:`, e);
+      }
+
+      if (swmmStatus.found && !fs.existsSync(runswmmPath)) {
+        console.warn(`SWMM binary no longer exists at ${runswmmPath}, falling back to simulation mode`);
+        swmmStatus = { found: false, mode: 'simulation', searchedPaths: swmmStatus.searchedPaths || [] };
+        cachedSwmmStatus = swmmStatus;
       }
 
       if (!swmmStatus.found) {
