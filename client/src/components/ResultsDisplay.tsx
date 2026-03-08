@@ -335,7 +335,7 @@ function extractTablesFromReport(content: string): TableData[] {
         i++;
       }
 
-      if (rows.length >= 2 && headers.length >= 2) {
+      if (rows.length >= 2 && headers.length >= 2 && !/Time Series/i.test(currentSection)) {
         tables.push({ sectionTitle: currentSection, headers, rows });
       }
       continue;
