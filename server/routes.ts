@@ -208,7 +208,7 @@ function parseSwmmOutputBinary(outPath: string): string {
           const { date, time } = oleToDateStr(dateVal);
           const linkDataStart = periodStart + 8 + nSub * nSubVars * 4 + nNode * nNodeVars * 4 + l * nLinkVars * 4;
           const vals: string[] = [date.padEnd(16), time.padEnd(16)];
-          for (let v = 0; v < actualLinkVarCount; v++) {
+          for (let v = 0; v < nLinkVars; v++) {
             vals.push(buf.readFloatLE(linkDataStart + v * 4).toFixed(3).padStart(12).padEnd(16));
           }
           lines.push('  ' + vals.join(''));
