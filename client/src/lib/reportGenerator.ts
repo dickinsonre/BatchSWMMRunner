@@ -226,6 +226,53 @@ ${recItems}
 </html>`;
 }
 
+function makeAsciiBar(value: number, maxValue: number, barWidth: number = 30): string {
+  if (maxValue === 0) return "";
+  const filled = Math.round(Math.min(Math.abs(value) / maxValue, 1) * barWidth);
+  return "\u2588".repeat(filled) + "\u2591".repeat(barWidth - filled);
+}
+
+function extractReportTables(reportContent: string): { section: string; headers: string[]; rows: string[][] }[] {
+  const lines = reportContent.split("\n");
+  const tables: { section: string; headers: string[]; rows: string[][] }[] = [];
+  let currentSection = "";
+
+  const split = (line: string) => line.trim().split(/\s{2,}/).filter(Boolean);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.startsWith("  ***")) {
+      currentSection = line.replace(/\*+/g, "").trim();
+      continue;
+    }
+    if (/Time Series/i.test(currentSection)) { i++; continue; }
+
+    const dashLine = lines[i];
+    if (!dashLine || !/^[\s-]+$/.test(dashLine) || !dashLine.includes("---")) continue;
+    const hasGaps = /\s{2,}/.test(dashLine.trim());
+    if (hasGaps) continue;
+
+    const headerLine = lines[i - 1];
+    if (!headerLine || !headerLine.trim()) continue;
+    const headers = split(headerLine);
+    if (headers.length < 2) continue;
+
+    i++;
+    const rows: string[][] = [];
+    while (i < lines.length) {
+      const dl = lines[i];
+      if (!dl || !dl.trim() || dl.startsWith("  ***") || dl.startsWith("  ---")) break;
+      rows.push(split(dl));
+      i++;
+    }
+
+    if (rows.length >= 1 && headers.length >= 2) {
+      tables.push({ section: currentSection, headers, rows });
+    }
+  }
+  return tables;
+}
+
 export function generateMarkdownReport(results: ProcessResult[]): string {
   const d = analyzeResults(results);
 
@@ -262,6 +309,32 @@ export function generateMarkdownReport(results: ProcessResult[]): string {
   });
   lines.push("");
 
+  const successWithMetrics = d.results.filter(r => r.status === "success" && r.parsedMetrics);
+
+  if (successWithMetrics.length > 0) {
+    lines.push("### Continuity Error Chart");
+    lines.push("");
+    lines.push("```");
+    const maxCE = Math.max(
+      ...successWithMetrics.map(r => Math.max(
+        Math.abs(r.parsedMetrics?.runoffContinuityError ?? 0),
+        Math.abs(r.parsedMetrics?.routingContinuityError ?? 0)
+      )),
+      0.01
+    );
+    const maxNameLen = Math.max(...successWithMetrics.map(r => r.fileName.length), 10);
+    successWithMetrics.forEach(r => {
+      const name = r.fileName.padEnd(maxNameLen);
+      const runoffVal = Math.abs(r.parsedMetrics?.runoffContinuityError ?? 0);
+      const routingVal = Math.abs(r.parsedMetrics?.routingContinuityError ?? 0);
+      lines.push(`${name}  Runoff  ${makeAsciiBar(runoffVal, maxCE, 25)} ${fmtNum(runoffVal)}%`);
+      lines.push(`${" ".repeat(maxNameLen)}  Routing ${makeAsciiBar(routingVal, maxCE, 25)} ${fmtNum(routingVal)}%`);
+      lines.push("");
+    });
+    lines.push("```");
+    lines.push("");
+  }
+
   lines.push("## Flooding Summary");
   lines.push("");
   if (d.floodedModels.length > 0) {
@@ -270,6 +343,18 @@ export function generateMarkdownReport(results: ProcessResult[]): string {
     d.floodedModels.forEach(m => {
       lines.push(`| ${m.fileName} | ${m.nodesFlooded} | ${m.floodingLoss !== undefined ? fmtNum(m.floodingLoss) : "N/A"} |`);
     });
+    lines.push("");
+
+    lines.push("### Flooding Chart");
+    lines.push("");
+    lines.push("```");
+    const maxFlooded = Math.max(...d.floodedModels.map(m => m.nodesFlooded), 1);
+    const maxFloodNameLen = Math.max(...d.floodedModels.map(m => m.fileName.length), 10);
+    d.floodedModels.forEach(m => {
+      const name = m.fileName.padEnd(maxFloodNameLen);
+      lines.push(`${name}  ${makeAsciiBar(m.nodesFlooded, maxFlooded, 30)} ${m.nodesFlooded} nodes`);
+    });
+    lines.push("```");
   } else {
     lines.push("No flooding detected in any model.");
   }
@@ -279,15 +364,99 @@ export function generateMarkdownReport(results: ProcessResult[]): string {
   lines.push("");
   lines.push("| File Name | Precipitation (ac-ft) | Surface Runoff (ac-ft) | Peak Flow (CFS) | Total Volume (MG) |");
   lines.push("|-----------|----------------------|----------------------|-----------------|-------------------|");
-  d.results.filter(r => r.status === "success" && r.parsedMetrics).forEach(r => {
+  successWithMetrics.forEach(r => {
     lines.push(`| ${r.fileName} | ${fmtNum(r.parsedMetrics?.totalPrecipitation)} | ${fmtNum(r.parsedMetrics?.surfaceRunoff)} | ${fmtNum(r.results?.peakFlow, 2)} | ${fmtNum(r.results?.totalVolume, 2)} |`);
   });
   lines.push("");
+
+  if (successWithMetrics.length > 0) {
+    const hasPeakFlow = successWithMetrics.some(r => r.results?.peakFlow !== undefined);
+    const hasPrecip = successWithMetrics.some(r => r.parsedMetrics?.totalPrecipitation !== undefined);
+
+    if (hasPeakFlow) {
+      lines.push("### Peak Flow Chart");
+      lines.push("");
+      lines.push("```");
+      const maxPeak = Math.max(...successWithMetrics.map(r => r.results?.peakFlow ?? 0), 0.01);
+      const maxNameLen2 = Math.max(...successWithMetrics.map(r => r.fileName.length), 10);
+      successWithMetrics.forEach(r => {
+        const val = r.results?.peakFlow ?? 0;
+        lines.push(`${r.fileName.padEnd(maxNameLen2)}  ${makeAsciiBar(val, maxPeak, 30)} ${fmtNum(val, 2)} CFS`);
+      });
+      lines.push("```");
+      lines.push("");
+    }
+
+    if (hasPrecip) {
+      lines.push("### Precipitation vs Surface Runoff Chart");
+      lines.push("");
+      lines.push("```");
+      const maxHydro = Math.max(
+        ...successWithMetrics.map(r => Math.max(
+          r.parsedMetrics?.totalPrecipitation ?? 0,
+          r.parsedMetrics?.surfaceRunoff ?? 0
+        )),
+        0.01
+      );
+      const maxNameLen3 = Math.max(...successWithMetrics.map(r => r.fileName.length), 10);
+      successWithMetrics.forEach(r => {
+        const precip = r.parsedMetrics?.totalPrecipitation ?? 0;
+        const runoff = r.parsedMetrics?.surfaceRunoff ?? 0;
+        lines.push(`${r.fileName.padEnd(maxNameLen3)}  Precip  ${makeAsciiBar(precip, maxHydro, 25)} ${fmtNum(precip)}`);
+        lines.push(`${" ".repeat(maxNameLen3)}  Runoff  ${makeAsciiBar(runoff, maxHydro, 25)} ${fmtNum(runoff)}`);
+        lines.push("");
+      });
+      lines.push("```");
+      lines.push("");
+    }
+  }
 
   lines.push("## Recommendations");
   lines.push("");
   d.recommendations.forEach(r => lines.push(`- ${r}`));
   lines.push("");
+
+  const successWithReports = d.results.filter(r => r.status === "success" && r.reportContent);
+  if (successWithReports.length > 0) {
+    lines.push("---");
+    lines.push("");
+    lines.push("## Detailed RPT Report Tables");
+    lines.push("");
+
+    for (const result of successWithReports) {
+      lines.push(`### ${result.fileName}`);
+      lines.push("");
+
+      const tables = extractReportTables(result.reportContent!);
+      if (tables.length === 0) {
+        lines.push("*No summary tables found in report.*");
+        lines.push("");
+        continue;
+      }
+
+      for (const table of tables) {
+        if (table.section) {
+          lines.push(`#### ${table.section}`);
+          lines.push("");
+        }
+
+        const colWidths = table.headers.map((h, ci) => {
+          const cellValues = table.rows.map(row => (row[ci] || "").length);
+          return Math.max(h.length, ...cellValues);
+        });
+
+        lines.push("| " + table.headers.map((h, i) => h.padEnd(colWidths[i])).join(" | ") + " |");
+        lines.push("| " + colWidths.map(w => "-".repeat(w)).join(" | ") + " |");
+
+        for (const row of table.rows) {
+          const cells = table.headers.map((_, i) => (row[i] || "").padEnd(colWidths[i]));
+          lines.push("| " + cells.join(" | ") + " |");
+        }
+        lines.push("");
+      }
+    }
+  }
+
   lines.push("---");
   lines.push("*Report generated by BatchSWMM*");
 

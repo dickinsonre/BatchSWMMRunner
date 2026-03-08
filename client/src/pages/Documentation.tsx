@@ -446,6 +446,15 @@ This tells SWMM5 to also apply its own runtime lengthening as a
 safety net, in case any conduits were added or modified after
 ReSWMM processing.`;
 
+function FaqItem({ question, answer, testId }: { question: string; answer: string; testId: string }) {
+  return (
+    <div className="border-b pb-4 last:border-b-0 last:pb-0" data-testid={testId}>
+      <h3 className="font-medium text-sm mb-2">{question}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed">{answer}</p>
+    </div>
+  );
+}
+
 function CodeBlock({ code, language = "typescript" }: { code: string; language?: string }) {
   return (
     <ScrollArea className="h-[500px] rounded border">
@@ -474,8 +483,9 @@ export default function Documentation() {
             </p>
           </div>
 
-          <Tabs defaultValue="swmm5-c" data-testid="tabs-documentation">
+          <Tabs defaultValue="faq" data-testid="tabs-documentation">
             <TabsList className="flex flex-wrap gap-1" data-testid="tablist-documentation">
+              <TabsTrigger value="faq" data-testid="tab-faq">FAQ</TabsTrigger>
               <TabsTrigger value="reswmm" data-testid="tab-reswmm">ReSWMM Lengthening</TabsTrigger>
               <TabsTrigger value="swmm5-c" data-testid="tab-swmm5-c">SWMM5 C Reference</TabsTrigger>
               <TabsTrigger value="integration" data-testid="tab-integration">SWMM Integration</TabsTrigger>
@@ -484,6 +494,86 @@ export default function Documentation() {
               <TabsTrigger value="upload" data-testid="tab-upload">File Upload</TabsTrigger>
               <TabsTrigger value="schema" data-testid="tab-schema">Data Schema</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="faq">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base" data-testid="text-faq-title">Frequently Asked Questions</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Common questions about BatchSWMM, EPA SWMM, and how to get the most out of the application.
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <FaqItem
+                      question="Do I need EPA SWMM installed to use BatchSWMM?"
+                      answer="No. BatchSWMM ships with a built-in EPA SWMM 5.2.4 engine (a compiled Linux binary) that runs automatically on the server. You do not need to install SWMM separately. If the engine is not found for any reason, the app falls back to Simulation Mode, which generates realistic mock reports so you can still explore the interface and features."
+                      testId="faq-swmm-required"
+                    />
+                    <FaqItem
+                      question="What is Simulation Mode?"
+                      answer="Simulation Mode activates automatically when the SWMM engine binary is not detected. In this mode, BatchSWMM generates realistic but synthetic report data with randomized metrics, continuity errors, and element results. This lets you test the upload workflow, view reports, explore charts and histograms, and use the AI Report Builder without running actual hydraulic simulations."
+                      testId="faq-simulation-mode"
+                    />
+                    <FaqItem
+                      question="What file types does BatchSWMM accept?"
+                      answer="BatchSWMM accepts only EPA SWMM .inp (input) files. These are plain-text files that define the drainage network, rainfall data, simulation parameters, and all other model inputs. You can upload multiple .inp files at once for batch processing."
+                      testId="faq-file-types"
+                    />
+                    <FaqItem
+                      question="What output files does a SWMM simulation produce?"
+                      answer="Each simulation produces two output files: a .rpt (report) file containing human-readable summary tables, continuity checks, and element-by-element results; and a .out (binary output) file containing time series data for all nodes, links, subcatchments, and system variables. BatchSWMM parses both files to populate the RPT Text, RPT Graphs, RPT Histograms, and RPT HTML tabs."
+                      testId="faq-output-files"
+                    />
+                    <FaqItem
+                      question="What is ReSWMM?"
+                      answer="ReSWMM is a conduit discretization tool built into BatchSWMM. It splits long conduits into smaller segments using either a fixed interval or a dx/D ratio method. It also includes automatic conduit lengthening to satisfy the Courant-Friedrichs-Lewy (CFL) stability criterion for dynamic wave routing. ReSWMM processes .inp files client-side and produces a modified .inp file ready for simulation."
+                      testId="faq-reswmm"
+                    />
+                    <FaqItem
+                      question="How does batch processing work?"
+                      answer="Upload one or more .inp files, then click Process. BatchSWMM processes each file sequentially through the SWMM engine, streaming real-time progress updates to your browser via WebSocket. Each file gets its own progress bar showing the simulation percentage. Results appear as each file completes, with full report viewing, charts, and download options."
+                      testId="faq-batch-processing"
+                    />
+                    <FaqItem
+                      question="What is the AI Report Builder?"
+                      answer="The AI Report Builder is a chat interface available in the results view (under the AI Report tab). You describe the kind of HTML report you want, and the AI generates a complete, standalone HTML document using your actual simulation data. You can iterate on the design through conversation, preview the result live, and download the final HTML file."
+                      testId="faq-ai-report"
+                    />
+                    <FaqItem
+                      question="Can I compare simulation results?"
+                      answer="Yes. The ReSWMM page includes a simulation comparison feature. After running SWMM on both the original and discretized .inp files, BatchSWMM displays a side-by-side comparison table and grouped bar charts showing differences in peak flows, total volumes, and other key metrics."
+                      testId="faq-comparison"
+                    />
+                    <FaqItem
+                      question="What do the continuity errors mean?"
+                      answer="Continuity errors measure how well the simulation conserved mass (water volume). SWMM reports both runoff and flow routing continuity errors as percentages. Errors below 1% (green) are excellent, 1-5% (yellow) are acceptable, and above 5% (red) may indicate model issues like instability, short conduits, or overly large time steps."
+                      testId="faq-continuity"
+                    />
+                    <FaqItem
+                      question="What version of EPA SWMM does BatchSWMM use?"
+                      answer="BatchSWMM uses EPA SWMM version 5.2.4 (version code 52004). The engine is compiled from the official EPA source code available at github.com/USEPA/Stormwater-Management-Model. EPA SWMM 5 is public domain software that may be freely copied and distributed."
+                      testId="faq-version"
+                    />
+                    <FaqItem
+                      question="Where can I get .inp files to test with?"
+                      answer="EPA provides several sample projects with the SWMM installation. Each sample includes an .inp file and a description. You can also find example models in the EPA SWMM documentation, university course materials, or create your own using the EPA SWMM 5.2 desktop application (available at epa.gov/water-research/storm-water-management-model-swmm)."
+                      testId="faq-sample-files"
+                    />
+                    <FaqItem
+                      question="Is my data stored on the server?"
+                      answer="Uploaded .inp files are stored temporarily in the server's uploads folder during processing. They are not persisted to a database. Report results are held in memory for the duration of your session. No simulation data is stored permanently or shared with third parties."
+                      testId="faq-data-storage"
+                    />
+                    <FaqItem
+                      question="Can I use BatchSWMM on Windows or Mac?"
+                      answer="BatchSWMM runs as a web application, so you access it through your browser on any operating system. The SWMM engine runs on the server (Linux). If you deploy BatchSWMM locally on Windows, it will look for runswmm.exe in standard EPA SWMM installation paths automatically."
+                      testId="faq-platforms"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             <TabsContent value="reswmm">
               <Card>

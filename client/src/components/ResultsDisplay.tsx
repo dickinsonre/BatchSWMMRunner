@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, FileDown, BarChart2 } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, FileDown, BarChart2, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
+import ReportChatbot from "./ReportChatbot";
 import { setDashboardResults } from "@/lib/resultsStore";
 import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
 
@@ -871,6 +872,12 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                       RPT HTML
                                     </TabsTrigger>
                                   )}
+                                  {result.reportContent && (
+                                    <TabsTrigger value="ai-report" data-testid={`tab-report-ai-${result.id}`}>
+                                      <Sparkles className="h-3 w-3 mr-1" />
+                                      AI Report
+                                    </TabsTrigger>
+                                  )}
                                 </TabsList>
                                 {result.inpContent && (
                                   <TabsContent value="inp">
@@ -909,6 +916,17 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                         data-testid={`html-report-content-${result.id}`}
                                       />
                                     </ScrollArea>
+                                  </TabsContent>
+                                )}
+                                {result.reportContent && (
+                                  <TabsContent value="ai-report">
+                                    <div className="rounded border p-4 bg-background" data-testid={`ai-report-content-${result.id}`}>
+                                      <ReportChatbot
+                                        reportContent={result.reportContent}
+                                        inpContent={result.inpContent}
+                                        fileName={result.fileName}
+                                      />
+                                    </div>
                                   </TabsContent>
                                 )}
                               </Tabs>

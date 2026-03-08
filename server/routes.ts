@@ -8,6 +8,7 @@ import { spawn, execSync } from "child_process";
 import { storage } from "./storage";
 import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus, type SweepResult, type SweepConfig, type DesignStormConfig } from "@shared/schema";
 import { z } from "zod";
+import OpenAI from "openai";
 
 const upload = multer({
   dest: 'uploads/',
@@ -1089,6 +1090,75 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
       });
     });
   }
+
+  const aiClient = new OpenAI({
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+  });
+
+  app.post('/api/chat-report', async (req, res) => {
+    try {
+      const { messages, reportContent, inpContent } = req.body;
+      if (!messages || !Array.isArray(messages)) {
+        return res.status(400).json({ error: 'messages array is required' });
+      }
+
+      const systemPrompt = `You are an expert EPA SWMM (Storm Water Management Model) report assistant. The user has an EPA SWMM simulation result and wants you to help them create a custom HTML report.
+
+When the user asks you to generate or modify an HTML report, produce a complete, self-contained HTML document with inline CSS styling. The HTML should be professional, well-formatted, and ready to save as a standalone file.
+
+Key guidelines for HTML reports:
+- Use clean, modern CSS with a professional color scheme
+- Include proper tables with alternating row colors for readability
+- Add charts/visualizations using inline SVG when appropriate
+- Make the report print-friendly
+- Include a title, date, and summary section
+- Parse and present the SWMM data in a clear, organized manner
+- Wrap the entire HTML in a code block with \`\`\`html and \`\`\` markers so it can be extracted
+
+When the user asks questions about the data, answer based on the report content provided.
+
+${reportContent ? `\n--- SWMM REPORT (.rpt) CONTENT ---\n${reportContent.substring(0, 30000)}\n--- END REPORT ---` : ''}
+${inpContent ? `\n--- SWMM INPUT (.inp) CONTENT ---\n${inpContent.substring(0, 15000)}\n--- END INPUT ---` : ''}`;
+
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+
+      const chatMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+        { role: 'system', content: systemPrompt },
+        ...messages.map((m: { role: string; content: string }) => ({
+          role: m.role as 'user' | 'assistant',
+          content: m.content,
+        })),
+      ];
+
+      const stream = await aiClient.chat.completions.create({
+        model: 'gpt-4o',
+        messages: chatMessages,
+        stream: true,
+        max_tokens: 16384,
+      });
+
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        if (content) {
+          res.write(`data: ${JSON.stringify({ content })}\n\n`);
+        }
+      }
+
+      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+      res.end();
+    } catch (error: any) {
+      console.error('Chat report error:', error);
+      if (res.headersSent) {
+        res.write(`data: ${JSON.stringify({ error: error.message || 'AI request failed' })}\n\n`);
+        res.end();
+      } else {
+        res.status(500).json({ error: error.message || 'AI request failed' });
+      }
+    }
+  });
 
   return httpServer;
 }
