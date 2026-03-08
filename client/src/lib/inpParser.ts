@@ -64,6 +64,11 @@ export interface CoordinateData {
   y: number;
 }
 
+export interface PolygonData {
+  subcatchment: string;
+  vertices: { x: number; y: number }[];
+}
+
 export interface LossData {
   link: string;
   entry: number;
@@ -126,6 +131,7 @@ export interface ParsedInpFile {
   raingages: RainGageData[];
   xsections: XSectionData[];
   coordinates: CoordinateData[];
+  polygons: PolygonData[];
   losses: LossData[];
 }
 
@@ -339,6 +345,27 @@ function parseCoordinates(sections: Map<string, string[]>): CoordinateData[] {
     }));
 }
 
+function parsePolygons(sections: Map<string, string[]>): PolygonData[] {
+  const lines = sections.get('POLYGONS');
+  if (!lines) return [];
+  const vertexMap = new Map<string, { x: number; y: number }[]>();
+  for (const line of lines) {
+    if (line.startsWith(';')) continue;
+    const parts = line.split(/\s+/).filter(Boolean);
+    if (parts.length < 3) continue;
+    const name = parts[0];
+    const x = parseFloat(parts[1]);
+    const y = parseFloat(parts[2]);
+    if (isNaN(x) || isNaN(y)) continue;
+    if (!vertexMap.has(name)) vertexMap.set(name, []);
+    vertexMap.get(name)!.push({ x, y });
+  }
+  return Array.from(vertexMap.entries()).map(([subcatchment, vertices]) => ({
+    subcatchment,
+    vertices,
+  }));
+}
+
 function parseLosses(sections: Map<string, string[]>): LossData[] {
   const lines = sections.get('LOSSES');
   if (!lines) return [];
@@ -366,6 +393,7 @@ export function parseInpFile(content: string): ParsedInpFile {
   const raingages = parseRaingages(sections);
   const xsections = parseXSections(sections);
   const coordinates = parseCoordinates(sections);
+  const polygons = parsePolygons(sections);
   const losses = parseLosses(sections);
 
   return {
@@ -393,6 +421,7 @@ export function parseInpFile(content: string): ParsedInpFile {
     raingages,
     xsections,
     coordinates,
+    polygons,
     losses,
   };
 }
