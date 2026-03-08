@@ -191,6 +191,186 @@ function buildOverlaidHistogram(beforeValues: number[], afterValues: number[], b
   return bins.filter(b => b.before > 0 || b.after > 0);
 }
 
+interface SimComparisonProps {
+  beforeResult: ProcessResult;
+  afterResult: ProcessResult;
+  beforeElapsed: string;
+  afterElapsed: string;
+  beforeLabel: string;
+  afterLabel: string;
+}
+
+function getContinuityColor(error: number | undefined): string {
+  if (error === undefined) return 'text-muted-foreground';
+  const abs = Math.abs(error);
+  if (abs <= 1) return 'text-green-600';
+  if (abs <= 5) return 'text-yellow-600';
+  return 'text-red-600';
+}
+
+function SimulationComparison({ beforeResult, afterResult, beforeElapsed, afterElapsed, beforeLabel, afterLabel }: SimComparisonProps) {
+  const bm = beforeResult.parsedMetrics;
+  const am = afterResult.parsedMetrics;
+
+  const comparisonRows = [
+    { label: 'Status', before: beforeResult.status, after: afterResult.status, type: 'status' as const },
+    { label: 'Processing Time', before: beforeElapsed, after: afterElapsed, type: 'text' as const },
+    { label: 'Runoff Continuity Error (%)', before: bm?.runoffContinuityError, after: am?.runoffContinuityError, type: 'continuity' as const },
+    { label: 'Routing Continuity Error (%)', before: bm?.routingContinuityError, after: am?.routingContinuityError, type: 'continuity' as const },
+    { label: 'Nodes Flooded', before: bm?.nodesFlooded, after: am?.nodesFlooded, type: 'number' as const },
+    { label: 'Flooding Loss', before: bm?.floodingLoss, after: am?.floodingLoss, type: 'decimal' as const },
+    { label: 'Total Precipitation', before: bm?.totalPrecipitation, after: am?.totalPrecipitation, type: 'decimal' as const },
+    { label: 'Surface Runoff', before: bm?.surfaceRunoff, after: am?.surfaceRunoff, type: 'decimal' as const },
+    { label: 'Total Inflow', before: bm?.totalInflow, after: am?.totalInflow, type: 'decimal' as const },
+    { label: 'Total Outflow', before: bm?.totalOutflow, after: am?.totalOutflow, type: 'decimal' as const },
+    { label: 'Flow Routing Method', before: bm?.flowRoutingMethod, after: am?.flowRoutingMethod, type: 'text' as const },
+    { label: 'Infiltration Method', before: bm?.infiltrationMethod, after: am?.infiltrationMethod, type: 'text' as const },
+  ];
+
+  const chartData = [
+    bm?.runoffContinuityError !== undefined && am?.runoffContinuityError !== undefined
+      ? { metric: 'Runoff CE (%)', before: Math.abs(bm.runoffContinuityError), after: Math.abs(am.runoffContinuityError) }
+      : null,
+    bm?.routingContinuityError !== undefined && am?.routingContinuityError !== undefined
+      ? { metric: 'Routing CE (%)', before: Math.abs(bm.routingContinuityError), after: Math.abs(am.routingContinuityError) }
+      : null,
+    bm?.nodesFlooded !== undefined && am?.nodesFlooded !== undefined
+      ? { metric: 'Nodes Flooded', before: bm.nodesFlooded, after: am.nodesFlooded }
+      : null,
+  ].filter(Boolean);
+
+  const volumeData = [
+    bm?.totalPrecipitation !== undefined && am?.totalPrecipitation !== undefined
+      ? { metric: 'Precipitation', before: bm.totalPrecipitation, after: am.totalPrecipitation }
+      : null,
+    bm?.surfaceRunoff !== undefined && am?.surfaceRunoff !== undefined
+      ? { metric: 'Surface Runoff', before: bm.surfaceRunoff, after: am.surfaceRunoff }
+      : null,
+    bm?.totalInflow !== undefined && am?.totalInflow !== undefined
+      ? { metric: 'Total Inflow', before: bm.totalInflow, after: am.totalInflow }
+      : null,
+    bm?.totalOutflow !== undefined && am?.totalOutflow !== undefined
+      ? { metric: 'Total Outflow', before: bm.totalOutflow, after: am.totalOutflow }
+      : null,
+    bm?.floodingLoss !== undefined && am?.floodingLoss !== undefined
+      ? { metric: 'Flooding Loss', before: bm.floodingLoss, after: am.floodingLoss }
+      : null,
+  ].filter(Boolean);
+
+  const formatVal = (val: any, type: string) => {
+    if (val === undefined || val === null) return 'N/A';
+    if (type === 'status') return val === 'success' ? 'Success' : 'Failed';
+    if (type === 'continuity') return typeof val === 'number' ? val.toFixed(3) : String(val);
+    if (type === 'decimal') return typeof val === 'number' ? val.toFixed(3) : String(val);
+    if (type === 'number') return String(val);
+    return String(val);
+  };
+
+  const computeDelta = (before: any, after: any, type: string) => {
+    if (type === 'text' || type === 'status') return '';
+    if (typeof before !== 'number' || typeof after !== 'number') return '';
+    const diff = after - before;
+    const sign = diff >= 0 ? '+' : '';
+    if (type === 'continuity' || type === 'decimal') return `${sign}${diff.toFixed(3)}`;
+    return `${sign}${diff}`;
+  };
+
+  return (
+    <div className="space-y-6 mt-6">
+      <Separator />
+      <h3 className="text-lg font-semibold" data-testid="text-sim-comparison-heading">
+        Simulation Results Comparison
+      </h3>
+      <p className="text-sm text-muted-foreground">
+        Side-by-side comparison of SWMM simulation results for the original and discretized models.
+      </p>
+
+      <Card data-testid="card-sim-comparison-table">
+        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Results Summary</CardTitle>
+          <BarChart3 className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="table-sim-comparison">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-2 pr-4 text-muted-foreground font-medium">Metric</th>
+                  <th className="text-right py-2 px-4 text-muted-foreground font-medium">Original</th>
+                  <th className="text-right py-2 px-4 text-muted-foreground font-medium">Discretized</th>
+                  <th className="text-right py-2 pl-4 text-muted-foreground font-medium">Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonRows.map((row) => (
+                  <tr key={row.label} className="border-b border-border/50">
+                    <td className="py-2 pr-4 text-muted-foreground">{row.label}</td>
+                    <td className={`text-right py-2 px-4 ${row.type === 'continuity' ? getContinuityColor(row.before as number | undefined) : ''} ${row.type === 'status' ? (row.before === 'success' ? 'text-green-600' : 'text-red-600') : ''}`}>
+                      {formatVal(row.before, row.type)}
+                    </td>
+                    <td className={`text-right py-2 px-4 ${row.type === 'continuity' ? getContinuityColor(row.after as number | undefined) : ''} ${row.type === 'status' ? (row.after === 'success' ? 'text-green-600' : 'text-red-600') : ''}`}>
+                      {formatVal(row.after, row.type)}
+                    </td>
+                    <td className="text-right py-2 pl-4 text-muted-foreground text-xs">
+                      {computeDelta(row.before, row.after, row.type)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {chartData.length > 0 && (
+          <Card data-testid="card-sim-errors-chart">
+            <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Continuity Errors and Flooding</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={chartData} barGap={0} barCategoryGap="25%">
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="metric" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 10 }} />
+                  <RechartsTooltip />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar dataKey="before" name="Original" fill="hsl(210, 85%, 50%)" fillOpacity={0.8} />
+                  <Bar dataKey="after" name="Discretized" fill="hsl(142, 60%, 40%)" fillOpacity={0.8} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        )}
+
+        {volumeData.length > 0 && (
+          <Card data-testid="card-sim-volumes-chart">
+            <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Volume Comparison</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={volumeData} barGap={0} barCategoryGap="25%">
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="metric" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 10 }} />
+                  <RechartsTooltip />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar dataKey="before" name="Original" fill="hsl(35, 90%, 50%)" fillOpacity={0.8} />
+                  <Bar dataKey="after" name="Discretized" fill="hsl(270, 60%, 55%)" fillOpacity={0.8} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+}
+
 type SimRunState = 'idle' | 'uploading' | 'processing' | 'completed';
 
 function formatRunTime(seconds: number): string {
@@ -1028,7 +1208,7 @@ export default function ReswmmPage() {
 
                     <Separator className="my-6" />
 
-                    <h3 className="text-lg font-semibold mb-4" data-testid="text-run-heading">Run Simulations</h3>
+                    <h3 className="text-lg font-semibold mb-4" data-testid="text-run-heading">Run and Compare Simulations</h3>
                     <p className="text-sm text-muted-foreground mb-4">
                       Run SWMM on the original and discretized models to compare simulation results side by side.
                     </p>
@@ -1119,6 +1299,18 @@ export default function ReswmmPage() {
                         </CardContent>
                       </Card>
                     </div>
+
+                    {beforeRunState === 'completed' && afterRunState === 'completed' &&
+                     beforeRunResults.length > 0 && afterRunResults.length > 0 && (
+                      <SimulationComparison
+                        beforeResult={beforeRunResults[0]}
+                        afterResult={afterRunResults[0]}
+                        beforeElapsed={beforeRunElapsed}
+                        afterElapsed={afterRunElapsed}
+                        beforeLabel={fileName}
+                        afterLabel={`ReSWMM_${fileName.replace(/\.inp$/i, '')}.inp`}
+                      />
+                    )}
                   </div>
                 </>
               )}
