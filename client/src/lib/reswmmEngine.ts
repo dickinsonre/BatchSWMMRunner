@@ -297,13 +297,18 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     out.push(';;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   ');
     out.push(';;-------------- ---------- ---------- ---------- ---------- ----------');
     for (const j of parsed.junctions) {
-      out.push(`${j.name.padEnd(17)}${j.elevation.toString().padEnd(11)}${j.maxDepth.toString().padEnd(11)}${(j.initDepth || 0).toString().padEnd(11)}${(j.surDepth || 0).toString().padEnd(11)}${j.aponded || 0}`);
+      out.push(`${padField(j.name, 17)}${padField(j.elevation, 17)}${padField(j.maxDepth, 11)}${padField(j.initDepth || 0, 11)}${padField(j.surDepth || 0, 11)}${j.aponded || 0}`);
     }
     for (const j of result.newJunctions) {
-      out.push(`${j.name.padEnd(17)}${j.elevation.toString().padEnd(11)}${j.maxDepth.toString().padEnd(11)}${(j.initDepth || 0).toString().padEnd(11)}${(j.surDepth || 0).toString().padEnd(11)}${j.aponded || 0}`);
+      out.push(`${padField(j.name, 17)}${padField(j.elevation, 17)}${padField(j.maxDepth, 11)}${padField(j.initDepth || 0, 11)}${padField(j.surDepth || 0, 11)}${j.aponded || 0}`);
     }
     out.push('');
     return out;
+  }
+
+  function padField(val: string | number, width: number): string {
+    const s = val.toString();
+    return s.length >= width ? s + ' ' : s.padEnd(width);
   }
 
   function buildConduitLines(): string[] {
@@ -312,7 +317,7 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     out.push(';;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   ');
     out.push(';;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------');
     for (const c of result.newConduits) {
-      out.push(`${c.name.padEnd(17)}${c.from.padEnd(17)}${c.to.padEnd(17)}${c.length.toString().padEnd(11)}${c.roughness.toString().padEnd(11)}${c.inOffset.toString().padEnd(11)}${c.outOffset.toString().padEnd(11)}${c.initFlow.toString().padEnd(11)}${c.maxFlow}`);
+      out.push(`${padField(c.name, 17)}${padField(c.from, 17)}${padField(c.to, 17)}${padField(c.length, 17)}${padField(c.roughness, 11)}${padField(c.inOffset, 11)}${padField(c.outOffset, 11)}${padField(c.initFlow, 11)}${c.maxFlow}`);
     }
     out.push('');
     return out;
@@ -330,12 +335,10 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     out.push(';;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   ');
     out.push(';;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------');
     for (const xs of result.newXSections) {
-      const shapePad = Math.max(13, xs.shape.length + 1);
-      out.push(`${xs.link.padEnd(17)}${xs.shape.padEnd(shapePad)}${xs.geom1.toString().padEnd(17)}${xs.geom2.toString().padEnd(11)}${xs.geom3.toString().padEnd(11)}${xs.geom4.toString().padEnd(11)}${xs.barrels}`);
+      out.push(`${padField(xs.link, 17)}${padField(xs.shape, Math.max(13, xs.shape.length + 1))}${padField(xs.geom1, 17)}${padField(xs.geom2, 11)}${padField(xs.geom3, 11)}${padField(xs.geom4, 11)}${xs.barrels}`);
     }
     for (const xs of nonConduitXSections) {
-      const shapePad = Math.max(13, xs.shape.length + 1);
-      out.push(`${xs.link.padEnd(17)}${xs.shape.padEnd(shapePad)}${xs.geom1.toString().padEnd(17)}${xs.geom2.toString().padEnd(11)}${xs.geom3.toString().padEnd(11)}${xs.geom4.toString().padEnd(11)}${xs.barrels}`);
+      out.push(`${padField(xs.link, 17)}${padField(xs.shape, Math.max(13, xs.shape.length + 1))}${padField(xs.geom1, 17)}${padField(xs.geom2, 11)}${padField(xs.geom3, 11)}${padField(xs.geom4, 11)}${xs.barrels}`);
     }
     out.push('');
     return out;
@@ -347,10 +350,10 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     out.push(';;Node           X-Coord            Y-Coord           ');
     out.push(';;-------------- ------------------ ------------------');
     for (const c of parsed.coordinates) {
-      out.push(`${c.node.padEnd(17)}${c.x.toString().padEnd(19)}${c.y}`);
+      out.push(`${padField(c.node, 17)}${padField(c.x, 19)}${c.y}`);
     }
     for (const c of result.newCoordinates) {
-      out.push(`${c.node.padEnd(17)}${c.x.toString().padEnd(19)}${c.y}`);
+      out.push(`${padField(c.node, 17)}${padField(c.x, 19)}${c.y}`);
     }
     out.push('');
     return out;
@@ -362,7 +365,7 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     out.push(';;Link           Kentry     Kexit      Kavg       Flap Gate  Seepage   ');
     out.push(';;-------------- ---------- ---------- ---------- ---------- ----------');
     for (const l of result.newLosses) {
-      out.push(`${l.link.padEnd(17)}${l.entry.toString().padEnd(11)}${l.exit.toString().padEnd(11)}${l.average}`);
+      out.push(`${padField(l.link, 17)}${padField(l.entry, 11)}${padField(l.exit, 11)}${l.average}`);
     }
     out.push('');
     return out;
