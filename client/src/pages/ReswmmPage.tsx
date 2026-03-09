@@ -1264,6 +1264,29 @@ export default function ReswmmPage() {
                       </div>
                     </div>
 
+                    {(() => {
+                      const beforeCflVals = cflBefore.map(c => c.standardTimeStep).filter(v => isFinite(v));
+                      const afterCflVals = cflAfterAnalysis.map(c => c.standardTimeStep).filter(v => isFinite(v));
+                      const meanCflBefore = beforeCflVals.length > 0 ? beforeCflVals.reduce((a, b) => a + b, 0) / beforeCflVals.length : 0;
+                      const meanCflAfter = afterCflVals.length > 0 ? afterCflVals.reduce((a, b) => a + b, 0) / afterCflVals.length : 0;
+                      const cflChange = meanCflBefore > 0 ? ((meanCflAfter - meanCflBefore) / meanCflBefore * 100) : 0;
+                      const lengthChange = beforeStats.mean > 0 ? ((afterStats.mean - beforeStats.mean) / beforeStats.mean * 100) : 0;
+                      return (
+                        <Card className="mb-6" data-testid="card-discretization-summary">
+                          <CardContent className="p-4">
+                            <p className="text-sm leading-relaxed" data-testid="text-discretization-summary">
+                              The original model had a mean conduit length of <strong>{beforeStats.mean.toFixed(1)} {flowUnit}</strong> and
+                              a mean CFL time step of <strong>{meanCflBefore.toFixed(1)} s</strong>.
+                              After discretization, the mean conduit length is <strong>{afterStats.mean.toFixed(1)} {flowUnit}</strong> ({lengthChange >= 0 ? '+' : ''}{lengthChange.toFixed(1)}%)
+                              and the mean CFL time step is <strong>{meanCflAfter.toFixed(1)} s</strong> ({cflChange >= 0 ? '+' : ''}{cflChange.toFixed(1)}%),
+                              resulting in {result.stats.newConduitCount.toLocaleString()} conduits (from {result.stats.originalConduitCount.toLocaleString()}) with {result.stats.splitConduits.toLocaleString()} conduits split
+                              and {result.stats.newJunctionCount.toLocaleString()} intermediate junctions added.
+                            </p>
+                          </CardContent>
+                        </Card>
+                      );
+                    })()}
+
                     <div className="flex items-center gap-3 flex-wrap">
                       <Button onClick={handleDownload} data-testid="button-download-reswmm">
                         <Download className="h-4 w-4 mr-2" />
