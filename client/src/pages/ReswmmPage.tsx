@@ -1279,8 +1279,8 @@ export default function ReswmmPage() {
                               a mean CFL time step of <strong>{meanCflBefore.toFixed(1)} s</strong>.
                               After discretization, the mean conduit length is <strong>{afterStats.mean.toFixed(1)} {flowUnit}</strong> ({lengthChange >= 0 ? '+' : ''}{lengthChange.toFixed(1)}%)
                               and the mean CFL time step is <strong>{meanCflAfter.toFixed(1)} s</strong> ({cflChange >= 0 ? '+' : ''}{cflChange.toFixed(1)}%),
-                              resulting in {result.stats.newConduitCount.toLocaleString()} conduits (from {result.stats.originalConduitCount.toLocaleString()}) with {result.stats.splitConduits.toLocaleString()} conduits split
-                              and {result.stats.newJunctionCount.toLocaleString()} intermediate junctions added.
+                              resulting in {(result.stats?.newConduitCount ?? 0).toLocaleString()} conduits (from {(result.stats?.originalConduitCount ?? 0).toLocaleString()}) with {(result.stats?.splitConduits ?? 0).toLocaleString()} conduits split
+                              and {(result.stats?.newJunctionCount ?? 0).toLocaleString()} intermediate junctions added.
                             </p>
                           </CardContent>
                         </Card>
