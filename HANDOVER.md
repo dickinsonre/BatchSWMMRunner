@@ -1326,6 +1326,9 @@ Must **never** be edited directly. Use the Replit package installer tool for add
 ### ReSWMM XSECTIONS for Non-Conduit Links
 The `[XSECTIONS]` block in SWMM files contains cross-section definitions for ALL link types: conduits, orifices, weirs, and outlets. When `rebuildInpFile()` replaces the XSECTIONS block, it must preserve non-conduit entries. The current implementation identifies non-conduit XSECTIONS by checking if the link name appears in the conduit lists (original or new). If it doesn't, the entry is a regulator cross-section and is appended to the rebuilt block. Omitting these causes SWMM ERROR 143 ("Regulator X has invalid cross-section shape").
 
+### ReSWMM Unsplittable Cross-Section Shapes
+Conduits with `DUMMY` or `IRREGULAR` cross-section shapes are excluded from discretization. SWMM does not allow intermediate nodes to have multiple DUMMY-shaped conduits connected to them (ERROR 134: "Node X has illegal DUMMY link connections"). These conduits are preserved as-is in the output. The check is in `discretizeConduits()` via the `unsplittableShapes` set.
+
 ### drizzle.config.ts
 Drizzle ORM is configured but not active. The `DATABASE_URL` environment variable can be set for PostgreSQL but the app currently uses in-memory storage only.
 
