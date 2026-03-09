@@ -1,4 +1,4 @@
-# BatchSWMM - Batch EPA SWMM Processing Tool
+# BatchSWMM - Batch EPA SWMM5 Processing Tool
 
 ## Overview
 

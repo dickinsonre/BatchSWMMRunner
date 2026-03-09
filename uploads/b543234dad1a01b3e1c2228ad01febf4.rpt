@@ -1,0 +1,299 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  
+  *************
+  Element Count
+  *************
+  Number of rain gages ...... 1
+  Number of subcatchments ... 30
+  Number of nodes ........... 54
+  Number of links ........... 49
+  Number of pollutants ...... 4
+  Number of land uses ....... 8
+  
+  
+  *****************
+  Pollutant Summary
+  *****************
+                               Ppt.      GW         Kdecay
+  Name                 Units   Concen.   Concen.    1/days    CoPollutant
+  -----------------------------------------------------------------------
+  BOD5                  MG/L      0.00      0.00      0.08
+  NITRO                 MG/L      0.00      0.00      0.20
+  PHOS                  MG/L      0.00      0.00      1.50
+  LEAD                  MG/L      0.00      0.00      0.90
+  
+  
+  ***************
+  Landuse Summary
+  ***************
+                         Sweeping   Maximum      Last
+  Name                   Interval   Removal     Swept
+  ---------------------------------------------------
+  COMM                      14.00      0.38     14.00
+  SRES                       0.00      0.00      0.00
+  MRES                       0.00      0.00      0.00
+  ATHL                       0.00      0.00      0.00
+  OPEN                       0.00      0.00      0.00
+  FOREST                     0.00      0.00      0.00
+  GARDEN                     0.00      0.00      0.00
+  LOT                        0.00      0.00      0.00
+  
+  
+  ****************
+  Raingage Summary
+  ****************
+                                                      Data       Recording
+  Name                 Data Source                    Type       Interval 
+  ------------------------------------------------------------------------
+  GAGE1                C:\NCIMM_Training\Data_Files\rdu.dat
+  
+  
+  ********************
+  Subcatchment Summary
+  ********************
+  Name                       Area     Width   %Imperv    %Slope Rain Gage            Outlet              
+  -----------------------------------------------------------------------------------------------------------
+  5                          8.20    770.00     95.00    2.3400 GAGE1                305                 
+  6                          8.70    720.00    100.00    3.8900 GAGE1                306                 
+  7                          8.20    600.00     60.00    5.8300 GAGE1                307                 
+  8                          8.60    420.00    100.00    0.5000 GAGE1                308                 
+  9                          6.80    380.00     80.00    3.1600 GAGE1                309                 
+  10                         2.90    340.00     60.00    2.9400 GAGE1                310                 
+  12                         1.50    313.00      0.00   10.0000 GAGE1                312a                
+  13                        10.60    580.00      0.00    5.1700 GAGE1                313a                
+  14                         9.90    520.00      0.00    6.3500 GAGE1                314                 
+  15                         1.90    320.00      0.00    3.4400 GAGE1                315                 
+  16                         6.80    540.00      5.00    4.4400 GAGE1                316                 
+  17                         2.30    140.00     80.00   11.4300 GAGE1                317                 
+  18                         7.40    560.00      0.00    7.1400 GAGE1                318                 
+  19                        14.10   1060.00      5.00    2.9200 GAGE1                89                  
+  20                         7.30    260.00      3.00    7.6900 GAGE1                320                 
+  21                         4.80    340.00     10.00    9.4100 GAGE1                321                 
+  22                        19.20    540.00     10.00    4.8100 GAGE1                322                 
+  24                         3.60    620.00     90.00    3.2300 GAGE1                324                 
+  25                         1.90    380.00     30.00    6.0500 GAGE1                325                 
+  26                         8.30    840.00     90.00    2.2600 GAGE1                326                 
+  27                        18.90   1080.00     35.00    6.1100 GAGE1                327                 
+  28                         7.60    800.00     16.00    4.1300 GAGE1                328                 
+  29                         7.70    740.00      7.00    8.5100 GAGE1                47                  
+  30                         6.10    420.00      0.00   11.1900 GAGE1                330                 
+  31                         2.50    320.00      0.00    9.3800 GAGE1                331                 
+  33                         6.80    540.00     33.00    5.9300 GAGE1                333                 
+  42                         6.60    387.00     31.40    0.6800 GAGE1                342                 
+  51                         7.70    925.00     29.00    0.6800 GAGE1                351                 
+  54                         3.80    238.00     24.00    0.6800 GAGE1                354                 
+  55                         3.10    150.00      8.20    0.6800 GAGE1                355                 
+  
+  
+  ************
+  Node Summary
+  ************
+                                           Invert      Max.    Ponded    External
+  Name                 Type                 Elev.     Depth      Area    Inflow  
+  -------------------------------------------------------------------------------
+  305                  JUNCTION             55.66      1.00       0.0    Yes
+  306                  JUNCTION             51.52      1.50       0.0    Yes
+  307                  JUNCTION             40.27      1.00       0.0    Yes
+  308                  JUNCTION             29.75      3.00       0.0    Yes
+  309                  JUNCTION             42.48      2.00       0.0    Yes
+  310                  JUNCTION             67.98      2.00       0.0    Yes
+  314                  JUNCTION             29.80      3.20       0.0    Yes
+  316                  JUNCTION             50.43      1.50       0.0    Yes
+  317                  JUNCTION             30.00      1.00       0.0    Yes
+  318                  JUNCTION             44.10      3.00       0.0    Yes
+  320                  JUNCTION             57.11      2.00       0.0    Yes
+  321                  JUNCTION             11.08      2.50       0.0    Yes
+  322                  JUNCTION             21.50      4.50       0.0    Yes
+  324                  JUNCTION             53.73      1.50       0.0    Yes
+  325                  JUNCTION             45.93      1.50       0.0    Yes
+  326                  JUNCTION             49.03      2.50       0.0    Yes
+  327                  JUNCTION              3.97      7.30       0.0    Yes
+  328                  JUNCTION              2.48      7.30       0.0    Yes
+  333                  JUNCTION             40.92      1.50       0.0    Yes
+  342                  JUNCTION             49.42      1.00       0.0    Yes
+  351                  JUNCTION             37.82      2.00       0.0    Yes
+  355                  JUNCTION             57.19      1.50       0.0    Yes
+  64                   JUNCTION             62.96      1.50       0.0
+  47                   JUNCTION              0.85      7.30       0.0
+  49                   JUNCTION              3.86      7.30       0.0
+  51                   JUNCTION              9.42      3.00       0.0
+  53                   JUNCTION             18.25      3.00       0.0
+  54                   JUNCTION             19.55      2.00       0.0
+  56                   JUNCTION              4.14      7.30       0.0
+  57                   JUNCTION             11.98      3.50       0.0
+  58                   JUNCTION             12.60      4.50       0.0
+  60                   JUNCTION             35.51      3.00       0.0
+  62                   JUNCTION             48.55      2.00       0.0
+  63                   JUNCTION             40.96      2.00       0.0
+  354                  JUNCTION             66.65      1.00       0.0
+  66                   JUNCTION             23.73      2.30       0.0
+  67                   JUNCTION             25.98      2.30       0.0
+  68                   JUNCTION             38.88      2.50       0.0
+  71                   JUNCTION             29.23      3.20       0.0
+  82                   JUNCTION             33.77      2.50       0.0
+  84                   JUNCTION             57.08      2.00       0.0
+  86                   JUNCTION             34.82      2.50       0.0
+  89                   JUNCTION              7.35      2.50       0.0
+  90                   JUNCTION             42.96      1.50       0.0
+  102n                 JUNCTION             39.54      3.00       0.0
+  312b                 JUNCTION             29.24      1.20       0.0
+  313b                 JUNCTION             29.21      1.00       0.0
+  315                  OUTFALL               0.00      0.00       0.0    Yes
+  319                  OUTFALL               0.00      2.50       0.0    Yes
+  329                  OUTFALL               0.00      7.30       0.0    Yes
+  330                  OUTFALL               0.00      0.00       0.0    Yes
+  331                  OUTFALL               0.00      0.00       0.0    Yes
+  312a                 STORAGE              29.24     21.00       0.0
+  313a                 STORAGE              29.23     21.00       0.0
+  
+  
+  ************
+  Link Summary
+  ************
+  Name             From Node        To Node          Type            Length    %Slope Roughness
+  ---------------------------------------------------------------------------------------------
+  243              47               329              CONDUIT          328.0    0.2591    0.0500
+  244              328              47               CONDUIT          161.0    1.0125    0.0150
+  245              49               328              CONDUIT          246.0    0.5610    0.0500
+  246              327              49               CONDUIT           70.0    0.1571    0.0150
+  247              51               327              CONDUIT          192.0    2.8397    0.0200
+  248              333              51               CONDUIT          428.0    7.3798    0.0150
+  249              53               51               CONDUIT          120.0    7.3783    0.0150
+  250              54               53               CONDUIT           90.0    1.4446    0.0150
+  251              351              54               CONDUIT          142.0   12.9740    0.0150
+  252              56               327              CONDUIT          110.0    0.1545    0.0500
+  253              57               56               CONDUIT          548.0    1.4308    0.0300
+  254              58               57               CONDUIT           81.2    0.7631    0.0500
+  255              322              58               CONDUIT          200.0    4.4544    0.0150
+  256              66               322              CONDUIT          213.0    1.0470    0.0150
+  257              67               66               CONDUIT          299.0    0.7525    0.0250
+  258              68               67               CONDUIT          228.0    5.6670    0.0150
+  259              326              68               CONDUIT           63.0   16.3244    0.0150
+  260              102n             67               CONDUIT          346.0    3.9221    0.0200
+  261              313b             67               CONDUIT          315.0    1.0255    0.0500
+  262              71               313a             CONDUIT          288.0    0.0017    0.0500
+  263              324              313a             CONDUIT          437.5    5.6088    0.0250
+  264              312b             71               CONDUIT          632.9    0.0005    0.0500
+  265              317              314              CONDUIT          536.0    0.0373    0.0300
+  266              314              71               CONDUIT          118.5    0.4767    0.0300
+  268              307              312a             CONDUIT          138.0    8.0184    0.0300
+  269              325              312a             CONDUIT          162.5   10.3254    0.0170
+  270              308              312a             CONDUIT           62.5    0.8160    0.0170
+  271              306              308              CONDUIT          496.0    4.3933    0.0200
+  272              82               308              CONDUIT          220.0    1.8276    0.0160
+  273              309              82               CONDUIT          236.0    3.6932    0.0150
+  274              84               309              CONDUIT          331.0    4.4152    0.0150
+  275              310              84               CONDUIT          307.0    3.5527    0.0150
+  276              86               82               CONDUIT          386.0    0.2720    0.0150
+  277              305              86               CONDUIT          307.0    6.8040    0.0150
+  278              89               319              CONDUIT          118.0    6.2409    0.0150
+  279              90               89               CONDUIT          516.0    6.9177    0.0250
+  280              316              90               CONDUIT           63.0   11.9414    0.0120
+  281              60               322              CONDUIT          300.0    4.6751    0.0150
+  282              63               60               CONDUIT           90.0    6.0667    0.0150
+  283              62               63               CONDUIT          196.0    3.8754    0.0150
+  284              342              62               CONDUIT          155.0    0.5613    0.0150
+  285              355              62               CONDUIT          660.0    1.3092    0.0150
+  286              64               62               CONDUIT          527.8    2.7312    0.0150
+  287              354              64               CONDUIT          211.0    1.7491    0.0150
+  295              318              102n             CONDUIT          480.0    0.9500    0.0150
+  297              320              321              CONDUIT          653.3    7.0629    0.0300
+  298              321              327              CONDUIT          383.0    1.8567    0.0300
+  O1               312a             312b             ORIFICE     
+  O2               313a             313b             ORIFICE     
+  
+  
+  *********************
+  Cross Section Summary
+  *********************
+                                        Full     Full     Hyd.     Max.   No. of     Full
+  Conduit          Shape               Depth     Area     Rad.    Width  Barrels     Flow
+  ---------------------------------------------------------------------------------------
+  243              TRAPEZOIDAL          7.30   219.37     3.81    55.60        1   808.96
+  244              CIRCULAR             5.33    22.31     1.33     5.33        1   269.32
+  245              TRAPEZOIDAL          7.30   219.37     3.81    55.60        1  1190.23
+  246              RECT_CLOSED          5.50    24.75     1.24     4.50        1   112.03
+  247              CIRCULAR             3.00     7.07     0.75     3.00        1    73.06
+  248              CIRCULAR             1.50     1.77     0.38     1.50        1    24.73
+  249              CIRCULAR             3.00     7.07     0.75     3.00        1   157.02
+  250              CIRCULAR             2.00     3.14     0.50     2.00        1    23.56
+  251              CIRCULAR             2.00     3.14     0.50     2.00        1    70.62
+  252              TRAPEZOIDAL          7.30   219.37     3.81    55.60        1   624.72
+  253              TRAPEZOIDAL          3.50    58.62     1.96    29.00        1   543.17
+  254              TRAPEZOIDAL          3.50    58.62     1.96    29.00        1   238.00
+  255              RECT_CLOSED          4.50    20.25     1.12     4.50        1   457.98
+  256              CIRCULAR             2.00     3.14     0.50     2.00        1    20.06
+  257              RECT_CLOSED          2.30    11.50     0.79     5.00        1    50.57
+  258              CIRCULAR             2.00     3.14     0.50     2.00        1    46.67
+  259              CIRCULAR             2.50     4.91     0.62     2.50        1   143.63
+  260              CIRCULAR             2.00     3.14     0.50     2.00        1    29.12
+  261              RECT_CLOSED          1.00     5.00     0.42     5.00        1     8.39
+  262              RECT_CLOSED          3.20     7.04     0.65     2.20        1     0.66
+  263              CIRCULAR             1.50     1.77     0.38     1.50        1    12.94
+  264              CIRCULAR             1.20     1.13     0.30     1.20        1     0.03
+  265              RECT_CLOSED          1.00     3.00     0.38     3.00        1     1.49
+  266              RECT_CLOSED          3.20     7.04     0.65     2.20        1    18.10
+  268              RECT_CLOSED          1.00     3.00     0.38     3.00        1    21.88
+  269              CIRCULAR             1.50     1.77     0.38     1.50        1    25.81
+  270              CIRCULAR             3.00     7.07     0.75     3.00        1    46.07
+  271              CIRCULAR             1.50     1.77     0.38     1.50        1    14.31
+  272              CIRCULAR             2.50     4.91     0.62     2.50        1    45.05
+  273              CIRCULAR             2.00     3.14     0.50     2.00        1    37.68
+  274              CIRCULAR             2.00     3.14     0.50     2.00        1    41.20
+  275              CIRCULAR             2.00     3.14     0.50     2.00        1    36.95
+  276              CIRCULAR             2.50     4.91     0.62     2.50        1    18.54
+  277              CIRCULAR             1.00     0.79     0.25     1.00        1     8.05
+  278              CIRCULAR             2.50     4.91     0.62     2.50        1    88.81
+  279              RECT_CLOSED          1.00     2.00     0.33     2.00        1    15.03
+  280              CIRCULAR             1.50     1.77     0.38     1.50        1    39.32
+  281              CIRCULAR             3.00     7.07     0.75     3.00        1   124.99
+  282              CIRCULAR             2.00     3.14     0.50     2.00        1    48.29
+  283              CIRCULAR             2.00     3.14     0.50     2.00        1    38.60
+  284              CIRCULAR             1.00     0.79     0.25     1.00        1     2.31
+  285              CIRCULAR             1.50     1.77     0.38     1.50        1    10.42
+  286              CIRCULAR             1.50     1.77     0.38     1.50        1    15.05
+  287              CIRCULAR             1.00     0.79     0.25     1.00        1     4.08
+  295              CIRCULAR             3.00     7.07     0.75     3.00        1    56.34
+  297              CIRCULAR             2.00     3.14     0.50     2.00        1    26.05
+  298              CIRCULAR             2.50     4.91     0.62     2.50        1    24.22
+  
+  
+  ****************
+  Analysis Options
+  ****************
+  Flow Units ............... CFS
+  Process Models:
+    Rainfall/Runoff ........ YES
+    RDII ................... NO
+    Snowmelt ............... NO
+    Groundwater ............ NO
+    Flow Routing ........... YES
+    Ponding Allowed ........ NO
+    Water Quality .......... YES
+  Infiltration Method ...... HORTON
+  Flow Routing Method ...... KINWAVE
+  Starting Date ............ 01/01/2000 00:00:00
+  Ending Date .............. 12/31/2000 23:55:00
+  Antecedent Dry Days ...... 0.0
+  Report Time Step ......... 01:00:00
+  Wet Time Step ............ 00:15:00
+  Dry Time Step ............ 02:00:00
+  Routing Time Step ........ 300.00 sec
+  
+  
+  *********************
+  Rainfall File Summary
+  *********************
+  Station    First        Last         Recording   Periods    Periods    Periods
+  ID         Date         Date         Frequency  w/Precip    Missing    Malfunc.
+  -------------------------------------------------------------------------------
+  
+  
+  ERROR 317: cannot open rainfall data file C:\NCIMM_Training\Data_Files\rdu.dat.
+
+  Analysis begun on:  Mon Mar  9 22:28:03 2026
+  Analysis ended on:  Mon Mar  9 22:28:03 2026
+  Total elapsed time: < 1 sec

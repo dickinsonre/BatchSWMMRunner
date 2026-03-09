@@ -1,0 +1,2234 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  Scenario Run :  LID_USAGE 
+  WARNING 03: negative offset ignored for Link SWALE_1
+  WARNING 03: negative offset ignored for Link SWALE_2
+  WARNING 02: maximum depth increased for Node 25
+  WARNING 02: maximum depth increased for Node 255
+  WARNING 02: maximum depth increased for Node 26
+  WARNING 02: maximum depth increased for Node 276
+  WARNING 02: maximum depth increased for Node 31
+  WARNING 02: maximum depth increased for Node 74
+  WARNING 02: maximum depth increased for Node 77
+  WARNING 02: maximum depth increased for Node JCT-10
+  WARNING 02: maximum depth increased for Node JCT-120
+  WARNING 02: maximum depth increased for Node JCT-160
+  WARNING 02: maximum depth increased for Node JCT-162
+  WARNING 02: maximum depth increased for Node JCT-164
+  WARNING 02: maximum depth increased for Node JCT-166
+  WARNING 02: maximum depth increased for Node JCT-168
+  WARNING 02: maximum depth increased for Node JCT-170
+  WARNING 02: maximum depth increased for Node CDT-119_N1
+  WARNING 02: maximum depth increased for Node CDT-163_N1
+  WARNING 02: maximum depth increased for Node CDT-163_N2
+  WARNING 02: maximum depth increased for Node CDT-163_N3
+  WARNING 02: maximum depth increased for Node CDT-165_N1
+  WARNING 02: maximum depth increased for Node CDT-165_N2
+  WARNING 02: maximum depth increased for Node CDT-165_N3
+  WARNING 02: maximum depth increased for Node CDT-165_N4
+  WARNING 02: maximum depth increased for Node CDT-167_N1
+  WARNING 02: maximum depth increased for Node CDT-167_N2
+  WARNING 02: maximum depth increased for Node CDT-167_N3
+  WARNING 02: maximum depth increased for Node CDT-167_N4
+  WARNING 02: maximum depth increased for Node CDT-167_N5
+  WARNING 02: maximum depth increased for Node CDT-169_N1
+  WARNING 02: maximum depth increased for Node CDT-169_N2
+  WARNING 02: maximum depth increased for Node CDT-171_N1
+  WARNING 02: maximum depth increased for Node CDT-171_N2
+  WARNING 02: maximum depth increased for Node CDT-175_N1
+  WARNING 02: maximum depth increased for Node R26_N1
+  WARNING 02: maximum depth increased for Node R26_N2
+  WARNING 02: maximum depth increased for Node R26_N3
+  WARNING 02: maximum depth increased for Node R26_N4
+  WARNING 02: maximum depth increased for Node R74_N1
+  WARNING 02: maximum depth increased for Node R83_N1
+  WARNING 02: maximum depth increased for Node R83_N2
+  
+  *************
+  Element Count
+  *************
+  Number of rain gages ...... 2
+  Number of subcatchments ... 30
+  Number of nodes ........... 434
+  Number of links ........... 497
+  Number of pollutants ...... 6
+  Number of land uses ....... 2
+  
+  
+  *****************
+  Pollutant Summary
+  *****************
+                               Ppt.      GW         Kdecay
+  Name                 Units   Concen.   Concen.    1/days    CoPollutant
+  -----------------------------------------------------------------------
+  TN                    MG/L      1.00      0.26      0.00
+  TSS                   MG/L      1.00      0.26      0.00
+  TP                    MG/L      1.00      0.26      0.00
+  NH3                   MG/L      1.00      0.26      0.00
+  Copper                UG/L      0.01      0.26      0.00
+  Ecoli                  #/L    100.00      0.26      0.00
+  
+  
+  ***************
+  Landuse Summary
+  ***************
+                         Sweeping   Maximum      Last
+  Name                   Interval   Removal     Swept
+  ---------------------------------------------------
+  GREENVILLEURBAN            0.00      0.00      0.00
+  GREENVILEMixed             0.00      0.00      0.00
+  
+  
+  ****************
+  Raingage Summary
+  ****************
+                                                      Data       Recording
+  Name                 Data Source                    Type       Interval 
+  ------------------------------------------------------------------------
+  RAINGAGE-13          50-YEAR                        VOLUME      15 min.
+  RAINGAGE-14          100-YEAR                       VOLUME       1 min.
+  
+  
+  ********************
+  Subcatchment Summary
+  ********************
+  Name                       Area     Width   %Imperv    %Slope Rain Gage            Outlet              
+  -----------------------------------------------------------------------------------------------------------
+  C10                        9.66   1066.44     90.00    1.4000 RAINGAGE-14          117                 
+  C13                        1.80    460.80     89.00    0.8000 RAINGAGE-14          JCT-10              
+  C15                        9.88   1078.45     62.00    2.2000 RAINGAGE-14          232                 
+  C20                        7.61    946.50     44.00    2.7000 RAINGAGE-13          281                 
+  C25                       14.87   1323.16     34.00    2.3000 RAINGAGE-13          1114                
+  C30                        6.72    889.38     26.00    3.3000 RAINGAGE-13          384                 
+  C33                        7.13    916.17     35.00    2.2000 RAINGAGE-13          1115                
+  C35                       13.46   1259.15     40.00    1.1000 RAINGAGE-13          421                 
+  C45                       10.69   1122.03     35.00    1.1000 RAINGAGE-13          1001                
+  C50                       19.09   1499.25     46.00    1.5000 RAINGAGE-13          387                 
+  C55                        6.45    871.82     48.00    3.0000 RAINGAGE-13          183                 
+  C57                       12.81   1228.24     48.00    3.0000 RAINGAGE-13          267                 
+  C60                       15.31   1342.60     54.00    1.6000 RAINGAGE-13          323                 
+  C65                        6.25    857.66     61.00    4.2000 RAINGAGE-13          257                 
+  D10                        9.79   1073.60     79.00    1.2000 RAINGAGE-13          136                 
+  D15                        5.99    839.99     56.00    1.4000 RAINGAGE-13          31                  
+  D20                        6.90    901.64     54.00    3.3000 RAINGAGE-13          19                  
+  D21                       14.96   1327.17     21.00    3.3000 RAINGAGE-13          7                   
+  D22                       13.95   1281.74     25.00    1.3000 RAINGAGE-13          17                  
+  D25                        5.69    818.57     24.00    1.0000 RAINGAGE-13          JCT-184             
+  D30                       14.35   1300.15     23.00    0.2000 RAINGAGE-13          201                 
+  D32                        3.31    624.65     52.00    0.4000 RAINGAGE-13          956                 
+  D35                        8.14    979.19     24.00    1.1000 RAINGAGE-13          348                 
+  D40                       10.20   1096.18     27.00    1.5000 RAINGAGE-13          269                 
+  D45                       16.00   1372.60     34.00    1.5000 RAINGAGE-13          95                  
+  D50                        8.39    994.15     39.00    1.8000 RAINGAGE-13          187                 
+  D55                        7.02    909.08     26.00    0.3000 RAINGAGE-13          46                  
+  D60                       12.65   1220.37     25.00    1.2000 RAINGAGE-13          200                 
+  D65                        8.64   1008.94     24.00    2.5000 RAINGAGE-13          209                 
+  D70                        7.28    926.19     44.00    1.6000 RAINGAGE-13          105                 
+
+
+  *******************
+  LID Control Summary
+  *******************
+                                   No. of        Unit        Unit      % Area    % Imperv      % Perv
+  Subcatchment     LID Control      Units        Area       Width     Covered     Treated     Treated
+  ---------------------------------------------------------------------------------------------------
+  C10              RG                   1       34.86       55.00        0.04        5.00        0.00
+  C10              PAVEMENT             1       34.86       55.00        0.04        5.00        0.00
+  C10              GREENROOF            1       34.86       55.00        0.04        5.00        0.00
+  C10              VEGSWALE             1       34.86       55.00        0.04        5.00        0.00
+  C10              RAINB                1       34.86       55.00        0.04        5.00        0.00
+  C10              BIOCELL              1       34.86       55.00        0.04        5.00        0.00
+  C10              TRENCH               1       34.86       55.00        0.04        5.00        0.00
+  C13              RG                   1       27.31       55.00        0.15        5.00        0.00
+  C13              PAVEMENT             1       27.31       55.00        0.15        5.00        0.00
+  C13              GREENROOF            1       27.31       55.00        0.15        5.00        0.00
+  C13              VEGSWALE             1       27.31       55.00        0.15        5.00        0.00
+  C13              RAINB                1       27.31       55.00        0.15        5.00        0.00
+  C13              BIOCELL              1       27.31       55.00        0.15        5.00        0.00
+  C13              TRENCH               1       27.31       55.00        0.15        5.00        0.00
+  C15              RG                   1      511.59       55.00        0.52        5.00        0.00
+  C15              PAVEMENT             1      511.59       55.00        0.52        5.00        0.00
+  C15              GREENROOF            1      511.59       55.00        0.52        5.00        0.00
+  C15              VEGSWALE             1      511.59       55.00        0.52        5.00        0.00
+  C15              RAINB                1      511.59       55.00        0.52        5.00        0.00
+  C15              BIOCELL              1      511.59       55.00        0.52        5.00        0.00
+  C15              TRENCH               1      511.59       55.00        0.52        5.00        0.00
+  C20              RG                   1      569.68       55.00        0.75        5.00        0.00
+  C20              PAVEMENT             1      569.68       55.00        0.75        5.00        0.00
+  C20              GREENROOF            1      569.68       55.00        0.75        5.00        0.00
+  C20              VEGSWALE             1      569.68       55.00        0.75        5.00        0.00
+  C20              RAINB                1      569.68       55.00        0.75        5.00        0.00
+  C20              BIOCELL              1      569.68       55.00        0.75        5.00        0.00
+  C20              TRENCH               1      569.68       55.00        0.75        5.00        0.00
+  C25              RG                   1      381.36       55.00        0.26        5.00        0.00
+  C25              PAVEMENT             1      381.36       55.00        0.26        5.00        0.00
+  C25              GREENROOF            1      381.36       55.00        0.26        5.00        0.00
+  C25              VEGSWALE             1      381.36       55.00        0.26        5.00        0.00
+  C25              RAINB                1      381.36       55.00        0.26        5.00        0.00
+  C25              BIOCELL              1      381.36       55.00        0.26        5.00        0.00
+  C25              TRENCH               1      381.36       55.00        0.26        5.00        0.00
+  C30              RG                   1      630.14       55.00        0.94        5.00        0.00
+  C30              PAVEMENT             1      630.14       55.00        0.94        5.00        0.00
+  C30              GREENROOF            1      630.14       55.00        0.94        5.00        0.00
+  C30              VEGSWALE             1      630.14       55.00        0.94        5.00        0.00
+  C30              RAINB                1      630.14       55.00        0.94        5.00        0.00
+  C30              BIOCELL              1      630.14       55.00        0.94        5.00        0.00
+  C30              TRENCH               1      630.14       55.00        0.94        5.00        0.00
+  C33              RG                   1      524.53       55.00        0.74        5.00        0.00
+  C33              GREENROOF            1      524.53       55.00        0.74        5.00        0.00
+  C33              VEGSWALE             1      524.53       55.00        0.74        5.00        0.00
+  C33              RAINB                1      524.53       55.00        0.74        5.00        0.00
+  C33              BIOCELL              1      524.53       55.00        0.74        5.00        0.00
+  C33              TRENCH               1      524.53       55.00        0.74        5.00        0.00
+  C35              RG                   1      324.17       55.00        0.24        5.00        0.00
+  C35              VEGSWALE             1      324.17       55.00        0.24        5.00        0.00
+  C35              RAINB                1      324.17       55.00        0.24        5.00        0.00
+  C35              BIOCELL              1      324.17       55.00        0.24        5.00        0.00
+  C35              TRENCH               1      324.17       55.00        0.24        5.00        0.00
+  C35              PAVEMENT             1      324.17       55.00        0.24        5.00        0.00
+  C45              RG                   1      284.94       55.00        0.27        5.00        0.00
+  C45              RAINB                1      284.94       55.00        0.27        5.00        0.00
+  C45              BIOCELL              1      284.94       55.00        0.27        5.00        0.00
+  C45              TRENCH               1      284.94       55.00        0.27        5.00        0.00
+  C45              PAVEMENT             1      284.94       55.00        0.27        5.00        0.00
+  C45              GREENROOF            1      284.94       55.00        0.27        5.00        0.00
+  C50              RG                   1      573.91       55.00        0.30        5.00        0.00
+  C50              BIOCELL              1      573.91       55.00        0.30        5.00        0.00
+  C50              TRENCH               1      573.91       55.00        0.30        5.00        0.00
+  C50              PAVEMENT             1      573.91       55.00        0.30        5.00        0.00
+  C50              GREENROOF            1      573.91       55.00        0.30        5.00        0.00
+  C50              VEGSWALE             1      573.91       55.00        0.30        5.00        0.00
+  C55              RG                   1       58.11       55.00        0.09        5.00        0.00
+  C55              TRENCH               1       58.11       55.00        0.09        5.00        0.00
+  C55              PAVEMENT             1       58.11       55.00        0.09        5.00        0.00
+  C55              GREENROOF            1       58.11       55.00        0.09        5.00        0.00
+  C55              VEGSWALE             1       58.11       55.00        0.09        5.00        0.00
+  C55              RAINB                1       58.11       55.00        0.09        5.00        0.00
+  C57              RG                   1      902.24       55.00        0.70        5.00        0.00
+  C57              PAVEMENT             1      902.24       55.00        0.70        5.00        0.00
+  C57              GREENROOF            1      902.24       55.00        0.70        5.00        0.00
+  C57              VEGSWALE             1      902.24       55.00        0.70        5.00        0.00
+  C57              RAINB                1      902.24       55.00        0.70        5.00        0.00
+  C57              BIOCELL              1      902.24       55.00        0.70        5.00        0.00
+  C60              RG                   1      339.77       55.00        0.22        5.00        0.00
+  C60              GREENROOF            1      339.77       55.00        0.22        5.00        0.00
+  C60              VEGSWALE             1      339.77       55.00        0.22        5.00        0.00
+  C60              RAINB                1      339.77       55.00        0.22        5.00        0.00
+  C60              BIOCELL              1      339.77       55.00        0.22        5.00        0.00
+  C60              TRENCH               1      339.77       55.00        0.22        5.00        0.00
+  C65              RG                   1      605.09       55.00        0.97        5.00        0.00
+  C65              VEGSWALE             1      605.09       55.00        0.97        5.00        0.00
+  C65              RAINB                1      605.09       55.00        0.97        5.00        0.00
+  C65              BIOCELL              1      605.09       55.00        0.97        5.00        0.00
+  C65              TRENCH               1      605.09       55.00        0.97        5.00        0.00
+  C65              PAVEMENT             1      605.09       55.00        0.97        5.00        0.00
+  D10              RG                   1      318.44       55.00        0.33        5.00        0.00
+  D10              RAINB                1      318.44       55.00        0.33        5.00        0.00
+  D10              BIOCELL              1      318.44       55.00        0.33        5.00        0.00
+  D10              TRENCH               1      318.44       55.00        0.33        5.00        0.00
+  D10              PAVEMENT             1      318.44       55.00        0.33        5.00        0.00
+  D10              GREENROOF            1      318.44       55.00        0.33        5.00        0.00
+  D15              RG                   1       50.32       55.00        0.08        5.00        0.00
+  D15              BIOCELL              1       50.32       55.00        0.08        5.00        0.00
+  D15              TRENCH               1       50.32       55.00        0.08        5.00        0.00
+  D15              PAVEMENT             1       50.32       55.00        0.08        5.00        0.00
+  D15              GREENROOF            1       50.32       55.00        0.08        5.00        0.00
+  D15              VEGSWALE             1       50.32       55.00        0.08        5.00        0.00
+  D20              RG                   1       36.15       55.00        0.05        5.00        0.00
+  D20              TRENCH               1       36.15       55.00        0.05        5.00        0.00
+  D20              PAVEMENT             1       36.15       55.00        0.05        5.00        0.00
+  D20              GREENROOF            1       36.15       55.00        0.05        5.00        0.00
+  D20              VEGSWALE             1       36.15       55.00        0.05        5.00        0.00
+  D20              RAINB                1       36.15       55.00        0.05        5.00        0.00
+  D21              RG                   1      577.80       55.00        0.39        5.00        0.00
+  D21              PAVEMENT             1      577.80       55.00        0.39        5.00        0.00
+  D21              GREENROOF            1      577.80       55.00        0.39        5.00        0.00
+  D21              VEGSWALE             1      577.80       55.00        0.39        5.00        0.00
+  D21              RAINB                1      577.80       55.00        0.39        5.00        0.00
+  D21              BIOCELL              1      577.80       55.00        0.39        5.00        0.00
+  D22              RG                   1      385.61       55.00        0.28        5.00        0.00
+  D22              GREENROOF            1      385.61       55.00        0.28        5.00        0.00
+  D22              VEGSWALE             1      385.61       55.00        0.28        5.00        0.00
+  D22              RAINB                1      385.61       55.00        0.28        5.00        0.00
+  D22              BIOCELL              1      385.61       55.00        0.28        5.00        0.00
+  D22              TRENCH               1      385.61       55.00        0.28        5.00        0.00
+  D25              RG                   1      393.20       55.00        0.69        5.00        0.00
+  D25              VEGSWALE             1      393.20       55.00        0.69        5.00        0.00
+  D25              RAINB                1      393.20       55.00        0.69        5.00        0.00
+  D25              BIOCELL              1      393.20       55.00        0.69        5.00        0.00
+  D25              TRENCH               1      393.20       55.00        0.69        5.00        0.00
+  D25              PAVEMENT             1      393.20       55.00        0.69        5.00        0.00
+  D30              RG                   1      265.03       55.00        0.18        5.00        0.00
+  D30              RAINB                1      265.03       55.00        0.18        5.00        0.00
+  D30              BIOCELL              1      265.03       55.00        0.18        5.00        0.00
+  D30              TRENCH               1      265.03       55.00        0.18        5.00        0.00
+  D30              PAVEMENT             1      265.03       55.00        0.18        5.00        0.00
+  D30              GREENROOF            1      265.03       55.00        0.18        5.00        0.00
+  D32              RG                   1       16.72       55.00        0.05        5.00        0.00
+  D32              BIOCELL              1       16.72       55.00        0.05        5.00        0.00
+  D32              TRENCH               1       16.72       55.00        0.05        5.00        0.00
+  D32              PAVEMENT             1       16.72       55.00        0.05        5.00        0.00
+  D32              GREENROOF            1       16.72       55.00        0.05        5.00        0.00
+  D32              VEGSWALE             1       16.72       55.00        0.05        5.00        0.00
+  D35              RG                   1      733.71       55.00        0.90        5.00        0.00
+  D35              TRENCH               1      733.71       55.00        0.90        5.00        0.00
+  D35              PAVEMENT             1      733.71       55.00        0.90        5.00        0.00
+  D35              GREENROOF            1      733.71       55.00        0.90        5.00        0.00
+  D35              VEGSWALE             1      733.71       55.00        0.90        5.00        0.00
+  D35              RAINB                1      733.71       55.00        0.90        5.00        0.00
+  D40              RG                   1      224.62       55.00        0.22        5.00        0.00
+  D40              PAVEMENT             1      224.62       55.00        0.22        5.00        0.00
+  D40              GREENROOF            1      224.62       55.00        0.22        5.00        0.00
+  D40              VEGSWALE             1      224.62       55.00        0.22        5.00        0.00
+  D40              RAINB                1      224.62       55.00        0.22        5.00        0.00
+  D40              BIOCELL              1      224.62       55.00        0.22        5.00        0.00
+  D45              RG                   1      846.45       55.00        0.53        5.00        0.00
+  D45              GREENROOF            1      846.45       55.00        0.53        5.00        0.00
+  D45              VEGSWALE             1      846.45       55.00        0.53        5.00        0.00
+  D45              RAINB                1      846.45       55.00        0.53        5.00        0.00
+  D45              BIOCELL              1      846.45       55.00        0.53        5.00        0.00
+  D45              TRENCH               1      846.45       55.00        0.53        5.00        0.00
+  D50              RG                   1      279.97       55.00        0.33        5.00        0.00
+  D50              VEGSWALE             1      279.97       55.00        0.33        5.00        0.00
+  D50              RAINB                1      279.97       55.00        0.33        5.00        0.00
+  D50              BIOCELL              1      279.97       55.00        0.33        5.00        0.00
+  D50              TRENCH               1      279.97       55.00        0.33        5.00        0.00
+  D50              PAVEMENT             1      279.97       55.00        0.33        5.00        0.00
+  D55              RG                   1      285.20       55.00        0.41        5.00        0.00
+  D55              RAINB                1      285.20       55.00        0.41        5.00        0.00
+  D55              BIOCELL              1      285.20       55.00        0.41        5.00        0.00
+  D55              TRENCH               1      285.20       55.00        0.41        5.00        0.00
+  D55              PAVEMENT             1      285.20       55.00        0.41        5.00        0.00
+  D55              GREENROOF            1      285.20       55.00        0.41        5.00        0.00
+  D60              RG                   1      545.78       55.00        0.43        5.00        0.00
+  D60              BIOCELL              1      545.78       55.00        0.43        5.00        0.00
+  D60              TRENCH               1      545.78       55.00        0.43        5.00        0.00
+  D60              PAVEMENT             1      545.78       55.00        0.43        5.00        0.00
+  D60              GREENROOF            1      545.78       55.00        0.43        5.00        0.00
+  D60              VEGSWALE             1      545.78       55.00        0.43        5.00        0.00
+  D65              RG                   1      827.94       55.00        0.96        5.00        0.00
+  D65              TRENCH               1      827.94       55.00        0.96        5.00        0.00
+  D65              PAVEMENT             1      827.94       55.00        0.96        5.00        0.00
+  D65              GREENROOF            1      827.94       55.00        0.96        5.00        0.00
+  D65              VEGSWALE             1      827.94       55.00        0.96        5.00        0.00
+  D65              RAINB                1      827.94       55.00        0.96        5.00        0.00
+  D70              RG                   1      866.12       55.00        1.19        5.00        0.00
+  D70              PAVEMENT             1      866.12       55.00        1.19        5.00        0.00
+  D70              GREENROOF            1      866.12       55.00        1.19        5.00        0.00
+  D70              VEGSWALE             1      866.12       55.00        1.19        5.00        0.00
+  D70              RAINB                1      866.12       55.00        1.19        5.00        0.00
+  D70              BIOCELL              1      866.12       55.00        1.19        5.00        0.00
+  
+  
+  ************
+  Node Summary
+  ************
+                                           Invert      Max.    Ponded    External
+  Name                 Type                 Elev.     Depth      Area    Inflow  
+  -------------------------------------------------------------------------------
+  1001                 JUNCTION            708.95      4.40       0.0    Yes
+  105                  JUNCTION            678.79      4.77       0.0    Yes
+  13                   JUNCTION            689.38      5.51       0.0    Yes
+  136                  JUNCTION            665.13     11.17       0.0    Yes
+  137                  JUNCTION            690.49      9.69       0.0    Yes
+  140                  JUNCTION            666.28      8.08       0.0    Yes
+  144                  JUNCTION            666.36      8.25       0.0    Yes
+  147                  JUNCTION            686.54      9.14       0.0    Yes
+  15                   JUNCTION            687.87      5.40       0.0    Yes
+  150                  JUNCTION            681.79      7.34       0.0    Yes
+  158                  JUNCTION            670.07      7.00       0.0    Yes
+  166                  JUNCTION            670.07      8.43       0.0    Yes
+  173                  JUNCTION            670.02      8.98       0.0    Yes
+  179                  JUNCTION            668.80      5.01       0.0    Yes
+  18                   JUNCTION            694.54      5.71       0.0    Yes
+  183                  JUNCTION            670.95     10.05       0.0    Yes
+  19                   JUNCTION            671.87     10.43       0.0    Yes
+  200                  JUNCTION            689.11      6.00       0.0    Yes
+  201                  JUNCTION            693.88      8.77       0.0    Yes
+  205                  JUNCTION            664.77     13.17       0.0    Yes
+  232                  JUNCTION            671.41      6.48       0.0    Yes
+  244                  JUNCTION            678.53      5.08       0.0    Yes
+  25                   JUNCTION            673.85      3.50       0.0    Yes
+  255                  JUNCTION            668.95     13.00       0.0    Yes
+  257                  JUNCTION            670.53     15.52       0.0    Yes
+  26                   JUNCTION            665.49     13.00       0.0    Yes
+  267                  JUNCTION            696.75      4.11       0.0    Yes
+  269                  JUNCTION            667.15     13.73       0.0    Yes
+  276                  JUNCTION            680.46      4.00       0.0    Yes
+  281                  JUNCTION            672.47      6.55       0.0    Yes
+  285                  JUNCTION            681.46      4.24       0.0    Yes
+  297                  JUNCTION            674.04      8.02       0.0    Yes
+  304                  JUNCTION            674.82      7.33       0.0    Yes
+  306                  JUNCTION            679.95      5.95       0.0    Yes
+  31                   JUNCTION            671.66      3.50       0.0    Yes
+  32                   JUNCTION            697.86      5.15       0.0    Yes
+  323                  JUNCTION            678.64     16.65       0.0    Yes
+  325                  JUNCTION            677.12      6.25       0.0    Yes
+  33                   JUNCTION            693.90      5.00       0.0    Yes
+  348                  JUNCTION            682.67      4.99       0.0    Yes
+  351                  JUNCTION            675.63     11.88       0.0    Yes
+  371                  JUNCTION            697.06      6.94       0.0    Yes
+  384                  JUNCTION            681.11     10.19       0.0    Yes
+  387                  JUNCTION            693.95     13.85       0.0    Yes
+  393                  JUNCTION            688.33      5.08       0.0    Yes
+  4                    JUNCTION            691.30      6.87       0.0
+  407                  JUNCTION            708.36      5.08       0.0    Yes
+  46                   JUNCTION            687.27     15.05       0.0    Yes
+  56                   JUNCTION            685.23      7.28       0.0    Yes
+  64                   JUNCTION            688.45     13.82       0.0    Yes
+  7                    JUNCTION            674.51      6.58       0.0    Yes
+  74                   JUNCTION            665.98     13.00       0.0    Yes
+  76                   JUNCTION            688.81     13.46       0.0    Yes
+  77                   JUNCTION            667.45      3.25       0.0    Yes
+  879                  JUNCTION            697.40      5.08       0.0    Yes
+  882                  JUNCTION            692.48      8.26       0.0    Yes
+  893                  JUNCTION            702.68      5.00       0.0    Yes
+  894                  JUNCTION            705.27      2.99       0.0    Yes
+  95                   JUNCTION            694.18      3.10       0.0    Yes
+  956                  JUNCTION            694.37      6.60       0.0    Yes
+  974                  JUNCTION            675.71      6.90       0.0    Yes
+  982                  JUNCTION            675.84      7.50       0.0    Yes
+  DUMMY2D              JUNCTION            211.49      2.67       0.0
+  JCT-10               JUNCTION            670.02     10.01       0.0    Yes
+  JCT-100              JUNCTION            716.75      4.00       0.0    Yes
+  JCT-102              JUNCTION            716.00      2.98       0.0    Yes
+  JCT-104              JUNCTION            714.94      5.83       0.0    Yes
+  JCT-106              JUNCTION            713.47      7.01       0.0    Yes
+  JCT-108              JUNCTION            712.89      3.94       0.0    Yes
+  JCT-110              JUNCTION            710.77      3.82       0.0    Yes
+  JCT-112              JUNCTION            719.49      4.08       0.0    Yes
+  JCT-114              JUNCTION            719.65      4.00       0.0    Yes
+  JCT-116              JUNCTION            718.81      4.00       0.0    Yes
+  JCT-118              JUNCTION            714.84      3.99       0.0    Yes
+  JCT-12               JUNCTION            669.18     13.42       0.0    Yes
+  JCT-120              JUNCTION            713.40      2.00       0.0    Yes
+  JCT-122              JUNCTION            712.30      1.70       0.0    Yes
+  JCT-124              JUNCTION            708.45      4.04       0.0    Yes
+  JCT-126              JUNCTION            703.29      4.04       0.0    Yes
+  JCT-128              JUNCTION            699.62      3.35       0.0    Yes
+  JCT-130              JUNCTION            715.65      4.00       0.0    Yes
+  JCT-132              JUNCTION            715.44      4.00       0.0    Yes
+  JCT-134              JUNCTION            712.01      4.00       0.0    Yes
+  JCT-136              JUNCTION            707.56      4.00       0.0    Yes
+  JCT-138              JUNCTION            680.00     31.63       0.0    Yes
+  JCT-14               JUNCTION            668.34     28.71       0.0    Yes
+  JCT-140              JUNCTION            682.00     30.49       0.0    Yes
+  JCT-142              JUNCTION            685.00     24.96       0.0    Yes
+  JCT-144              JUNCTION            685.50     17.23       0.0    Yes
+  JCT-146              JUNCTION            686.00     22.41       0.0    Yes
+  JCT-148              JUNCTION            667.70     41.48       0.0    Yes
+  JCT-150              JUNCTION            670.00     46.25       0.0    Yes
+  JCT-152              JUNCTION            675.00     34.64       0.0    Yes
+  JCT-154              JUNCTION            689.00      6.99       0.0    Yes
+  JCT-156              JUNCTION            680.48      4.00       0.0    Yes
+  JCT-16               JUNCTION            696.88      3.95       0.0    Yes
+  JCT-160              JUNCTION            671.03      8.26       0.0    Yes
+  JCT-162              JUNCTION            670.16      8.26       0.0
+  JCT-164              JUNCTION            667.59      7.27       0.0
+  JCT-166              JUNCTION            666.94      5.89       0.0
+  JCT-168              JUNCTION            664.87     13.00       0.0
+  JCT-170              JUNCTION            663.96      9.63       0.0
+  JCT-174              JUNCTION            693.27      1.50       0.0
+  JCT-176              JUNCTION            694.89      1.50       0.0
+  JCT-178              JUNCTION            698.17      1.50       0.0
+  JCT-18               JUNCTION            689.98      4.00       0.0    Yes
+  JCT-180              JUNCTION            700.25      1.50       0.0
+  JCT-182              JUNCTION            702.49      1.50       0.0
+  JCT-184              JUNCTION            703.00      1.50       0.0
+  JCT-20               JUNCTION            682.57      4.00       0.0    Yes
+  JCT-22               JUNCTION            669.11     14.32       0.0    Yes
+  JCT-24               JUNCTION            704.83      4.00       0.0    Yes
+  JCT-26               JUNCTION            699.61      3.89       0.0    Yes
+  JCT-28               JUNCTION            685.15      4.00       0.0    Yes
+  JCT-30               JUNCTION            671.61     10.26       0.0    Yes
+  JCT-32               JUNCTION            710.18      4.72       0.0    Yes
+  JCT-34               JUNCTION            703.12      4.01       0.0    Yes
+  JCT-36               JUNCTION            687.39      4.16       0.0    Yes
+  JCT-38               JUNCTION            673.11      6.17       0.0    Yes
+  JCT-40               JUNCTION            703.45      4.00       0.0    Yes
+  JCT-42               JUNCTION            699.39      4.00       0.0    Yes
+  JCT-44               JUNCTION            697.16     10.00       0.0    Yes
+  JCT-46               JUNCTION            681.31      4.02       0.0    Yes
+  JCT-48               JUNCTION            674.61      4.00       0.0    Yes
+  JCT-50               JUNCTION            724.28      4.17       0.0    Yes
+  JCT-52               JUNCTION            721.00     13.39       0.0    Yes
+  JCT-54               JUNCTION            717.67      3.57       0.0    Yes
+  JCT-56               JUNCTION            688.05      4.00       0.0    Yes
+  JCT-58               JUNCTION            686.05      6.00       0.0    Yes
+  JCT-60               JUNCTION            684.21      8.08       0.0    Yes
+  JCT-62               JUNCTION            725.41      4.00       0.0    Yes
+  JCT-64               JUNCTION            711.33      3.69       0.0    Yes
+  JCT-66               JUNCTION            697.57      4.00       0.0    Yes
+  JCT-68               JUNCTION            692.00      4.04       0.0    Yes
+  JCT-70               JUNCTION            717.84      4.00       0.0    Yes
+  JCT-72               JUNCTION            710.40      4.00       0.0    Yes
+  JCT-74               JUNCTION            699.81      4.05       0.0    Yes
+  JCT-76               JUNCTION            697.17      4.00       0.0    Yes
+  JCT-78               JUNCTION            712.19      4.14       0.0    Yes
+  JCT-80               JUNCTION            710.36      3.92       0.0    Yes
+  JCT-82               JUNCTION            715.11      4.00       0.0    Yes
+  JCT-84               JUNCTION            714.03      3.68       0.0    Yes
+  JCT-86               JUNCTION            725.62      4.31       0.0    Yes
+  JCT-88               JUNCTION            722.01      4.26       0.0    Yes
+  JCT-90               JUNCTION            718.89      4.08       0.0    Yes
+  JCT-92               JUNCTION            715.36      4.00       0.0    Yes
+  JCT-94               JUNCTION            711.00      8.97       0.0    Yes
+  JCT-96               JUNCTION            702.00     14.76       0.0    Yes
+  JCT-98               JUNCTION            720.80      4.11       0.0    Yes
+  1001OF_N1            JUNCTION            708.65      4.40      13.0
+  105OF_N1             JUNCTION            671.96      4.77      13.0
+  1209_N1              JUNCTION            693.18      8.77      13.0
+  1211_N1              JUNCTION            691.48      8.26      13.0
+  1225_N1              JUNCTION            689.65      9.69      13.0
+  1230_N1              JUNCTION            695.49      5.00      13.0
+  1230_N2              JUNCTION            688.30      5.00      13.0
+  1249_N1              JUNCTION            686.18      5.08      13.0
+  1269_N1              JUNCTION            690.87      6.00      13.0
+  1269_N2              JUNCTION            692.62      6.00      13.0
+  1270_N1              JUNCTION            690.03      9.69      13.0
+  1270_N2              JUNCTION            689.57      9.69      13.0
+  1275_N1              JUNCTION            690.34      6.87      13.0
+  1277_N1              JUNCTION            686.18     15.05      13.0
+  1277_N2              JUNCTION            685.10     15.05      13.0
+  1277_N3              JUNCTION            684.02     15.05      13.0
+  1281_N1              JUNCTION            679.20      7.34      13.0
+  1281_N2              JUNCTION            676.60      7.34      13.0
+  1284_N1              JUNCTION            681.38      9.14      13.0
+  1284_N2              JUNCTION            676.21      9.14      13.0
+  1285_N1              JUNCTION            669.75     12.20      13.0
+  1285_N2              JUNCTION            668.45     12.20      13.0
+  1288_N1              JUNCTION            678.37     11.88      13.0
+  1290_N1              JUNCTION            668.53     13.73      13.0
+  1290_N2              JUNCTION            669.90     13.73      13.0
+  1290_N3              JUNCTION            671.28     13.73      13.0
+  1290_N4              JUNCTION            672.66     13.73      13.0
+  1294_N1              JUNCTION            676.21      5.95      13.0
+  1297_N1              JUNCTION            695.50     13.85      13.0
+  1298_N1              JUNCTION            690.92      6.94      13.0
+  1298_N2              JUNCTION            684.78      6.94      13.0
+  1299_N1              JUNCTION            691.01      5.00      13.0
+  1299_N2              JUNCTION            688.12      5.00      13.0
+  1300_N1              JUNCTION            683.08      7.28      13.0
+  1300_N2              JUNCTION            680.93      7.28      13.0
+  1306_N1              JUNCTION            665.90     11.17      13.0
+  1306_N2              JUNCTION            666.68     11.17      13.0
+  1307_N1              JUNCTION            666.54      8.08      13.0
+  1308_N1              JUNCTION            665.27     13.17      13.0
+  1308_N2              JUNCTION            665.77     13.17      13.0
+  1312_N1              JUNCTION            680.48      4.24      13.0
+  1312_N2              JUNCTION            679.51      4.24      13.0
+  1315_N1              JUNCTION            673.63      6.58      13.0
+  1315_N2              JUNCTION            672.75      6.58      13.0
+  1316_N1              JUNCTION            690.25      5.00      13.0
+  1316_N2              JUNCTION            686.59      5.00      13.0
+  1317_N1              JUNCTION            670.82      5.80      13.0
+  1328_N1              JUNCTION            675.93      2.00      13.0
+  136OF_N1             JUNCTION            665.70     11.17      13.0
+  140OF_N1             JUNCTION            666.54      8.08      13.0
+  144_N1               JUNCTION            667.65      8.25      13.0
+  150OF_N1             JUNCTION            679.20      7.34      13.0
+  150OF_N2             JUNCTION            676.60      7.34      13.0
+  166OF_N1             JUNCTION            670.83      8.43      13.0
+  179OF_N1             JUNCTION            667.80      5.01      13.0
+  17OF_N1              JUNCTION            680.13      9.78      13.0
+  17OF_N2              JUNCTION            677.32      9.78      13.0
+  183OF_N1             JUNCTION            669.54     10.05      13.0
+  187OF_N1             JUNCTION            670.82      5.80      13.0
+  18OF_N1              JUNCTION            699.21      1.50      13.0
+  191OF_N1             JUNCTION            673.63      6.58      13.0
+  191OF_N2             JUNCTION            672.75      6.58      13.0
+  19OF_N1              JUNCTION            672.86     10.43      13.0
+  200_N1               JUNCTION            687.83      6.00      13.0
+  200OF_N1             JUNCTION            684.60      6.00      13.0
+  200OF_N2             JUNCTION            680.08      6.00      13.0
+  200OF_N3             JUNCTION            675.57      6.00      13.0
+  201OF_N1             JUNCTION            694.04      8.77      13.0
+  201OF_N2             JUNCTION            694.21      8.77      13.0
+  205OF_N1             JUNCTION            666.78     13.17      13.0
+  229OF_N1             JUNCTION            673.20     65.62      13.0
+  229OF_N2             JUNCTION            672.39     65.62      13.0
+  229OFB_N1            JUNCTION            673.23     65.62      13.0
+  232OF_N1             JUNCTION            671.49      6.48      13.0
+  244OF_N1             JUNCTION            671.65      5.08      13.0
+  260OF_N1             JUNCTION            672.15      5.00      13.0
+  260OF_N2             JUNCTION            671.87      5.00      13.0
+  267OF_N1             JUNCTION            688.15      4.11      13.0
+  267OF_N2             JUNCTION            679.55      4.11      13.0
+  269OF_N1             JUNCTION            670.58     13.73      13.0
+  276OF_N1             JUNCTION            675.93      2.00      13.0
+  2851OF_N1            JUNCTION            680.48      4.24      13.0
+  2851OF_N2            JUNCTION            679.51      4.24      13.0
+  297OF_N1             JUNCTION            673.52      8.02      13.0
+  297OF_N2             JUNCTION            673.00      8.02      13.0
+  306OF_N1             JUNCTION            676.21      5.95      13.0
+  3231OF_N1            JUNCTION            680.05     16.65      13.0
+  323OF_N1             JUNCTION            679.29     16.65      13.0
+  3355_N1              JUNCTION            708.65      4.40      13.0
+  3493_N1              JUNCTION            687.98      3.10      13.0
+  3510_N1              JUNCTION            673.33      8.02      13.0
+  3511_N1              JUNCTION            673.23     65.62      13.0
+  3527_N1              JUNCTION            703.56      5.08      13.0
+  3527_N2              JUNCTION            698.75      5.08      13.0
+  3629_N1              JUNCTION            695.97      5.08      13.0
+  3656_N1              JUNCTION            672.01      5.00      13.0
+  3682_N1              JUNCTION            670.83      8.43      13.0
+  3690_N1              JUNCTION            671.94      6.55      13.0
+  371OF_N1             JUNCTION            687.85      6.94      13.0
+  3843_N1              JUNCTION            693.46      5.71      13.0
+  3843_N2              JUNCTION            692.38      5.71      13.0
+  3873_N1              JUNCTION            671.96      4.77      13.0
+  4030_N1              JUNCTION            668.15      8.98      13.0
+  4043_N1              JUNCTION            671.65      5.08      13.0
+  407OF_N1             JUNCTION            703.56      5.08      13.0
+  407OF_N2             JUNCTION            698.75      5.08      13.0
+  4103_N1              JUNCTION            678.72      9.78      13.0
+  4117_N1              JUNCTION            672.86     10.43      13.0
+  4155_N1              JUNCTION            666.78     13.17      13.0
+  4OF_N1               JUNCTION            696.53      1.50      13.0
+  5002_N1              JUNCTION            670.72      6.48      13.0
+  5003_N1              JUNCTION            688.15      4.11      13.0
+  5003_N2              JUNCTION            679.55      4.11      13.0
+  7OF_N1               JUNCTION            673.64      6.58      13.0
+  7OF_N2               JUNCTION            672.77      6.58      13.0
+  7OF_N3               JUNCTION            671.90      6.58      13.0
+  7OF_N4               JUNCTION            671.03      6.58      13.0
+  879OF_N1             JUNCTION            701.37      1.50      13.0
+  882OF_N1             JUNCTION            691.36      8.26      13.0
+  882OF_N2             JUNCTION            690.24      8.26      13.0
+  893OF_N1             JUNCTION            695.49      5.00      13.0
+  893OF_N2             JUNCTION            688.30      5.00      13.0
+  8941OF_N1            JUNCTION            702.18      2.99      13.0
+  8941OF_N2            JUNCTION            699.09      2.99      13.0
+  9561OF_N1            JUNCTION            692.03      6.60      13.0
+  9561OF_N2            JUNCTION            689.69      6.60      13.0
+  9561OF_N3            JUNCTION            687.35      6.60      13.0
+  9561OF_N4            JUNCTION            685.01      6.60      13.0
+  9562OF_N1            JUNCTION            693.18      6.60      13.0
+  956OF_N1             JUNCTION            692.62      6.60      13.0
+  956OF_N2             JUNCTION            690.87      6.60      13.0
+  95OF_N1              JUNCTION            687.98      3.10      13.0
+  974OF_N1             JUNCTION            674.09      6.90      13.0
+  989OF_N1             JUNCTION            679.83      3.45      13.0
+  CDT-101_N1           JUNCTION            715.47      2.98      13.0
+  CDT-103_N1           JUNCTION            714.20      5.83      13.0
+  CDT-105_N1           JUNCTION            713.18      7.01      13.0
+  CDT-107_N1           JUNCTION            711.83      3.94      13.0
+  CDT-109_N1           JUNCTION            706.38      3.82      13.0
+  CDT-11_N1            JUNCTION            669.74      9.47      13.0
+  CDT-11_N2            JUNCTION            669.46      9.47      13.0
+  CDT-111_N1           JUNCTION            717.22      4.08      13.0
+  CDT-113_N1           JUNCTION            719.05      4.00      13.0
+  CDT-113_N2           JUNCTION            718.44      4.00      13.0
+  CDT-115_N1           JUNCTION            716.83      4.00      13.0
+  CDT-117_N1           JUNCTION            714.12      3.99      13.0
+  CDT-119_N1           JUNCTION            712.85      0.50      13.0
+  CDT-121_N1           JUNCTION            710.37      1.70      13.0
+  CDT-123_N1           JUNCTION            706.73      4.04      13.0
+  CDT-123_N2           JUNCTION            705.01      4.04      13.0
+  CDT-125_N1           JUNCTION            701.46      4.04      13.0
+  CDT-127_N1           JUNCTION            692.31      3.35      13.0
+  CDT-129_N1           JUNCTION            712.05      4.00      13.0
+  CDT-13_N1            JUNCTION            668.76     13.42      13.0
+  CDT-131_N1           JUNCTION            714.42      4.00      13.0
+  CDT-133_N1           JUNCTION            709.78      4.00      13.0
+  CDT-135_N1           JUNCTION            690.87      4.00      13.0
+  CDT-135_N2           JUNCTION            674.18      4.00      13.0
+  CDT-137_N1           JUNCTION            681.00     31.63      13.0
+  CDT-141_N1           JUNCTION            683.00     30.49      13.0
+  CDT-141_N2           JUNCTION            684.00     30.49      13.0
+  CDT-143_N1           JUNCTION            685.25     24.96      13.0
+  CDT-147_N1           JUNCTION            685.75     17.23      13.0
+  CDT-149_N1           JUNCTION            681.42     22.41      13.0
+  CDT-149_N2           JUNCTION            676.85     22.41      13.0
+  CDT-149_N3           JUNCTION            672.27     22.41      13.0
+  CDT-15_N1            JUNCTION            662.92     28.71      13.0
+  CDT-151_N1           JUNCTION            668.85     41.48      13.0
+  CDT-153_N1           JUNCTION            672.50     46.25      13.0
+  CDT-155_N1           JUNCTION            676.40     34.64      13.0
+  CDT-155_N2           JUNCTION            677.80     34.64      13.0
+  CDT-155_N3           JUNCTION            679.20     34.64      13.0
+  CDT-155_N4           JUNCTION            680.60     34.64      13.0
+  CDT-155_N5           JUNCTION            682.00     34.64      13.0
+  CDT-155_N6           JUNCTION            683.40     34.64      13.0
+  CDT-155_N7           JUNCTION            684.80     34.64      13.0
+  CDT-155_N8           JUNCTION            686.20     34.64      13.0
+  CDT-155_N9           JUNCTION            687.60     34.64      13.0
+  CDT-157_N1           JUNCTION            681.90      4.00      13.0
+  CDT-157_N2           JUNCTION            683.32      4.00      13.0
+  CDT-157_N3           JUNCTION            684.74      4.00      13.0
+  CDT-157_N4           JUNCTION            686.16      4.00      13.0
+  CDT-157_N5           JUNCTION            687.58      4.00      13.0
+  CDT-159_N1           JUNCTION            686.61      6.99      13.0
+  CDT-163_N1           JUNCTION            670.81      8.26      13.0
+  CDT-163_N2           JUNCTION            670.59      8.26      13.0
+  CDT-163_N3           JUNCTION            670.38      8.26      13.0
+  CDT-165_N1           JUNCTION            669.65      7.27      13.0
+  CDT-165_N2           JUNCTION            669.13      7.27      13.0
+  CDT-165_N3           JUNCTION            668.62      7.27      13.0
+  CDT-165_N4           JUNCTION            668.10      7.27      13.0
+  CDT-167_N1           JUNCTION            667.48      5.89      13.0
+  CDT-167_N2           JUNCTION            667.37      5.89      13.0
+  CDT-167_N3           JUNCTION            667.27      5.89      13.0
+  CDT-167_N4           JUNCTION            667.16      5.89      13.0
+  CDT-167_N5           JUNCTION            667.05      5.89      13.0
+  CDT-169_N1           JUNCTION            666.25      3.66      13.0
+  CDT-169_N2           JUNCTION            665.56      3.66      13.0
+  CDT-17_N1            JUNCTION            693.43      3.95      13.0
+  CDT-171_N1           JUNCTION            664.57      5.89      13.0
+  CDT-171_N2           JUNCTION            664.26      5.89      13.0
+  CDT-175_N1           JUNCTION            661.98      9.63      13.0
+  CDT-19_N1            JUNCTION            686.27      4.00      13.0
+  CDT-21_N1            JUNCTION            675.84      4.00      13.0
+  CDT-23_N1            JUNCTION            660.97     14.32      13.0
+  CDT-25_N1            JUNCTION            702.22      4.00      13.0
+  CDT-27_N1            JUNCTION            692.38      3.89      13.0
+  CDT-29_N1            JUNCTION            678.38      4.00      13.0
+  CDT-31_N1            JUNCTION            670.36     10.26      13.0
+  CDT-33_N1            JUNCTION            706.65      4.72      13.0
+  CDT-35_N1            JUNCTION            697.88      4.01      13.0
+  CDT-35_N2            JUNCTION            692.64      4.01      13.0
+  CDT-37_N1            JUNCTION            680.25      4.16      13.0
+  CDT-39_N1            JUNCTION            672.36      6.17      13.0
+  CDT-43_N1            JUNCTION            698.65      4.00      13.0
+  CDT-43_N2            JUNCTION            697.90      4.00      13.0
+  CDT-45_N1            JUNCTION            689.24     10.00      13.0
+  CDT-47_N1            JUNCTION            677.96      4.02      13.0
+  CDT-49_N1            JUNCTION            673.86      4.00      13.0
+  CDT-51_N1            JUNCTION            722.64      4.17      13.0
+  CDT-53_N1            JUNCTION            719.34     13.39      13.0
+  CDT-55_N1            JUNCTION            707.80      3.57      13.0
+  CDT-55_N2            JUNCTION            697.93      3.57      13.0
+  CDT-57_N1            JUNCTION            687.05      4.00      13.0
+  CDT-59_N1            JUNCTION            685.44      6.00      13.0
+  CDT-59_N2            JUNCTION            684.83      6.00      13.0
+  CDT-61_N1            JUNCTION            720.72      4.00      13.0
+  CDT-61_N2            JUNCTION            716.02      4.00      13.0
+  CDT-63_N1            JUNCTION            704.45      3.69      13.0
+  CDT-65_N1            JUNCTION            696.18      4.00      13.0
+  CDT-65_N2            JUNCTION            694.78      4.00      13.0
+  CDT-65_N3            JUNCTION            693.39      4.00      13.0
+  CDT-67_N1            JUNCTION            688.11      4.04      13.0
+  CDT-69_N1            JUNCTION            714.12      4.00      13.0
+  CDT-71_N1            JUNCTION            705.10      4.00      13.0
+  CDT-73_N1            JUNCTION            698.49      4.05      13.0
+  CDT-75_N1            JUNCTION            694.58      4.00      13.0
+  CDT-77_N1            JUNCTION            711.27      4.14      13.0
+  CDT-79_N1            JUNCTION            705.09      3.92      13.0
+  CDT-81_N1            JUNCTION            714.57      4.00      13.0
+  CDT-83_N1            JUNCTION            712.20      3.68      13.0
+  CDT-85_N1            JUNCTION            723.81      4.31      13.0
+  CDT-87_N1            JUNCTION            720.97      4.26      13.0
+  CDT-87_N2            JUNCTION            719.92      4.26      13.0
+  CDT-89_N1            JUNCTION            717.12      4.08      13.0
+  CDT-91_N1            JUNCTION            713.91      4.00      13.0
+  CDT-91_N2            JUNCTION            712.45      4.00      13.0
+  CDT-93_N1            JUNCTION            708.75      8.97      13.0
+  CDT-93_N2            JUNCTION            706.50      8.97      13.0
+  CDT-93_N3            JUNCTION            704.25      8.97      13.0
+  CDT-95_N1            JUNCTION            691.00     14.76      13.0
+  CDT-97_N1            JUNCTION            718.77      4.11      13.0
+  CDT-99_N1            JUNCTION            716.37      4.00      13.0
+  R26_N1               JUNCTION            665.59     13.00      13.0
+  R26_N2               JUNCTION            665.68     13.00      13.0
+  R26_N3               JUNCTION            665.78     13.00      13.0
+  R26_N4               JUNCTION            665.88     13.00      13.0
+  R74_N1               JUNCTION            663.24     13.00      13.0
+  R83_N1               JUNCTION            663.32     13.00      13.0
+  R83_N2               JUNCTION            666.14     13.00      13.0
+  RINFLOW_N1           JUNCTION            669.73     10.43      13.0
+  SWALE_N1             JUNCTION            210.75      2.67      13.0
+  DUMMYOUTFALL         OUTFALL             210.00      0.10       0.0
+  OFALL-10             OUTFALL             680.00      4.00       0.0
+  OFALL-12             OUTFALL             660.00      9.63       0.0
+  VIADUCT1             OUTFALL             696.00      2.00       0.0
+  VIADUCT2             OUTFALL             692.00      2.00       0.0
+  333                  DIVIDER             676.84      8.22       0.0    Yes
+  1114                 STORAGE             683.64      2.44       0.0
+  1115                 STORAGE             682.50     10.34       0.0
+  117                  STORAGE             666.80     65.62       0.0
+  163                  STORAGE             668.13     65.62       0.0
+  17                   STORAGE             682.94      9.78       0.0
+  187                  STORAGE             671.58      5.80       0.0
+  229                  STORAGE             674.01     65.62       0.0
+  421                  STORAGE             705.55     65.62       0.0
+  83                   STORAGE             660.50      9.84       0.0    Yes
+  989                  STORAGE             684.03      3.45       0.0
+  STOR-10              STORAGE             680.00     31.68       0.0
+  STOR-12              STORAGE             685.00     25.08       0.0
+  STOR-14              STORAGE             657.50     51.48       0.0
+  STOR-16              STORAGE             652.83     31.65       0.0
+  260                  STORAGE             672.44      5.00       0.0    Yes
+  261                  STORAGE             672.62      5.00       0.0    Yes
+  209                  STORAGE             671.05     12.20       0.0    Yes
+  
+  
+  ************
+  Link Summary
+  ************
+  Name             From Node        To Node          Type            Length    %Slope Roughness
+  ---------------------------------------------------------------------------------------------
+  1001OF_1         1001             1001OF_N1        CONDUIT          175.0    0.1669    0.0300
+  1001OF_2         1001OF_N1        407              CONDUIT          175.0    0.1674    0.0300
+  105OF_1          105              105OF_N1         CONDUIT          156.0    4.3805    0.0300
+  105OF_2          105OF_N1         136              CONDUIT          156.0    4.3811    0.0300
+  1114             1114             333              CONDUIT           50.0   13.7337    0.0150
+  117              117              83               CONDUIT          168.0    3.7533    0.0150
+  117OF            117              77               CONDUIT          170.0   -0.3835    0.0350
+  1209_1           201              1209_N1          CONDUIT          114.6    0.6101    0.0150
+  1209_2           1209_N1          882              CONDUIT          114.6    0.6110    0.0150
+  1211_1           882              1211_N1          CONDUIT          107.0    0.9310    0.0150
+  1211_2           1211_N1          137              CONDUIT          107.0    0.9309    0.0150
+  1225_1           137              1225_N1          CONDUIT          199.8    0.4190    0.0150
+  1225_2           1225_N1          76               CONDUIT          199.8    0.4195    0.0150
+  1226             32               879              CONDUIT           93.0    0.4851    0.0150
+  1228             893              894              CONDUIT           49.6   -5.2182    0.0150
+  1230_1           893              1230_N1          CONDUIT          197.5    3.6436    0.0150
+  1230_2           1230_N1          1230_N2          CONDUIT          197.5    3.6436    0.0150
+  1230_3           1230_N2          384              CONDUIT          197.5    3.6436    0.0150
+  1249_1           393              1249_N1          CONDUIT          189.6    1.1345    0.0150
+  1249_2           1249_N1          989              CONDUIT          189.6    1.1344    0.0150
+  1269_1           200              1269_N1          CONDUIT          143.5   -1.2210    0.0150
+  1269_2           1269_N1          1269_N2          CONDUIT          143.5   -1.2210    0.0150
+  1269_3           1269_N2          956              CONDUIT          143.5   -1.2210    0.0150
+  1270_1           137              1270_N1          CONDUIT          149.3    0.3067    0.0150
+  1270_2           1270_N1          1270_N2          CONDUIT          149.3    0.3060    0.0150
+  1270_3           1270_N2          200              CONDUIT          149.3    0.3066    0.0150
+  1275_1           4                1275_N1          CONDUIT          118.0    0.8145    0.0150
+  1275_2           1275_N1          13               CONDUIT          118.0    0.8153    0.0150
+  1276             13               15               CONDUIT          179.0    0.8430    0.0150
+  1277_1           46               1277_N1          CONDUIT          197.4    0.5482    0.0150
+  1277_2           1277_N1          1277_N2          CONDUIT          197.4    0.5477    0.0150
+  1277_3           1277_N2          1277_N3          CONDUIT          197.4    0.5482    0.0150
+  1277_4           1277_N3          17               CONDUIT          197.4    0.5482    0.0150
+  1281_1           150              1281_N1          CONDUIT          179.5    1.4450    0.0150
+  1281_2           1281_N1          1281_N2          CONDUIT          179.5    1.4445    0.0150
+  1281_3           1281_N2          229              CONDUIT          179.5    1.4450    0.0150
+  1284_1           147              1284_N1          CONDUIT          152.1    3.3947    0.0150
+  1284_2           1284_N1          1284_N2          CONDUIT          152.1    3.3953    0.0150
+  1284_3           1284_N2          209              CONDUIT          152.1    3.3947    0.0150
+  1285_1           209              1285_N1          CONDUIT          153.3    0.8492    0.0150
+  1285_2           1285_N1          1285_N2          CONDUIT          153.3    0.8486    0.0150
+  1285_3           1285_N2          269              CONDUIT          153.3    0.8492    0.0150
+  1288_1           351              1288_N1          CONDUIT          175.2   -1.5639    0.0150
+  1288_2           1288_N1          384              CONDUIT          175.2   -1.5633    0.0150
+  1289             384              333              CONDUIT          494.0    0.8643    0.0150
+  1290_1           269              1290_N1          CONDUIT          167.2   -0.8247    0.0150
+  1290_2           1290_N1          1290_N2          CONDUIT          167.2   -0.8241    0.0150
+  1290_3           1290_N2          1290_N3          CONDUIT          167.2   -0.8247    0.0150
+  1290_4           1290_N3          1290_N4          CONDUIT          167.2   -0.8241    0.0150
+  1290_5           1290_N4          297              CONDUIT          167.2   -0.8247    0.0150
+  1291             304              297              CONDUIT           64.1    1.2079    0.0150
+  1293             281              261              CONDUIT          168.4   -0.0885    0.0150
+  1294_1           306              1294_N1          CONDUIT          150.5    2.4828    0.0150
+  1294_2           1294_N1          281              CONDUIT          150.5    2.4835    0.0150
+  1297_1           387              1297_N1          CONDUIT          117.0   -1.3297    0.0150
+  1297_2           1297_N1          371              CONDUIT          117.0   -1.3298    0.0150
+  1298_1           371              1298_N1          CONDUIT          169.3    3.6287    0.0150
+  1298_2           1298_N1          1298_N2          CONDUIT          169.3    3.6287    0.0150
+  1298_3           1298_N2          323              CONDUIT          169.3    3.6286    0.0150
+  1299_1           33               1299_N1          CONDUIT          154.5    1.8705    0.0150
+  1299_2           1299_N1          1299_N2          CONDUIT          154.5    1.8705    0.0150
+  1299_3           1299_N2          56               CONDUIT          154.5    1.8705    0.0150
+  1300_1           56               1300_N1          CONDUIT          134.7    1.5960    0.0150
+  1300_2           1300_N1          1300_N2          CONDUIT          134.7    1.5952    0.0150
+  1300_3           1300_N2          105              CONDUIT          134.7    1.5959    0.0150
+  1306_1           136              1306_N1          CONDUIT          133.3   -0.5805    0.0200
+  1306_2           1306_N1          1306_N2          CONDUIT          133.3   -0.5805    0.0200
+  1306_3           1306_N2          77               CONDUIT          133.3   -0.5805    0.0200
+  1307_1           140              1307_N1          CONDUIT          108.0   -0.2425    0.0150
+  1307_2           1307_N1          117              CONDUIT          108.0   -0.2416    0.0150
+  1308_1           205              1308_N1          CONDUIT          150.0   -0.3347    0.0150
+  1308_2           1308_N1          1308_N2          CONDUIT          150.0   -0.3347    0.0150
+  1308_3           1308_N2          140              CONDUIT          150.0   -0.3347    0.0150
+  1312_1           285              1312_N1          CONDUIT          133.6    0.7299    0.0150
+  1312_2           1312_N1          1312_N2          CONDUIT          133.6    0.7299    0.0150
+  1312_3           1312_N2          244              CONDUIT          133.6    0.7299    0.0150
+  1314             257              244              CONDUIT          141.7   -5.6585    0.0150
+  1315_1           7                1315_N1          CONDUIT          141.5    0.6197    0.0150
+  1315_2           1315_N1          1315_N2          CONDUIT          141.5    0.6204    0.0150
+  1315_3           1315_N2          19               CONDUIT          141.5    0.6197    0.0150
+  1316_1           33               1316_N1          CONDUIT          153.3    2.3841    0.0150
+  1316_2           1316_N1          1316_N2          CONDUIT          153.3    2.3834    0.0150
+  1316_3           1316_N2          17               CONDUIT          153.3    2.3841    0.0150
+  1317_1           187              1317_N1          CONDUIT          126.0    0.6011    0.0150
+  1317_2           1317_N1          158              CONDUIT          126.0    0.6010    0.0150
+  1328_1           276              1328_N1          CONDUIT          166.9    2.7121    0.0150
+  1328_2           1328_N1          232              CONDUIT          166.9    2.7121    0.0150
+  136OF_1          136              136OF_N1         CONDUIT          130.0   -0.4415    0.0350
+  136OF_2          136OF_N1         140              CONDUIT          130.0   -0.4408    0.0350
+  13OF             JCT-176          JCT-174          CONDUIT          136.0    1.1938    0.0350
+  140OF_1          140              140OF_N1         CONDUIT          110.0   -0.2382    0.0350
+  140OF_2          140OF_N1         117              CONDUIT          110.0   -0.2373    0.0350
+  144_1            144              144_N1           CONDUIT          106.7   -1.2170    0.0150
+  144_2            144_N1           255              CONDUIT          106.7   -1.2171    0.0150
+  144OF            144              255              CONDUIT           90.0   -2.8879    0.0350
+  150OF_1          150              150OF_N1         CONDUIT          180.0    1.4413    0.0350
+  150OF_2          150OF_N1         150OF_N2         CONDUIT          180.0    1.4407    0.0350
+  150OF_3          150OF_N2         229              CONDUIT          180.0    1.4412    0.0350
+  158              158              136              CONDUIT          153.2    3.2240    0.0150
+  158OF            158              136              CONDUIT          150.0    3.2924    0.0300
+  15OF             JCT-174          17               CONDUIT           44.5    0.6007    0.0350
+  163OF            163              144              CONDUIT           90.0    1.9715    0.0300
+  166OF_1          166              166OF_N1         CONDUIT          103.5   -0.7275    0.0300
+  166OF_2          166OF_N1         187              CONDUIT          103.5   -0.7276    0.0300
+  1791OF           179              163              CONDUIT           90.0    0.7400    0.0300
+  179OF_1          179              179OF_N1         CONDUIT          100.0    0.9981    0.0300
+  179OF_2          179OF_N1         117              CONDUIT          100.0    0.9980    0.0300
+  17OF_1           17               17OF_N1          CONDUIT          133.3    2.1088    0.0350
+  17OF_2           17OF_N1          17OF_N2          CONDUIT          133.3    2.1095    0.0350
+  17OF_3           17OF_N2          7                CONDUIT          133.3    2.1088    0.0350
+  183OF_1          183              183OF_N1         CONDUIT          100.0    1.4102    0.0300
+  183OF_2          183OF_N1         163              CONDUIT          100.0    1.4111    0.0300
+  187OF_1          187              187OF_N1         CONDUIT          125.0    0.6056    0.0350
+  187OF_2          187OF_N1         158              CONDUIT          125.0    0.6056    0.0350
+  18OF_1           JCT-180          18OF_N1          CONDUIT          193.2    0.5394    0.0350
+  18OF_2           18OF_N1          JCT-178          CONDUIT          193.2    0.5394    0.0350
+  191OF_1          7                191OF_N1         CONDUIT          141.7    0.6191    0.0350
+  191OF_2          191OF_N1         191OF_N2         CONDUIT          141.7    0.6198    0.0350
+  191OF_3          191OF_N2         19               CONDUIT          141.7    0.6190    0.0350
+  19OF_1           19               19OF_N1          CONDUIT          131.5   -0.7513    0.0350
+  19OF_2           19OF_N1          25               CONDUIT          131.5   -0.7506    0.0350
+  200_1            200              200_N1           CONDUIT          196.9    0.6542    0.0150
+  200_2            200_N1           147              CONDUIT          196.9    0.6546    0.0150
+  200OF_1          200              200OF_N1         CONDUIT          192.5    2.3466    0.0400
+  200OF_2          200OF_N1         200OF_N2         CONDUIT          192.5    2.3466    0.0400
+  200OF_3          200OF_N2         200OF_N3         CONDUIT          192.5    2.3471    0.0400
+  200OF_4          200OF_N3         209              CONDUIT          192.5    2.3466    0.0400
+  201OF_1          201              201OF_N1         CONDUIT          150.0   -0.1093    0.0350
+  201OF_2          201OF_N1         201OF_N2         CONDUIT          150.0   -0.1093    0.0350
+  201OF_3          201OF_N2         956              CONDUIT          150.0   -0.1093    0.0350
+  205OF_1          205              205OF_N1         CONDUIT          100.0   -2.0134    0.0300
+  205OF_2          205OF_N1         179              CONDUIT          100.0   -2.0124    0.0300
+  229OF_1          229              229OF_N1         CONDUIT          133.3    0.6075    0.0350
+  229OF_2          229OF_N1         229OF_N2         CONDUIT          133.3    0.6075    0.0350
+  229OF_3          229OF_N2         187              CONDUIT          133.3    0.6075    0.0350
+  229OFB_1         229              229OFB_N1        CONDUIT          130.0    0.6031    0.0300
+  229OFB_2         229OFB_N1        260              CONDUIT          130.0    0.6038    0.0300
+  232OF_1          232              232OF_N1         CONDUIT          125.0   -0.0688    0.0300
+  232OF_2          232OF_N1         187              CONDUIT          125.0   -0.0680    0.0300
+  244OF_1          244              244OF_N1         CONDUIT          105.0    6.5675    0.0350
+  244OF_2          244OF_N1         205              CONDUIT          105.0    6.5684    0.0350
+  257OF            257              244              CONDUIT          140.0   -5.7265    0.0330
+  25OF             25               31               CONDUIT          186.0    1.1780    0.0350
+  260OF_1          260              260OF_N1         CONDUIT          133.3    0.2153    0.0350
+  260OF_2          260OF_N1         260OF_N2         CONDUIT          133.3    0.2153    0.0350
+  260OF_3          260OF_N2         187              CONDUIT          133.3    0.2152    0.0350
+  267OF_1          267              267OF_N1         CONDUIT          173.3    4.9683    0.0350
+  267OF_2          267OF_N1         267OF_N2         CONDUIT          173.3    4.9678    0.0350
+  267OF_3          267OF_N2         183              CONDUIT          173.3    4.9683    0.0350
+  269OF_1          269              269OF_N1         CONDUIT          150.0   -2.2879    0.0350
+  269OF_2          269OF_N1         229              CONDUIT          150.0   -2.2879    0.0350
+  276OF_1          276              276OF_N1         CONDUIT          170.0    2.6621    0.0350
+  276OF_2          276OF_N1         232              CONDUIT          170.0    2.6621    0.0350
+  281OF            281              261              CONDUIT          160.0   -0.0931    0.0300
+  2851OF_1         285              2851OF_N1        CONDUIT          133.3    0.7313    0.0400
+  2851OF_2         2851OF_N1        2851OF_N2        CONDUIT          133.3    0.7313    0.0400
+  2851OF_3         2851OF_N2        244              CONDUIT          133.3    0.7313    0.0400
+  285OF            285              276              CONDUIT          100.0    1.0021    0.0300
+  297OF_1          297              297OF_N1         CONDUIT          133.3    0.3915    0.0300
+  297OF_2          297OF_N1         297OF_N2         CONDUIT          133.3    0.3923    0.0300
+  297OF_3          297OF_N2         281              CONDUIT          133.3    0.3915    0.0300
+  306OF_1          306              306OF_N1         CONDUIT          125.0    2.9902    0.0300
+  306OF_2          306OF_N1         281              CONDUIT          125.0    2.9909    0.0300
+  3084             989              351              CONDUIT          165.2    5.0909    0.0150
+  3091             348              351              CONDUIT           19.8   38.0132    0.0150
+  31OF             31               26               CONDUIT          120.0    5.1485    0.0350
+  3231OF_1         323              3231OF_N1        CONDUIT          185.0   -0.7622    0.0300
+  3231OF_2         3231OF_N1        285              CONDUIT          185.0   -0.7622    0.0300
+  323OF_1          323              323OF_N1         CONDUIT          100.0   -0.6540    0.0300
+  323OF_2          323OF_N1         306              CONDUIT          100.0   -0.6540    0.0300
+  325OF            325              982              CONDUIT           60.0    2.1305    0.0400
+  3289             333              325              CONDUIT          158.9   -0.1780    0.0150
+  3293             325              982              CONDUIT           57.9    2.2061    0.0150
+  32OF             JCT-184          JCT-182          CONDUIT           97.0    0.5329    0.0350
+  3339             982              974              CONDUIT          159.8    0.0826    0.0150
+  3349             974              304              CONDUIT           93.6    0.9560    0.0150
+  3355_1           1001             3355_N1          CONDUIT          171.0    0.1708    0.0150
+  3355_2           3355_N1          407              CONDUIT          171.0    0.1714    0.0150
+  3423             76               64               CONDUIT          137.3    0.2623    0.0150
+  3424             64               46               CONDUIT          178.4    0.6642    0.0150
+  348OF            348              351              CONDUIT           20.0   37.6007    0.0400
+  3493_1           95               3493_N1          CONDUIT          193.1    3.2088    0.0150
+  3493_2           3493_N1          150              CONDUIT          193.1    3.2093    0.0150
+  3510_1           297              3510_N1          CONDUIT          163.4    0.4340    0.0150
+  3510_2           3510_N1          261              CONDUIT          163.4    0.4340    0.0150
+  3511_1           229              3511_N1          CONDUIT          140.8    0.5566    0.0150
+  3511_2           3511_N1          260              CONDUIT          140.8    0.5573    0.0150
+  351OF            351              1114             CONDUIT           50.0  -16.2296    0.0300
+  3521             323              306              CONDUIT          167.3   -0.7817    0.0150
+  3527_1           407              3527_N1          CONDUIT          138.6    3.4687    0.0150
+  3527_2           3527_N1          3527_N2          CONDUIT          138.6    3.4687    0.0150
+  3527_3           3527_N2          387              CONDUIT          138.6    3.4687    0.0150
+  3629_1           879              3629_N1          CONDUIT          142.5    1.0046    0.0150
+  3629_2           3629_N1          18               CONDUIT          142.5    1.0052    0.0150
+  3656_1           260              3656_N1          CONDUIT          181.9    0.2364    0.0150
+  3656_2           3656_N1          187              CONDUIT          181.9    0.2369    0.0150
+  3682_1           166              3682_N1          CONDUIT          108.6   -0.6936    0.0150
+  3682_2           3682_N1          187              CONDUIT          108.6   -0.6937    0.0150
+  3690_1           281              3690_N1          CONDUIT          197.7    0.2691    0.0150
+  3690_2           3690_N1          232              CONDUIT          197.7    0.2696    0.0150
+  371OF_1          371              371OF_N1         CONDUIT          100.0    9.2493    0.0300
+  371OF_2          371OF_N1         323              CONDUIT          100.0    9.2493    0.0300
+  3843_1           18               3843_N1          CONDUIT          138.7    0.7796    0.0150
+  3843_2           3843_N1          3843_N2          CONDUIT          138.7    0.7789    0.0150
+  3843_3           3843_N2          4                CONDUIT          138.7    0.7796    0.0150
+  384OF            384              1114             CONDUIT          150.0   -1.6889    0.0300
+  3860             15               17               CONDUIT           45.0   11.0046    0.0150
+  3873_1           105              3873_N1          CONDUIT          141.1    4.8441    0.0150
+  3873_2           3873_N1          136              CONDUIT          141.1    4.8448    0.0150
+  387OF            387              371              CONDUIT          150.0   -2.0738    0.0300
+  4030_1           173              4030_N1          CONDUIT          101.2    1.8513    0.0150
+  4030_2           4030_N1          140              CONDUIT          101.2    1.8523    0.0150
+  4043_1           244              4043_N1          CONDUIT          107.7    6.4010    0.0150
+  4043_2           4043_N1          205              CONDUIT          107.7    6.4018    0.0150
+  407OF_1          407              407OF_N1         CONDUIT          138.3    3.4750    0.0300
+  407OF_2          407OF_N1         407OF_N2         CONDUIT          138.3    3.4750    0.0300
+  407OF_3          407OF_N2         387              CONDUIT          138.3    3.4749    0.0300
+  4103_1           17               4103_N1          CONDUIT          199.5    2.1145    0.0150
+  4103_2           4103_N1          7                CONDUIT          199.5    2.1145    0.0150
+  4117_1           19               4117_N1          CONDUIT          131.4   -0.7520    0.0150
+  4117_2           4117_N1          25               CONDUIT          131.4   -0.7513    0.0150
+  4130             25               31               CONDUIT          186.3    1.1762    0.0150
+  4155_1           205              4155_N1          CONDUIT          100.8   -1.9978    0.0150
+  4155_2           4155_N1          179              CONDUIT          100.8   -1.9968    0.0150
+  4195             77               74               CONDUIT           55.8    2.6489    0.0150
+  4202             183              163              CONDUIT          182.2    1.5481    0.0150
+  4203             179              163              CONDUIT           92.6    0.7196    0.0150
+  421OF            421              894              CONDUIT          120.0    0.2333    0.0300
+  4220             31               26               CONDUIT          120.0    5.1485    0.0150
+  4232             163              144              CONDUIT           83.3    2.1300    0.0150
+  4OF_1            JCT-178          4OF_N1           CONDUIT          137.4    1.1934    0.0350
+  4OF_2            4OF_N1           JCT-176          CONDUIT          137.4    1.1927    0.0350
+  5002_1           232              5002_N1          CONDUIT          187.8    0.3685    0.0150
+  5002_2           5002_N1          JCT-10           CONDUIT          187.8    0.3690    0.0150
+  5003_1           267              5003_N1          CONDUIT          169.2    5.0905    0.0150
+  5003_2           5003_N1          5003_N2          CONDUIT          169.2    5.0899    0.0150
+  5003_3           5003_N2          183              CONDUIT          169.2    5.0905    0.0150
+  77OF             77               74               CONDUIT           60.0    2.4624    0.0400
+  7OF_1            7                7OF_N1           CONDUIT          167.6    0.5185    0.0400
+  7OF_2            7OF_N1           7OF_N2           CONDUIT          167.6    0.5184    0.0400
+  7OF_3            7OF_N2           7OF_N3           CONDUIT          167.6    0.5178    0.0400
+  7OF_4            7OF_N3           7OF_N4           CONDUIT          167.6    0.5184    0.0400
+  7OF_5            7OF_N4           JCT-162          CONDUIT          167.6    0.5184    0.0400
+  879OF_1          JCT-182          879OF_N1         CONDUIT          141.0    0.7931    0.0350
+  879OF_2          879OF_N1         JCT-180          CONDUIT          141.0    0.7924    0.0350
+  882OF_1          882              882OF_N1         CONDUIT          186.4    0.6020    0.0400
+  882OF_2          882OF_N1         882OF_N2         CONDUIT          186.4    0.6014    0.0400
+  882OF_3          882OF_N2         200              CONDUIT          186.4    0.6020    0.0400
+  893OF_1          893              893OF_N1         CONDUIT          191.7    3.7549    0.0300
+  893OF_2          893OF_N1         893OF_N2         CONDUIT          191.7    3.7549    0.0300
+  893OF_3          893OF_N2         384              CONDUIT          191.7    3.7549    0.0300
+  8941OF_1         894              8941OF_N1        CONDUIT          133.3    2.3182    0.0400
+  8941OF_2         8941OF_N1        8941OF_N2        CONDUIT          133.3    2.3182    0.0400
+  8941OF_3         8941OF_N2        VIADUCT1         CONDUIT          133.3    2.3182    0.0400
+  894OF            894              893              CONDUIT           70.0    3.6982    0.0300
+  9561OF_1         956              9561OF_N1        CONDUIT          186.0    1.2582    0.0300
+  9561OF_2         9561OF_N1        9561OF_N2        CONDUIT          186.0    1.2582    0.0300
+  9561OF_3         9561OF_N2        9561OF_N3        CONDUIT          186.0    1.2587    0.0300
+  9561OF_4         9561OF_N3        9561OF_N4        CONDUIT          186.0    1.2582    0.0300
+  9561OF_5         9561OF_N4        348              CONDUIT          186.0    1.2582    0.0300
+  9562OF_1         956              9562OF_N1        CONDUIT          175.0    0.6772    0.0400
+  9562OF_2         9562OF_N1        VIADUCT2         CONDUIT          175.0    0.6771    0.0400
+  956OF_1          956              956OF_N1         CONDUIT          143.3    1.2225    0.0350
+  956OF_2          956OF_N1         956OF_N2         CONDUIT          143.3    1.2224    0.0350
+  956OF_3          956OF_N2         200              CONDUIT          143.3    1.2224    0.0350
+  95OF_1           95               95OF_N1          CONDUIT          195.0    3.1770    0.0350
+  95OF_2           95OF_N1          150              CONDUIT          195.0    3.1775    0.0350
+  974OF_1          974              974OF_N1         CONDUIT          180.0    0.8989    0.0300
+  974OF_2          974OF_N1         281              CONDUIT          180.0    0.8989    0.0300
+  982OF            982              974              CONDUIT          160.0    0.0825    0.0300
+  989OF_1          989              989OF_N1         CONDUIT          104.9    4.0082    0.0300
+  989OF_2          989OF_N1         351              CONDUIT          104.9    4.0082    0.0300
+  CDT-101_1        JCT-102          CDT-101_N1       CONDUIT          191.1    0.2768    0.0130
+  CDT-101_2        CDT-101_N1       JCT-104          CONDUIT          191.1    0.2767    0.0130
+  CDT-103_1        JCT-104          CDT-103_N1       CONDUIT          196.8    0.3725    0.0130
+  CDT-103_2        CDT-103_N1       JCT-106          CONDUIT          196.8    0.3730    0.0130
+  CDT-105_1        JCT-106          CDT-105_N1       CONDUIT          188.4    0.1534    0.0130
+  CDT-105_2        CDT-105_N1       JCT-108          CONDUIT          188.4    0.1534    0.0130
+  CDT-107_1        JCT-108          CDT-107_N1       CONDUIT          188.7    0.5627    0.0130
+  CDT-107_2        CDT-107_N1       JCT-110          CONDUIT          188.7    0.5632    0.0130
+  CDT-109_1        JCT-110          CDT-109_N1       CONDUIT          176.8    2.4798    0.0130
+  CDT-109_2        CDT-109_N1       JCT-96           CONDUIT          176.8    2.4804    0.0130
+  CDT-11_1         JCT-10           CDT-11_N1        CONDUIT          162.9    0.1719    0.0130
+  CDT-11_2         CDT-11_N1        CDT-11_N2        CONDUIT          162.9    0.1725    0.0130
+  CDT-11_3         CDT-11_N2        JCT-12           CONDUIT          162.9    0.1719    0.0130
+  CDT-111_1        JCT-112          CDT-111_N1       CONDUIT          159.7    1.4267    0.0130
+  CDT-111_2        CDT-111_N1       JCT-104          CONDUIT          159.7    1.4266    0.0130
+  CDT-113_1        JCT-114          CDT-113_N1       CONDUIT          194.2    0.3105    0.0130
+  CDT-113_2        CDT-113_N1       CDT-113_N2       CONDUIT          194.2    0.3104    0.0130
+  CDT-113_3        CDT-113_N2       JCT-70           CONDUIT          194.2    0.3104    0.0130
+  CDT-115_1        JCT-116          CDT-115_N1       CONDUIT          179.7    1.1056    0.0130
+  CDT-115_2        CDT-115_N1       JCT-118          CONDUIT          179.7    1.1055    0.0130
+  CDT-117_1        JCT-118          CDT-117_N1       CONDUIT          188.2    0.3821    0.0130
+  CDT-117_2        CDT-117_N1       JCT-120          CONDUIT          188.2    0.3826    0.0130
+  CDT-119_1        JCT-120          CDT-119_N1       CONDUIT          162.8    0.3379    0.0130
+  CDT-119_2        CDT-119_N1       JCT-122          CONDUIT          162.8    0.3379    0.0130
+  CDT-121_1        JCT-122          CDT-121_N1       CONDUIT          191.4    1.0069    0.0130
+  CDT-121_2        CDT-121_N1       JCT-124          CONDUIT          191.4    1.0069    0.0130
+  CDT-123_1        JCT-124          CDT-123_N1       CONDUIT          135.1    1.2719    0.0130
+  CDT-123_2        CDT-123_N1       CDT-123_N2       CONDUIT          135.1    1.2726    0.0130
+  CDT-123_3        CDT-123_N2       JCT-126          CONDUIT          135.1    1.2718    0.0130
+  CDT-125_1        JCT-126          CDT-125_N1       CONDUIT          162.8    1.1269    0.0130
+  CDT-125_2        CDT-125_N1       JCT-128          CONDUIT          162.8    1.1269    0.0130
+  CDT-127_1        JCT-128          CDT-127_N1       CONDUIT          149.2    4.9054    0.0130
+  CDT-127_2        CDT-127_N1       STOR-12          CONDUIT          149.2    4.9060    0.0130
+  CDT-129_1        JCT-130          CDT-129_N1       CONDUIT          194.1    1.8557    0.0130
+  CDT-129_2        CDT-129_N1       JCT-124          CONDUIT          194.1    1.8561    0.0130
+  CDT-13_1         JCT-12           CDT-13_N1        CONDUIT          182.1    0.2307    0.0130
+  CDT-13_2         CDT-13_N1        JCT-14           CONDUIT          182.1    0.2312    0.0130
+  CDT-131_1        JCT-132          CDT-131_N1       CONDUIT          156.9    0.6506    0.0130
+  CDT-131_2        CDT-131_N1       JCT-120          CONDUIT          156.9    0.6506    0.0130
+  CDT-133_1        JCT-134          CDT-133_N1       CONDUIT          191.1    1.1642    0.0130
+  CDT-133_2        CDT-133_N1       JCT-136          CONDUIT          191.1    1.1641    0.0130
+  CDT-135_1        JCT-136          CDT-135_N1       CONDUIT          144.0   11.6687    0.0130
+  CDT-135_2        CDT-135_N1       CDT-135_N2       CONDUIT          144.0   11.6694    0.0130
+  CDT-135_3        CDT-135_N2       STOR-14          CONDUIT          144.0   11.6686    0.0130
+  CDT-137_1        JCT-138          CDT-137_N1       CONDUIT          119.8   -0.8347    0.0130
+  CDT-137_2        CDT-137_N1       JCT-140          CONDUIT          119.8   -0.8348    0.0130
+  CDT-141_1        JCT-140          CDT-141_N1       CONDUIT          198.2   -0.5046    0.0130
+  CDT-141_2        CDT-141_N1       CDT-141_N2       CONDUIT          198.2   -0.5046    0.0130
+  CDT-141_3        CDT-141_N2       JCT-142          CONDUIT          198.2   -0.5046    0.0130
+  CDT-143_1        JCT-142          CDT-143_N1       CONDUIT          166.0   -0.1506    0.0130
+  CDT-143_2        CDT-143_N1       JCT-144          CONDUIT          166.0   -0.1507    0.0130
+  CDT-147_1        JCT-144          CDT-147_N1       CONDUIT          152.6   -0.1638    0.0130
+  CDT-147_2        CDT-147_N1       JCT-146          CONDUIT          152.6   -0.1639    0.0130
+  CDT-149_1        JCT-146          CDT-149_N1       CONDUIT          199.4    2.2951    0.0130
+  CDT-149_2        CDT-149_N1       CDT-149_N2       CONDUIT          199.4    2.2951    0.0130
+  CDT-149_3        CDT-149_N2       CDT-149_N3       CONDUIT          199.4    2.2951    0.0130
+  CDT-149_4        CDT-149_N3       JCT-148          CONDUIT          199.4    2.2951    0.0130
+  CDT-15_1         JCT-14           CDT-15_N1        CONDUIT          158.1    3.4307    0.0130
+  CDT-15_2         CDT-15_N1        STOR-14          CONDUIT          158.1    3.4306    0.0130
+  CDT-151_1        JCT-148          CDT-151_N1       CONDUIT          185.5   -0.6198    0.0130
+  CDT-151_2        CDT-151_N1       JCT-150          CONDUIT          185.5   -0.6198    0.0130
+  CDT-153_1        JCT-150          CDT-153_N1       CONDUIT          165.2   -1.5133    0.0130
+  CDT-153_2        CDT-153_N1       JCT-152          CONDUIT          165.2   -1.5133    0.0130
+  CDT-155_1        JCT-152          CDT-155_N1       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_2        CDT-155_N1       CDT-155_N2       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_3        CDT-155_N2       CDT-155_N3       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_4        CDT-155_N3       CDT-155_N4       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_5        CDT-155_N4       CDT-155_N5       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_6        CDT-155_N5       CDT-155_N6       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_7        CDT-155_N6       CDT-155_N7       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_8        CDT-155_N7       CDT-155_N8       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_9        CDT-155_N8       CDT-155_N9       CONDUIT          195.1   -0.7176    0.0130
+  CDT-155_10       CDT-155_N9       JCT-154          CONDUIT          195.1   -0.7176    0.0130
+  CDT-157_1        JCT-156          CDT-157_N1       CONDUIT          177.0   -0.8028    0.0130
+  CDT-157_2        CDT-157_N1       CDT-157_N2       CONDUIT          177.0   -0.8029    0.0130
+  CDT-157_3        CDT-157_N2       CDT-157_N3       CONDUIT          177.0   -0.8029    0.0130
+  CDT-157_4        CDT-157_N3       CDT-157_N4       CONDUIT          177.0   -0.8023    0.0130
+  CDT-157_5        CDT-157_N4       CDT-157_N5       CONDUIT          177.0   -0.8029    0.0130
+  CDT-157_6        CDT-157_N5       JCT-154          CONDUIT          177.0   -0.8029    0.0130
+  CDT-159_1        JCT-154          CDT-159_N1       CONDUIT          192.8    1.2417    0.0130
+  CDT-159_2        CDT-159_N1       JCT-60           CONDUIT          192.8    1.2422    0.0130
+  CDT-161          JCT-60           OFALL-10         CONDUIT          180.1    2.3389    0.0100
+  CDT-163_1        JCT-160          CDT-163_N1       CONDUIT          199.7    0.1082    0.0350
+  CDT-163_2        CDT-163_N1       CDT-163_N2       CONDUIT          199.7    0.1082    0.0350
+  CDT-163_3        CDT-163_N2       CDT-163_N3       CONDUIT          199.7    0.1082    0.0350
+  CDT-163_4        CDT-163_N3       JCT-162          CONDUIT          199.7    0.1082    0.0350
+  CDT-165_1        JCT-162          CDT-165_N1       CONDUIT          184.4    0.2794    0.0350
+  CDT-165_2        CDT-165_N1       CDT-165_N2       CONDUIT          184.4    0.2793    0.0350
+  CDT-165_3        CDT-165_N2       CDT-165_N3       CONDUIT          184.4    0.2788    0.0350
+  CDT-165_4        CDT-165_N3       CDT-165_N4       CONDUIT          184.4    0.2793    0.0350
+  CDT-165_5        CDT-165_N4       JCT-164          CONDUIT          184.4    0.2793    0.0350
+  CDT-167_1        JCT-164          CDT-167_N1       CONDUIT          167.7    0.0638    0.0350
+  CDT-167_2        CDT-167_N1       CDT-167_N2       CONDUIT          167.7    0.0644    0.0350
+  CDT-167_3        CDT-167_N2       CDT-167_N3       CONDUIT          167.7    0.0638    0.0350
+  CDT-167_4        CDT-167_N3       CDT-167_N4       CONDUIT          167.7    0.0644    0.0350
+  CDT-167_5        CDT-167_N4       CDT-167_N5       CONDUIT          167.7    0.0638    0.0350
+  CDT-167_6        CDT-167_N5       JCT-166          CONDUIT          167.7    0.0644    0.0350
+  CDT-169_1        JCT-166          CDT-169_N1       CONDUIT          168.8    0.4099    0.0350
+  CDT-169_2        CDT-169_N1       CDT-169_N2       CONDUIT          168.8    0.4099    0.0350
+  CDT-169_3        CDT-169_N2       JCT-168          CONDUIT          168.8    0.4099    0.0350
+  CDT-17_1         JCT-16           CDT-17_N1        CONDUIT          169.5    2.0371    0.0130
+  CDT-17_2         CDT-17_N1        JCT-18           CONDUIT          169.5    2.0377    0.0130
+  CDT-171_1        JCT-168          CDT-171_N1       CONDUIT          135.9    0.2215    0.0350
+  CDT-171_2        CDT-171_N1       CDT-171_N2       CONDUIT          135.9    0.2215    0.0350
+  CDT-171_3        CDT-171_N2       JCT-170          CONDUIT          135.9    0.2215    0.0350
+  CDT-175_1        JCT-170          CDT-175_N1       CONDUIT          176.9    1.1207    0.0350
+  CDT-175_2        CDT-175_N1       OFALL-12         CONDUIT          176.9    1.1207    0.0350
+  CDT-19_1         JCT-18           CDT-19_N1        CONDUIT          183.4    2.0175    0.0130
+  CDT-19_2         CDT-19_N1        JCT-20           CONDUIT          183.4    2.0181    0.0130
+  CDT-21_1         JCT-20           CDT-21_N1        CONDUIT          190.2    3.5402    0.0130
+  CDT-21_2         CDT-21_N1        JCT-22           CONDUIT          190.2    3.5407    0.0130
+  CDT-23_1         JCT-22           CDT-23_N1        CONDUIT          197.1    4.1331    0.0130
+  CDT-23_2         CDT-23_N1        STOR-16          CONDUIT          197.1    4.1336    0.0130
+  CDT-25_1         JCT-24           CDT-25_N1        CONDUIT          186.8    1.3968    0.0130
+  CDT-25_2         CDT-25_N1        JCT-26           CONDUIT          186.8    1.3973    0.0130
+  CDT-27_1         JCT-26           CDT-27_N1        CONDUIT          179.1    4.0412    0.0130
+  CDT-27_2         CDT-27_N1        JCT-28           CONDUIT          179.1    4.0417    0.0130
+  CDT-29_1         JCT-28           CDT-29_N1        CONDUIT          189.6    3.5709    0.0130
+  CDT-29_2         CDT-29_N1        JCT-30           CONDUIT          189.6    3.5714    0.0130
+  CDT-31_1         JCT-30           CDT-31_N1        CONDUIT          192.4    0.6497    0.0130
+  CDT-31_2         CDT-31_N1        JCT-22           CONDUIT          192.4    0.6497    0.0130
+  CDT-33_1         JCT-32           CDT-33_N1        CONDUIT          166.6    2.1207    0.0130
+  CDT-33_2         CDT-33_N1        JCT-34           CONDUIT          166.6    2.1206    0.0130
+  CDT-35_1         JCT-34           CDT-35_N1        CONDUIT          134.7    3.8960    0.0130
+  CDT-35_2         CDT-35_N1        CDT-35_N2        CONDUIT          134.7    3.8960    0.0130
+  CDT-35_3         CDT-35_N2        JCT-36           CONDUIT          134.7    3.8960    0.0130
+  CDT-37_1         JCT-36           CDT-37_N1        CONDUIT          174.5    4.0956    0.0130
+  CDT-37_2         CDT-37_N1        JCT-38           CONDUIT          174.5    4.0962    0.0130
+  CDT-39_1         JCT-38           CDT-39_N1        CONDUIT          196.4    0.3818    0.0130
+  CDT-39_2         CDT-39_N1        JCT-30           CONDUIT          196.4    0.3818    0.0130
+  CDT-43_1         JCT-42           CDT-43_N1        CONDUIT          134.2    0.5536    0.0130
+  CDT-43_2         CDT-43_N1        CDT-43_N2        CONDUIT          134.2    0.5535    0.0130
+  CDT-43_3         CDT-43_N2        JCT-44           CONDUIT          134.2    0.5535    0.0130
+  CDT-45_1         JCT-44           CDT-45_N1        CONDUIT          194.3    4.0803    0.0130
+  CDT-45_2         CDT-45_N1        JCT-46           CONDUIT          194.3    4.0808    0.0130
+  CDT-47_1         JCT-46           CDT-47_N1        CONDUIT          184.0    1.8207    0.0130
+  CDT-47_2         CDT-47_N1        JCT-48           CONDUIT          184.0    1.8212    0.0130
+  CDT-49_1         JCT-48           CDT-49_N1        CONDUIT          189.6    0.3956    0.0130
+  CDT-49_2         CDT-49_N1        JCT-38           CONDUIT          189.6    0.3956    0.0130
+  CDT-51_1         JCT-50           CDT-51_N1        CONDUIT          171.2    0.9581    0.0130
+  CDT-51_2         CDT-51_N1        JCT-52           CONDUIT          171.2    0.9586    0.0130
+  CDT-53_1         JCT-52           CDT-53_N1        CONDUIT          154.0    1.0812    0.0130
+  CDT-53_2         CDT-53_N1        JCT-54           CONDUIT          154.0    1.0818    0.0130
+  CDT-55_1         JCT-54           CDT-55_N1        CONDUIT          190.2    5.1960    0.0130
+  CDT-55_2         CDT-55_N1        CDT-55_N2        CONDUIT          190.2    5.1954    0.0130
+  CDT-55_3         CDT-55_N2        JCT-56           CONDUIT          190.2    5.1960    0.0130
+  CDT-57_1         JCT-56           CDT-57_N1        CONDUIT          168.3    0.5941    0.0130
+  CDT-57_2         CDT-57_N1        JCT-58           CONDUIT          168.3    0.5940    0.0130
+  CDT-59_1         JCT-58           CDT-59_N1        CONDUIT          163.6    0.3753    0.0130
+  CDT-59_2         CDT-59_N1        CDT-59_N2        CONDUIT          163.6    0.3759    0.0130
+  CDT-59_3         CDT-59_N2        JCT-60           CONDUIT          163.6    0.3753    0.0130
+  CDT-61_1         JCT-62           CDT-61_N1        CONDUIT          186.5    2.5182    0.0130
+  CDT-61_2         CDT-61_N1        CDT-61_N2        CONDUIT          186.5    2.5177    0.0130
+  CDT-61_3         CDT-61_N2        JCT-64           CONDUIT          186.5    2.5182    0.0130
+  CDT-63_1         JCT-64           CDT-63_N1        CONDUIT          168.5    4.0875    0.0130
+  CDT-63_2         CDT-63_N1        JCT-66           CONDUIT          168.5    4.0875    0.0130
+  CDT-65_1         JCT-66           CDT-65_N1        CONDUIT          151.2    0.9201    0.0130
+  CDT-65_2         CDT-65_N1        CDT-65_N2        CONDUIT          151.2    0.9207    0.0130
+  CDT-65_3         CDT-65_N2        CDT-65_N3        CONDUIT          151.2    0.9201    0.0130
+  CDT-65_4         CDT-65_N3        JCT-68           CONDUIT          151.2    0.9207    0.0130
+  CDT-67_1         JCT-68           CDT-67_N1        CONDUIT          181.9    2.1418    0.0130
+  CDT-67_2         CDT-67_N1        JCT-60           CONDUIT          181.9    2.1423    0.0130
+  CDT-69_1         JCT-70           CDT-69_N1        CONDUIT          171.2    2.1747    0.0130
+  CDT-69_2         CDT-69_N1        JCT-72           CONDUIT          171.2    2.1753    0.0130
+  CDT-71_1         JCT-72           CDT-71_N1        CONDUIT          174.0    3.0415    0.0130
+  CDT-71_2         CDT-71_N1        JCT-74           CONDUIT          174.0    3.0421    0.0130
+  CDT-73_1         JCT-74           CDT-73_N1        CONDUIT          162.6    0.8141    0.0130
+  CDT-73_2         CDT-73_N1        JCT-76           CONDUIT          162.6    0.8141    0.0130
+  CDT-75_1         JCT-76           CDT-75_N1        CONDUIT          192.4    1.3417    0.0130
+  CDT-75_2         CDT-75_N1        JCT-68           CONDUIT          192.4    1.3422    0.0130
+  CDT-77_1         JCT-78           CDT-77_N1        CONDUIT          182.5    0.5008    0.0130
+  CDT-77_2         CDT-77_N1        JCT-80           CONDUIT          182.5    0.5014    0.0130
+  CDT-79_1         JCT-80           CDT-79_N1        CONDUIT          188.2    2.8021    0.0130
+  CDT-79_2         CDT-79_N1        JCT-74           CONDUIT          188.2    2.8026    0.0130
+  CDT-81_1         JCT-82           CDT-81_N1        CONDUIT          176.8    0.3031    0.0130
+  CDT-81_2         CDT-81_N1        JCT-84           CONDUIT          176.8    0.3037    0.0130
+  CDT-83_1         JCT-84           CDT-83_N1        CONDUIT          199.6    0.9208    0.0130
+  CDT-83_2         CDT-83_N1        JCT-80           CONDUIT          199.6    0.9207    0.0130
+  CDT-85_1         JCT-86           CDT-85_N1        CONDUIT          154.0    1.1740    0.0130
+  CDT-85_2         CDT-85_N1        JCT-88           CONDUIT          154.0    1.1747    0.0130
+  CDT-87_1         JCT-88           CDT-87_N1        CONDUIT          139.0    0.7483    0.0130
+  CDT-87_2         CDT-87_N1        CDT-87_N2        CONDUIT          139.0    0.7483    0.0130
+  CDT-87_3         CDT-87_N2        JCT-90           CONDUIT          139.0    0.7483    0.0130
+  CDT-89_1         JCT-90           CDT-89_N1        CONDUIT          191.8    0.9186    0.0130
+  CDT-89_2         CDT-89_N1        JCT-92           CONDUIT          191.8    0.9191    0.0130
+  CDT-91_1         JCT-92           CDT-91_N1        CONDUIT          145.1    1.0015    0.0130
+  CDT-91_2         CDT-91_N1        CDT-91_N2        CONDUIT          145.1    1.0022    0.0130
+  CDT-91_3         CDT-91_N2        JCT-94           CONDUIT          145.1    1.0015    0.0130
+  CDT-93_1         JCT-94           CDT-93_N1        CONDUIT          182.7    1.2316    0.0100
+  CDT-93_2         CDT-93_N1        CDT-93_N2        CONDUIT          182.7    1.2316    0.0100
+  CDT-93_3         CDT-93_N2        CDT-93_N3        CONDUIT          182.7    1.2316    0.0100
+  CDT-93_4         CDT-93_N3        JCT-96           CONDUIT          182.7    1.2316    0.0100
+  CDT-95_1         JCT-96           CDT-95_N1        CONDUIT          179.3    6.1462    0.0130
+  CDT-95_2         CDT-95_N1        STOR-10          CONDUIT          179.3    6.1462    0.0130
+  CDT-97_1         JCT-98           CDT-97_N1        CONDUIT          188.6    1.0746    0.0130
+  CDT-97_2         CDT-97_N1        JCT-100          CONDUIT          188.6    1.0746    0.0130
+  CDT-99_1         JCT-100          CDT-99_N1        CONDUIT          151.2    0.2480    0.0130
+  CDT-99_2         CDT-99_N1        JCT-102          CONDUIT          151.2    0.2486    0.0130
+  R255             255              JCT-168          CONDUIT          131.0    3.1215    0.0350
+  R26_1            26               R26_N1           CONDUIT          160.0   -0.0606    0.0350
+  R26_2            R26_N1           R26_N2           CONDUIT          160.0   -0.0613    0.0350
+  R26_3            R26_N2           R26_N3           CONDUIT          160.0   -0.0606    0.0350
+  R26_4            R26_N3           R26_N4           CONDUIT          160.0   -0.0613    0.0350
+  R26_5            R26_N4           74               CONDUIT          160.0   -0.0606    0.0350
+  R74_1            74               R74_N1           CONDUIT          100.0    2.7390    0.0350
+  R74_2            R74_N1           83               CONDUIT          100.0    2.7390    0.0350
+  R83_1            83               R83_N1           CONDUIT          133.3   -2.1140    0.0350
+  R83_2            R83_N1           R83_N2           CONDUIT          133.3   -2.1148    0.0350
+  R83_3            R83_N2           255              CONDUIT          133.3   -2.1140    0.0350
+  RINFLOW_1        19               RINFLOW_N1       CONDUIT          162.3    1.3207    0.0350
+  RINFLOW_2        RINFLOW_N1       JCT-164          CONDUIT          162.3    1.3207    0.0350
+  SWALE_1          DUMMY2D          SWALE_N1         CONDUIT          142.5    0.5243    0.0100
+  SWALE_2          SWALE_N1         DUMMYOUTFALL     CONDUIT          142.5    0.5243    0.0100
+  PUMP-13          STOR-16          JCT-156          TYPE3 PUMP  
+  PUMP-15          STOR-14          JCT-148          TYPE3 PUMP  
+  PUMP-17          STOR-12          JCT-142          TYPE3 PUMP  
+  PUMP-19          STOR-10          JCT-138          TYPE3 PUMP  
+  PUMP1@1115-351   1115             351              TYPE4 PUMP  
+  ORI-11           JCT-10           173              ORIFICE     
+  CDT-41           JCT-40           JCT-42           ORIFICE     
+  WEIR1@260-261    261              260              WEIR        
+  Vnotch1          261              260              WEIR        
+  Transverse1      261              260              WEIR        
+  2601OF           261              260              WEIR        
+  OLET-11          1115             351              OUTLET      
+  
+  
+  *********************
+  Cross Section Summary
+  *********************
+                                        Full     Full     Hyd.     Max.   No. of     Full
+  Conduit          Shape               Depth     Area     Rad.    Width  Barrels     Flow
+  ---------------------------------------------------------------------------------------
+  1001OF_1         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 228916.24
+  1001OF_2         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 229289.85
+  105OF_1          TRAPEZOIDAL          2.00   116.09     1.75    66.01        1 1174198.01
+  105OF_2          TRAPEZOIDAL          2.00   116.09     1.75    66.01        1 1174280.46
+  1114             RECT_OPEN            1.00     1.00     0.33     1.00        2 11878.13
+  117              TRIANGULAR           9.84    48.44     2.20     9.84        1 1058562.76
+  117OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 297468.46
+  1209_1           PARABOLIC            1.50     1.00     0.31     1.00        1  2373.99
+  1209_2           PARABOLIC            1.50     1.00     0.31     1.00        1  2375.62
+  1211_1           POWER                1.50     1.00     0.31     1.00        1  2934.58
+  1211_2           POWER                1.50     1.00     0.31     1.00        1  2934.52
+  1225_1           FORCE_MAIN           2.00     3.14     0.50     2.00        1 10629.92
+  1225_2           FORCE_MAIN           2.00     3.14     0.50     2.00        1 10636.47
+  1226             FILLED_CIRCULAR      1.00     1.57     0.31     2.00        2  3359.01
+  1228             RECT_CLOSED          1.00     1.00     0.25     1.00        1  6043.98
+  1230_1           HORIZ_ELLIPSE        1.00     1.27     0.31     1.00        1  7336.20
+  1230_2           HORIZ_ELLIPSE        1.00     1.27     0.31     1.00        1  7336.19
+  1230_3           HORIZ_ELLIPSE        1.00     1.27     0.31     1.00        1  7336.18
+  1249_1           DUMMY                0.00     0.00     0.00     0.00        1     0.00
+  1249_2           DUMMY                0.00     0.00     0.00     0.00        1     0.00
+  1269_1           CATENARY             1.00     0.70     0.23     0.90        1  1953.19
+  1269_2           CATENARY             1.00     0.70     0.23     0.90        1  1953.20
+  1269_3           CATENARY             1.00     0.70     0.23     0.90        1  1953.22
+  1270_1           SEMICIRCULAR         0.83     0.87     0.24     1.36        1  1262.82
+  1270_2           SEMICIRCULAR         0.83     0.87     0.24     1.36        1  1261.41
+  1270_3           SEMICIRCULAR         0.83     0.87     0.24     1.36        1  1262.76
+  1275_1           BASKETHANDLE         2.00     3.14     0.49     1.89        2 11805.23
+  1275_2           BASKETHANDLE         2.00     3.14     0.49     1.89        2 11811.10
+  1276             CIRCULAR             2.00     3.14     0.50     2.00        2 12115.01
+  1277_1           CIRCULAR             4.00    12.57     1.00     4.00        1 62031.82
+  1277_2           CIRCULAR             4.00    12.57     1.00     4.00        1 62002.51
+  1277_3           CIRCULAR             4.00    12.57     1.00     4.00        1 62031.18
+  1277_4           CIRCULAR             4.00    12.57     1.00     4.00        1 62030.55
+  1281_1           CIRCULAR             1.25     1.23     0.31     1.25        1  4529.18
+  1281_2           CIRCULAR             1.25     1.23     0.31     1.25        1  4528.28
+  1281_3           CIRCULAR             1.25     1.23     0.31     1.25        1  4529.14
+  1284_1           CIRCULAR             1.50     1.77     0.38     1.50        1 11288.28
+  1284_2           CIRCULAR             1.50     1.77     0.38     1.50        1 11289.35
+  1284_3           CIRCULAR             1.50     1.77     0.38     1.50        1 11288.24
+  1285_1           CIRCULAR             1.50     1.77     0.38     1.50        1  5646.06
+  1285_2           CIRCULAR             1.50     1.77     0.38     1.50        1  5643.85
+  1285_3           CIRCULAR             1.50     1.77     0.38     1.50        1  5645.97
+  1288_1           CIRCULAR             3.00     7.07     0.75     3.00        2 48649.47
+  1288_2           CIRCULAR             3.00     7.07     0.75     3.00        2 48640.98
+  1289             CIRCULAR             2.75     5.94     0.69     2.75        1 28677.86
+  1290_1           MODBASKETHANDLE      1.66     1.62     0.32     1.00        1  4550.74
+  1290_2           MODBASKETHANDLE      1.66     1.62     0.32     1.00        1  4549.13
+  1290_3           MODBASKETHANDLE      1.66     1.62     0.32     1.00        1  4550.78
+  1290_4           MODBASKETHANDLE      1.66     1.62     0.32     1.00        1  4549.13
+  1290_5           MODBASKETHANDLE      1.66     1.62     0.32     1.00        1  4550.81
+  1291             EGG                  2.75     3.86     0.53     1.83        1 18550.75
+  1293             HORSESHOE            3.50    10.16     0.89     3.50        1 18616.30
+  1294_1           HORSESHOE            1.00     0.83     0.25     1.00        1  3492.33
+  1294_2           HORSESHOE            1.00     0.83     0.25     1.00        1  3492.78
+  1297_1           GOTHIC               1.00     0.66     0.23     0.84        1  1874.47
+  1297_2           GOTHIC               1.00     0.66     0.23     0.84        1  1874.50
+  1298_1           CATENARY             1.00     0.70     0.23     0.90        1  3367.16
+  1298_2           CATENARY             1.00     0.70     0.23     0.90        1  3367.16
+  1298_3           CATENARY             1.00     0.70     0.23     0.90        1  3367.15
+  1299_1           CIRCULAR             0.83     0.54     0.21     0.83        1  1729.19
+  1299_2           CIRCULAR             0.83     0.54     0.21     0.83        1  1729.18
+  1299_3           CIRCULAR             0.83     0.54     0.21     0.83        1  1729.17
+  1300_1           CIRCULAR             1.00     0.79     0.25     1.00        1  2625.21
+  1300_2           CIRCULAR             1.00     0.79     0.25     1.00        1  2624.59
+  1300_3           CIRCULAR             1.00     0.79     0.25     1.00        1  2625.18
+  1306_1           CIRCULAR             3.25     8.30     0.81     3.25        1 27519.42
+  1306_2           CIRCULAR             3.25     8.30     0.81     3.25        1 27519.80
+  1306_3           CIRCULAR             3.25     8.30     0.81     3.25        1 27520.17
+  1307_1           VERT_ELLIPSE         1.52     1.20     0.30     0.97        1  1744.97
+  1307_2           VERT_ELLIPSE         1.52     1.20     0.30     0.97        1  1741.78
+  1308_1           CIRCULAR             3.00     7.07     0.75     3.00        1 22504.70
+  1308_2           CIRCULAR             3.00     7.07     0.75     3.00        1 22505.17
+  1308_3           CIRCULAR             3.00     7.07     0.75     3.00        1 22505.64
+  1312_1           CIRCULAR             1.25     1.23     0.31     1.25        1  3219.00
+  1312_2           CIRCULAR             1.25     1.23     0.31     1.25        1  3218.96
+  1312_3           CIRCULAR             1.25     1.23     0.31     1.25        1  3218.92
+  1314             CIRCULAR             1.00     0.79     0.25     1.00        1  4943.13
+  1315_1           CIRCULAR             3.50     9.62     0.87     3.50        1 46193.91
+  1315_2           CIRCULAR             3.50     9.62     0.87     3.50        1 46219.66
+  1315_3           CIRCULAR             3.50     9.62     0.87     3.50        1 46192.75
+  1316_1           CIRCULAR             0.83     0.54     0.21     0.83        1  1952.19
+  1316_2           CIRCULAR             0.83     0.54     0.21     0.83        1  1951.92
+  1316_3           CIRCULAR             0.83     0.54     0.21     0.83        1  1952.18
+  1317_1           CIRCULAR             3.25     8.30     0.81     3.25        1 37336.41
+  1317_2           CIRCULAR             3.25     8.30     0.81     3.25        1 37335.37
+  1328_1           CIRCULAR             0.83     0.54     0.21     0.83        1  2082.15
+  1328_2           CIRCULAR             0.83     0.54     0.21     0.83        1  2082.14
+  136OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 319167.34
+  136OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 318900.87
+  13OF             TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 198174.51
+  140OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 234410.74
+  140OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 233981.75
+  144_1            CIRCULAR             2.00     3.14     0.50     2.00        1 14556.32
+  144_2            CIRCULAR             2.00     3.14     0.50     2.00        1 14556.56
+  144OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 816260.58
+  150OF_1          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1958868.43
+  150OF_2          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1958482.43
+  150OF_3          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1958851.81
+  158              CIRCULAR             3.25     8.30     0.81     3.25        1 86471.47
+  158OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1016825.34
+  15OF             TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 140571.84
+  163OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 786836.55
+  166OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 477984.48
+  166OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 477997.81
+  1791OF           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 482068.32
+  179OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 559844.54
+  179OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 559832.76
+  17OF_1           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 697519.66
+  17OF_2           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 697641.04
+  17OF_3           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 697514.20
+  183OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 665458.79
+  183OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 665684.86
+  187OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 373803.13
+  187OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 373792.76
+  18OF_1           TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 133213.19
+  18OF_2           TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 133213.19
+  191OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 377929.21
+  191OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 378139.88
+  191OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 377919.73
+  19OF_1           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 416348.39
+  19OF_2           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 416146.89
+  200_1            CIRCULAR             1.25     1.23     0.31     1.25        1  3047.34
+  200_2            CIRCULAR             1.25     1.23     0.31     1.25        1  3048.48
+  200OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 643824.53
+  200OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 643822.96
+  200OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 643894.29
+  200OF_4          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 643821.46
+  201OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 158813.45
+  201OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 158824.11
+  201OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 158834.76
+  205OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 795152.48
+  205OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 794963.17
+  229OF_1          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1271805.26
+  229OF_2          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1271787.98
+  229OF_3          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1271771.50
+  229OFB_1         CIRCULAR             1.00     0.79     0.25     1.00        1   806.90
+  229OFB_2         CIRCULAR             1.00     0.79     0.25     1.00        1   807.39
+  232OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 146969.77
+  232OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 146148.69
+  244OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1230946.32
+  244OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1231032.28
+  257OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1219099.38
+  25OF             TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 521338.59
+  260OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 222861.04
+  260OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 222852.50
+  260OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 222844.35
+  267OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1070645.85
+  267OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1070582.08
+  267OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1070643.17
+  269OF_1          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 2468040.94
+  269OF_2          TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 2468056.41
+  276OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 783708.96
+  276OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 783705.23
+  281OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 171009.41
+  2851OF_1         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 359415.77
+  2851OF_2         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 359411.71
+  2851OF_3         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 359407.66
+  285OF            TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1905564.64
+  297OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 350646.02
+  297OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 350974.34
+  297OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 350631.24
+  306OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 969021.76
+  306OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 969145.84
+  3084             CIRCULAR             2.50     4.91     0.62     2.50        1 53978.49
+  3091             CIRCULAR             2.50     4.91     0.62     2.50        1 147500.00
+  31OF             TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1089881.71
+  3231OF_1         TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1661902.50
+  3231OF_2         TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 1661928.43
+  323OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 453182.37
+  323OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 453197.61
+  325OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 613461.22
+  3289             CIRCULAR             2.75     5.94     0.69     2.75        1 13015.82
+  3293             CIRCULAR             2.75     5.94     0.69     2.75        1 45815.82
+  32OF             TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 132407.95
+  3339             CIRCULAR             2.75     5.94     0.69     2.75        1  8866.36
+  3349             CIRCULAR             2.75     5.94     0.69     2.75        1 30160.98
+  3355_1           CIRCULAR             0.83     0.54     0.21     0.83        1   522.53
+  3355_2           CIRCULAR             0.83     0.54     0.21     0.83        1   523.38
+  3423             CIRCULAR             2.50     4.91     0.62     2.50        1 12252.38
+  3424             CIRCULAR             2.50     4.91     0.62     2.50        1 19496.83
+  348OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 2577188.82
+  3493_1           CIRCULAR             1.25     1.23     0.31     1.25        1  6749.14
+  3493_2           CIRCULAR             1.25     1.23     0.31     1.25        1  6749.67
+  3510_1           CIRCULAR             2.75     5.94     0.69     2.75        1 20321.28
+  3510_2           CIRCULAR             2.75     5.94     0.69     2.75        1 20320.65
+  3511_1           CIRCULAR             1.25     1.23     0.31     1.25        1  2811.04
+  3511_2           CIRCULAR             1.25     1.23     0.31     1.25        1  2812.75
+  351OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 2257568.07
+  3521             CIRCULAR             1.00     0.79     0.25     1.00        1  1837.32
+  3527_1           CIRCULAR             0.83     0.54     0.21     0.83        1  2354.74
+  3527_2           CIRCULAR             0.83     0.54     0.21     0.83        1  2354.73
+  3527_3           CIRCULAR             0.83     0.54     0.21     0.83        1  2354.73
+  3629_1           CIRCULAR             2.00     3.14     0.50     2.00        2 13224.70
+  3629_2           CIRCULAR             2.00     3.14     0.50     2.00        2 13229.11
+  3656_1           CIRCULAR             3.25     8.30     0.81     3.25        1 23414.85
+  3656_2           CIRCULAR             3.25     8.30     0.81     3.25        1 23440.89
+  3682_1           CIRCULAR             1.00     0.79     0.25     1.00        1  1730.67
+  3682_2           CIRCULAR             1.00     0.79     0.25     1.00        1  1730.71
+  3690_1           VERT_ELLIPSE         1.14     0.69     0.22     0.74        1   877.90
+  3690_2           VERT_ELLIPSE         1.14     0.69     0.22     0.74        1   878.68
+  371OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1704284.22
+  371OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1704280.11
+  3843_1           CIRCULAR             2.00     3.14     0.50     2.00        2 11650.13
+  3843_2           CIRCULAR             2.00     3.14     0.50     2.00        2 11644.62
+  3843_3           CIRCULAR             2.00     3.14     0.50     2.00        2 11649.89
+  384OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 728265.46
+  3860             CIRCULAR             2.00     3.14     0.50     2.00        2 43770.85
+  3873_1           CIRCULAR             1.00     0.79     0.25     1.00        1  4573.60
+  3873_2           CIRCULAR             1.00     0.79     0.25     1.00        1  4573.92
+  387OF            TRAPEZOIDAL          4.00   264.00     3.18    82.00        1 2741322.75
+  4030_1           VERT_ELLIPSE         2.87     4.28     0.56     1.83        1 26469.54
+  4030_2           VERT_ELLIPSE         2.87     4.28     0.56     1.83        1 26476.31
+  4043_1           CIRCULAR             1.25     1.23     0.31     1.25        1  9532.36
+  4043_2           CIRCULAR             1.25     1.23     0.31     1.25        1  9533.02
+  407OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1044629.22
+  407OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1044626.71
+  407OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1044624.32
+  4103_1           CIRCULAR             2.50     4.91     0.62     2.50        1 34787.77
+  4103_2           CIRCULAR             2.50     4.91     0.62     2.50        1 34787.59
+  4117_1           CIRCULAR             3.50     9.62     0.87     3.50        1 50887.92
+  4117_2           CIRCULAR             3.50     9.62     0.87     3.50        1 50863.29
+  4130             CIRCULAR             3.50     9.62     0.87     3.50        1 63642.48
+  4155_1           CIRCULAR             1.25     1.23     0.31     1.25        1  5325.42
+  4155_2           CIRCULAR             1.25     1.23     0.31     1.25        1  5324.15
+  4195             CIRCULAR             3.25     8.30     0.81     3.25        1 78379.59
+  4202             CIRCULAR             1.50     1.77     0.38     1.50        1  7623.10
+  4203             CIRCULAR             1.25     1.23     0.31     1.25        1  3196.16
+  421OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 270692.22
+  4220             CIRCULAR             3.00     7.07     0.75     3.00        1 88270.21
+  4232             CIRCULAR             2.00     3.14     0.50     2.00        1 19256.87
+  4OF_1            TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 198142.06
+  4OF_2            TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 198081.63
+  5002_1           VERT_ELLIPSE         1.14     0.69     0.22     0.74        1  1027.27
+  5002_2           VERT_ELLIPSE         1.14     0.69     0.22     0.74        1  1027.98
+  5003_1           CIRCULAR             1.00     0.79     0.25     1.00        1  4688.49
+  5003_2           CIRCULAR             1.00     0.79     0.25     1.00        1  4688.21
+  5003_3           CIRCULAR             1.00     0.79     0.25     1.00        1  4688.48
+  77OF             TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 659520.78
+  7OF_1            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 302624.05
+  7OF_2            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 302620.22
+  7OF_3            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 302446.04
+  7OF_4            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 302620.22
+  7OF_5            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 302616.56
+  879OF_1          TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 161526.75
+  879OF_2          TRAPEZOIDAL          1.50    54.00     1.27    42.00        1 161454.49
+  882OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 326092.92
+  882OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 325944.37
+  882OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 326086.53
+  893OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1085895.91
+  893OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1085894.25
+  893OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1085892.58
+  8941OF_1         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 639916.49
+  8941OF_2         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 639914.11
+  8941OF_3         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 639911.83
+  894OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1077666.68
+  9561OF_1         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 628575.53
+  9561OF_2         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 628572.58
+  9561OF_3         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 628706.90
+  9561OF_4         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 628572.58
+  9561OF_5         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 628569.62
+  9562OF_1         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 345857.51
+  9562OF_2         TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 345851.09
+  956OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 531076.95
+  956OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 531073.61
+  956OF_3          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 531070.28
+  95OF_1           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 856147.26
+  95OF_2           TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 856213.42
+  974OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 531314.32
+  974OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 531307.10
+  982OF            TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 160958.47
+  989OF_1          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1121918.29
+  989OF_2          TRAPEZOIDAL          2.00   116.00     1.74    66.00        1 1121912.40
+  CDT-101_1        CIRCULAR             0.50     0.20     0.12     0.50        1   198.66
+  CDT-101_2        CIRCULAR             0.50     0.20     0.12     0.50        1   198.65
+  CDT-103_1        CIRCULAR             0.50     0.20     0.12     0.50        1   230.47
+  CDT-103_2        CIRCULAR             0.50     0.20     0.12     0.50        1   230.62
+  CDT-105_1        CIRCULAR             0.50     0.20     0.12     0.50        1   147.90
+  CDT-105_2        CIRCULAR             0.50     0.20     0.12     0.50        1   147.89
+  CDT-107_1        CIRCULAR             0.50     0.20     0.12     0.50        1   283.26
+  CDT-107_2        CIRCULAR             0.50     0.20     0.12     0.50        1   283.39
+  CDT-109_1        CIRCULAR             0.50     0.20     0.12     0.50        1   594.66
+  CDT-109_2        CIRCULAR             0.50     0.20     0.12     0.50        1   594.72
+  CDT-11_1         CIRCULAR             3.00     7.07     0.75     3.00        1 18611.63
+  CDT-11_2         CIRCULAR             3.00     7.07     0.75     3.00        1 18644.14
+  CDT-11_3         CIRCULAR             3.00     7.07     0.75     3.00        1 18610.24
+  CDT-111_1        CIRCULAR             0.50     0.20     0.12     0.50        1   451.04
+  CDT-111_2        CIRCULAR             0.50     0.20     0.12     0.50        1   451.04
+  CDT-113_1        CIRCULAR             0.50     0.20     0.12     0.50        1   210.40
+  CDT-113_2        CIRCULAR             0.50     0.20     0.12     0.50        1   210.40
+  CDT-113_3        CIRCULAR             0.50     0.20     0.12     0.50        1   210.39
+  CDT-115_1        CIRCULAR             0.50     0.20     0.12     0.50        1   397.05
+  CDT-115_2        CIRCULAR             0.50     0.20     0.12     0.50        1   397.05
+  CDT-117_1        CIRCULAR             0.50     0.20     0.12     0.50        1   233.41
+  CDT-117_2        CIRCULAR             0.50     0.20     0.12     0.50        1   233.56
+  CDT-119_1        CIRCULAR             0.50     0.20     0.12     0.50        1   219.52
+  CDT-119_2        CIRCULAR             0.50     0.20     0.12     0.50        1   219.51
+  CDT-121_1        CIRCULAR             0.50     0.20     0.12     0.50        1   378.92
+  CDT-121_2        CIRCULAR             0.50     0.20     0.12     0.50        1   378.92
+  CDT-123_1        CIRCULAR             0.50     0.20     0.12     0.50        1   425.87
+  CDT-123_2        CIRCULAR             0.50     0.20     0.12     0.50        1   425.99
+  CDT-123_3        CIRCULAR             0.50     0.20     0.12     0.50        1   425.86
+  CDT-125_1        CIRCULAR             0.50     0.20     0.12     0.50        1   400.86
+  CDT-125_2        CIRCULAR             0.50     0.20     0.12     0.50        1   400.86
+  CDT-127_1        RECT_ROUND           1.00     0.96     0.25     1.00        1  6521.91
+  CDT-127_2        RECT_ROUND           1.00     0.96     0.25     1.00        1  6522.34
+  CDT-129_1        ARCH                 0.50     0.39     0.15     1.00        1  1163.14
+  CDT-129_2        ARCH                 0.50     0.39     0.15     1.00        1  1163.29
+  CDT-13_1         RECT_TRIANGULAR      3.00     2.50     0.35     1.00        1  4547.99
+  CDT-13_2         RECT_TRIANGULAR      3.00     2.50     0.35     1.00        1  4553.17
+  CDT-131_1        VERT_ELLIPSE         2.00     1.27     0.31     1.00        1  3576.93
+  CDT-131_2        VERT_ELLIPSE         2.00     1.27     0.31     1.00        1  3576.85
+  CDT-133_1        CIRCULAR             0.50     0.20     0.12     0.50        1   407.44
+  CDT-133_2        CIRCULAR             0.50     0.20     0.12     0.50        1   407.43
+  CDT-135_1        CIRCULAR             1.00     0.79     0.25     1.00        1  8190.50
+  CDT-135_2        CIRCULAR             1.00     0.79     0.25     1.00        1  8190.74
+  CDT-135_3        CIRCULAR             1.00     0.79     0.25     1.00        1  8190.48
+  CDT-137_1        CIRCULAR             1.50     1.77     0.38     1.50        1  6458.78
+  CDT-137_2        CIRCULAR             1.50     1.77     0.38     1.50        1  6458.92
+  CDT-141_1        CIRCULAR             1.50     1.77     0.38     1.50        1  5021.50
+  CDT-141_2        CIRCULAR             1.50     1.77     0.38     1.50        1  5021.55
+  CDT-141_3        CIRCULAR             1.50     1.77     0.38     1.50        1  5021.61
+  CDT-143_1        CIRCULAR             1.50     1.77     0.38     1.50        1  2743.63
+  CDT-143_2        CIRCULAR             1.50     1.77     0.38     1.50        1  2743.87
+  CDT-147_1        CIRCULAR             1.50     1.77     0.38     1.50        1  2861.49
+  CDT-147_2        CIRCULAR             1.50     1.77     0.38     1.50        1  2861.74
+  CDT-149_1        CIRCULAR             1.50     1.77     0.38     1.50        1 10709.72
+  CDT-149_2        CIRCULAR             1.50     1.77     0.38     1.50        1 10709.69
+  CDT-149_3        CIRCULAR             1.50     1.77     0.38     1.50        1 10709.69
+  CDT-149_4        CIRCULAR             1.50     1.77     0.38     1.50        1 10709.67
+  CDT-15_1         CIRCULAR             3.00     7.07     0.75     3.00        1 83140.24
+  CDT-15_2         CIRCULAR             3.00     7.07     0.75     3.00        1 83139.92
+  CDT-151_1        CIRCULAR             1.50     1.77     0.38     1.50        1  5565.53
+  CDT-151_2        CIRCULAR             1.50     1.77     0.38     1.50        1  5565.63
+  CDT-153_1        CIRCULAR             1.50     1.77     0.38     1.50        1  8696.37
+  CDT-153_2        CIRCULAR             1.50     1.77     0.38     1.50        1  8696.44
+  CDT-155_1        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.29
+  CDT-155_2        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_3        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_4        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_5        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_6        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_7        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_8        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_9        CIRCULAR             1.50     1.77     0.38     1.50        1  5988.33
+  CDT-155_10       CIRCULAR             1.50     1.77     0.38     1.50        1  5988.38
+  CDT-157_1        FORCE_MAIN           1.50     1.77     0.38     1.50        1  7109.71
+  CDT-157_2        FORCE_MAIN           1.50     1.77     0.38     1.50        1  7109.77
+  CDT-157_3        FORCE_MAIN           1.50     1.77     0.38     1.50        1  7109.77
+  CDT-157_4        FORCE_MAIN           1.50     1.77     0.38     1.50        1  7107.06
+  CDT-157_5        FORCE_MAIN           1.50     1.77     0.38     1.50        1  7109.77
+  CDT-157_6        FORCE_MAIN           1.50     1.77     0.38     1.50        1  7109.83
+  CDT-159_1        HORIZ_ELLIPSE        1.50     2.86     0.46     2.00        1 14569.23
+  CDT-159_2        HORIZ_ELLIPSE        1.50     2.86     0.46     2.00        1 14572.14
+  CDT-161          CIRCULAR             4.00    12.57     1.00     4.00        1 192195.52
+  CDT-163_1        RCV-1                8.26   815.74     1.37   203.56        1 944717.62
+  CDT-163_2        RCV-1                8.26   815.74     1.37   203.56        1 944671.70
+  CDT-163_3        RCV-1                8.26   815.74     1.37   203.56        1 944671.70
+  CDT-163_4        RCV-1                8.26   815.74     1.37   203.56        1 944625.78
+  CDT-165_1        RCV-2                7.27   803.92     1.58   183.79        1 1645672.77
+  CDT-165_2        RCV-2                7.27   803.92     1.58   183.79        1 1645639.22
+  CDT-165_3        RCV-2                7.27   803.92     1.58   183.79        1 1644040.72
+  CDT-165_4        RCV-2                7.27   803.92     1.58   183.79        1 1645639.22
+  CDT-165_5        RCV-2                7.27   803.92     1.58   183.79        1 1645605.67
+  CDT-167_1        RCV-3                5.89  1373.02     1.22   395.77        1 1130743.05
+  CDT-167_2        RCV-3                5.89  1373.02     1.22   395.77        1 1135903.15
+  CDT-167_3        RCV-3                5.89  1373.02     1.22   395.77        1 1130632.10
+  CDT-167_4        RCV-3                5.89  1373.02     1.22   395.77        1 1135903.15
+  CDT-167_5        RCV-3                5.89  1373.02     1.22   395.77        1 1130632.10
+  CDT-167_6        RCV-3                5.89  1373.02     1.22   395.77        1 1135792.70
+  CDT-169_1        RCV-4                3.66   499.98     0.85   206.50        1 818683.05
+  CDT-169_2        RCV-4                3.66   499.98     0.85   206.50        1 818670.62
+  CDT-169_3        RCV-4                3.66   499.98     0.85   206.50        1 818658.20
+  CDT-17_1         CIRCULAR             0.50     0.20     0.12     0.50        1   538.97
+  CDT-17_2         CIRCULAR             0.50     0.20     0.12     0.50        1   539.04
+  CDT-171_1        RCV-3                5.89  1373.02     1.22   395.77        1 2106928.73
+  CDT-171_2        RCV-3                5.89  1373.02     1.22   395.77        1 2106855.24
+  CDT-171_3        RCV-3                5.89  1373.02     1.22   395.77        1 2106781.74
+  CDT-175_1        RCV-6                9.63  3739.81     2.35   560.52        1 19974137.64
+  CDT-175_2        RCV-6                9.63  3739.81     2.35   560.52        1 19974031.81
+  CDT-19_1         CIRCULAR             0.50     0.20     0.12     0.50        1   536.37
+  CDT-19_2         CIRCULAR             0.50     0.20     0.12     0.50        1   536.44
+  CDT-21_1         CIRCULAR             0.50     0.20     0.12     0.50        1   710.51
+  CDT-21_2         CIRCULAR             0.50     0.20     0.12     0.50        1   710.56
+  CDT-23_1         CIRCULAR             1.00     0.79     0.25     1.00        1  4874.57
+  CDT-23_2         CIRCULAR             1.00     0.79     0.25     1.00        1  4874.86
+  CDT-25_1         CIRCULAR             0.50     0.20     0.12     0.50        1   446.29
+  CDT-25_2         CIRCULAR             0.50     0.20     0.12     0.50        1   446.37
+  CDT-27_1         CIRCULAR             0.50     0.20     0.12     0.50        1   759.11
+  CDT-27_2         CIRCULAR             0.50     0.20     0.12     0.50        1   759.16
+  CDT-29_1         CIRCULAR             0.50     0.20     0.12     0.50        1   713.57
+  CDT-29_2         CIRCULAR             0.50     0.20     0.12     0.50        1   713.62
+  CDT-31_1         CIRCULAR             1.00     0.79     0.25     1.00        1  1932.73
+  CDT-31_2         CIRCULAR             1.00     0.79     0.25     1.00        1  1932.70
+  CDT-33_1         CIRCULAR             0.50     0.20     0.12     0.50        1   549.91
+  CDT-33_2         CIRCULAR             0.50     0.20     0.12     0.50        1   549.90
+  CDT-35_1         CIRCULAR             0.50     0.20     0.12     0.50        1   745.36
+  CDT-35_2         CIRCULAR             0.50     0.20     0.12     0.50        1   745.35
+  CDT-35_3         CIRCULAR             0.50     0.20     0.12     0.50        1   745.35
+  CDT-37_1         CIRCULAR             0.50     0.20     0.12     0.50        1   764.21
+  CDT-37_2         CIRCULAR             0.50     0.20     0.12     0.50        1   764.26
+  CDT-39_1         CIRCULAR             1.00     0.79     0.25     1.00        1  1481.65
+  CDT-39_2         CIRCULAR             1.00     0.79     0.25     1.00        1  1481.61
+  CDT-43_1         CIRCULAR             0.50     0.20     0.12     0.50        1   280.95
+  CDT-43_2         CIRCULAR             0.50     0.20     0.12     0.50        1   280.95
+  CDT-43_3         CIRCULAR             0.50     0.20     0.12     0.50        1   280.94
+  CDT-45_1         CIRCULAR             0.50     0.20     0.12     0.50        1   762.78
+  CDT-45_2         CIRCULAR             0.50     0.20     0.12     0.50        1   762.82
+  CDT-47_1         CIRCULAR             0.50     0.20     0.12     0.50        1   509.53
+  CDT-47_2         CIRCULAR             0.50     0.20     0.12     0.50        1   509.60
+  CDT-49_1         CIRCULAR             0.67     0.35     0.17     0.67        1   512.18
+  CDT-49_2         CIRCULAR             0.67     0.35     0.17     0.67        1   512.16
+  CDT-51_1         CIRCULAR             0.50     0.20     0.12     0.50        1   369.61
+  CDT-51_2         CIRCULAR             0.50     0.20     0.12     0.50        1   369.72
+  CDT-53_1         CIRCULAR             0.50     0.20     0.12     0.50        1   392.65
+  CDT-53_2         CIRCULAR             0.50     0.20     0.12     0.50        1   392.76
+  CDT-55_1         FORCE_MAIN           0.50     0.20     0.12     0.50        1  1132.58
+  CDT-55_2         FORCE_MAIN           0.50     0.20     0.12     0.50        1  1132.52
+  CDT-55_3         FORCE_MAIN           0.50     0.20     0.12     0.50        1  1132.58
+  CDT-57_1         CIRCULAR             0.50     0.20     0.12     0.50        1   291.05
+  CDT-57_2         CIRCULAR             0.50     0.20     0.12     0.50        1   291.04
+  CDT-59_1         CIRCULAR             0.50     0.20     0.12     0.50        1   231.35
+  CDT-59_2         CIRCULAR             0.50     0.20     0.12     0.50        1   231.53
+  CDT-59_3         CIRCULAR             0.50     0.20     0.12     0.50        1   231.34
+  CDT-61_1         CIRCULAR             0.50     0.20     0.12     0.50        1   599.24
+  CDT-61_2         CIRCULAR             0.50     0.20     0.12     0.50        1   599.18
+  CDT-61_3         CIRCULAR             0.50     0.20     0.12     0.50        1   599.24
+  CDT-63_1         CIRCULAR             0.50     0.20     0.12     0.50        1   763.45
+  CDT-63_2         CIRCULAR             0.50     0.20     0.12     0.50        1   763.45
+  CDT-65_1         CIRCULAR             0.50     0.20     0.12     0.50        1   362.22
+  CDT-65_2         CIRCULAR             0.50     0.20     0.12     0.50        1   362.34
+  CDT-65_3         CIRCULAR             0.50     0.20     0.12     0.50        1   362.21
+  CDT-65_4         CIRCULAR             0.50     0.20     0.12     0.50        1   362.34
+  CDT-67_1         CIRCULAR             0.67     0.35     0.17     0.67        1  1191.76
+  CDT-67_2         CIRCULAR             0.67     0.35     0.17     0.67        1  1191.91
+  CDT-69_1         CIRCULAR             0.50     0.20     0.12     0.50        1   556.87
+  CDT-69_2         CIRCULAR             0.50     0.20     0.12     0.50        1   556.94
+  CDT-71_1         CIRCULAR             0.50     0.20     0.12     0.50        1   658.56
+  CDT-71_2         CIRCULAR             0.50     0.20     0.12     0.50        1   658.62
+  CDT-73_1         CIRCULAR             0.50     0.20     0.12     0.50        1   340.72
+  CDT-73_2         CIRCULAR             0.50     0.20     0.12     0.50        1   340.71
+  CDT-75_1         CIRCULAR             0.50     0.20     0.12     0.50        1   437.40
+  CDT-75_2         CIRCULAR             0.50     0.20     0.12     0.50        1   437.48
+  CDT-77_1         CIRCULAR             0.50     0.20     0.12     0.50        1   267.24
+  CDT-77_2         CIRCULAR             0.50     0.20     0.12     0.50        1   267.38
+  CDT-79_1         CIRCULAR             0.50     0.20     0.12     0.50        1   632.11
+  CDT-79_2         CIRCULAR             0.50     0.20     0.12     0.50        1   632.17
+  CDT-81_1         CIRCULAR             0.50     0.20     0.12     0.50        1   207.91
+  CDT-81_2         CIRCULAR             0.50     0.20     0.12     0.50        1   208.10
+  CDT-83_1         CIRCULAR             0.50     0.20     0.12     0.50        1   362.35
+  CDT-83_2         CIRCULAR             0.50     0.20     0.12     0.50        1   362.34
+  CDT-85_1         CIRCULAR             0.50     0.20     0.12     0.50        1   409.16
+  CDT-85_2         CIRCULAR             0.50     0.20     0.12     0.50        1   409.27
+  CDT-87_1         CIRCULAR             0.50     0.20     0.12     0.50        1   326.67
+  CDT-87_2         CIRCULAR             0.50     0.20     0.12     0.50        1   326.66
+  CDT-87_3         CIRCULAR             0.50     0.20     0.12     0.50        1   326.66
+  CDT-89_1         CIRCULAR             0.50     0.20     0.12     0.50        1   361.93
+  CDT-89_2         CIRCULAR             0.50     0.20     0.12     0.50        1   362.02
+  CDT-91_1         CIRCULAR             0.50     0.20     0.12     0.50        1   377.90
+  CDT-91_2         CIRCULAR             0.50     0.20     0.12     0.50        1   378.03
+  CDT-91_3         CIRCULAR             0.50     0.20     0.12     0.50        1   377.90
+  CDT-93_1         CIRCULAR             0.50     0.20     0.12     0.50        1   544.80
+  CDT-93_2         CIRCULAR             0.50     0.20     0.12     0.50        1   544.80
+  CDT-93_3         CIRCULAR             0.50     0.20     0.12     0.50        1   544.80
+  CDT-93_4         CIRCULAR             0.50     0.20     0.12     0.50        1   544.79
+  CDT-95_1         CIRCULAR             1.00     0.79     0.25     1.00        1  5944.33
+  CDT-95_2         CIRCULAR             1.00     0.79     0.25     1.00        1  5944.32
+  CDT-97_1         CIRCULAR             0.50     0.20     0.12     0.50        1   391.45
+  CDT-97_2         CIRCULAR             0.50     0.20     0.12     0.50        1   391.44
+  CDT-99_1         CIRCULAR             0.50     0.20     0.12     0.50        1   188.04
+  CDT-99_2         CIRCULAR             0.50     0.20     0.12     0.50        1   188.28
+  R255             5                   13.00  3840.00     2.78   485.00        1 38284487.39
+  R26_1            2                   13.00  3840.00     2.78   485.00        1 5334807.90
+  R26_2            2                   13.00  3840.00     2.78   485.00        1 5362816.95
+  R26_3            2                   13.00  3840.00     2.78   485.00        1 5335385.48
+  R26_4            2                   13.00  3840.00     2.78   485.00        1 5362816.95
+  R26_5            2                   13.00  3840.00     2.78   485.00        1 5335962.99
+  R74_1            3                   13.00  3840.00     2.78   485.00        1 35862428.83
+  R74_2            3                   13.00  3840.00     2.78   485.00        1 35862153.56
+  R83_1            3                   13.00  3840.00     2.78   485.00        1 31506004.75
+  R83_2            3                   13.00  3840.00     2.78   485.00        1 31511714.36
+  R83_3            3                   13.00  3840.00     2.78   485.00        1 31506239.64
+  RINFLOW_1        1                    4.45   802.28     1.01   280.01        1 2647537.96
+  RINFLOW_2        1                    4.45   802.28     1.01   280.01        1 2647511.39
+  SWALE_1          TRAPEZOIDAL          0.10    10.01     0.10   100.20        1 15596.97
+  SWALE_2          TRAPEZOIDAL          0.10    10.01     0.10   100.20        1 15596.83
+  
+  
+  *************
+  Shape Summary
+  *************
+
+  Shape BoxShape
+  Area:  
+              0.0200     0.0400     0.0600     0.0800     0.1000 
+              0.1200     0.1400     0.1600     0.1800     0.2000 
+              0.2200     0.2400     0.2600     0.2800     0.3000 
+              0.3200     0.3400     0.3600     0.3800     0.4000 
+              0.4200     0.4400     0.4600     0.4800     0.5000 
+              0.5200     0.5400     0.5600     0.5800     0.6000 
+              0.6200     0.6400     0.6600     0.6800     0.7000 
+              0.7200     0.7400     0.7600     0.7800     0.8000 
+              0.8200     0.8400     0.8600     0.8800     0.9000 
+              0.9200     0.9400     0.9600     0.9800     1.0000 
+  Hrad:  
+              0.0769     0.1481     0.2143     0.2759     0.3333 
+              0.3871     0.4375     0.4848     0.5294     0.5714 
+              0.6111     0.6486     0.6842     0.7179     0.7500 
+              0.7805     0.8095     0.8372     0.8636     0.8889 
+              0.9130     0.9362     0.9583     0.9796     1.0000 
+              1.0196     1.0385     1.0566     1.0741     1.0909 
+              1.1071     1.1228     1.1379     1.1525     1.1667 
+              1.1803     1.1935     1.2063     1.2188     1.2308 
+              1.2424     1.2537     1.2647     1.2754     1.2857 
+              1.2958     1.3056     1.3151     1.3243     1.0000 
+  Width: 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+              1.0000     1.0000     1.0000     1.0000     1.0000 
+  
+  
+  ****************
+  Transect Summary
+  ****************
+
+  Transect 1
+  Area:  
+              0.0066     0.0225     0.0389     0.0555     0.0723 
+              0.0893     0.1064     0.1236     0.1409     0.1583 
+              0.1756     0.1931     0.2105     0.2280     0.2456 
+              0.2632     0.2808     0.2984     0.3161     0.3339 
+              0.3517     0.3696     0.3877     0.4059     0.4244 
+              0.4432     0.4622     0.4814     0.5007     0.5200 
+              0.5393     0.5587     0.5782     0.5978     0.6175 
+              0.6372     0.6570     0.6769     0.6969     0.7180 
+              0.7409     0.7658     0.7911     0.8172     0.8466 
+              0.8769     0.9075     0.9382     0.9690     1.0000 
+  Hrad:  
+              0.0155     0.0429     0.0733     0.1034     0.1332 
+              0.1627     0.1925     0.2222     0.2527     0.2832 
+              0.3135     0.3438     0.3741     0.4042     0.4343 
+              0.4644     0.4943     0.5242     0.5539     0.5827 
+              0.6113     0.6399     0.6683     0.6962     0.7238 
+              0.7511     0.7783     0.7779     0.8064     0.8348 
+              0.8631     0.8910     0.9184     0.9456     0.9728 
+              0.9998     1.0268     1.0537     1.0746     1.0935 
+              0.9278     0.9464     0.9639     0.9759     0.8759 
+              0.8929     0.9198     0.9467     0.9734     1.0000 
+  Width: 
+              0.4253     0.5257     0.5316     0.5375     0.5433 
+              0.5491     0.5532     0.5568     0.5581     0.5593 
+              0.5606     0.5619     0.5631     0.5644     0.5657 
+              0.5669     0.5682     0.5695     0.5709     0.5731 
+              0.5754     0.5777     0.5843     0.5924     0.6005 
+              0.6086     0.6167     0.6187     0.6206     0.6226 
+              0.6246     0.6268     0.6293     0.6318     0.6344 
+              0.6369     0.6395     0.6420     0.6482     0.7075 
+              0.7983     0.8089     0.8206     0.9079     0.9666 
+              0.9821     0.9866     0.9911     0.9955     1.0000 
+
+  Transect 2
+  Area:  
+              0.0051     0.0103     0.0155     0.0208     0.0261 
+              0.0315     0.0370     0.0425     0.0481     0.0537 
+              0.0594     0.0653     0.0722     0.0804     0.0898 
+              0.1004     0.1123     0.1254     0.1397     0.1553 
+              0.1721     0.1901     0.2094     0.2299     0.2516 
+              0.2746     0.2988     0.3242     0.3509     0.3788 
+              0.4078     0.4374     0.4672     0.4971     0.5272 
+              0.5575     0.5880     0.6186     0.6494     0.6804 
+              0.7116     0.7429     0.7744     0.8061     0.8380 
+              0.8701     0.9023     0.9347     0.9672     1.0000 
+  Hrad:  
+              0.0327     0.0650     0.0968     0.1281     0.1590 
+              0.1895     0.2195     0.2492     0.2785     0.3075 
+              0.3361     0.3346     0.3106     0.2979     0.2922 
+              0.2914     0.2940     0.2990     0.3059     0.3143 
+              0.3237     0.3342     0.3453     0.3571     0.3694 
+              0.3821     0.3952     0.4087     0.4224     0.4363 
+              0.4541     0.4842     0.5141     0.5438     0.5734 
+              0.6028     0.6320     0.6612     0.6901     0.7190 
+              0.7477     0.7762     0.8047     0.8329     0.8611 
+              0.8891     0.9170     0.9448     0.9725     1.0000 
+  Width: 
+              0.1564     0.1582     0.1600     0.1618     0.1636 
+              0.1654     0.1671     0.1689     0.1707     0.1725 
+              0.1743     0.1926     0.2301     0.2676     0.3052 
+              0.3427     0.3802     0.4177     0.4553     0.4928 
+              0.5303     0.5678     0.6054     0.6429     0.6804 
+              0.7179     0.7555     0.7930     0.8305     0.8680 
+              0.8981     0.9035     0.9089     0.9142     0.9196 
+              0.9249     0.9303     0.9357     0.9410     0.9464 
+              0.9518     0.9571     0.9625     0.9678     0.9732 
+              0.9786     0.9839     0.9893     0.9946     1.0000 
+
+  Transect 3
+  Area:  
+              0.0051     0.0103     0.0155     0.0208     0.0261 
+              0.0315     0.0370     0.0425     0.0481     0.0537 
+              0.0594     0.0653     0.0722     0.0804     0.0898 
+              0.1004     0.1123     0.1254     0.1397     0.1553 
+              0.1721     0.1901     0.2094     0.2299     0.2516 
+              0.2746     0.2988     0.3242     0.3509     0.3788 
+              0.4078     0.4374     0.4672     0.4971     0.5272 
+              0.5575     0.5880     0.6186     0.6494     0.6804 
+              0.7116     0.7429     0.7744     0.8061     0.8380 
+              0.8701     0.9023     0.9347     0.9672     1.0000 
+  Hrad:  
+              0.0327     0.0650     0.0968     0.1281     0.1590 
+              0.1895     0.2195     0.2492     0.2785     0.3075 
+              0.3361     0.3346     0.3106     0.2979     0.2922 
+              0.2914     0.2940     0.2990     0.3059     0.3143 
+              0.3237     0.3342     0.3453     0.3571     0.3694 
+              0.3821     0.3952     0.4087     0.4224     0.4363 
+              0.4541     0.4842     0.5141     0.5438     0.5734 
+              0.6028     0.6320     0.6612     0.6901     0.7190 
+              0.7477     0.7762     0.8047     0.8329     0.8611 
+              0.8891     0.9170     0.9448     0.9725     1.0000 
+  Width: 
+              0.1564     0.1582     0.1600     0.1618     0.1636 
+              0.1654     0.1671     0.1689     0.1707     0.1725 
+              0.1743     0.1926     0.2301     0.2676     0.3052 
+              0.3427     0.3802     0.4177     0.4553     0.4928 
+              0.5303     0.5678     0.6054     0.6429     0.6804 
+              0.7179     0.7555     0.7930     0.8305     0.8680 
+              0.8981     0.9035     0.9089     0.9142     0.9196 
+              0.9249     0.9303     0.9357     0.9410     0.9464 
+              0.9518     0.9571     0.9625     0.9678     0.9732 
+              0.9786     0.9839     0.9893     0.9946     1.0000 
+
+  Transect 4
+  Area:  
+              0.0051     0.0103     0.0155     0.0208     0.0261 
+              0.0315     0.0370     0.0425     0.0481     0.0537 
+              0.0594     0.0653     0.0722     0.0804     0.0898 
+              0.1004     0.1123     0.1254     0.1397     0.1553 
+              0.1721     0.1901     0.2094     0.2299     0.2516 
+              0.2746     0.2988     0.3242     0.3509     0.3788 
+              0.4078     0.4374     0.4672     0.4971     0.5272 
+              0.5575     0.5880     0.6186     0.6494     0.6804 
+              0.7116     0.7429     0.7744     0.8061     0.8380 
+              0.8701     0.9023     0.9347     0.9672     1.0000 
+  Hrad:  
+              0.0327     0.0650     0.0968     0.1281     0.1590 
+              0.1895     0.2195     0.2492     0.2785     0.3075 
+              0.3361     0.3346     0.3106     0.2979     0.2922 
+              0.2914     0.2940     0.2990     0.3059     0.3143 
+              0.3237     0.3342     0.3453     0.3571     0.3694 
+              0.3821     0.3952     0.4087     0.4224     0.4363 
+              0.4541     0.4842     0.5141     0.5438     0.5734 
+              0.6028     0.6320     0.6612     0.6901     0.7190 
+              0.7477     0.7762     0.8047     0.8329     0.8611 
+              0.8891     0.9170     0.9448     0.9725     1.0000 
+  Width: 
+              0.1564     0.1582     0.1600     0.1618     0.1636 
+              0.1654     0.1671     0.1689     0.1707     0.1725 
+              0.1743     0.1926     0.2301     0.2676     0.3052 
+              0.3427     0.3802     0.4177     0.4553     0.4928 
+              0.5303     0.5678     0.6054     0.6429     0.6804 
+              0.7179     0.7555     0.7930     0.8305     0.8680 
+              0.8981     0.9035     0.9089     0.9142     0.9196 
+              0.9249     0.9303     0.9357     0.9410     0.9464 
+              0.9518     0.9571     0.9625     0.9678     0.9732 
+              0.9786     0.9839     0.9893     0.9946     1.0000 
+
+  Transect 5
+  Area:  
+              0.0051     0.0103     0.0155     0.0208     0.0261 
+              0.0315     0.0370     0.0425     0.0481     0.0537 
+              0.0594     0.0653     0.0722     0.0804     0.0898 
+              0.1004     0.1123     0.1254     0.1397     0.1553 
+              0.1721     0.1901     0.2094     0.2299     0.2516 
+              0.2746     0.2988     0.3242     0.3509     0.3788 
+              0.4078     0.4374     0.4672     0.4971     0.5272 
+              0.5575     0.5880     0.6186     0.6494     0.6804 
+              0.7116     0.7429     0.7744     0.8061     0.8380 
+              0.8701     0.9023     0.9347     0.9672     1.0000 
+  Hrad:  
+              0.0327     0.0650     0.0968     0.1281     0.1590 
+              0.1895     0.2195     0.2492     0.2785     0.3075 
+              0.3361     0.3346     0.3106     0.2979     0.2922 
+              0.2914     0.2940     0.2990     0.3059     0.3143 
+              0.3237     0.3342     0.3453     0.3571     0.3694 
+              0.3821     0.3952     0.4087     0.4224     0.4363 
+              0.4541     0.4842     0.5141     0.5438     0.5734 
+              0.6028     0.6320     0.6612     0.6901     0.7190 
+              0.7477     0.7762     0.8047     0.8329     0.8611 
+              0.8891     0.9170     0.9448     0.9725     1.0000 
+  Width: 
+              0.1564     0.1582     0.1600     0.1618     0.1636 
+              0.1654     0.1671     0.1689     0.1707     0.1725 
+              0.1743     0.1926     0.2301     0.2676     0.3052 
+              0.3427     0.3802     0.4177     0.4553     0.4928 
+              0.5303     0.5678     0.6054     0.6429     0.6804 
+              0.7179     0.7555     0.7930     0.8305     0.8680 
+              0.8981     0.9035     0.9089     0.9142     0.9196 
+              0.9249     0.9303     0.9357     0.9410     0.9464 
+              0.9518     0.9571     0.9625     0.9678     0.9732 
+              0.9786     0.9839     0.9893     0.9946     1.0000 
+
+  Transect RCV-1
+  Area:  
+              0.0076     0.0167     0.0264     0.0365     0.0470 
+              0.0581     0.0696     0.0816     0.0942     0.1071 
+              0.1202     0.1334     0.1467     0.1602     0.1737 
+              0.1874     0.2012     0.2151     0.2292     0.2433 
+              0.2576     0.2719     0.2864     0.3011     0.3160 
+              0.3314     0.3471     0.3630     0.3792     0.3956 
+              0.4122     0.4291     0.4471     0.4733     0.5034 
+              0.5336     0.5639     0.5943     0.6249     0.6556 
+              0.6865     0.7176     0.7488     0.7803     0.8129 
+              0.8471     0.8836     0.9207     0.9597     1.0000 
+  Hrad:  
+              0.1021     0.2137     0.3201     0.4220     0.5202 
+              0.6150     0.7047     0.7904     0.8724     0.9688 
+              1.0764     1.1812     1.2849     1.3890     1.4923 
+              1.5946     1.6960     1.7964     1.8960     1.9947 
+              2.0926     2.1896     2.2859     2.3811     2.4733 
+              0.9047     0.8981     0.9260     0.9537     0.9812 
+              1.0085     1.0280     1.0364     1.0231     0.6921 
+              0.7306     0.7690     0.8062     0.8423     0.8781 
+              0.9137     0.9491     0.9843     1.0058     1.0044 
+              0.9726     0.9868     0.9995     0.9985     1.0000 
+  Width: 
+              0.2165     0.2278     0.2391     0.2505     0.2618 
+              0.2731     0.2853     0.2983     0.3121     0.3155 
+              0.3182     0.3215     0.3247     0.3276     0.3304 
+              0.3332     0.3360     0.3388     0.3416     0.3444 
+              0.3472     0.3500     0.3528     0.3581     0.3673 
+              0.3771     0.3838     0.3893     0.3948     0.4003 
+              0.4058     0.4146     0.5061     0.7267     0.7319 
+              0.7341     0.7362     0.7393     0.7433     0.7472 
+              0.7512     0.7551     0.7591     0.7737     0.8075 
+              0.8703     0.8947     0.9204     0.9607     1.0000 
+
+  Transect RCV-2
+  Area:  
+              0.0014     0.0055     0.0123     0.0218     0.0339 
+              0.0487     0.0655     0.0825     0.0996     0.1167 
+              0.1338     0.1509     0.1687     0.1877     0.2067 
+              0.2259     0.2451     0.2645     0.2839     0.3035 
+              0.3233     0.3432     0.3636     0.3843     0.4055 
+              0.4269     0.4484     0.4701     0.4921     0.5143 
+              0.5366     0.5590     0.5813     0.6037     0.6262 
+              0.6486     0.6711     0.6936     0.7162     0.7387 
+              0.7616     0.7853     0.8093     0.8337     0.8585 
+              0.8840     0.9106     0.9395     0.9691     1.0000 
+  Hrad:  
+              0.0459     0.0919     0.1386     0.1848     0.2310 
+              0.2770     0.3531     0.4432     0.5327     0.6218 
+              0.7104     0.7986     0.8105     0.8963     0.9815 
+              1.0662     1.1504     1.2340     1.3172     1.3998 
+              1.4813     1.5617     1.6400     1.7160     1.7898 
+              1.7778     1.8593     1.9238     1.9868     2.0530 
+              2.1362     2.2190     2.3016     2.3837     2.4655 
+              2.5470     2.6282     2.7090     2.7895     2.8696 
+              2.8570     2.8863     2.9349     2.9756     2.9911 
+              3.0090     1.0112     0.9988     1.0094     1.0000 
+  Width: 
+              0.0824     0.1646     0.2446     0.3247     0.4048 
+              0.4848     0.5112     0.5122     0.5132     0.5143 
+              0.5153     0.5163     0.5685     0.5715     0.5745 
+              0.5775     0.5805     0.5834     0.5864     0.5913 
+              0.5968     0.6048     0.6177     0.6306     0.6436 
+              0.6459     0.6478     0.6558     0.6640     0.6710 
+              0.6718     0.6726     0.6734     0.6741     0.6749 
+              0.6757     0.6765     0.6773     0.6781     0.6789 
+              0.7032     0.7176     0.7269     0.7383     0.7564 
+              0.7743     0.8413     0.8797     0.8979     1.0000 
+
+  Transect RCV-3
+  Area:  
+              0.0012     0.0048     0.0109     0.0193     0.0301 
+              0.0433     0.0588     0.0761     0.0936     0.1112 
+              0.1290     0.1468     0.1648     0.1828     0.2010 
+              0.2193     0.2378     0.2564     0.2753     0.2945 
+              0.3139     0.3335     0.3532     0.3731     0.3932 
+              0.4137     0.4345     0.4556     0.4768     0.4982 
+              0.5197     0.5413     0.5631     0.5849     0.6068 
+              0.6288     0.6509     0.6730     0.6953     0.7178 
+              0.7405     0.7636     0.7872     0.8118     0.8380 
+              0.8689     0.9009     0.9335     0.9665     1.0000 
+  Hrad:  
+              0.0481     0.0962     0.1443     0.1931     0.2419 
+              0.2904     0.3389     0.4194     0.5128     0.6057 
+              0.6974     0.7885     0.8790     0.9690     1.0583 
+              1.1471     1.2346     1.3168     1.3858     1.4651 
+              1.5474     1.6298     1.7115     1.7927     1.8671 
+              1.9208     1.9940     2.0665     2.1468     2.2301 
+              0.8181     0.8483     0.8784     0.9084     0.9383 
+              0.9681     0.9977     1.0273     1.0540     1.0780 
+              1.1017     1.1036     1.1214     1.1263     1.1094 
+              0.9298     0.9434     0.9666     0.9876     1.0000 
+  Width: 
+              0.0712     0.1424     0.2136     0.2837     0.3531 
+              0.4224     0.4918     0.5143     0.5173     0.5203 
+              0.5238     0.5273     0.5308     0.5343     0.5378 
+              0.5414     0.5453     0.5512     0.5623     0.5690 
+              0.5742     0.5791     0.5841     0.5890     0.5960 
+              0.6095     0.6167     0.6238     0.6285     0.6321 
+              0.6355     0.6383     0.6410     0.6438     0.6466 
+              0.6494     0.6522     0.6549     0.6594     0.6656 
+              0.6719     0.6916     0.7017     0.7401     0.8299 
+              0.9345     0.9550     0.9658     0.9788     1.0000 
+
+  Transect RCV-4
+  Area:  
+              0.0011     0.0045     0.0102     0.0181     0.0284 
+              0.0413     0.0564     0.0738     0.0924     0.1111 
+              0.1299     0.1489     0.1679     0.1870     0.2062 
+              0.2255     0.2449     0.2643     0.2838     0.3034 
+              0.3230     0.3427     0.3624     0.3822     0.4021 
+              0.4220     0.4420     0.4620     0.4821     0.5023 
+              0.5225     0.5429     0.5634     0.5840     0.6048 
+              0.6257     0.6471     0.6692     0.6919     0.7153 
+              0.7399     0.7661     0.7937     0.8223     0.8512 
+              0.8804     0.9099     0.9398     0.9698     1.0000 
+  Hrad:  
+              0.0431     0.0861     0.1292     0.1722     0.2082 
+              0.2538     0.2987     0.3432     0.1508     0.1803 
+              0.2096     0.2387     0.2677     0.2966     0.3255 
+              0.3548     0.3839     0.4130     0.4419     0.4708 
+              0.4995     0.5282     0.5568     0.5852     0.6136 
+              0.6419     0.6701     0.6982     0.7263     0.7542 
+              0.7820     0.8097     0.8371     0.8643     0.8913 
+              0.9028     0.9289     0.9538     0.9778     1.0006 
+              1.0217     1.0324     1.0241     1.0360     1.0484 
+              1.0613     1.0747     1.0896     1.1111     1.0000 
+  Width: 
+              0.0748     0.1495     0.2243     0.2990     0.3884 
+              0.4630     0.5376     0.6123     0.6168     0.6203 
+              0.6237     0.6272     0.6307     0.6342     0.6371 
+              0.6392     0.6412     0.6433     0.6453     0.6474 
+              0.6494     0.6515     0.6535     0.6556     0.6577 
+              0.6597     0.6618     0.6638     0.6659     0.6679 
+              0.6701     0.6749     0.6797     0.6845     0.6894 
+              0.6953     0.7181     0.7409     0.7589     0.7927 
+              0.8390     0.8913     0.9346     0.9506     0.9611 
+              0.9713     0.9815     0.9909     0.9955     1.0000 
+
+  Transect RCV-5
+  Area:  
+              0.0006     0.0025     0.0057     0.0101     0.0158 
+              0.0227     0.0309     0.0401     0.0505     0.0622 
+              0.0752     0.0898     0.1054     0.1216     0.1383 
+              0.1552     0.1723     0.1896     0.2071     0.2250 
+              0.2433     0.2621     0.2813     0.3009     0.3209 
+              0.3410     0.3614     0.3821     0.4032     0.4247 
+              0.4464     0.4684     0.4905     0.5129     0.5355 
+              0.5588     0.5828     0.6092     0.6373     0.6665 
+              0.6966     0.7276     0.7593     0.7920     0.8253 
+              0.8591     0.8940     0.9292     0.9646     1.0000 
+  Hrad:  
+              0.0506     0.1011     0.1517     0.2023     0.2528 
+              0.3035     0.3590     0.4134     0.4667     0.5180 
+              0.5661     0.6360     0.7031     0.7740     0.8571 
+              0.9388     1.0202     1.1011     1.1808     1.2585 
+              1.3336     1.4067     1.4783     1.6324     1.7153 
+              1.7980     1.7555     1.8279     1.8995     1.9623 
+              2.0424     2.1218     2.2007     2.2791     2.3569 
+              0.8314     0.8589     0.8550     0.7968     0.8088 
+              0.8249     0.8217     0.8388     0.8438     0.8774 
+              0.8820     0.9024     0.9313     0.9653     1.0000 
+  Width: 
+              0.0357     0.0713     0.1070     0.1426     0.1783 
+              0.2139     0.2454     0.2769     0.3106     0.3466 
+              0.3944     0.4273     0.4495     0.4653     0.4735 
+              0.4817     0.4863     0.4909     0.4968     0.5101 
+              0.5235     0.5363     0.5486     0.5596     0.5655 
+              0.5713     0.5810     0.5900     0.5997     0.6106 
+              0.6167     0.6228     0.6289     0.6350     0.6412 
+              0.6708     0.7059     0.7778     0.8090     0.8377 
+              0.8621     0.8854     0.9052     0.9388     0.9407 
+              0.9742     0.9909     0.9980     0.9994     1.0000 
+
+  Transect RCV-6
+  Area:  
+              0.0063     0.0134     0.0211     0.0292     0.0376 
+              0.0465     0.0557     0.0651     0.0748     0.0846 
+              0.0946     0.1051     0.1162     0.1276     0.1395 
+              0.1527     0.1680     0.1863     0.2056     0.2267 
+              0.2490     0.2720     0.2966     0.3214     0.3462 
+              0.3712     0.3962     0.4212     0.4463     0.4715 
+              0.4970     0.5226     0.5483     0.5740     0.5998 
+              0.6257     0.6516     0.6777     0.7039     0.7303 
+              0.7567     0.7832     0.8098     0.8364     0.8632 
+              0.8902     0.9175     0.9448     0.9723     1.0000 
+  Hrad:  
+              0.0738     0.1502     0.2167     0.2901     0.3570 
+              0.4178     0.4869     0.5574     0.6289     0.7010 
+              0.7710     0.2790     0.2977     0.3200     0.3273 
+              0.3201     0.3109     0.2862     0.3009     0.2996 
+              0.3197     0.3240     0.3467     0.3737     0.4014 
+              0.4290     0.4570     0.4854     0.5137     0.5367 
+              0.5606     0.5880     0.6155     0.6430     0.6704 
+              0.6960     0.7223     0.7483     0.7730     0.7978 
+              0.8249     0.8519     0.8788     0.9045     0.9260 
+              0.9435     0.9705     0.9975     1.0157     1.0000 
+  Width: 
+              0.2426     0.2531     0.2760     0.2849     0.2981 
+              0.3149     0.3238     0.3308     0.3365     0.3413 
+              0.3549     0.3769     0.3904     0.3988     0.4263 
+              0.4858     0.6054     0.6512     0.6954     0.7570 
+              0.7793     0.8402     0.8559     0.8605     0.8630 
+              0.8656     0.8673     0.8681     0.8689     0.8788 
+              0.8867     0.8889     0.8909     0.8928     0.8948 
+              0.8991     0.9023     0.9058     0.9107     0.9155 
+              0.9175     0.9194     0.9214     0.9247     0.9322 
+              0.9436     0.9454     0.9471     0.9573     1.0000 
+  
+  
+  ****************
+  Analysis Options
+  ****************
+  Flow Units ............... LPS
+  Process Models:
+    Rainfall/Runoff ........ YES
+    RDII ................... YES
+    Snowmelt ............... YES
+    Groundwater ............ YES
+    Flow Routing ........... YES
+    Ponding Allowed ........ NO
+    Water Quality .......... NO
+  Infiltration Method ...... GREEN_AMPT
+  Flow Routing Method ...... DYNWAVE
+  Surcharge Method ......... SLOT
+  Starting Date ............ 01/01/1997 00:00:00
+  Ending Date .............. 01/03/1997 02:00:00
+  Antecedent Dry Days ...... 5.0
+  Report Time Step ......... 00:01:00
+  Wet Time Step ............ 00:00:30
+  Dry Time Step ............ 00:01:00
+  Routing Time Step ........ 10.00 sec
+  Variable Time Step ....... YES
+  Maximum Trials ........... 8
+  Number of Threads ........ 1
+  Head Tolerance ........... 0.000100 m
+  
+  
+  **********************           Volume        Volume
+  Rainfall Dependent I/I        hectare-m      10^6 ltr
+  **********************        ---------     ---------
+  Sewershed Rainfall ......         1.061        10.609
+  RDII Produced ...........         0.055         0.545
+  RDII Ratio ..............         0.051
+  
+  
+  ERROR 134: Node 1249_N1 has illegal DUMMY link connections.
+
+  Analysis begun on:  Mon Mar  9 22:29:44 2026
+  Analysis ended on:  Mon Mar  9 22:29:44 2026
+  Total elapsed time: < 1 sec
