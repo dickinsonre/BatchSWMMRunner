@@ -16,6 +16,7 @@ import ExpectedOutputs from "@/components/ExpectedOutputs";
 import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
 import SampleModels from "@/components/SampleModels";
+import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from "@/components/LiveApiDashboard";
 import type { SwmmStatus } from "@shared/schema";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
@@ -45,6 +46,7 @@ export default function Home() {
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
   const [engineMode, setEngineMode] = useState<'executable' | 'api'>('executable');
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
+  const [apiSnapshots, setApiSnapshots] = useState<ApiSnapshotEntry[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const { toast } = useToast();
@@ -162,6 +164,28 @@ export default function Home() {
           title: "Batch Processing Complete",
           description: "All files have been processed.",
         });
+      } else if (data.type === 'api_snapshot') {
+        setApiSnapshots(prev => {
+          const entry: ApiSnapshotEntry = {
+            stepCount: data.stepCount,
+            elapsedTime: data.elapsedTime,
+            fileId: data.fileId,
+            fileName: data.fileName,
+            nodeSnapshots: data.nodeSnapshots || [],
+            linkSnapshots: data.linkSnapshots || [],
+          };
+          const next = [...prev, entry];
+          const fileCount = next.filter(s => s.fileId === data.fileId).length;
+          if (fileCount > MAX_SNAPSHOTS_PER_FILE) {
+            let dropped = 0;
+            return next.filter(s => {
+              if (s.fileId !== data.fileId) return true;
+              dropped++;
+              return dropped % 2 === 0;
+            });
+          }
+          return next;
+        });
       } else if (data.type === 'cancelled') {
         setProcessingState('idle');
         setStartTime(null);
@@ -233,6 +257,7 @@ export default function Home() {
     setElapsedTime('');
     setLogs([]);
     setFileProgressMap(new Map());
+    setApiSnapshots([]);
     startTimeRef.current = null;
   };
 
@@ -261,6 +286,7 @@ export default function Home() {
       setResults([]);
       setLogs([]);
       setFileProgressMap(new Map());
+      setApiSnapshots([]);
       setStartTime(Date.now());
       startTimeRef.current = Date.now();
 
@@ -546,6 +572,14 @@ export default function Home() {
                   fileNames={files.map(f => f.name)}
                 />
               </section>
+              {engineMode === 'api' && (
+                <section data-testid="section-live-dashboard">
+                  <LiveApiDashboard
+                    snapshots={apiSnapshots}
+                    currentFileId={apiSnapshots.length > 0 ? apiSnapshots[apiSnapshots.length - 1].fileId : ''}
+                  />
+                </section>
+              )}
               <section data-testid="section-processing-log">
                 <ProcessingLog logs={logs} />
               </section>
@@ -555,6 +589,14 @@ export default function Home() {
           {processingState === 'completed' && results.length > 0 && (
             <>
               <Separator />
+              {apiSnapshots.length > 0 && (
+                <section data-testid="section-live-dashboard-completed">
+                  <LiveApiDashboard
+                    snapshots={apiSnapshots}
+                    currentFileId={apiSnapshots[apiSnapshots.length - 1]?.fileId || ''}
+                  />
+                </section>
+              )}
               <section data-testid="section-processing-log">
                 <ProcessingLog logs={logs} defaultCollapsed={true} />
               </section>
