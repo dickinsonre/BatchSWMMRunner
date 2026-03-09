@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import AppHeader from "@/components/AppHeader";
 import FileUploadZone from "@/components/FileUploadZone";
@@ -42,6 +43,7 @@ export default function Home() {
   const [outputFormat, setOutputFormat] = useState("all");
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
+  const [engineMode, setEngineMode] = useState<'executable' | 'api'>('executable');
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -266,6 +268,8 @@ export default function Home() {
 
       const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ engineMode }),
       });
 
       if (!startResponse.ok) {
@@ -353,7 +357,7 @@ export default function Home() {
                 ) : (
                   <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 )}
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-sm flex-1">
                   {swmmStatus?.found ? (
                     <>
                       <p className="font-medium text-green-700 dark:text-green-400" data-testid="text-swmm-found">SWMM5 Engine Detected</p>
@@ -402,6 +406,50 @@ export default function Home() {
                         </a>
                       </p>
                     </>
+                  )}
+
+                  {swmmStatus?.found && (
+                    <div className="pt-2 border-t border-border/50">
+                      <p className="text-xs font-medium text-muted-foreground mb-2">Engine Mode</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Button
+                          size="sm"
+                          variant={engineMode === 'executable' ? 'default' : 'outline'}
+                          onClick={() => setEngineMode('executable')}
+                          disabled={processingState === 'processing'}
+                          data-testid="button-mode-executable"
+                          className="toggle-elevate"
+                        >
+                          <Terminal className="h-3.5 w-3.5 mr-1.5" />
+                          Executable
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={engineMode === 'api' ? 'default' : 'outline'}
+                          onClick={() => setEngineMode('api')}
+                          disabled={processingState === 'processing' || !swmmStatus?.apiAvailable}
+                          data-testid="button-mode-api"
+                          className="toggle-elevate"
+                        >
+                          <Cpu className="h-3.5 w-3.5 mr-1.5" />
+                          SWMM5 API
+                        </Button>
+                        {swmmStatus?.apiAvailable ? (
+                          <Badge variant="outline" className="text-green-600 border-green-500/30" data-testid="badge-api-available">
+                            API v{swmmStatus.apiVersion ? (swmmStatus.apiVersion / 10000).toFixed(1) : '?'}
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-muted-foreground" data-testid="badge-api-unavailable">
+                            API unavailable
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1.5">
+                        {engineMode === 'executable'
+                          ? 'Spawns runswmm as a child process (standard mode).'
+                          : 'Uses SWMM5 shared library for step-by-step control with live data streaming.'}
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>

@@ -6,7 +6,9 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
-- **Mar 2026 (latest)**: Updated HANDOVER.md to 1,599 lines with accurate file line counts (routes.ts 1,018, total key files 8,484), dedicated binary output parser section, corrected architecture diagram, comprehensive 21-section table of contents
+- **Mar 2026 (latest)**: Added Full SWMM5 API Guide (5,408-line markdown) as searchable documentation tab — fetched at runtime from `/api/swmm5-api-guide`, rendered with react-markdown + remark-gfm + @tailwindcss/typography prose styling, includes search/filter functionality
+- **Mar 2026**: Added SWMM5 API Mode — compiled EPA SWMM 5.2.4 as shared library (`libswmm5.so`), created `server/swmm5api.ts` FFI bridge via koffi wrapping all 20 API functions, added API mode toggle on Home page with step-by-step simulation control, live node/link data streaming via WebSocket, and BatchSWMM API Mode documentation tab
+- **Mar 2026**: Updated HANDOVER.md to 1,599 lines with accurate file line counts (routes.ts 1,018, total key files 8,484), dedicated binary output parser section, corrected architecture diagram, comprehensive 21-section table of contents
 - **Mar 2026**: Added SWMM `.out` binary parser (`parseSwmmOutputBinary()` in `server/routes.ts`) — reads EPA SWMM 5.2 binary format (magic 516114522), extracts node/link time series for interactive charts; max 2,000 periods, OLE date conversion
 - **Mar 2026**: Added "Run SWMM" feature to ReSWMM page with before/after SimulationComparison (side-by-side table + grouped bar charts)
 - **Mar 2026**: Added "Run SWMM" button to Folder View file detail panel
@@ -68,7 +70,10 @@ Preferred communication style: Simple, everyday language.
 - Path-based WebSocket routing using job IDs as query parameters
 
 **Process Management:**
-- Child process spawning for executing SWMM simulations
+- Child process spawning for executing SWMM simulations (Executable mode)
+- SWMM5 shared library (libswmm5.so) via koffi FFI for step-by-step simulation (API mode)
+- FFI bridge: `server/swmm5api.ts` wrapping all 20 SWMM5 API functions
+- Engine mode toggle: `engineMode: 'executable' | 'api'` passed to batch start
 - In-memory job tracking with status updates
 - Sequential file processing with progress callbacks
 

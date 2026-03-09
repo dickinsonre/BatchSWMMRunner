@@ -60,6 +60,8 @@ export const swmmStatusSchema = z.object({
   path: z.string().optional(),
   mode: z.enum(['live', 'simulation']),
   searchedPaths: z.array(z.string()).optional(),
+  apiAvailable: z.boolean().optional(),
+  apiVersion: z.number().optional(),
 });
 
 export type SwmmStatus = z.infer<typeof swmmStatusSchema>;

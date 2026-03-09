@@ -1,10 +1,15 @@
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Loader2, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import AppHeader from "@/components/AppHeader";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import swmm5ApiDiagramPath from "@assets/image_1773083934176.png";
+import swmm5ApiRoadmapPath from "@assets/image_1773085062886.png";
 
 const SWMM_INTEGRATION_CODE = `import { spawn } from "child_process";
 import fs from "fs";
@@ -1064,6 +1069,129 @@ function CodeBlock({ code, language = "typescript" }: { code: string; language?:
   );
 }
 
+interface GuideSection {
+  heading: string;
+  level: number;
+  content: string;
+}
+
+function parseIntoSections(markdown: string): GuideSection[] {
+  const lines = markdown.split("\n");
+  const sections: GuideSection[] = [];
+  let currentHeading = "Introduction";
+  let currentLevel = 1;
+  let currentLines: string[] = [];
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^(#{1,4})\s+(.+)/);
+    if (headingMatch) {
+      if (currentLines.length > 0) {
+        sections.push({ heading: currentHeading, level: currentLevel, content: currentLines.join("\n") });
+      }
+      currentHeading = headingMatch[2];
+      currentLevel = headingMatch[1].length;
+      currentLines = [line];
+    } else {
+      currentLines.push(line);
+    }
+  }
+  if (currentLines.length > 0) {
+    sections.push({ heading: currentHeading, level: currentLevel, content: currentLines.join("\n") });
+  }
+  return sections;
+}
+
+function FullApiGuide() {
+  const [guideContent, setGuideContent] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    fetch("/api/swmm5-api-guide")
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.text();
+      })
+      .then((text) => {
+        setGuideContent(text);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(`Failed to load API guide: ${err.message}`);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchTerm(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => setDebouncedSearch(value), 200);
+  }, []);
+
+  const sections = useMemo(() => parseIntoSections(guideContent), [guideContent]);
+
+  const { filteredContent, matchCount } = useMemo(() => {
+    const term = debouncedSearch.trim().toLowerCase();
+    if (!term) return { filteredContent: guideContent, matchCount: 0 };
+
+    const matched = sections.filter((s) => s.content.toLowerCase().includes(term) || s.heading.toLowerCase().includes(term));
+    return {
+      filteredContent: matched.map((s) => s.content).join("\n\n---\n\n") || "",
+      matchCount: matched.length,
+    };
+  }, [debouncedSearch, sections, guideContent]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12 gap-2 text-muted-foreground" data-testid="loading-api-guide">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span className="text-sm">Loading SWMM5 API Guide...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12 text-destructive text-sm" data-testid="error-api-guide">
+        {error}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search the API guide..."
+          value={searchTerm}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="pl-9"
+          data-testid="input-search-api-guide"
+        />
+      </div>
+      {debouncedSearch && (
+        <p className="text-xs text-muted-foreground" data-testid="text-search-results">
+          {matchCount > 0 ? `Found ${matchCount} section${matchCount !== 1 ? "s" : ""} matching` : "No sections matching"} "{debouncedSearch}" &mdash;{" "}
+          <button className="underline" onClick={() => { setSearchTerm(""); setDebouncedSearch(""); }} data-testid="button-clear-search">
+            clear search
+          </button>
+        </p>
+      )}
+      <ScrollArea className="h-[70vh]">
+        <div className="prose prose-sm dark:prose-invert max-w-none px-1" data-testid="content-api-guide">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {filteredContent || "No matching content found."}
+          </ReactMarkdown>
+        </div>
+      </ScrollArea>
+    </div>
+  );
+}
+
 export default function Documentation() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -1200,12 +1328,18 @@ export default function Documentation() {
                 <CardContent>
                   <Tabs defaultValue="api-overview" data-testid="tabs-swmm5-api-inner">
                     <TabsList className="flex flex-wrap gap-1 mb-4" data-testid="tablist-swmm5-api-inner">
+                      <TabsTrigger value="api-full-guide" data-testid="tab-api-full-guide">Full API Guide</TabsTrigger>
                       <TabsTrigger value="api-overview" data-testid="tab-api-overview">Overview</TabsTrigger>
                       <TabsTrigger value="api-c" data-testid="tab-api-c">C Header</TabsTrigger>
                       <TabsTrigger value="api-python" data-testid="tab-api-python">Python</TabsTrigger>
                       <TabsTrigger value="api-pascal" data-testid="tab-api-pascal">Pascal</TabsTrigger>
                       <TabsTrigger value="api-examples" data-testid="tab-api-examples">Usage Examples</TabsTrigger>
+                      <TabsTrigger value="api-batchswmm" data-testid="tab-api-batchswmm">BatchSWMM API Mode</TabsTrigger>
                     </TabsList>
+
+                    <TabsContent value="api-full-guide">
+                      <FullApiGuide />
+                    </TabsContent>
 
                     <TabsContent value="api-overview">
                       <div className="space-y-6">
@@ -1334,6 +1468,117 @@ With stride:    swmm_open(f1, f2, f3)
 
                     <TabsContent value="api-examples">
                       <CodeBlock code={SWMM5_API_DOC.usageExamples} />
+                    </TabsContent>
+
+                    <TabsContent value="api-batchswmm">
+                      <div className="space-y-6">
+                        <div className="rounded border overflow-hidden" data-testid="img-swmm5-api-roadmap">
+                          <img
+                            src={swmm5ApiRoadmapPath}
+                            alt="Unlocking SWMM5 API Control: Implementation Roadmap — compile shared library, FFI bindings, step mode with live monitoring and real-time control"
+                            className="w-full h-auto"
+                          />
+                        </div>
+
+                        <div className="bg-muted/40 rounded p-4">
+                          <h3 className="font-medium text-sm mb-3" data-testid="text-batchswmm-api-mode-title">BatchSWMM API Mode</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            BatchSWMM offers two engine modes for running SWMM simulations. Users can toggle between
+                            them on the Home page before starting a batch run.
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <Card>
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm">Executable Mode (Default)</CardTitle>
+                              </CardHeader>
+                              <CardContent className="text-xs text-muted-foreground space-y-1">
+                                <p>Spawns <code>runswmm</code> as a child process via <code>child_process.spawn()</code>.</p>
+                                <p>Equivalent to running <code>runswmm input.inp report.rpt output.out</code> from the command line.</p>
+                                <p>Progress parsed from stdout percentage output.</p>
+                                <p>Simple, reliable, no library linking needed.</p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm">API Mode (SWMM5 Shared Library)</CardTitle>
+                              </CardHeader>
+                              <CardContent className="text-xs text-muted-foreground space-y-1">
+                                <p>Loads <code>libswmm5.so</code> via Node.js FFI (koffi) and calls API functions directly.</p>
+                                <p>Uses step-by-step execution: <code>swmm_open → swmm_start → swmm_step (loop) → swmm_end → swmm_report → swmm_close</code></p>
+                                <p>Streams live node/link data during simulation (depth, flow, velocity).</p>
+                                <p>Enables future real-time control (adjusting pump settings mid-simulation).</p>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-sm">Architecture</h4>
+                          <pre className="text-xs font-mono bg-muted/40 p-4 rounded whitespace-pre-wrap">{`BatchSWMM API Mode Architecture
+================================
+
+Source:   EPA SWMM 5.2.4 (github.com/USEPA/Stormwater-Management-Model)
+Compiled: gcc -shared -fPIC -O2 → libswmm5.so (54 C source files)
+Bridge:   server/swmm5api.ts (koffi FFI bindings)
+Route:    POST /api/batch/:jobId/start { engineMode: 'api' }
+
+Step-by-Step Flow:
+─────────────────
+1. swmm_open(inp, rpt, out)    — Parse input file, allocate objects
+2. swmm_start(1)               — Initialize simulation (saveFlag=1 for .out)
+3. swmm_step(&elapsed) [loop]  — Advance one routing time step
+   ├─ swmm_getValue(NODE_DEPTH, i)  — Read live node depths
+   ├─ swmm_getValue(LINK_FLOW, i)   — Read live link flows
+   └─ WebSocket → api_snapshot      — Stream to browser
+4. swmm_getMassBalErr(...)     — Get continuity errors
+5. swmm_end()                  — Finalize results
+6. swmm_report()               — Write .rpt file
+7. swmm_close()                — Free memory
+
+Output: Same .rpt and .out files as Executable mode
+        → Fully compatible with existing Results Dashboard
+
+API Functions Wrapped (20 total):
+─────────────────────────────────
+Core:     swmm_run, swmm_open, swmm_start, swmm_step, swmm_stride,
+          swmm_end, swmm_report, swmm_close
+Query:    swmm_getCount, swmm_getName, swmm_getIndex
+Runtime:  swmm_getValue, swmm_setValue, swmm_getSavedValue
+Status:   swmm_getMassBalErr, swmm_getVersion, swmm_getError,
+          swmm_getWarnings, swmm_writeLine, swmm_decodeDate
+
+WebSocket Message Types (API Mode):
+────────────────────────────────────
+file_progress  — Step count and percentage
+api_snapshot   — Live node/link data (depth, flow, velocity)
+log            — [API Mode] prefix messages with version/step/error info`}</pre>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-sm">Key Files</h4>
+                          <div className="text-xs font-mono text-muted-foreground space-y-1 bg-muted/40 p-3 rounded">
+                            <div><code>swmm-engine/libswmm5.so</code> — Compiled SWMM5 shared library (EPA SWMM 5.2.4)</div>
+                            <div><code>swmm-engine/runswmm</code> — Standalone executable (used in Executable mode)</div>
+                            <div><code>swmm-source/</code> — EPA SWMM source code (54 solver .c files + headers)</div>
+                            <div><code>server/swmm5api.ts</code> — Node.js FFI bridge wrapping all 20 API functions</div>
+                            <div><code>server/routes.ts</code> — processSingleFileApi() for API-mode batch runs</div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-sm">Future Capabilities (Enabled by API Mode)</h4>
+                          <div className="text-xs text-muted-foreground space-y-1">
+                            <p>The step-by-step API opens the door to features not possible with the executable:</p>
+                            <ul className="list-disc pl-5 space-y-1 mt-1">
+                              <li><strong>Real-Time Control (RTC):</strong> Use <code>swmm_setValue()</code> to adjust pump speeds, gate openings, or orifice settings mid-simulation based on live conditions.</li>
+                              <li><strong>Live Dashboards:</strong> Stream node depths and link flows to the browser in real time during simulation.</li>
+                              <li><strong>Conditional Early Termination:</strong> Stop a simulation early if flooding thresholds are exceeded.</li>
+                              <li><strong>Parameter Modification:</strong> Change subcatchment properties or inflow patterns between steps without restarting.</li>
+                              <li><strong>Custom Reporting:</strong> Use <code>swmm_writeLine()</code> to inject custom annotations into the .rpt file during simulation.</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
