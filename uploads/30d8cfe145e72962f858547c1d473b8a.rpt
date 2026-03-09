@@ -1,0 +1,62 @@
+
+  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
+  ------------------------------------------------------------
+
+  Scenario Run :  LID_USAGE 
+  WARNING 03: negative offset ignored for Link SWALE_1
+  WARNING 03: negative offset ignored for Link SWALE_2
+  
+  ERROR 143: Regulator ORI-11 has invalid cross-section shape.
+  
+  ERROR 143: Regulator CDT-41 has invalid cross-section shape.
+  
+  ERROR 143: Regulator WEIR1@260-261 has invalid cross-section shape.
+  
+  ERROR 143: Regulator Vnotch1 has invalid cross-section shape.
+  
+  ERROR 143: Regulator Transverse1 has invalid cross-section shape.
+  
+  ERROR 143: Regulator 2601OF has invalid cross-section shape.
+  WARNING 02: maximum depth increased for Node 25
+  WARNING 02: maximum depth increased for Node 255
+  WARNING 02: maximum depth increased for Node 26
+  WARNING 02: maximum depth increased for Node 276
+  WARNING 02: maximum depth increased for Node 31
+  WARNING 02: maximum depth increased for Node 74
+  WARNING 02: maximum depth increased for Node 77
+  WARNING 02: maximum depth increased for Node JCT-120
+  WARNING 02: maximum depth increased for Node JCT-160
+  WARNING 02: maximum depth increased for Node JCT-162
+  WARNING 02: maximum depth increased for Node JCT-164
+  WARNING 02: maximum depth increased for Node JCT-166
+  WARNING 02: maximum depth increased for Node JCT-168
+  WARNING 02: maximum depth increased for Node JCT-170
+  WARNING 02: maximum depth increased for Node CDT-119_N1
+  WARNING 02: maximum depth increased for Node CDT-163_N1
+  WARNING 02: maximum depth increased for Node CDT-163_N2
+  WARNING 02: maximum depth increased for Node CDT-163_N3
+  WARNING 02: maximum depth increased for Node CDT-165_N1
+  WARNING 02: maximum depth increased for Node CDT-165_N2
+  WARNING 02: maximum depth increased for Node CDT-165_N3
+  WARNING 02: maximum depth increased for Node CDT-165_N4
+  WARNING 02: maximum depth increased for Node CDT-167_N1
+  WARNING 02: maximum depth increased for Node CDT-167_N2
+  WARNING 02: maximum depth increased for Node CDT-167_N3
+  WARNING 02: maximum depth increased for Node CDT-167_N4
+  WARNING 02: maximum depth increased for Node CDT-167_N5
+  WARNING 02: maximum depth increased for Node CDT-169_N1
+  WARNING 02: maximum depth increased for Node CDT-169_N2
+  WARNING 02: maximum depth increased for Node CDT-171_N1
+  WARNING 02: maximum depth increased for Node CDT-171_N2
+  WARNING 02: maximum depth increased for Node CDT-175_N1
+  WARNING 02: maximum depth increased for Node R26_N1
+  WARNING 02: maximum depth increased for Node R26_N2
+  WARNING 02: maximum depth increased for Node R26_N3
+  WARNING 02: maximum depth increased for Node R26_N4
+  WARNING 02: maximum depth increased for Node R74_N1
+  WARNING 02: maximum depth increased for Node R83_N1
+  WARNING 02: maximum depth increased for Node R83_N2
+
+  Analysis begun on:  Mon Mar  9 22:12:41 2026
+  Analysis ended on:  Mon Mar  9 22:12:41 2026
+  Total elapsed time: < 1 sec

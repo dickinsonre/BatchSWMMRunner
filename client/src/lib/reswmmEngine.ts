@@ -319,11 +319,21 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
   }
 
   function buildXSectionLines(): string[] {
+    const conduitNames = new Set(result.newConduits.map(c => c.name));
+    const originalConduitNames = new Set(parsed.conduits.map(c => c.name));
+    const nonConduitXSections = parsed.xsections.filter(xs =>
+      !conduitNames.has(xs.link) && !originalConduitNames.has(xs.link)
+    );
+
     const out: string[] = [];
     out.push('[XSECTIONS]');
     out.push(';;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   ');
     out.push(';;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------');
     for (const xs of result.newXSections) {
+      const shapePad = Math.max(13, xs.shape.length + 1);
+      out.push(`${xs.link.padEnd(17)}${xs.shape.padEnd(shapePad)}${xs.geom1.toString().padEnd(17)}${xs.geom2.toString().padEnd(11)}${xs.geom3.toString().padEnd(11)}${xs.geom4.toString().padEnd(11)}${xs.barrels}`);
+    }
+    for (const xs of nonConduitXSections) {
       const shapePad = Math.max(13, xs.shape.length + 1);
       out.push(`${xs.link.padEnd(17)}${xs.shape.padEnd(shapePad)}${xs.geom1.toString().padEnd(17)}${xs.geom2.toString().padEnd(11)}${xs.geom3.toString().padEnd(11)}${xs.geom4.toString().padEnd(11)}${xs.barrels}`);
     }
