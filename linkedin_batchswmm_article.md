@@ -99,9 +99,10 @@ This is the kind of pre-processing review that catches problems before you burn 
 
 BatchSWMM includes **ReSWMM**, a conduit discretization engine that addresses one of the most common sources of numerical error in dynamic wave models: insufficient spatial resolution in the conduit network.
 
-The physics are well-established. The Courant-Friedrichs-Lewy (CFL) condition requires that the simulation timestep be small enough relative to conduit length and wave celerity to maintain numerical stability (Courant et al., 1928). Long conduits can under-resolve flow attenuation, while short conduits can force unnecessarily small timesteps.
+The physics are well-established. The Courant-Friedrichs-Lewy (CFL) condition requires that the simulation timestep be small enough relative to conduit length and wave celerity to maintain numerical stability (Courant et al., 1928). Vasconcelos et al. (2018) demonstrated that SWMM's lack of intra-conduit spatial discretization causes significant accuracy problems during rapid filling and mixed-flow conditions. Pachaly et al. (2020) further confirmed that combining Artificial Spatial Discretization with appropriate timesteps reduces continuity errors and numerical instabilities, with field validation against real stormwater systems (Pachaly et al., 2019).
 
-ReSWMM automates the process of:
+The concept builds on the original **ReSWMM** tool (https://github.com/ecotecnologias/ReSWMM), which implemented these discretization methods as a standalone application. BatchSWMM's engine extends the same principles with an integrated workflow:
+
 - Splitting long conduits into shorter segments with interpolated intermediate junctions
 - Lengthening short conduits that would violate CFL stability for a given timestep
 - Computing CFL-stable timesteps for every conduit in the network
@@ -188,7 +189,13 @@ Your models. Your engine. Just faster.
 
 Courant, R., Friedrichs, K., & Lewy, H. (1928). Über die partiellen Differenzengleichungen der mathematischen Physik. *Mathematische Annalen*, 100(1), 32-74. https://doi.org/10.1007/BF01448839
 
+ecotecnologias. (2019). *ReSWMM* [Computer software]. GitHub. https://github.com/ecotecnologias/ReSWMM
+
 James, W., Rossman, L. A., & James, W. R. C. (2010). *User's Guide to SWMM 5*. CHI Press, Guelph, Ontario. ISBN: 978-0-9808853-5-4.
+
+Pachaly, R. L., Vasconcelos, J. G., Allasia, D. G., & Tassi, R. (2019). Field Evaluation of Discretized Model Setups for the Storm Water Management Model. *Journal of Water Management Modeling*, C463. https://www.chijournal.org/C463
+
+Pachaly, R. L., Vasconcelos, J. G., Allasia, D. G., Tassi, R., & Bocchi, J. P. P. (2020). Comparing SWMM 5.1 Calculation Alternatives to Represent Unsteady Stormwater Sewer Flows. *Journal of Hydraulic Engineering*, 146(7). https://doi.org/10.1061/(ASCE)HY.1943-7900.0001762
 
 Rossman, L. A. (2015). *Storm Water Management Model Reference Manual Volume I — Hydrology (Revised)*. EPA/600/R-15/162A. U.S. Environmental Protection Agency, Cincinnati, OH.
 
@@ -197,6 +204,8 @@ Rossman, L. A. (2017). *Storm Water Management Model Reference Manual Volume II 
 Rossman, L. A., & Simon, M. A. (2022). *Storm Water Management Model User's Manual Version 5.2*. EPA/600/R-22/030. U.S. Environmental Protection Agency, Cincinnati, OH.
 
 U.S. EPA. (2024). *Storm Water Management Model (SWMM) Version 5.2.4*. U.S. Environmental Protection Agency, Office of Research and Development. https://www.epa.gov/water-research/storm-water-management-model-swmm
+
+Vasconcelos, J. G., Wright, S. J., & Roe, P. L. (2018). Evaluating Storm Water Management Model Accuracy in Conditions of Mixed Flows. *Journal of Water Management Modeling*, C451. https://www.chijournal.org/C451
 
 ---
 
