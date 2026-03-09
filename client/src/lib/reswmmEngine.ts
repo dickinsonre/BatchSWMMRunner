@@ -130,6 +130,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
   const newLosses: LossData[] = [];
   let splitCount = 0;
   let newJunctionCount = 0;
+  const unsplittableShapes = new Set(['DUMMY', 'IRREGULAR']);
 
   for (const conduit of workingConduits) {
     const xs = xsMap.get(conduit.name);
@@ -143,8 +144,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
     }
 
     const nSeg = Math.max(1, Math.ceil(conduit.length / targetLen));
-
-    if (nSeg <= 1) {
+    if (nSeg <= 1 || (xs && unsplittableShapes.has(xs.shape.toUpperCase()))) {
       newConduits.push(conduit);
       if (xs) newXSections.push(xs);
       const loss = lossMap.get(conduit.name);
