@@ -51,7 +51,7 @@ export interface RainGageData {
 export interface XSectionData {
   link: string;
   shape: string;
-  geom1: number;
+  geom1: string;
   geom2: number;
   geom3: number;
   geom4: number;
@@ -325,7 +325,7 @@ function parseXSections(sections: Map<string, string[]>): XSectionData[] {
     .map(parts => ({
       link: parts[0],
       shape: parts[1],
-      geom1: parseFloat(parts[2]) || 0,
+      geom1: parts[2] || '0',
       geom2: parseFloat(parts[3]) || 0,
       geom3: parseFloat(parts[4]) || 0,
       geom4: parseFloat(parts[5]) || 0,

@@ -586,7 +586,7 @@ export default function ReswmmPage() {
     const g = isUS ? 32.174 : 9.81;
     return result.newConduits.map(c => {
       const xs = xsMap.get(c.name);
-      const diameter = xs ? xs.geom1 : 1;
+      const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
       const celerity = Math.sqrt(g * diameter);
       const standardTs = celerity > 0 ? c.length / celerity : 999;
       return { conduitName: c.name, length: c.length, diameter, standardTimeStep: standardTs, conservativeTimeStep: standardTs * 0.10 };

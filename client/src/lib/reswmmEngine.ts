@@ -60,7 +60,7 @@ export function computeCflAnalysis(parsed: ParsedInpFile): CflAnalysis[] {
 
   return parsed.conduits.map(c => {
     const xs = xsMap.get(c.name);
-    const diameter = xs ? xs.geom1 : 1;
+    const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
     const celerity = Math.sqrt(g * diameter);
     const standardTs = celerity > 0 ? c.length / celerity : 999;
     return {
@@ -111,7 +111,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
   if (config.lengtheningEnabled && config.lengtheningStep > 0) {
     for (const conduit of workingConduits) {
       const xs = xsMap.get(conduit.name);
-      const diameter = xs ? xs.geom1 : 1;
+      const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
       const celerity = Math.sqrt(g * diameter);
       const minLength = +(celerity * config.lengtheningStep).toFixed(2);
       if (conduit.length < minLength) {
@@ -133,7 +133,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
 
   for (const conduit of workingConduits) {
     const xs = xsMap.get(conduit.name);
-    const diameter = xs ? xs.geom1 : 1;
+    const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
 
     let targetLen: number;
     if (config.method === 'fixed_interval') {
@@ -324,7 +324,8 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     out.push(';;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   ');
     out.push(';;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------');
     for (const xs of result.newXSections) {
-      out.push(`${xs.link.padEnd(17)}${xs.shape.padEnd(13)}${xs.geom1.toString().padEnd(17)}${xs.geom2.toString().padEnd(11)}${xs.geom3.toString().padEnd(11)}${xs.geom4.toString().padEnd(11)}${xs.barrels}`);
+      const shapePad = Math.max(13, xs.shape.length + 1);
+      out.push(`${xs.link.padEnd(17)}${xs.shape.padEnd(shapePad)}${xs.geom1.toString().padEnd(17)}${xs.geom2.toString().padEnd(11)}${xs.geom3.toString().padEnd(11)}${xs.geom4.toString().padEnd(11)}${xs.barrels}`);
     }
     out.push('');
     return out;
