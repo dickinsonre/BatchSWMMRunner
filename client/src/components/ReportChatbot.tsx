@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, User, Download, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { Send, Bot, User, Download, Loader2, Sparkles, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -133,11 +134,88 @@ export default function ReportChatbot({ reportContent, inpContent, fileName }: R
     }
   };
 
-  const suggestions = [
-    "Generate a professional HTML report with all summary tables",
-    "Create an executive summary report with key findings and charts",
-    "Make a report focused on flooding analysis and node surcharging",
-    "Build a conduit capacity report with flow vs. design comparisons",
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+
+  const reportCategories: { label: string; reports: { title: string; prompt: string }[] }[] = [
+    {
+      label: "System Performance",
+      reports: [
+        { title: "Professional HTML Report", prompt: "Generate a professional HTML report with all summary tables, continuity errors, flooding summary, and hydrology comparison." },
+        { title: "Executive Summary", prompt: "Create an executive summary report with key findings, charts, and actionable recommendations." },
+        { title: "System Mass Balance", prompt: "Generate a report showing the system-wide water balance: total precipitation, total infiltration, total runoff, total inflow, total flooding, total outflow, and continuity errors for both runoff and routing. Flag any continuity errors exceeding 1%." },
+        { title: "Model Health Check", prompt: "Create a diagnostic report identifying potential model issues: continuity errors, unconverged timesteps, dry nodes, zero-flow conduits, nodes that never receive flow, and conduits with flow reversals. Summarize overall model health with a traffic-light rating." },
+        { title: "Simulation Performance", prompt: "Build a report on simulation runtime performance: total elapsed time, number of timesteps, average timestep, minimum timestep used, number of timestep reductions, and routing stability metrics. Include recommendations if the model shows instability." },
+        { title: "Rainfall-Runoff Summary", prompt: "Generate a report summarizing the rainfall event characteristics (total depth, peak intensity, duration) and corresponding runoff response (total runoff volume, peak flow at outfalls, runoff coefficient per subcatchment, and system-wide runoff coefficient)." },
+      ],
+    },
+    {
+      label: "Node Analysis",
+      reports: [
+        { title: "Flooding Analysis", prompt: "Make a report focused on flooding analysis and node surcharging: all nodes that experienced flooding, total flood volume per node, maximum flood rate, duration of flooding, time of first flooding, and a ranked list from worst to least." },
+        { title: "Node Depth Exceedance", prompt: "Create a report showing all nodes where maximum water depth exceeded 80% of maximum depth. Include node ID, max depth, crown elevation, rim elevation, time of maximum, duration above 80%, and flag any nodes with actual surface flooding." },
+        { title: "Node Inflow Analysis", prompt: "Generate a report listing all nodes with external inflows: dry weather flow, direct inflow, RDII, and total inflow per node. Show peak inflow rate and time of peak for each. Identify the top 10 nodes by peak inflow." },
+        { title: "Surcharging Duration", prompt: "Create a report of all nodes that experienced surcharging: node ID, maximum HGL elevation, duration of surcharging, maximum surcharge depth above crown, and time of first surcharging. Rank by total surcharge duration." },
+        { title: "Outfall Loading Summary", prompt: "Build a report summarizing discharge at all outfall nodes: total volume discharged, peak flow rate, time of peak, average flow rate, and flow duration. If water quality is simulated, include total pollutant mass discharged per outfall." },
+        { title: "Freeboard Analysis", prompt: "Generate a report for all nodes showing the difference between rim elevation and maximum water surface elevation (freeboard). Flag nodes with freeboard less than 300mm. Include a ranked list from least freeboard to most." },
+      ],
+    },
+    {
+      label: "Conduit/Link Analysis",
+      reports: [
+        { title: "Conduit Capacity", prompt: "Build a conduit capacity report comparing peak flow in each conduit against pipe-full capacity (Manning's equation). Show conduit ID, diameter, slope, Manning's n, pipe-full capacity, peak simulated flow, percent utilization, and flag conduits exceeding 100%." },
+        { title: "Conduit Velocity", prompt: "Create a report showing all conduits with maximum velocity exceeding 3 m/s and all conduits with maximum velocity below 0.6 m/s. Include conduit ID, upstream/downstream nodes, diameter, slope, max velocity, max flow, and a self-cleansing assessment." },
+        { title: "Conduit d/D Ratio", prompt: "Generate a report showing the maximum depth-to-diameter ratio for every conduit. Flag conduits exceeding 0.80 d/D in amber and 1.0 d/D in red. Include conduit geometry, slope, max flow, and the time when maximum d/D occurred." },
+        { title: "Pipe Surcharging", prompt: "Build a report of all conduits that experienced surcharging: conduit ID, diameter, length, slope, duration of surcharging, maximum HGL at upstream and downstream nodes, and maximum surcharge head above the pipe crown." },
+        { title: "Slope & Gradient Audit", prompt: "Generate a report listing all conduits with their upstream invert, downstream invert, length, calculated slope, and Manning's n. Flag adverse slopes (negative), flat slopes (<0.1%), and excessively steep slopes (>10%). Include a histogram of slope distribution." },
+        { title: "Flow Reversal", prompt: "Create a report identifying all conduits that experienced flow reversal during the simulation: conduit ID, number of reversal events, maximum reverse flow rate, duration of reversal, and likely cause (downstream surcharging, tidal boundary, etc.)." },
+        { title: "Conduit Length-Diameter Summary", prompt: "Build a table of all conduits showing: ID, shape, diameter/dimensions, length, slope, Manning's n, upstream node, downstream node. Group by pipe material or diameter range and show total length per group." },
+      ],
+    },
+    {
+      label: "Subcatchment Reports",
+      reports: [
+        { title: "Subcatchment Runoff Summary", prompt: "Generate a table of all subcatchments: area, percent impervious, slope, width, infiltration parameters, total rainfall, total infiltration, total runoff, peak runoff rate, time of peak, and runoff coefficient. Rank by peak runoff rate." },
+        { title: "Imperviousness Audit", prompt: "Create a report analyzing imperviousness across all subcatchments: directly connected impervious area, total impervious area, percent with no depression storage, and the resulting effective impervious fraction. Highlight outliers." },
+        { title: "LID Performance", prompt: "Generate a report on all Low Impact Development controls: LID type, area, number of units, total inflow captured, total outflow, overflow volume, drain flow, infiltration volume, evaporation, and overall percent capture." },
+        { title: "Groundwater Summary", prompt: "Build a report on all subcatchments with groundwater simulation: initial water table elevation, final water table elevation, peak groundwater flow to drainage system, total groundwater volume contributed, and lateral/deep percolation losses." },
+      ],
+    },
+    {
+      label: "Hydraulic Design",
+      reports: [
+        { title: "HGL Profile", prompt: "Build a report showing the maximum hydraulic grade line profile along major trunk routes. Include: node ID, ground elevation, invert elevation, maximum HGL elevation, maximum depth, freeboard, and a text-based profile representation." },
+        { title: "Pump Station Performance", prompt: "Generate a report for all pump links: pump ID, pump curve reference, number of start-stop cycles, total pumped volume, maximum flow rate, total energy consumption (if available), percent of time running, and maximum wet well depth." },
+        { title: "Weir & Orifice Activation", prompt: "Create a report listing all weir and orifice links: structure ID, type, dimensions, crest/invert elevation, maximum flow through the structure, total volume passed, time of first activation, and duration of flow." },
+        { title: "Storage Unit Performance", prompt: "Build a report for all storage nodes: storage ID, storage curve type, maximum volume, maximum depth, peak inflow, peak outflow, total inflow volume, total outflow volume, maximum surface area, and time of peak storage." },
+        { title: "Detention Basin Sizing", prompt: "Generate a report for each storage unit comparing: required detention volume, available volume, peak inflow, peak outflow, maximum stored volume, percent of volume utilized, and outflow vs. allowable release rate." },
+      ],
+    },
+    {
+      label: "Model QA/QC",
+      reports: [
+        { title: "Input Data Audit", prompt: "Generate a comprehensive audit of all input parameters: subcatchment parameters (area, width, slope, imperviousness, Manning's n), conduit parameters (diameter, length, slope, roughness), and node parameters (invert, max depth). Flag missing, zero, or out-of-range values." },
+        { title: "Connectivity Check", prompt: "Build a network connectivity report: total number of nodes, links, subcatchments, and outfalls. Identify disconnected nodes, orphan subcatchments, dead-end conduits, and nodes with no downstream path to an outfall." },
+        { title: "Manning's n Summary", prompt: "Create a report grouping all conduits by Manning's roughness value: count, total length, and diameter range per roughness value. Flag any unusual values (n < 0.010 or n > 0.030 for pipes, n < 0.020 or n > 0.150 for channels)." },
+        { title: "Subcatchment-to-Node Assignment", prompt: "Build a report mapping every subcatchment to its outlet node: subcatchment ID, area, outlet node, and total contributing area per node. Flag nodes receiving disproportionately large or small contributing areas." },
+      ],
+    },
+    {
+      label: "Regulatory & Compliance",
+      reports: [
+        { title: "Design Storm Compliance", prompt: "Create a report assessing system performance against design criteria: no flooding for the 10-year storm, no surcharging for the 5-year storm. List all nodes and conduits that fail each criterion." },
+        { title: "CSO Activation", prompt: "Build a Combined Sewer Overflow report: CSO location, number of activations, total overflow volume, maximum overflow rate, total duration of overflow, and average overflow concentration for each pollutant." },
+        { title: "Stormwater Management Compliance", prompt: "Create a regulatory-style summary: total impervious area, total site runoff volume, peak discharge at each discharge point, detention provided, treatment provided (LID summary), and comparison against local ordinance requirements." },
+      ],
+    },
+    {
+      label: "Specialized",
+      reports: [
+        { title: "Energy Loss Summary", prompt: "Generate a report showing head losses through the system: friction losses per conduit, entrance/exit losses at junctions, losses through special structures (weirs, orifices, pumps), and total head loss along major trunk routes." },
+        { title: "I&I Analysis", prompt: "Build a report quantifying rainfall-dependent infiltration and inflow: RDII volume per subcatchment, RDII as percent of total flow, peak RDII rate, and comparison of dry weather flow to wet weather flow at key monitoring nodes." },
+        { title: "Calibration Comparison", prompt: "Generate a report comparing simulated results against observed monitoring data: observed vs. modeled peak flow, volume, and time to peak at each gauge location, Nash-Sutcliffe efficiency, R-squared, and RMSE per gauge." },
+        { title: "Asset Condition Priority", prompt: "Build a report ranking conduits by rehabilitation priority based on: utilization ratio, surcharging frequency, velocity adequacy, slope adequacy, and contributing population/area. Assign a composite priority score." },
+      ],
+    },
   ];
 
   return (
@@ -150,27 +228,45 @@ export default function ReportChatbot({ reportContent, inpContent, fileName }: R
             style={{ minHeight: "300px", maxHeight: "500px" }}
           >
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full gap-4 text-muted-foreground">
-                <Sparkles className="h-10 w-10" />
-                <p className="text-sm font-medium">AI Report Builder</p>
-                <p className="text-xs text-center max-w-sm">
-                  Describe the custom HTML report you want. The AI has access to your full SWMM simulation data and can generate professional reports.
+              <div className="flex flex-col gap-3 h-full overflow-y-auto">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles className="h-5 w-5 text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground">AI Report Builder</span>
+                  <Badge variant="secondary" className="text-[10px]">{reportCategories.reduce((s, c) => s + c.reports.length, 0)} templates</Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Pick a template below or describe your own custom report. The AI has access to your full SWMM simulation data.
                 </p>
-                <div className="flex flex-wrap gap-2 justify-center mt-2">
-                  {suggestions.map((s, i) => (
-                    <Button
-                      key={i}
-                      variant="outline"
-                      size="sm"
-                      className="text-xs max-w-[220px] h-auto whitespace-normal text-left py-2"
-                      onClick={() => {
-                        setInput(s);
-                        inputRef.current?.focus();
-                      }}
-                      data-testid={`button-suggestion-${i}`}
-                    >
-                      {s}
-                    </Button>
+                <div className="space-y-1">
+                  {reportCategories.map((cat, ci) => (
+                    <div key={ci}>
+                      <button
+                        className="flex items-center gap-2 w-full text-left text-xs font-medium py-1.5 px-2 rounded hover-elevate"
+                        onClick={() => setExpandedCategory(expandedCategory === cat.label ? null : cat.label)}
+                        data-testid={`button-category-${ci}`}
+                      >
+                        {expandedCategory === cat.label ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                        {cat.label}
+                        <Badge variant="outline" className="text-[10px] ml-auto no-default-hover-elevate no-default-active-elevate">{cat.reports.length}</Badge>
+                      </button>
+                      {expandedCategory === cat.label && (
+                        <div className="ml-5 space-y-0.5 mt-0.5 mb-1">
+                          {cat.reports.map((r, ri) => (
+                            <button
+                              key={ri}
+                              className="w-full text-left text-xs py-1.5 px-2 rounded text-muted-foreground hover-elevate"
+                              onClick={() => {
+                                setInput(r.prompt);
+                                inputRef.current?.focus();
+                              }}
+                              data-testid={`button-report-${ci}-${ri}`}
+                            >
+                              {r.title}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
