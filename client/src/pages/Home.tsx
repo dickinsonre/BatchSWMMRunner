@@ -234,13 +234,17 @@ export default function Home() {
   };
 
   const handleSamplesLoaded = (sampleFiles: File[]) => {
-    const newFiles: FileItem[] = sampleFiles.map((file, index) => ({
-      id: `sample-${Date.now()}-${index}`,
-      name: file.name,
-      path: file.name,
-      file,
-    })) as any;
-    setFiles(prev => [...prev, ...newFiles]);
+    setFiles(prev => {
+      const existingNames = new Set(prev.map(f => f.name));
+      const deduped = sampleFiles.filter(f => !existingNames.has(f.name));
+      const newFiles: FileItem[] = deduped.map((file, index) => ({
+        id: `sample-${Date.now()}-${index}`,
+        name: file.name,
+        path: file.name,
+        file,
+      })) as any;
+      return [...prev, ...newFiles];
+    });
   };
 
   const handleRemoveFile = (id: string) => {

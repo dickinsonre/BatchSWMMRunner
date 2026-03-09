@@ -463,9 +463,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .sort()
         .map(f => {
           const stat = fs.statSync(path.join(samplesDir, f));
-          const content = fs.readFileSync(path.join(samplesDir, f), 'utf-8');
-          const titleMatch = content.match(/\[TITLE\]\s*\n(?:;;[^\n]*\n)*(.*)/);
-          const title = titleMatch ? titleMatch[1].trim() : f;
+          let title = f;
+          try {
+            const content = fs.readFileSync(path.join(samplesDir, f), 'utf-8');
+            const titleMatch = content.match(/\[TITLE\]\s*\n(?:;;[^\n]*\n)*(.*)/);
+            if (titleMatch) title = titleMatch[1].trim();
+          } catch {
+            const buf = fs.readFileSync(path.join(samplesDir, f));
+            const content = buf.toString('latin1');
+            const titleMatch = content.match(/\[TITLE\]\s*\n(?:;;[^\n]*\n)*(.*)/);
+            if (titleMatch) title = titleMatch[1].trim();
+          }
           return {
             name: f,
             size: stat.size,
