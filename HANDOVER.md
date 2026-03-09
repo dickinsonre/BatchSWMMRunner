@@ -189,12 +189,12 @@ BatchSWMM is a full-stack TypeScript desktop application for batch processing EP
 │   └── schema.ts                          # Zod schemas + TS types (95 lines)
 ├── swmm-engine/
 │   └── runswmm                            # Compiled EPA SWMM 5.2.4 binary (511KB ELF)
-├── public/samples/
-│   ├── user1.inp                          # 545 lines, small test model
-│   ├── user2.inp                          # 1,244 lines
-│   ├── user3.inp                          # 2,831 lines
-│   ├── user4.inp                          # 5,062 lines, largest sample
-│   └── user5.inp                          # 2,749 lines
+├── public/samples/                        # 90 sample .inp models (auto-discovered by server)
+│   ├── user1-5.inp                        # Original test models
+│   ├── Greenville_SI.inp                  # Large LID model (811KB)
+│   ├── Nathan_SquareModel.inp             # Large CMS network
+│   ├── Session1-81_*.inp                  # 81 session models covering all SWMM features
+│   └── ...                                # KW dividers, culverts, tunnels, pumps, weirs, etc.
 ├── uploads/                               # Runtime upload directory (gitignored)
 │   └── {hash}                             # Multer hashed filenames (NO .inp extension!)
 │   └── {hash}.rpt                         # SWMM report output
@@ -894,10 +894,11 @@ Returns per-conduit analysis with flags for conduits below the configured `lengt
 `rebuildInpFile()` creates new `.inp` content:
 1. Identifies line ranges of all sections in the original file using `[SECTION]` header detection
 2. Replaces five sections with discretized data: `[JUNCTIONS]`, `[CONDUITS]`, `[XSECTIONS]`, `[LOSSES]`, `[COORDINATES]`
-3. Injects discretization parameters comment into `[TITLE]` section
-4. Updates/inserts `LENGTHENING_STEP` in `[OPTIONS]`
-5. Preserves all other sections verbatim (e.g., `[SUBCATCHMENTS]`, `[RAINGAGES]`, `[TIMESERIES]`)
-6. Uses `.padEnd()` formatting for SWMM-compatible column alignment (important: SWMM is column-sensitive)
+3. **Preserves non-conduit XSECTIONS:** Cross-sections for orifices, weirs, and outlets are identified (entries not matching any original or new conduit name) and appended after conduit cross-sections. Without this, models with regulators would get ERROR 143 ("invalid cross-section shape").
+4. Injects discretization parameters comment into `[TITLE]` section
+5. Updates/inserts `LENGTHENING_STEP` in `[OPTIONS]`
+6. Preserves all other sections verbatim (e.g., `[SUBCATCHMENTS]`, `[RAINGAGES]`, `[TIMESERIES]`, `[ORIFICES]`, `[WEIRS]`, `[OUTLETS]`)
+7. Uses `.padEnd()` formatting for SWMM-compatible column alignment (important: SWMM is column-sensitive)
 
 ### Simulation Comparison (ReswmmPage)
 When both original and discretized models have been run through SWMM:
@@ -1158,9 +1159,11 @@ Individual file inspection:
 5. **"Run SWMM" button:** Uploads selected file to server, runs simulation via WebSocket, shows `ResultsDisplay` with full results
 6. **Compare mode:** Multi-select files for side-by-side metrics comparison table
 
-#### ReSWMM (`/reswmm`) -- `client/src/pages/ReswmmPage.tsx` (1,323 lines)
+#### ReSWMM (`/reswmm`) -- `client/src/pages/ReswmmPage.tsx` (~1,387 lines)
 Conduit discretization tool -- the largest and most complex page:
-1. **Upload a single `.inp` file** via drag-and-drop or file picker
+1. **Load a model** via two side-by-side options:
+   - **Upload:** Drag-and-drop or file picker for local `.inp` files
+   - **Sample Models:** Dropdown selector with all 90 built-in sample models (fetched from `/api/samples`), with a "Load" button
 2. **Configure discretization:**
    - Method toggle: Fixed Interval / dx/D Ratio
    - Fixed Interval: Min Length (ft), Max Length (ft) via Slider
@@ -1251,7 +1254,7 @@ The `title` field is extracted from the `[TITLE]` section of each `.inp` file.
 | File | Lines | Purpose |
 |------|-------|---------|
 | `Documentation.tsx` | 1,784 | Technical docs tabs + Full API Guide + API Mode docs |
-| `ReswmmPage.tsx` | 1,323 | Largest frontend file -- discretization UI + simulation comparison |
+| `ReswmmPage.tsx` | ~1,387 | Largest frontend file -- discretization UI + sample loading + simulation comparison |
 | `routes.ts` | 1,320 | All backend logic: API + WebSocket + parsers + API mode |
 | `ResultsDisplay.tsx` | 966 | Results viewer with 4 tabs + RPT histograms |
 | `FolderView.tsx` | 930 | File browser with network map |
@@ -1320,6 +1323,9 @@ const { data } = useQuery({ queryKey: ['/api/samples'] }); // queryFn auto-provi
 ### Package.json (DO NOT EDIT DIRECTLY)
 Must **never** be edited directly. Use the Replit package installer tool for adding dependencies.
 
+### ReSWMM XSECTIONS for Non-Conduit Links
+The `[XSECTIONS]` block in SWMM files contains cross-section definitions for ALL link types: conduits, orifices, weirs, and outlets. When `rebuildInpFile()` replaces the XSECTIONS block, it must preserve non-conduit entries. The current implementation identifies non-conduit XSECTIONS by checking if the link name appears in the conduit lists (original or new). If it doesn't, the entry is a regulator cross-section and is appended to the rebuilt block. Omitting these causes SWMM ERROR 143 ("Regulator X has invalid cross-section shape").
+
 ### drizzle.config.ts
 Drizzle ORM is configured but not active. The `DATABASE_URL` environment variable can be set for PostgreSQL but the app currently uses in-memory storage only.
 
@@ -1330,7 +1336,7 @@ For large models, `reportContent` can be very large (6+ MB) because it includes 
 The `.out` parser limits extraction to 2,000 reporting periods to prevent enormous text output. For a typical 5-minute report step, this covers ~7 days of simulation. Longer simulations will have their later periods silently omitted from the graphs.
 
 ### Sample Files
-The 5 bundled sample files in `public/samples/` range from 545 to 5,062 lines. They are real SWMM models that produce valid results with the bundled binary.
+The 90 bundled sample files in `public/samples/` cover a wide range of SWMM features: KW dividers, culverts, transects, tunnels, pressure networks, surcharged weirs, pumps, force mains, LIDs, pollutants, orifices, weirs, outlets, storage units, custom cross-section shapes, and more. They range from 122-line simple models to 94,847-line tunnel systems. The server auto-discovers files via directory listing -- no code changes needed when adding models. Both the Home page (batch processing) and ReSWMM page (discretization) can load sample models.
 
 ---
 
