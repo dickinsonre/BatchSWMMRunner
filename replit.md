@@ -6,7 +6,8 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 
 ## Recent Changes
 
-- **Mar 2026 (latest)**: Added Full SWMM5 API Guide (5,408-line markdown) as searchable documentation tab — fetched at runtime from `/api/swmm5-api-guide`, rendered with react-markdown + remark-gfm + @tailwindcss/typography prose styling, includes search/filter functionality
+- **Mar 2026 (latest)**: Added Live API Dashboard — real-time line charts (Node Depths, Link Flows, Link Velocity) and data tables that update during API mode simulations via WebSocket `api_snapshot` messages; persists after completion showing final simulation data
+- **Mar 2026**: Added Full SWMM5 API Guide (5,408-line markdown) as searchable documentation tab — fetched at runtime from `/api/swmm5-api-guide`, rendered with react-markdown + remark-gfm + @tailwindcss/typography prose styling, includes search/filter functionality
 - **Mar 2026**: Added SWMM5 API Mode — compiled EPA SWMM 5.2.4 as shared library (`libswmm5.so`), created `server/swmm5api.ts` FFI bridge via koffi wrapping all 20 API functions, added API mode toggle on Home page with step-by-step simulation control, live node/link data streaming via WebSocket, and BatchSWMM API Mode documentation tab
 - **Mar 2026**: Updated HANDOVER.md to 1,599 lines with accurate file line counts (routes.ts 1,018, total key files 8,484), dedicated binary output parser section, corrected architecture diagram, comprehensive 21-section table of contents
 - **Mar 2026**: Added SWMM `.out` binary parser (`parseSwmmOutputBinary()` in `server/routes.ts`) — reads EPA SWMM 5.2 binary format (magic 516114522), extracts node/link time series for interactive charts; max 2,000 periods, OLE date conversion
