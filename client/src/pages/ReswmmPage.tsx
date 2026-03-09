@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, MapIcon, Play, Loader2, ArrowLeft } from "lucide-react";
+import { Upload, Download, Scissors, BarChart3, ArrowRight, AlertTriangle, Info, MapIcon, Play, Loader2, ArrowLeft, Database } from "lucide-react";
 import type { CoordinateData, ConduitData, PolygonData } from "@/lib/inpParser";
 import AppHeader from "@/components/AppHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,8 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query";
 import { parseInpFile, type ParsedInpFile } from "@/lib/inpParser";
 import {
   discretizeConduits,
@@ -366,6 +368,8 @@ export default function ReswmmPage() {
   const [result, setResult] = useState<DiscretizedResult | null>(null);
   const [cflBefore, setCflBefore] = useState<CflAnalysis[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedSample, setSelectedSample] = useState<string>('');
+  const [loadingSample, setLoadingSample] = useState(false);
 
   const [beforeRunState, setBeforeRunState] = useState<SimRunState>('idle');
   const [beforeRunResults, setBeforeRunResults] = useState<ProcessResult[]>([]);
@@ -384,6 +388,30 @@ export default function ReswmmPage() {
   const [showingResults, setShowingResults] = useState<'before' | 'after' | null>(null);
 
   const { toast } = useToast();
+
+  const { data: sampleModels } = useQuery<{ name: string; size: number; title: string }[]>({
+    queryKey: ['/api/samples'],
+  });
+
+  const handleLoadSample = useCallback(async () => {
+    if (!selectedSample) return;
+    setLoadingSample(true);
+    try {
+      const res = await fetch(`/api/samples/${selectedSample}`);
+      if (!res.ok) throw new Error('Failed to load sample');
+      const content = await res.text();
+      setFileName(selectedSample);
+      setOriginalContent(content);
+      setResult(null);
+      const p = parseInpFile(content);
+      setParsed(p);
+      setCflBefore(computeCflAnalysis(p));
+    } catch {
+      toast({ title: 'Error', description: 'Failed to load sample model', variant: 'destructive' });
+    } finally {
+      setLoadingSample(false);
+    }
+  }, [selectedSample, toast]);
 
   useEffect(() => {
     return () => {
@@ -648,33 +676,67 @@ export default function ReswmmPage() {
           </div>
 
           {!parsed && (
-            <Card
-              className="border-dashed"
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
-              data-testid="card-reswmm-upload"
-            >
-              <CardContent className="p-8">
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <Upload className="h-10 w-10 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">Upload an .inp file</p>
-                    <p className="text-sm text-muted-foreground mt-1">Drag and drop or click to browse</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card
+                className="border-dashed"
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                data-testid="card-reswmm-upload"
+              >
+                <CardContent className="p-8">
+                  <div className="flex flex-col items-center gap-4 text-center">
+                    <Upload className="h-10 w-10 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">Upload an .inp file</p>
+                      <p className="text-sm text-muted-foreground mt-1">Drag and drop or click to browse</p>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".inp"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      data-testid="input-reswmm-file"
+                    />
+                    <Button onClick={() => fileInputRef.current?.click()} data-testid="button-reswmm-browse">
+                      Browse Files
+                    </Button>
                   </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".inp"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    data-testid="input-reswmm-file"
-                  />
-                  <Button onClick={() => fileInputRef.current?.click()} data-testid="button-reswmm-browse">
-                    Browse Files
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+              <Card data-testid="card-reswmm-samples">
+                <CardContent className="p-8">
+                  <div className="flex flex-col items-center gap-4 text-center">
+                    <Database className="h-10 w-10 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">Load a Sample Model</p>
+                      <p className="text-sm text-muted-foreground mt-1">Choose from {sampleModels?.length || 0} built-in SWMM models</p>
+                    </div>
+                    <div className="flex items-center gap-2 w-full max-w-sm">
+                      <Select value={selectedSample} onValueChange={setSelectedSample}>
+                        <SelectTrigger className="flex-1" data-testid="select-reswmm-sample">
+                          <SelectValue placeholder="Select a model..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sampleModels?.map(s => (
+                            <SelectItem key={s.name} value={s.name} data-testid={`option-sample-${s.name}`}>
+                              {s.name.replace(/\.inp$/i, '')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={handleLoadSample}
+                        disabled={!selectedSample || loadingSample}
+                        data-testid="button-reswmm-load-sample"
+                      >
+                        {loadingSample ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Load'}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {parsed && (
