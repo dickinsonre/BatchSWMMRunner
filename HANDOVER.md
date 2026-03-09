@@ -1,6 +1,6 @@
 # BatchSWMM Handover Document
 
-**Last Updated:** March 8, 2026
+**Last Updated:** March 9, 2026
 **Version:** 2.x (Active Development)
 **Platform:** Replit (NixOS Linux container)
 
@@ -44,6 +44,7 @@ BatchSWMM is a full-stack TypeScript desktop application for batch processing EP
 - ReSWMM tool for conduit discretization (splitting long pipes, lengthening short ones) with CFL analysis
 - Side-by-side comparison of original vs. discretized model simulation results
 - Binary `.out` file parser extracting time series data for interactive graphing
+- Live API Dashboard with real-time charts (node depths, link flows, link velocity) during API mode simulations
 - Multiple university-branded color themes (Auburn, Autodesk, UF, OSU) with dark mode
 - Downloadable reports in HTML, Markdown, and CSV formats
 
@@ -68,22 +69,27 @@ BatchSWMM is a full-stack TypeScript desktop application for batch processing EP
 |  | (Batch)  | |  View    | |  Page    | |  + Docs       |  |
 |  +----+-----+ +----+-----+ +----+-----+ +---------------+  |
 |       |             |            |                           |
+|  +----v-------------------------------------------+         |
+|  |  LiveApiDashboard (API mode real-time charts)  |         |
+|  +----+-------------------------------------------+         |
+|       |             |            |                           |
 |  +----v-------------v------------v----------------------+   |
 |  |  WebSocket Client  |  HTTP (fetch/TanStack Query)    |   |
 |  +----+---------------+------------------------+-------+   |
 +-------|-----------------------------------------|----------+
         | ws://host/api/ws?jobId=X                | REST /api/*
+        | + api_snapshot messages (API mode)       |
 +-------|-----------------------------------------|----------+
 |  Express Server (Node.js)                       |           |
 |  +----v-----------------------------------------v-------+   |
-|  |  routes.ts (1,018 lines)                             |   |
+|  |  routes.ts (1,320 lines)                             |   |
 |  |  +-------------+  +--------------+  +------------+  |   |
 |  |  | WebSocket   |  | Multer       |  | REST       |  |   |
 |  |  | Server      |  | Upload       |  | Endpoints  |  |   |
 |  |  +------+------+  +------+-------+  +------------+  |   |
 |  |         |                |                           |   |
 |  |  +------v----------------v-----------------------+   |   |
-|  |  |  processSingleFile()                          |   |   |
+|  |  |  processSingleFile() / processSingleFileApi() |   |   |
 |  |  |  +-----------------+  +--------------------+  |   |   |
 |  |  |  | child_process   |  | parseReportMetrics |  |   |   |
 |  |  |  | spawn(runswmm)  |  | (.rpt parser)      |  |   |   |
@@ -95,10 +101,13 @@ BatchSWMM is a full-stack TypeScript desktop application for batch processing EP
 |  |  |  +-----------------+                          |   |   |
 |  |  +-----------------------------------------------+   |   |
 |  +-------------------------------------------------------+   |
-|                 |                                       |   |
-|  +--------------v------------------------------------+  |   |
-|  |  swmm-engine/runswmm  (EPA SWMM 5.2.4 ELF binary)|  |   |
-|  +---------------------------------------------------+  |   |
+|                 |                    |                    |   |
+|  +--------------v-----------+  +----v-----------------+  |   |
+|  |  swmm-engine/runswmm    |  |  swmm-engine/        |  |   |
+|  |  (ELF binary, exec mode)|  |  libswmm5.so         |  |   |
+|  +--------------------------+  |  (shared lib, API    |  |   |
+|                                |   mode via koffi FFI)|  |   |
+|                                +----------------------+  |   |
 |                                                          |   |
 |  +---------------------------------------------------+  |   |
 |  |  storage.ts  (In-memory MemStorage)               |  |   |
@@ -471,9 +480,37 @@ In addition to the executable mode, BatchSWMM supports running simulations via t
 | Runtime control | Not possible | `swmm_setValue()` available |
 | Output files | .rpt + .out | .rpt + .out (identical) |
 
+### Live API Dashboard (`client/src/components/LiveApiDashboard.tsx`, 301 lines)
+
+A real-time visualization panel that appears on the Home page during API mode batch processing and persists after completion.
+
+**Features:**
+- **Three Recharts line charts:** Node Depths (ft), Link Flows (CFS), Link Velocity (ft/s) — each with up to 5 series distinguished by `--chart-N` CSS color variables
+- **Latest-value tables:** Two tables showing the most recent node data (Name, Depth, Head, Inflow) and link data (Name, Flow, Depth, Velocity)
+- **Status badges:** Current file name, step count, elapsed simulation time, total snapshot count
+- **Empty state:** Shows "Waiting for simulation data..." message before first snapshot arrives
+
+**Data Flow:**
+1. Server sends `api_snapshot` WebSocket messages every 10 simulation steps
+2. `Home.tsx` accumulates snapshots in `apiSnapshots` state (type: `ApiSnapshotEntry[]`)
+3. Each snapshot includes `fileId` (unique upload hash) for identity — prevents cross-contamination if multiple files share the same basename
+4. Snapshots are capped at `MAX_SNAPSHOTS_PER_FILE` (500) with automatic downsampling — when exceeded, every other snapshot for that file is dropped
+5. `LiveApiDashboard` filters snapshots by `currentFileId` and renders charts/tables
+
+**`ApiSnapshotEntry` interface:**
+```typescript
+{
+  stepCount: number;       // Simulation step number
+  elapsedTime: number;     // Elapsed time in decimal days
+  fileId: string;          // Unique file upload ID (hash)
+  fileName: string;        // Original file name for display
+  nodeSnapshots: Array<{ name, depth, head, inflow }>;   // Up to 5 nodes
+  linkSnapshots: Array<{ name, flow, depth, velocity }>; // Up to 5 links
+}
+```
+
 **Future API Mode Capabilities:**
 - Real-time control (RTC): Adjust pump/gate settings mid-simulation via `swmm_setValue()`
-- Live streaming dashboards with per-step node/link data
 - Conditional early termination when thresholds are exceeded
 - Custom report annotations via `swmm_writeLine()`
 
@@ -723,6 +760,7 @@ This means `reportContent` in every `ProcessResult` contains both the original `
 | `result` | `result` (full `ProcessResult`) | Completed file result | `{ type: "result", result: { id, fileName, status, reportContent, ... } }` |
 | `completed` | `results[]` | Batch finished, all results | `{ type: "completed", results: [...] }` |
 | `error` | `message` | Fatal error | `{ type: "error", message: "SWMM binary not found" }` |
+| `api_snapshot` | `fileId`, `fileName`, `stepCount`, `elapsedTime`, `nodeSnapshots[]`, `linkSnapshots[]` | Live node/link data (API mode, every 10 steps) | `{ type: "api_snapshot", fileId: "abc", stepCount: 500, ... }` |
 | `cancelled` | (none) | Job was cancelled | `{ type: "cancelled" }` |
 
 ### Message Buffering System
@@ -1087,21 +1125,25 @@ Shared across all pages. Contains:
 
 ### Page Details
 
-#### Home (`/`) -- `client/src/pages/Home.tsx` (533 lines)
+#### Home (`/`) -- `client/src/pages/Home.tsx` (623 lines)
 Batch processing workflow:
 1. **Upload `.inp` files:** drag-and-drop, file picker, or directory picker (`webkitdirectory` attribute)
 2. **Optionally load bundled sample models** from `/api/samples`
 3. **Configure settings:** Routing Method (DYNWAVE/KINWAVE/STEADY), Report Step (seconds), Parallel Processing (toggle), Stop on Error (toggle)
-4. **Click "Start Processing":** Files uploaded to `/api/upload`, WebSocket connects, `/api/batch/:jobId/start` called
-5. **Real-time progress:** Overall progress bar, per-file status icons (pending/running/success/failed), processing log
-6. **Results displayed** via `ResultsDisplay` component
-7. **"Open in Results Dashboard"** button to navigate to `/dashboard`
+4. **Select engine mode:** Executable (default) or SWMM5 API (step-by-step with live data)
+5. **Click "Start Processing":** Files uploaded to `/api/upload`, WebSocket connects, `/api/batch/:jobId/start` called
+6. **Real-time progress:** Overall progress bar, per-file status icons (pending/running/success/failed), processing log
+7. **Live API Dashboard** (API mode only): Three real-time charts + data tables showing node depths, link flows, link velocity — persists after completion
+8. **Results displayed** via `ResultsDisplay` component
+9. **"Open in Results Dashboard"** button to navigate to `/dashboard`
 
 **Key state variables:**
 - `processingState`: `'idle' | 'uploading' | 'processing' | 'completed'`
 - `results`: `ProcessResult[]`
 - `fileProgressMap`: `Map<string, { percent, status }>`
 - `logs`: `LogEntry[]` for ProcessingLog component
+- `apiSnapshots`: `ApiSnapshotEntry[]` for Live API Dashboard (capped at 500 per file)
+- `engineMode`: `'executable' | 'api'` for engine mode toggle
 
 #### Folder View (`/folder`) -- `client/src/pages/FolderView.tsx` (930 lines)
 Individual file inspection:
@@ -1208,18 +1250,20 @@ The `title` field is extracted from the `[TITLE]` section of each `.inp` file.
 
 | File | Lines | Purpose |
 |------|-------|---------|
+| `Documentation.tsx` | 1,784 | Technical docs tabs + Full API Guide + API Mode docs |
 | `ReswmmPage.tsx` | 1,323 | Largest frontend file -- discretization UI + simulation comparison |
-| `routes.ts` | 1,018 | All backend logic: API + WebSocket + parsers |
+| `routes.ts` | 1,320 | All backend logic: API + WebSocket + parsers + API mode |
+| `ResultsDisplay.tsx` | 966 | Results viewer with 4 tabs + RPT histograms |
 | `FolderView.tsx` | 930 | File browser with network map |
 | `index.css` | 736 | All theme definitions + Tailwind utilities |
-| `Documentation.tsx` | 684 | Technical docs tabs |
-| `ResultsDisplay.tsx` | 659 | Results viewer with 4 tabs |
-| `Home.tsx` | 533 | Batch processing page |
-| `InteractiveCharts.tsx` | 492 | Time series chart parser + renderer |
+| `Home.tsx` | 623 | Batch processing page + API mode + Live Dashboard integration |
+| `InteractiveCharts.tsx` | 507 | Time series chart parser + renderer |
 | `reswmmEngine.ts` | 444 | Discretization engine (client-side) |
 | `inpParser.ts` | 427 | INP file parser (client-side) |
 | `Dashboard.tsx` | 394 | Results dashboard with 4 chart types |
 | `reportGenerator.ts` | 360 | HTML/MD/CSV report export |
+| `LiveApiDashboard.tsx` | 301 | Real-time API mode charts + tables |
+| `swmm5api.ts` | 292 | SWMM5 FFI bridge (koffi, 20 functions) |
 | `ThemeToggle.tsx` | 125 | Theme + dark mode selector |
 | `AppHeader.tsx` | 109 | Shared navigation header |
 | `schema.ts` | 95 | Zod schemas + TypeScript types |
@@ -1227,7 +1271,7 @@ The `title` field is extracted from the `[TITLE]` section of each `.inp` file.
 | `storage.ts` | 44 | In-memory BatchJob storage |
 | `App.tsx` | 37 | Router + providers |
 | `resultsStore.ts` | 17 | Cross-page results passing |
-| **Total (key files)** | **8,484** | |
+| **Total (key files)** | **10,891** | |
 
 ---
 
@@ -1336,6 +1380,8 @@ npm start
 | `NODE_ENV` | development/production mode | -- | No (auto-set by scripts) |
 | `PORT` | Server port | 5000 | No |
 | `RUNSWMM_PATH` | Custom absolute path to SWMM binary | Auto-detected | No |
+| `AI_INTEGRATIONS_OPENAI_API_KEY` | OpenAI API key for AI Report Builder | -- | No (via Replit integration) |
+| `AI_INTEGRATIONS_OPENAI_BASE_URL` | OpenAI base URL for AI Report Builder | -- | No (via Replit integration) |
 | `DATABASE_URL` | PostgreSQL connection string (unused) | -- | No |
 
 ### Replit Workflow
@@ -1343,8 +1389,10 @@ The `Start application` workflow runs `npm run dev`. It auto-restarts on file ch
 
 ### Production Deployment Notes
 - The `swmm-engine/runswmm` binary must be included in the deployment
+- The `swmm-engine/libswmm5.so` shared library must be included for API mode
 - The `uploads/` directory must be writable
 - The `public/samples/` directory should be present for sample models
+- The `public/swmm5_api_guide.md` file should be present for the Full API Guide
 - In-memory storage means all batch jobs are lost on restart
 
 ---
@@ -1434,7 +1482,7 @@ Report Generation                   8       8
   Analysis + recommendations engine
 
 Real-Time Communication             8       8
-  WebSocket with 7 message types
+  WebSocket with 8 message types
   Per-file progress (0-100%)
   Message buffering for race conditions
   Graceful fallback for edge cases
