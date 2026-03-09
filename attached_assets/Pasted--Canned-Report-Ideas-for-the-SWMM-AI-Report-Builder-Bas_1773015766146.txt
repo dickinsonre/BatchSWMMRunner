@@ -1,0 +1,206 @@
+# Canned Report Ideas for the SWMM AI Report Builder
+
+Based on the existing four quick-start prompts visible in your screenshot, here are **50+ additional canned report templates** organized by category. Each includes the button label and the full prompt text that would be sent to the AI.
+
+---
+
+## Currently Existing (4 reports)
+
+1. **Professional HTML report with all summary tables**
+2. **Executive summary report with key findings and charts**
+3. **Flooding analysis and node surcharging report**
+4. **Conduit capacity report with flow vs. design comparisons**
+
+---
+
+## System Performance Overview Reports
+
+**5. System Mass Balance Report**
+> Generate a report showing the system-wide water balance: total precipitation, total infiltration, total runoff, total inflow, total flooding, total outflow, and continuity errors for both runoff and routing. Flag any continuity errors exceeding 1%.
+
+**6. Model Health Check Report**
+> Create a diagnostic report identifying potential model issues: continuity errors, unconverged timesteps, dry nodes, zero-flow conduits, nodes that never receive flow, and conduits with flow reversals. Summarize overall model health with a traffic-light rating.
+
+**7. Simulation Performance Report**
+> Build a report on simulation runtime performance: total elapsed time, number of timesteps, average timestep, minimum timestep used, number of timestep reductions, and routing stability metrics. Include recommendations if the model shows instability.
+
+**8. Rainfall-Runoff Summary Report**
+> Generate a report summarizing the rainfall event characteristics (total depth, peak intensity, duration) and corresponding runoff response (total runoff volume, peak flow at outfalls, runoff coefficient per subcatchment, and system-wide runoff coefficient).
+
+---
+
+## Node Analysis Reports
+
+**9. Node Depth Exceedance Report**
+> Create a report showing all nodes where maximum water depth exceeded 80% of maximum depth. Include node ID, max depth, crown elevation, rim elevation, time of maximum, duration above 80%, and flag any nodes with actual surface flooding.
+
+**10. Node Flooding Summary Report**
+> Build a detailed flooding report: all nodes that experienced flooding, total flood volume per node, maximum flood rate, duration of flooding, time of first flooding, and a ranked list from worst to least. Include a system total.
+
+**11. Node Inflow Analysis Report**
+> Generate a report listing all nodes with external inflows: dry weather flow, direct inflow, RDII, and total inflow per node. Show peak inflow rate and time of peak for each. Identify the top 10 nodes by peak inflow.
+
+**12. Surcharging Duration Report**
+> Create a report of all nodes that experienced surcharging: node ID, maximum HGL elevation, duration of surcharging, maximum surcharge depth above crown, and time of first surcharging. Rank by total surcharge duration.
+
+**13. Node Ponding Analysis Report**
+> Generate a report for all nodes with ponding enabled: ponded area, maximum ponded volume, maximum ponded depth, duration of ponding, and whether the ponded volume drained completely by the end of simulation.
+
+**14. Outfall Loading Summary Report**
+> Build a report summarizing discharge at all outfall nodes: total volume discharged, peak flow rate, time of peak, average flow rate, and flow duration. If water quality is simulated, include total pollutant mass discharged per outfall.
+
+---
+
+## Conduit/Link Analysis Reports
+
+**15. Conduit Velocity Report**
+> Create a report showing all conduits with maximum velocity exceeding 3 m/s (or user threshold) and all conduits with maximum velocity below 0.6 m/s. Include conduit ID, upstream/downstream nodes, diameter, slope, max velocity, max flow, and a self-cleansing assessment.
+
+**16. Conduit d/D Ratio Report**
+> Generate a report showing the maximum depth-to-diameter ratio for every conduit. Flag conduits exceeding 0.80 d/D in amber and 1.0 d/D in red. Include conduit geometry, slope, max flow, and the time when maximum d/D occurred.
+
+**17. Pipe Surcharging Report**
+> Build a report of all conduits that experienced surcharging: conduit ID, diameter, length, slope, duration of surcharging, maximum HGL at upstream and downstream nodes, and maximum surcharge head above the pipe crown.
+
+**18. Conduit Flow vs. Capacity Report**
+> Create a report comparing peak flow in each conduit against pipe-full capacity (Manning's equation). Show: conduit ID, diameter, slope, Manning's n, pipe-full capacity, peak simulated flow, percent utilization, and flag conduits exceeding 100%.
+
+**19. Slope and Gradient Audit Report**
+> Generate a report listing all conduits with their upstream invert, downstream invert, length, calculated slope, and Manning's n. Flag adverse slopes (negative), flat slopes (<0.1%), and excessively steep slopes (>10%). Include a histogram of slope distribution.
+
+**20. Conduit Length-Diameter Summary Report**
+> Build a table of all conduits showing: ID, shape, diameter/dimensions, length, slope, Manning's n, upstream node, downstream node. Group by pipe material or diameter range and show total length per group.
+
+**21. Flow Reversal Report**
+> Create a report identifying all conduits that experienced flow reversal during the simulation: conduit ID, number of reversal events, maximum reverse flow rate, duration of reversal, and likely cause (downstream surcharging, tidal boundary, etc.).
+
+---
+
+## Subcatchment Reports
+
+**22. Subcatchment Runoff Summary Report**
+> Generate a table of all subcatchments: area, percent impervious, slope, width, infiltration parameters, total rainfall, total infiltration, total runoff, peak runoff rate, time of peak, and runoff coefficient. Rank by peak runoff rate.
+
+**23. Subcatchment Imperviousness Audit Report**
+> Create a report analyzing imperviousness across all subcatchments: directly connected impervious area, total impervious area, percent with no depression storage, and the resulting effective impervious fraction. Highlight outliers.
+
+**24. Groundwater Summary Report**
+> Build a report on all subcatchments with groundwater simulation: initial water table elevation, final water table elevation, peak groundwater flow to drainage system, total groundwater volume contributed, and lateral/deep percolation losses.
+
+**25. LID Performance Report**
+> Generate a report on all Low Impact Development controls: LID type, area, number of units, total inflow captured, total outflow, overflow volume, drain flow, infiltration volume, evaporation, and overall percent capture.
+
+**26. Snow Pack Report**
+> Create a report summarizing snow accumulation and melt across subcatchments: initial snow depth, maximum accumulation, total melt volume, melt contribution to runoff, and remaining snow at end of simulation.
+
+---
+
+## Water Quality Reports
+
+**27. Pollutant Loading Summary Report**
+> Generate a report of total pollutant mass generated, transported, and discharged at each outfall. Include: pollutant name, units, total mass washoff per subcatchment, total mass at each outfall, and percent removal through the system.
+
+**28. Treatment Facility Performance Report**
+> Build a report for all nodes with treatment functions: node ID, treatment expression, influent concentration, effluent concentration, percent removal, and total mass removed for each pollutant.
+
+**29. Water Quality Violation Report**
+> Create a report identifying all locations and time periods where pollutant concentrations exceeded specified thresholds. Include: node/link ID, pollutant, threshold value, maximum concentration, duration of exceedance, and time of first violation.
+
+---
+
+## Hydraulic Design Reports
+
+**30. Freeboard Analysis Report**
+> Generate a report for all nodes showing the difference between rim elevation and maximum water surface elevation (freeboard). Flag nodes with freeboard less than 300mm. Include a ranked list from least freeboard to most.
+
+**31. Time of Concentration Verification Report**
+> Create a report estimating time of concentration for each subcatchment using the simulated hydrograph (time from start of rainfall excess to peak flow at subcatchment outlet) and compare it to the input parameters. Flag discrepancies exceeding 20%.
+
+**32. HGL Profile Report**
+> Build a report showing the maximum hydraulic grade line profile along user-specified trunk routes. Include: node ID, ground elevation, invert elevation, maximum HGL elevation, maximum depth, freeboard, and a text-based profile representation.
+
+**33. Pump Station Performance Report**
+> Generate a report for all pump links: pump ID, pump curve reference, number of start-stop cycles, total pumped volume, maximum flow rate, total energy consumption (if available), percent of time running, and maximum wet well depth.
+
+**34. Weir and Orifice Activation Report**
+> Create a report listing all weir and orifice links: structure ID, type, dimensions, crest/invert elevation, maximum flow through the structure, total volume passed, time of first activation, and duration of flow.
+
+**35. Storage Unit Performance Report**
+> Build a report for all storage nodes: storage ID, storage curve type, maximum volume, maximum depth, peak inflow, peak outflow, total inflow volume, total outflow volume, maximum surface area, and time of peak storage.
+
+---
+
+## Regulatory and Compliance Reports
+
+**36. Pre-Development vs. Post-Development Comparison Report**
+> Generate a comparison report (requires two simulation results): peak flows at key nodes, total volumes, time to peak, and percent change for pre- and post-development scenarios. Flag locations where post-development flows exceed pre-development by more than 10%.
+
+**37. Design Storm Compliance Report**
+> Create a report assessing system performance against design criteria: no flooding for the 10-year storm, no surcharging for the 5-year storm (or user-specified criteria). List all nodes and conduits that fail each criterion.
+
+**38. CSO Activation Report**
+> Build a Combined Sewer Overflow report: CSO location, number of activations, total overflow volume, maximum overflow rate, total duration of overflow, and average overflow concentration for each pollutant. Include annual total if simulation covers multiple events.
+
+**39. Detention Basin Sizing Verification Report**
+> Generate a report for each storage unit comparing: required detention volume (from design criteria), available volume, peak inflow, peak outflow, maximum stored volume, percent of volume utilized, and outflow vs. allowable release rate.
+
+**40. Stormwater Management Compliance Summary**
+> Create a regulatory-style summary: total impervious area, total site runoff volume, peak discharge at each discharge point, detention provided, treatment provided (LID summary), and comparison against local ordinance requirements.
+
+---
+
+## Model QA/QC Reports
+
+**41. Input Data Audit Report**
+> Generate a comprehensive audit of all input parameters: subcatchment parameters (area, width, slope, imperviousness, Manning's n), conduit parameters (diameter, length, slope, roughness), and node parameters (invert, max depth). Flag missing, zero, or out-of-range values.
+
+**42. Connectivity Check Report**
+> Build a network connectivity report: total number of nodes, links, subcatchments, and outfalls. Identify disconnected nodes, orphan subcatchments, dead-end conduits, and nodes with no downstream path to an outfall.
+
+**43. Manning's n Summary Report**
+> Create a report grouping all conduits by Manning's roughness value: count, total length, and diameter range per roughness value. Flag any unusual values (n < 0.010 or n > 0.030 for pipes, n < 0.020 or n > 0.150 for channels).
+
+**44. Dry Weather Flow Verification Report**
+> Generate a report comparing assigned dry weather flows against expected values: total DWF per node, pattern assignment, resulting daily/hourly variation, total system DWF, and comparison against expected per-capita generation rates.
+
+**45. Subcatchment-to-Node Assignment Report**
+> Build a report mapping every subcatchment to its outlet node: subcatchment ID, area, outlet node, and total contributing area per node. Flag nodes receiving disproportionately large or small contributing areas.
+
+---
+
+## Comparative and Scenario Reports
+
+**46. Sensitivity Analysis Summary Report**
+> Create a report comparing results across multiple simulations: identify which parameters were varied, show peak flow at key nodes for each run, and calculate percent change relative to the baseline. Present as a sensitivity matrix.
+
+**47. Event Comparison Report**
+> Generate a report comparing system performance across multiple rainfall events: event date, total rainfall, peak intensity, duration, resulting peak flows at selected nodes, total flooding volume, and number of surcharging conduits per event.
+
+**48. Before/After Improvement Report**
+> Build a report comparing system performance before and after a proposed improvement (e.g., upsized pipe, added storage): show changes in peak flow, max depth, flooding volume, and surcharging duration at affected nodes and conduits.
+
+**49. Climate Change Uplift Report**
+> Create a report comparing baseline design storm results against climate-change-uplifted storms (+10%, +20%, +30% rainfall): peak flows at outfalls, flooding locations, surcharging duration, and CSO activations for each scenario.
+
+---
+
+## Specialized Reports
+
+**50. Energy Loss Summary Report**
+> Generate a report showing head losses through the system: friction losses per conduit, entrance/exit losses at junctions, losses through special structures (weirs, orifices, pumps), and total head loss along major trunk routes.
+
+**51. Inflow/Infiltration (I&I) Analysis Report**
+> Build a report quantifying rainfall-dependent infiltration and inflow: RDII volume per subcatchment, RDII as percent of total flow, peak RDII rate, and comparison of dry weather flow to wet weather flow at key monitoring nodes.
+
+**52. Real-Time Control (RTC) Performance Report**
+> Create a report evaluating any real-time control rules: rule trigger conditions, number of activations, duration of each activation, flow diverted or controlled, and overall impact on system flooding and CSO performance.
+
+**53. Calibration Comparison Report**
+> Generate a report comparing simulated results against observed monitoring data: observed vs. modeled peak flow, volume, and time to peak at each gauge location, Nash-Sutcliffe efficiency, R², and RMSE per gauge.
+
+**54. Asset Condition Priority Report**
+> Build a report ranking conduits by rehabilitation priority based on: utilization ratio, surcharging frequency, age (if available), velocity adequacy, slope adequacy, and contributing population/area. Assign a composite priority score.
+
+---
+
+## Quick
