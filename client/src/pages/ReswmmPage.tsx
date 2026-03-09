@@ -168,28 +168,6 @@ function buildHistogram(values: number[], binCount = 15) {
   return bins.filter(b => b.count > 0);
 }
 
-function buildOverlaidHistogram(beforeValues: number[], afterValues: number[], binCount = 15) {
-  const all = [...beforeValues, ...afterValues];
-  if (all.length === 0) return [];
-  const min = Math.min(...all);
-  const max = Math.max(...all);
-  if (min === max) return [{ range: `${min.toFixed(0)}`, before: beforeValues.length, after: afterValues.length }];
-  const binSize = (max - min) / binCount;
-  const bins = Array.from({ length: binCount }, (_, i) => ({
-    range: `${(min + i * binSize).toFixed(0)}-${(min + (i + 1) * binSize).toFixed(0)}`,
-    before: 0,
-    after: 0,
-  }));
-  for (const v of beforeValues) {
-    const idx = Math.min(Math.floor((v - min) / binSize), binCount - 1);
-    bins[idx].before++;
-  }
-  for (const v of afterValues) {
-    const idx = Math.min(Math.floor((v - min) / binSize), binCount - 1);
-    bins[idx].after++;
-  }
-  return bins.filter(b => b.before > 0 || b.after > 0);
-}
 
 interface SimComparisonProps {
   beforeResult: ProcessResult;
@@ -619,18 +597,6 @@ export default function ReswmmPage() {
     const vals = cflAfterAnalysis.map(c => c.standardTimeStep).filter(v => isFinite(v));
     return buildHistogram(vals, 12);
   }, [cflAfterAnalysis]);
-
-  const combinedLengthHist = useMemo(() => {
-    if (!result) return [];
-    return buildOverlaidHistogram(beforeLengths, afterLengths, 15);
-  }, [beforeLengths, afterLengths, result]);
-
-  const combinedCflHist = useMemo(() => {
-    if (!result) return [];
-    const beforeVals = cflBefore.map(c => c.standardTimeStep).filter(v => isFinite(v));
-    const afterVals = cflAfterAnalysis.map(c => c.standardTimeStep).filter(v => isFinite(v));
-    return buildOverlaidHistogram(beforeVals, afterVals, 12);
-  }, [cflBefore, cflAfterAnalysis, result]);
 
   const afterCoordinates = useMemo(() => {
     if (!parsed || !result) return [];
@@ -1158,45 +1124,80 @@ export default function ReswmmPage() {
                     </Card>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                      <Card data-testid="card-length-distribution-combined">
-                        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Conduit Length Distribution ({flowUnit})</CardTitle>
-                          <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                          <ResponsiveContainer width="100%" height={220}>
-                            <BarChart data={combinedLengthHist} barGap={0} barCategoryGap="20%">
-                              <CartesianGrid strokeDasharray="3 3" />
-                              <XAxis dataKey="range" tick={{ fontSize: 9 }} />
-                              <YAxis />
-                              <RechartsTooltip />
-                              <Legend wrapperStyle={{ fontSize: 12 }} />
-                              <Bar dataKey="before" name="Before" fill="hsl(210, 85%, 50%)" fillOpacity={0.7} />
-                              <Bar dataKey="after" name="After" fill="hsl(142, 60%, 40%)" fillOpacity={0.7} />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </CardContent>
-                      </Card>
-
-                      <Card data-testid="card-cfl-distribution-combined">
-                        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">CFL Time Step Distribution (s)</CardTitle>
-                          <Info className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                          <ResponsiveContainer width="100%" height={220}>
-                            <BarChart data={combinedCflHist} barGap={0} barCategoryGap="20%">
-                              <CartesianGrid strokeDasharray="3 3" />
-                              <XAxis dataKey="range" tick={{ fontSize: 9 }} />
-                              <YAxis />
-                              <RechartsTooltip />
-                              <Legend wrapperStyle={{ fontSize: 12 }} />
-                              <Bar dataKey="before" name="Before" fill="hsl(35, 90%, 50%)" fillOpacity={0.7} />
-                              <Bar dataKey="after" name="After" fill="hsl(270, 60%, 55%)" fillOpacity={0.7} />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </CardContent>
-                      </Card>
+                      <div className="space-y-4">
+                        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Original Model</h4>
+                        <Card data-testid="card-length-distribution-original">
+                          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Conduit Length Distribution ({flowUnit})</CardTitle>
+                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <ResponsiveContainer width="100%" height={200}>
+                              <BarChart data={beforeHist}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="range" tick={{ fontSize: 9 }} />
+                                <YAxis />
+                                <RechartsTooltip />
+                                <Bar dataKey="count" name="Conduits" fill="hsl(210, 85%, 50%)" />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </CardContent>
+                        </Card>
+                        <Card data-testid="card-cfl-distribution-original">
+                          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">CFL Time Step Distribution (s)</CardTitle>
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <ResponsiveContainer width="100%" height={200}>
+                              <BarChart data={cflBeforeHist}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="range" tick={{ fontSize: 9 }} />
+                                <YAxis />
+                                <RechartsTooltip />
+                                <Bar dataKey="count" name="Conduits" fill="hsl(35, 90%, 50%)" />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      <div className="space-y-4">
+                        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Discretized Model</h4>
+                        <Card data-testid="card-length-distribution-discretized">
+                          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Conduit Length Distribution ({flowUnit})</CardTitle>
+                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <ResponsiveContainer width="100%" height={200}>
+                              <BarChart data={afterHist}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="range" tick={{ fontSize: 9 }} />
+                                <YAxis />
+                                <RechartsTooltip />
+                                <Bar dataKey="count" name="Conduits" fill="hsl(142, 60%, 40%)" />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </CardContent>
+                        </Card>
+                        <Card data-testid="card-cfl-distribution-discretized">
+                          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">CFL Time Step Distribution (s)</CardTitle>
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <ResponsiveContainer width="100%" height={200}>
+                              <BarChart data={cflAfterHist}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="range" tick={{ fontSize: 9 }} />
+                                <YAxis />
+                                <RechartsTooltip />
+                                <Bar dataKey="count" name="Conduits" fill="hsl(270, 60%, 55%)" />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-3 flex-wrap">
