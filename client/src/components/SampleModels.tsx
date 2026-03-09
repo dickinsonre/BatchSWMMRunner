@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Download, FileText, FolderOpen, Check } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SampleFile {
   name: string;
@@ -23,47 +30,40 @@ function formatFileSize(bytes: number): string {
 }
 
 export default function SampleModels({ onSamplesLoaded, disabled }: SampleModelsProps) {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [selectedName, setSelectedName] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   const { data: samples = [], isLoading } = useQuery<SampleFile[]>({
     queryKey: ['/api/samples'],
   });
 
-  const toggleSelect = (name: string) => {
-    setSelected(prev => {
-      const next = new Set(prev);
-      if (next.has(name)) {
-        next.delete(name);
-      } else {
-        next.add(name);
-      }
-      return next;
-    });
-  };
-
-  const selectAll = () => {
-    if (selected.size === samples.length) {
-      setSelected(new Set());
-    } else {
-      setSelected(new Set(samples.map(s => s.name)));
+  const handleLoad = async () => {
+    if (!selectedName) return;
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/samples/${selectedName}`);
+      if (!response.ok) throw new Error('Failed to fetch sample');
+      const blob = await response.blob();
+      const file = new File([blob], selectedName, { type: 'application/octet-stream' });
+      onSamplesLoaded([file]);
+    } catch (error) {
+      console.error('Failed to load sample model:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleLoad = async () => {
-    if (selected.size === 0) return;
+  const handleLoadAll = async () => {
     setLoading(true);
     try {
       const files: File[] = [];
-      for (const name of selected) {
-        const response = await fetch(`/api/samples/${name}`);
+      for (const sample of samples) {
+        const response = await fetch(`/api/samples/${sample.name}`);
         if (!response.ok) continue;
         const blob = await response.blob();
-        const file = new File([blob], name, { type: 'application/octet-stream' });
-        files.push(file);
+        files.push(new File([blob], sample.name, { type: 'application/octet-stream' }));
       }
       onSamplesLoaded(files);
-      setSelected(new Set());
     } catch (error) {
       console.error('Failed to load sample models:', error);
     } finally {
@@ -74,65 +74,58 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
   if (isLoading) return null;
   if (samples.length === 0) return null;
 
+  const selectedSample = samples.find(s => s.name === selectedName);
+
   return (
     <Card data-testid="card-sample-models">
       <CardContent className="p-4 space-y-3">
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <div className="flex items-center gap-2">
-            <FolderOpen className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium" data-testid="text-sample-models-title">Sample Models</span>
-            <Badge variant="secondary">{samples.length}</Badge>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={selectAll}
-              disabled={disabled}
-              data-testid="button-select-all-samples"
-            >
-              {selected.size === samples.length ? "Deselect All" : "Select All"}
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleLoad}
-              disabled={disabled || selected.size === 0 || loading}
-              data-testid="button-load-samples"
-            >
-              <Download className="h-3 w-3 mr-1" />
-              {loading ? "Loading..." : `Load ${selected.size > 0 ? selected.size : ""} Selected`}
-            </Button>
-          </div>
+        <div className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium" data-testid="text-sample-models-title">Sample Models</span>
+          <Badge variant="secondary">{samples.length}</Badge>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {samples.map(sample => {
-            const isSelected = selected.has(sample.name);
-            return (
-              <button
-                key={sample.name}
-                onClick={() => !disabled && toggleSelect(sample.name)}
-                disabled={disabled}
-                className={`flex items-center gap-2 p-2 rounded-md text-left text-sm transition-colors hover-elevate ${
-                  isSelected
-                    ? 'bg-primary/10 border border-primary/30'
-                    : 'border border-transparent'
-                }`}
-                data-testid={`button-sample-${sample.name}`}
-              >
-                <div className={`flex-shrink-0 h-4 w-4 rounded border flex items-center justify-center ${
-                  isSelected ? 'bg-primary border-primary text-primary-foreground' : 'border-muted-foreground/30'
-                }`}>
-                  {isSelected && <Check className="h-3 w-3" />}
-                </div>
-                <FileText className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <div className="font-mono text-xs truncate" data-testid={`text-sample-name-${sample.name}`}>{sample.name}</div>
-                  <div className="text-xs text-muted-foreground truncate">{sample.title} ({formatFileSize(sample.size)})</div>
-                </div>
-              </button>
-            );
-          })}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Select
+            value={selectedName}
+            onValueChange={setSelectedName}
+            disabled={disabled || loading}
+          >
+            <SelectTrigger className="flex-1 min-w-[200px]" data-testid="select-sample-model">
+              <SelectValue placeholder="Select a sample model..." />
+            </SelectTrigger>
+            <SelectContent>
+              {samples.map(sample => (
+                <SelectItem key={sample.name} value={sample.name} data-testid={`option-sample-${sample.name}`}>
+                  <span className="font-mono text-xs">{sample.name}</span>
+                  <span className="text-muted-foreground text-xs ml-2">({formatFileSize(sample.size)})</span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            size="sm"
+            onClick={handleLoad}
+            disabled={disabled || !selectedName || loading}
+            data-testid="button-load-sample"
+          >
+            <Download className="h-3 w-3 mr-1" />
+            {loading ? "Loading..." : "Load"}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLoadAll}
+            disabled={disabled || loading}
+            data-testid="button-load-samples"
+          >
+            Load All
+          </Button>
         </div>
+        {selectedSample && (
+          <p className="text-xs text-muted-foreground" data-testid="text-sample-description">
+            {selectedSample.title}
+          </p>
+        )}
       </CardContent>
     </Card>
   );
