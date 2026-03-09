@@ -10,6 +10,7 @@ import { storage } from "./storage";
 import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus, type SweepResult, type SweepConfig, type DesignStormConfig } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
+import * as swmm5api from "./swmm5api";
 
 const upload = multer({
   dest: 'uploads/',
@@ -68,6 +69,19 @@ function detectSwmmPath(): SwmmStatus {
   }
 
   return { found: false, mode: 'simulation', searchedPaths };
+}
+
+function enrichWithApiStatus(status: SwmmStatus): SwmmStatus {
+  const apiAvailable = swmm5api.isApiAvailable();
+  let apiVersion: number | undefined;
+  if (apiAvailable) {
+    try {
+      apiVersion = swmm5api.getVersion();
+    } catch (e) {
+      console.warn('Could not get SWMM API version:', e);
+    }
+  }
+  return { ...status, apiAvailable, apiVersion };
 }
 
 function parseSwmmOutputBinary(outPath: string): string {
@@ -421,12 +435,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!cachedSwmmStatus) {
       cachedSwmmStatus = detectSwmmPath();
     }
-    res.json(cachedSwmmStatus);
+    res.json(enrichWithApiStatus(cachedSwmmStatus));
   });
 
   app.post('/api/swmm-status/refresh', async (_req, res) => {
     cachedSwmmStatus = detectSwmmPath();
-    res.json(cachedSwmmStatus);
+    res.json(enrichWithApiStatus(cachedSwmmStatus));
+  });
+
+  app.get('/api/swmm5-api-guide', async (_req, res) => {
+    const guidePath = path.join(process.cwd(), 'public', 'swmm5_api_guide.md');
+    if (fs.existsSync(guidePath)) {
+      res.type('text/markdown').sendFile(guidePath);
+    } else {
+      res.status(404).json({ error: 'API guide not found' });
+    }
   });
 
   app.get('/api/samples', async (req, res) => {
@@ -497,6 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/batch/:jobId/start', async (req, res) => {
     try {
       const { jobId } = req.params;
+      const { engineMode } = req.body || {};
       const job = await storage.getBatchJob(jobId);
 
       if (!job) {
@@ -505,10 +529,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.updateBatchJob(jobId, { status: 'processing' });
 
-      res.json({ message: 'Processing started' });
+      res.json({ message: 'Processing started', engineMode: engineMode || 'executable' });
 
       setTimeout(() => {
-        processFilesSequentially(jobId, job.files);
+        processFilesSequentially(jobId, job.files, engineMode || 'executable');
       }, 500);
     } catch (error) {
       console.error('Start processing error:', error);
@@ -543,7 +567,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  async function processFilesSequentially(jobId: string, files: Array<{ id: string; name: string; path: string }>) {
+  async function processFilesSequentially(jobId: string, files: Array<{ id: string; name: string; path: string }>, engineMode: string = 'executable') {
     const job = await storage.getBatchJob(jobId);
     if (!job) return;
 
@@ -567,7 +591,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileId: file.id,
       });
 
-      const result = await processSingleFile(jobId, file);
+      const useApi = engineMode === 'api' && swmm5api.isApiAvailable();
+      const result = useApi
+        ? await processSingleFileApi(jobId, file)
+        : await processSingleFile(jobId, file);
       
       const updatedJob = await storage.getBatchJob(jobId);
       if (updatedJob) {
@@ -881,6 +908,134 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
       console.log(`Injected report options into ${filePath}`);
     } catch (e) {
       console.warn(`Could not inject report options into ${filePath}:`, e);
+    }
+  }
+
+  async function processSingleFileApi(jobId: string, file: { id: string; name: string; path: string }): Promise<ProcessResult> {
+    const startTime = Date.now();
+    const inputPath = file.path;
+    const reportPath = inputPath + '.rpt';
+    const outputPath = inputPath + '.out';
+
+    injectReportOptions(inputPath);
+
+    let inpContent: string | undefined;
+    try {
+      inpContent = fs.readFileSync(inputPath, 'utf-8');
+    } catch (e) {
+      console.warn(`Could not read inp file ${inputPath}:`, e);
+    }
+
+    sendProgressUpdate(jobId, {
+      type: 'log',
+      fileId: file.id,
+      fileName: file.name,
+      text: `[API Mode] Running SWMM5 API step-by-step simulation...`,
+      stream: 'stdout',
+    });
+
+    try {
+      const apiResult = await swmm5api.runWithApi(
+        inputPath,
+        reportPath,
+        outputPath,
+        (stepData) => {
+          sendProgressUpdate(jobId, {
+            type: 'file_progress',
+            fileId: file.id,
+            fileName: file.name,
+            percentage: stepData.percentComplete,
+            message: `API Step ${stepData.stepCount} — ${stepData.percentComplete}%`,
+          });
+
+          if (stepData.nodeSnapshots || stepData.linkSnapshots) {
+            sendProgressUpdate(jobId, {
+              type: 'api_snapshot',
+              fileId: file.id,
+              fileName: file.name,
+              elapsedTime: stepData.elapsedTime,
+              stepCount: stepData.stepCount,
+              nodeSnapshots: stepData.nodeSnapshots,
+              linkSnapshots: stepData.linkSnapshots,
+            });
+          }
+        },
+        10
+      );
+
+      const processingTime = (Date.now() - startTime) / 1000;
+
+      sendProgressUpdate(jobId, {
+        type: 'file_progress',
+        fileId: file.id,
+        fileName: file.name,
+        percentage: 100,
+        message: apiResult.success ? 'Complete (API Mode)' : 'Failed (API Mode)',
+      });
+
+      sendProgressUpdate(jobId, {
+        type: 'log',
+        fileId: file.id,
+        fileName: file.name,
+        text: `[API Mode] Version: ${apiResult.version}, Steps: ${apiResult.totalSteps}, Warnings: ${apiResult.warnings}` +
+              (apiResult.massBalErr ? `, Mass Balance Err - Runoff: ${apiResult.massBalErr.runoff.toFixed(3)}%, Flow: ${apiResult.massBalErr.flow.toFixed(3)}%, Quality: ${apiResult.massBalErr.quality.toFixed(3)}%` : ''),
+        stream: 'stdout',
+      });
+
+      if (!apiResult.success) {
+        return {
+          id: file.id,
+          fileName: file.name,
+          filePath: file.path,
+          status: 'failed',
+          error: apiResult.error || 'API simulation failed',
+          processingTime,
+          inpContent,
+        };
+      }
+
+      let reportContent: string | undefined;
+      try {
+        if (fs.existsSync(reportPath)) {
+          reportContent = fs.readFileSync(reportPath, 'utf-8');
+        }
+      } catch (e) {
+        console.warn(`Could not read report file: ${reportPath}`);
+      }
+
+      try {
+        const timeSeriesData = parseSwmmOutputBinary(outputPath);
+        if (timeSeriesData) {
+          reportContent = (reportContent || '') + '\n' + timeSeriesData;
+        }
+      } catch (e) {
+        console.warn(`Could not parse SWMM output binary: ${outputPath}`);
+      }
+
+      const parsedMetrics = reportContent ? parseReportMetrics(reportContent) : undefined;
+
+      return {
+        id: file.id,
+        fileName: file.name,
+        filePath: file.path,
+        status: 'success',
+        processingTime,
+        reportContent,
+        inpContent,
+        results: { peakFlow: undefined, totalVolume: undefined },
+        parsedMetrics,
+      };
+    } catch (e: any) {
+      const processingTime = (Date.now() - startTime) / 1000;
+      return {
+        id: file.id,
+        fileName: file.name,
+        filePath: file.path,
+        status: 'failed',
+        error: `API mode error: ${e.message}`,
+        processingTime,
+        inpContent,
+      };
     }
   }
 

@@ -433,6 +433,50 @@ After a successful run, SWMM produces:
 
 Both are parsed server-side and combined into the `reportContent` field of `ProcessResult`.
 
+### API Mode (SWMM5 Shared Library)
+
+In addition to the executable mode, BatchSWMM supports running simulations via the **SWMM5 shared library** (`libswmm5.so`), which enables step-by-step simulation control with live data streaming.
+
+**Shared Library:**
+- **Location:** `swmm-engine/libswmm5.so`
+- **Size:** ~604 KB
+- **Source:** Compiled from the same EPA SWMM 5.2.4 source (54 C files) using `gcc -shared -fPIC -O2`
+- **Exports:** All 20 SWMM5 API functions (verified via `nm -D`)
+
+**FFI Bridge:**
+- **File:** `server/swmm5api.ts`
+- **Package:** `koffi` (modern Node.js FFI, no native compilation needed)
+- **Functions wrapped:** `swmm_run`, `swmm_open`, `swmm_start`, `swmm_step`, `swmm_stride`, `swmm_end`, `swmm_report`, `swmm_close`, `swmm_getMassBalErr`, `swmm_getVersion`, `swmm_getError`, `swmm_getWarnings`, `swmm_getCount`, `swmm_getName`, `swmm_getIndex`, `swmm_getValue`, `swmm_setValue`, `swmm_getSavedValue`, `swmm_writeLine`
+
+**How API Mode Works:**
+1. User selects "SWMM5 API" engine mode on the Home page
+2. `POST /api/batch/:jobId/start` receives `{ engineMode: 'api' }`
+3. `processSingleFileApi()` is called instead of `processSingleFile()`
+4. Uses `swmm5api.runWithApi()` for step-by-step execution:
+   - `swmm_open()` → `swmm_start(1)` → `swmm_step()` loop → `swmm_end()` → `swmm_report()` → `swmm_close()`
+5. Every 10 steps, live node/link data snapshots are streamed via WebSocket (`api_snapshot` message type)
+6. Produces the same `.rpt` and `.out` files as executable mode — fully compatible with existing results pipeline
+
+**WebSocket Messages (API Mode specific):**
+- `api_snapshot`: Contains `nodeSnapshots` (name, depth, head, inflow) and `linkSnapshots` (name, flow, depth, velocity) for up to 5 nodes/links per snapshot
+- `file_progress.message`: Shows "API Step N — X%" format instead of "Running... X%"
+- `log`: Messages prefixed with `[API Mode]` including version, step count, and mass balance errors
+
+**Key Differences from Executable Mode:**
+| Feature | Executable Mode | API Mode |
+|---------|----------------|----------|
+| Invocation | `child_process.spawn()` | koffi FFI calls |
+| Progress | stdout regex parsing | Step counter percentage |
+| Live data | Not available | Node/link snapshots every 10 steps |
+| Runtime control | Not possible | `swmm_setValue()` available |
+| Output files | .rpt + .out | .rpt + .out (identical) |
+
+**Future API Mode Capabilities:**
+- Real-time control (RTC): Adjust pump/gate settings mid-simulation via `swmm_setValue()`
+- Live streaming dashboards with per-step node/link data
+- Conditional early termination when thresholds are exceeded
+- Custom report annotations via `swmm_writeLine()`
+
 ### EPA SWMM 5.2 Release Notes
 
 ```
