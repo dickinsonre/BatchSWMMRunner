@@ -1,0 +1,12 @@
+This archive contains a guide to using the SWMM 5 Application Programming Interface (API).
+The guide is contained in a Windows Help file named Swmm5_API_Guide.chm and can be viewed
+by double-clicking on it in Windows File Explorer.
+
+If there is a problem in viewing the CHM file try doing the following:
+1. In Windows Explorer, right-click on the CHM file, and select Properties from the popup menu.
+2. Click on the Unblock button immediately below the Advanced button on the General page.
+3. Click Apply to show the file's content.
+
+In addition to the API Guide the archive also contains version 5.2.3 of the SWMM engine DLL
+(64-bit edition) that executes the API functions as well as several support files needed to
+create applications in C/C++, Pascal, and Python.

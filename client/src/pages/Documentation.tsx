@@ -446,6 +446,604 @@ This tells SWMM5 to also apply its own runtime lengthening as a
 safety net, in case any conduits were added or modified after
 ReSWMM processing.`;
 
+const SWMM5_API_DOC = {
+  overview: `The SWMM 5 Application Programming Interface (API) allows external programs to run 
+SWMM simulations, control them step-by-step, and access model data during runtime. 
+The API is exported from the swmm5.dll (Windows) or libswmm5.so (Linux) shared library.
+
+The API supports three languages out of the box:
+  - C/C++ via swmm5.h
+  - Object Pascal (Delphi/Free Pascal) via swmm5.pas
+  - Python via swmm5.py (ctypes wrapper)
+
+Version: 5.2 (Build 5.2.0)
+Author: L. Rossman, US EPA
+License: Public Domain`,
+
+  cHeader: `//-----------------------------------------------------------------------------
+//   swmm5.h — Prototypes for SWMM5 API functions
+//   Project: EPA SWMM5   Version: 5.2   Date: 11/01/21
+//   Author:  L. Rossman
+//-----------------------------------------------------------------------------
+
+// ── Object Type Enumerations ────────────────────────────────
+
+typedef enum {
+    swmm_GAGE     = 0,    // Rain gage
+    swmm_SUBCATCH = 1,    // Subcatchment
+    swmm_NODE     = 2,    // Node (junction, outfall, storage, divider)
+    swmm_LINK     = 3,    // Link (conduit, pump, orifice, weir, outlet)
+    swmm_SYSTEM   = 100   // System-wide properties
+} swmm_Object;
+
+typedef enum {
+    swmm_JUNCTION = 0,    // Junction node
+    swmm_OUTFALL  = 1,    // Outfall node
+    swmm_STORAGE  = 2,    // Storage unit node
+    swmm_DIVIDER  = 3     // Flow divider node
+} swmm_NodeType;
+
+typedef enum {
+    swmm_CONDUIT = 0,     // Conduit link
+    swmm_PUMP    = 1,     // Pump link
+    swmm_ORIFICE = 2,     // Orifice link
+    swmm_WEIR    = 3,     // Weir link
+    swmm_OUTLET  = 4      // Outlet link
+} swmm_LinkType;
+
+// ── Property Enumerations ───────────────────────────────────
+
+// Rain Gage Properties (100+)
+swmm_GAGE_RAINFALL = 100    // Current rainfall rate
+
+// Subcatchment Properties (200+)
+swmm_SUBCATCH_AREA      = 200   // Area
+swmm_SUBCATCH_RAINGAGE  = 201   // Assigned rain gage index
+swmm_SUBCATCH_RAINFALL  = 202   // Current rainfall
+swmm_SUBCATCH_EVAP      = 203   // Current evaporation
+swmm_SUBCATCH_INFIL     = 204   // Current infiltration
+swmm_SUBCATCH_RUNOFF    = 205   // Current runoff rate
+swmm_SUBCATCH_RPTFLAG   = 206   // Reporting flag
+
+// Node Properties (300+)
+swmm_NODE_TYPE     = 300   // Node type (junction/outfall/storage/divider)
+swmm_NODE_ELEV     = 301   // Invert elevation
+swmm_NODE_MAXDEPTH = 302   // Maximum depth
+swmm_NODE_DEPTH    = 303   // Current water depth
+swmm_NODE_HEAD     = 304   // Current hydraulic head
+swmm_NODE_VOLUME   = 305   // Current stored volume
+swmm_NODE_LATFLOW  = 306   // Current lateral inflow
+swmm_NODE_INFLOW   = 307   // Current total inflow
+swmm_NODE_OVERFLOW = 308   // Current overflow rate
+swmm_NODE_RPTFLAG  = 309   // Reporting flag
+
+// Link Properties (400+)
+swmm_LINK_TYPE       = 400   // Link type (conduit/pump/orifice/weir/outlet)
+swmm_LINK_NODE1      = 401   // Upstream node index
+swmm_LINK_NODE2      = 402   // Downstream node index
+swmm_LINK_LENGTH     = 403   // Conduit length
+swmm_LINK_SLOPE      = 404   // Conduit slope
+swmm_LINK_FULLDEPTH  = 405   // Full (max) depth
+swmm_LINK_FULLFLOW   = 406   // Full (max) flow
+swmm_LINK_SETTING    = 407   // Current setting (pump speed, gate opening)
+swmm_LINK_TIMEOPEN   = 408   // Fraction of time open
+swmm_LINK_TIMECLOSED = 409   // Fraction of time closed
+swmm_LINK_FLOW       = 410   // Current flow rate
+swmm_LINK_DEPTH      = 411   // Current flow depth
+swmm_LINK_VELOCITY   = 412   // Current flow velocity
+swmm_LINK_TOPWIDTH   = 413   // Current top width
+swmm_LINK_RPTFLAG    = 414   // Reporting flag
+
+// System Properties
+swmm_STARTDATE    = 0   // Simulation start date (DateTime)
+swmm_CURRENTDATE  = 1   // Current date (DateTime)
+swmm_ELAPSEDTIME  = 2   // Elapsed time (days)
+swmm_ROUTESTEP    = 3   // Current routing time step (sec)
+swmm_MAXROUTESTEP = 4   // Maximum routing time step (sec)
+swmm_REPORTSTEP   = 5   // Reporting time step (sec)
+swmm_TOTALSTEPS   = 6   // Total routing steps taken
+swmm_NOREPORT     = 7   // No-report flag
+swmm_FLOWUNITS    = 8   // Flow units code
+
+// Flow Units
+swmm_CFS = 0   // cubic feet per second
+swmm_GPM = 1   // gallons per minute
+swmm_MGD = 2   // million gallons per day
+swmm_CMS = 3   // cubic meters per second
+swmm_LPS = 4   // liters per second
+swmm_MLD = 5   // million liters per day
+
+// ── Core Simulation Functions ───────────────────────────────
+
+int swmm_run(const char *f1, const char *f2, const char *f3);
+    // Runs a complete simulation.
+    // f1 = input file, f2 = report file, f3 = output file
+    // Returns 0 on success, error code on failure.
+
+int swmm_open(const char *f1, const char *f2, const char *f3);
+    // Opens the input file and reads in network data.
+    // Must be called before swmm_start().
+
+int swmm_start(int saveFlag);
+    // Starts the simulation. saveFlag = 1 to save results.
+    // Must be called after swmm_open().
+
+int swmm_step(double *elapsedTime);
+    // Advances the simulation by one routing time step.
+    // elapsedTime receives total elapsed time in milliseconds.
+    // Returns 0 when simulation is not yet complete.
+
+int swmm_stride(int strideStep, double *elapsedTime);
+    // Advances the simulation by strideStep routing time steps.
+    // More efficient than calling swmm_step() repeatedly.
+
+int swmm_end(void);
+    // Ends the simulation and writes results.
+
+int swmm_report(void);
+    // Writes simulation results to the report file.
+
+int swmm_close(void);
+    // Closes all files and frees memory.
+    // Must be the last API call.
+
+// ── Query Functions ─────────────────────────────────────────
+
+int    swmm_getMassBalErr(float *runoffErr, float *flowErr, float *qualErr);
+    // Returns mass balance errors (%) for runoff, flow routing, and quality.
+
+int    swmm_getVersion(void);
+    // Returns version number (e.g. 52004 for v5.2.4).
+
+int    swmm_getError(char *errMsg, int msgLen);
+    // Retrieves the text of the last error message.
+
+int    swmm_getWarnings(void);
+    // Returns the number of warning messages generated.
+
+int    swmm_getCount(int objType);
+    // Returns the number of objects of a given type.
+    // objType: swmm_GAGE, swmm_SUBCATCH, swmm_NODE, swmm_LINK
+
+void   swmm_getName(int objType, int index, char *name, int size);
+    // Gets the ID name of an object given its type and index.
+
+int    swmm_getIndex(int objType, const char *name);
+    // Gets the index of an object given its type and ID name.
+
+double swmm_getValue(int property, int index);
+    // Gets the current value of an object's property.
+    // Use during a step loop for runtime values.
+
+void   swmm_setValue(int property, int index, double value);
+    // Sets the value of an object's property during runtime.
+    // Allows real-time control (e.g., adjust pump speed).
+
+double swmm_getSavedValue(int property, int index, int period);
+    // Gets a saved value from a completed simulation.
+    // period = reporting period index (0-based).
+
+void   swmm_writeLine(const char *line);
+    // Writes a line of text to the report file.
+
+void   swmm_decodeDate(double date, int *year, int *month, int *day,
+         int *hour, int *minute, int *second, int *dayOfWeek);
+    // Converts a SWMM DateTime value into its components.`,
+
+  pythonWrapper: `"""Python SWMM5 Interface (swmm5.py)"""
+"""Uses ctypes to call the SWMM5 shared library (swmm5.dll / libswmm5.so)"""
+
+import ctypes
+import platform
+import datetime
+
+# ── Library Loading ──────────────────────────────────────────
+
+_plat = platform.system()
+if _plat == 'Linux':
+    _lib = ctypes.CDLL("libswmm5.so")
+elif _plat == 'Windows':
+    _lib = ctypes.WinDLL(".\\\\swmm5.dll")
+else:
+    raise Exception('Platform ' + _plat + ' unsupported')
+
+# ── Core Simulation Functions ────────────────────────────────
+
+def getVersion():
+    """Returns SWMM version number (e.g., 52004)."""
+    return _lib.swmm_getVersion()
+
+def run(f1, f2, f3=''):
+    """Runs a complete simulation.
+    f1: input file (.inp)
+    f2: report file (.rpt)
+    f3: output file (.out), optional
+    """
+    return _lib.swmm_run(
+        ctypes.c_char_p(f1.encode()),
+        ctypes.c_char_p(f2.encode()),
+        ctypes.c_char_p(f3.encode()))
+
+def open(f1, f2, f3=''):
+    """Opens input file and reads network data."""
+    return _lib.swmm_open(
+        ctypes.c_char_p(f1.encode()),
+        ctypes.c_char_p(f2.encode()),
+        ctypes.c_char_p(f3.encode()))
+
+def start(saveFlag):
+    """Starts the simulation. saveFlag=1 to save results."""
+    return _lib.swmm_start(ctypes.c_int(saveFlag))
+
+def step():
+    """Advances by one routing step. Returns elapsed time (ms)."""
+    elapsed_time = ctypes.c_double()
+    _lib.swmm_step(ctypes.byref(elapsed_time))
+    return elapsed_time.value
+
+def stride(strideStep):
+    """Advances by strideStep routing steps. Returns elapsed time."""
+    elapsed_time = ctypes.c_double()
+    _lib.swmm_stride(ctypes.c_int(strideStep),
+                     ctypes.byref(elapsed_time))
+    return elapsed_time.value
+
+def end():
+    """Ends the simulation."""
+    _lib.swmm_end()
+
+def report():
+    """Writes results to the report file."""
+    return _lib.swmm_report()
+
+def close():
+    """Closes all files and frees memory."""
+    _lib.swmm_close()
+
+# ── Query Functions ──────────────────────────────────────────
+
+def getMassBalErr():
+    """Returns (runoffErr, flowErr, qualErr) as percentages."""
+    runoff = ctypes.c_float()
+    flow = ctypes.c_float()
+    qual = ctypes.c_float()
+    _lib.swmm_getMassBalErr(
+        ctypes.byref(runoff),
+        ctypes.byref(flow),
+        ctypes.byref(qual))
+    return runoff.value, flow.value, qual.value
+
+def getWarnings():
+    """Returns number of warning messages."""
+    return _lib.swmm_getWarnings()
+
+def getError():
+    """Returns the last error message as a string."""
+    errmsg = ctypes.create_string_buffer(240)
+    _lib.swmm_getError(ctypes.byref(errmsg), ctypes.c_int(240))
+    return errmsg.value.decode()
+
+def getCount(objtype):
+    """Returns count of objects of given type."""
+    return _lib.swmm_getCount(ctypes.c_int(objtype))
+
+def getName(objtype, index, size):
+    """Returns ID name of object at given index."""
+    name = ctypes.create_string_buffer(size)
+    _lib.swmm_getName(
+        ctypes.c_int(objtype), ctypes.c_int(index),
+        ctypes.byref(name), ctypes.c_int(size))
+    return name.value.decode()
+
+def getIndex(objtype, name):
+    """Returns index of object with given ID name."""
+    return _lib.swmm_getIndex(
+        ctypes.c_int(objtype),
+        ctypes.c_char_p(name.encode()))
+
+def getValue(property, index):
+    """Gets current runtime value of a property."""
+    _lib.swmm_getValue.restype = ctypes.c_double
+    return _lib.swmm_getValue(
+        ctypes.c_int(property), ctypes.c_int(index))
+
+def getSavedValue(property, index, period):
+    """Gets saved value from completed simulation."""
+    _lib.swmm_getSavedValue.restype = ctypes.c_double
+    return _lib.swmm_getSavedValue(
+        ctypes.c_int(property),
+        ctypes.c_int(index),
+        ctypes.c_int(period))
+
+def setValue(property, index, value):
+    """Sets a property value during runtime (real-time control)."""
+    _lib.swmm_setValue(
+        ctypes.c_int(property),
+        ctypes.c_int(index),
+        ctypes.c_double(value))
+
+def writeLine(line):
+    """Writes a line of text to the report file."""
+    _lib.swmm_writeLine(ctypes.c_char_p(line.encode()))
+
+def decodeDate(date):
+    """Converts SWMM DateTime to Python datetime."""
+    year = ctypes.c_int()
+    month = ctypes.c_int()
+    day = ctypes.c_int()
+    hour = ctypes.c_int()
+    minute = ctypes.c_int()
+    second = ctypes.c_int()
+    dayofweek = ctypes.c_int()
+    _lib.swmm_decodeDate(
+        ctypes.c_double(date),
+        ctypes.byref(year), ctypes.byref(month),
+        ctypes.byref(day), ctypes.byref(hour),
+        ctypes.byref(minute), ctypes.byref(second),
+        ctypes.byref(dayofweek))
+    return datetime.datetime(
+        year.value, month.value, day.value,
+        hour.value, minute.value, second.value)
+
+# ── Constants ────────────────────────────────────────────────
+
+GAGE = 0;  SUBCATCH = 1;  NODE = 2;  LINK = 3;  SYSTEM = 100
+
+JUNCTION = 0; OUTFALL = 1; STORAGE = 2; DIVIDER = 3
+CONDUIT = 0; PUMP = 1; ORIFICE = 2; WEIR = 3; OUTLET = 4
+
+GAGE_RAINFALL = 100
+
+SUBCATCH_AREA = 200;  SUBCATCH_RAINGAGE = 201
+SUBCATCH_RAINFALL = 202;  SUBCATCH_EVAP = 203
+SUBCATCH_INFIL = 204;  SUBCATCH_RUNOFF = 205
+SUBCATCH_RPTFLAG = 206
+
+NODE_TYPE = 300; NODE_ELEV = 301; NODE_MAXDEPTH = 302
+NODE_DEPTH = 303; NODE_HEAD = 304; NODE_VOLUME = 305
+NODE_LATFLOW = 306; NODE_INFLOW = 307
+NODE_OVERFLOW = 308; NODE_RPTFLAG = 309
+
+LINK_TYPE = 400; LINK_NODE1 = 401; LINK_NODE2 = 402
+LINK_LENGTH = 403; LINK_SLOPE = 404
+LINK_FULLDEPTH = 405; LINK_FULLFLOW = 406
+LINK_SETTING = 407; LINK_TIMEOPEN = 408
+LINK_TIMECLOSED = 409; LINK_FLOW = 410
+LINK_DEPTH = 411; LINK_VELOCITY = 412
+LINK_TOPWIDTH = 413; LINK_RPTFLAG = 414
+
+CFS = 0; GPM = 1; MGD = 2; CMS = 3; LPS = 4; MLD = 5`,
+
+  pascalUnit: `unit swmm5;
+{ Object Pascal (Delphi/Free Pascal) SWMM 5 Interface }
+
+interface
+
+const
+  Swmm5Lib = 'swmm5.dll';
+
+  // Object types
+  swmm_GAGE     = 0;   swmm_SUBCATCH = 1;
+  swmm_NODE     = 2;   swmm_LINK     = 3;
+  swmm_SYSTEM   = 100;
+
+  // Node types
+  swmm_JUNCTION = 0;   swmm_OUTFALL  = 1;
+  swmm_STORAGE  = 2;   swmm_DIVIDER  = 3;
+
+  // Link types
+  swmm_CONDUIT = 0;  swmm_PUMP    = 1;
+  swmm_ORIFICE = 2;  swmm_WEIR    = 3;  swmm_OUTLET  = 4;
+
+  // Flow units
+  swmm_CFS = 0;  swmm_GPM = 1;  swmm_MGD = 2;
+  swmm_CMS = 3;  swmm_LPS = 4;  swmm_MLD = 5;
+
+// ── Core Simulation Functions ───────────────────────────────
+
+function  swmm_run(F1, F2, F3: PAnsiChar): Integer;
+function  swmm_open(F1, F2, F3: PAnsiChar): Integer;
+function  swmm_start(SaveFlag: Integer): Integer;
+function  swmm_step(var ElapsedTime: Double): Integer;
+function  swmm_stride(StrideStep: Integer;
+                      var ElapsedTime: Double): Integer;
+function  swmm_end: Integer;
+function  swmm_report: Integer;
+function  swmm_close: Integer;
+
+// ── Query Functions ─────────────────────────────────────────
+
+function  swmm_getMassBalErr(var Erunoff, Eflow, Equal: Single): Integer;
+function  swmm_getVersion: Integer;
+function  swmm_getError(ErrMsg: PAnsiChar; MsgLen: Integer): Integer;
+function  swmm_getWarnings: Integer;
+
+function  swmm_getCount(ObjType: Integer): Integer;
+procedure swmm_getName(ObjType, Index: Integer;
+                       Name: PAnsiChar; Size: Integer);
+function  swmm_getIndex(ObjType: Integer; Name: PAnsiChar): Integer;
+function  swmm_getValue(aProperty, Index: Integer): Double;
+procedure swmm_setValue(aProperty, Index: Integer; Value: Double);
+function  swmm_getSavedValue(aProperty, Index, Period: Integer): Double;
+procedure swmm_writeLine(Line: PAnsiChar);
+procedure swmm_decodeDate(Date: Double;
+            var Year, Month, Day, Hour, Minute, Second,
+            DayOfWeek: Integer);
+
+// All functions are stdcall, imported from swmm5.dll
+implementation
+end.`,
+
+  usageExamples: `// ═══════════════════════════════════════════════════════════
+//  SWMM5 API Usage Examples
+// ═══════════════════════════════════════════════════════════
+
+// ── Example 1: Simple Complete Run ──────────────────────────
+// The simplest way to run a simulation (all languages)
+
+// C:
+int err = swmm_run("model.inp", "model.rpt", "model.out");
+if (err) printf("Error code: %d\\n", err);
+
+// Python:
+import swmm5
+err = swmm5.run("model.inp", "model.rpt", "model.out")
+if err: print(f"Error code: {err}")
+
+// Pascal:
+err := swmm_run('model.inp', 'model.rpt', 'model.out');
+
+// ── Example 2: Step-by-Step Simulation ──────────────────────
+// Run one routing step at a time for real-time monitoring
+
+// Python:
+import swmm5
+
+swmm5.open("model.inp", "model.rpt", "model.out")
+swmm5.start(1)  # 1 = save results
+
+elapsed = 0.0
+while elapsed == 0.0 or elapsed > 0.0:
+    elapsed = swmm5.step()
+    if elapsed <= 0:
+        break
+
+    # Read runtime values at each step
+    n_nodes = swmm5.getCount(swmm5.NODE)
+    for i in range(n_nodes):
+        depth = swmm5.getValue(swmm5.NODE_DEPTH, i)
+        flow_in = swmm5.getValue(swmm5.NODE_INFLOW, i)
+        overflow = swmm5.getValue(swmm5.NODE_OVERFLOW, i)
+
+        if overflow > 0:
+            name = swmm5.getName(swmm5.NODE, i, 64)
+            print(f"  Flooding at {name}: {overflow:.3f}")
+
+swmm5.end()
+swmm5.report()
+swmm5.close()
+
+# Check mass balance errors
+runoff_err, flow_err, qual_err = swmm5.getMassBalErr()
+print(f"Runoff error: {runoff_err:.3f}%")
+print(f"Flow error:   {flow_err:.3f}%")
+print(f"Quality error:{qual_err:.3f}%")
+
+// ── Example 3: Real-Time Control ────────────────────────────
+// Adjust pump speed based on upstream node depth
+
+// Python:
+import swmm5
+
+swmm5.open("model.inp", "model.rpt", "model.out")
+swmm5.start(1)
+
+pump_index = swmm5.getIndex(swmm5.LINK, "PUMP-1")
+wet_well   = swmm5.getIndex(swmm5.NODE, "WET-WELL")
+
+while True:
+    elapsed = swmm5.step()
+    if elapsed <= 0:
+        break
+
+    # Read wet well depth
+    depth = swmm5.getValue(swmm5.NODE_DEPTH, wet_well)
+
+    # Simple on/off control
+    if depth > 4.0:    # High water: pump on
+        swmm5.setValue(swmm5.LINK_SETTING, pump_index, 1.0)
+    elif depth < 1.0:  # Low water: pump off
+        swmm5.setValue(swmm5.LINK_SETTING, pump_index, 0.0)
+
+swmm5.end()
+swmm5.report()
+swmm5.close()
+
+// ── Example 4: Post-Simulation Analysis ─────────────────────
+// Read saved results after simulation completes
+
+// Python:
+import swmm5
+
+# Run the simulation first
+swmm5.run("model.inp", "model.rpt", "model.out")
+
+# Reopen to access saved results
+swmm5.open("model.inp", "model.rpt", "model.out")
+swmm5.start(0)  # 0 = don't re-run, just load
+
+total_steps = int(swmm5.getValue(swmm5.TOTALSTEPS, 0))
+link_idx = swmm5.getIndex(swmm5.LINK, "C1")
+
+print("Period | Flow     | Depth    | Velocity")
+print("-------|----------|----------|----------")
+for t in range(total_steps):
+    flow = swmm5.getSavedValue(swmm5.LINK_FLOW, link_idx, t)
+    depth = swmm5.getSavedValue(swmm5.LINK_DEPTH, link_idx, t)
+    vel = swmm5.getSavedValue(swmm5.LINK_VELOCITY, link_idx, t)
+    print(f"  {t:4d} | {flow:8.3f} | {depth:8.3f} | {vel:8.3f}")
+
+swmm5.end()
+swmm5.close()
+
+// ── Example 5: Network Inventory ────────────────────────────
+// List all objects in the model
+
+// Python:
+import swmm5
+
+swmm5.open("model.inp", "model.rpt", "")
+
+obj_types = [
+    ("Rain Gages",    swmm5.GAGE),
+    ("Subcatchments", swmm5.SUBCATCH),
+    ("Nodes",         swmm5.NODE),
+    ("Links",         swmm5.LINK),
+]
+
+for label, obj_type in obj_types:
+    count = swmm5.getCount(obj_type)
+    print(f"\\n{label} ({count}):")
+    for i in range(count):
+        name = swmm5.getName(obj_type, i, 64)
+        print(f"  [{i}] {name}")
+
+# Node details
+n_nodes = swmm5.getCount(swmm5.NODE)
+for i in range(n_nodes):
+    name = swmm5.getName(swmm5.NODE, i, 64)
+    elev = swmm5.getValue(swmm5.NODE_ELEV, i)
+    maxd = swmm5.getValue(swmm5.NODE_MAXDEPTH, i)
+    ntype = int(swmm5.getValue(swmm5.NODE_TYPE, i))
+    type_names = ["Junction", "Outfall", "Storage", "Divider"]
+    print(f"  {name}: {type_names[ntype]}, "
+          f"Elev={elev:.2f}, MaxDepth={maxd:.2f}")
+
+swmm5.close()
+
+// ═══════════════════════════════════════════════════════════
+//  Call Sequence Summary
+// ═══════════════════════════════════════════════════════════
+//
+//  Simple run:     swmm_run(f1, f2, f3)
+//
+//  Step-by-step:   swmm_open(f1, f2, f3)
+//                  swmm_start(saveFlag)
+//                  loop { swmm_step(&t) } until t <= 0
+//                  swmm_end()
+//                  swmm_report()
+//                  swmm_close()
+//
+//  With stride:    swmm_open(f1, f2, f3)
+//                  swmm_start(saveFlag)
+//                  loop { swmm_stride(n, &t) } until t <= 0
+//                  swmm_end()
+//                  swmm_report()
+//                  swmm_close()
+//
+// ═══════════════════════════════════════════════════════════`,
+};
+
 function FaqItem({ question, answer, testId }: { question: string; answer: string; testId: string }) {
   return (
     <div className="border-b pb-4 last:border-b-0 last:pb-0" data-testid={testId}>
@@ -486,6 +1084,7 @@ export default function Documentation() {
           <Tabs defaultValue="faq" data-testid="tabs-documentation">
             <TabsList className="flex flex-wrap gap-1" data-testid="tablist-documentation">
               <TabsTrigger value="faq" data-testid="tab-faq">FAQ</TabsTrigger>
+              <TabsTrigger value="swmm5-api" data-testid="tab-swmm5-api">SWMM5 API</TabsTrigger>
               <TabsTrigger value="reswmm" data-testid="tab-reswmm">ReSWMM Lengthening</TabsTrigger>
               <TabsTrigger value="swmm5-c" data-testid="tab-swmm5-c">SWMM5 C Reference</TabsTrigger>
               <TabsTrigger value="integration" data-testid="tab-integration">SWMM Integration</TabsTrigger>
@@ -571,6 +1170,163 @@ export default function Documentation() {
                       testId="faq-platforms"
                     />
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="swmm5-api">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center justify-between gap-4 flex-wrap">
+                    <span>SWMM5 Application Programming Interface (API)</span>
+                    <a
+                      href="https://github.com/USEPA/Stormwater-Management-Model"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary flex items-center gap-1 font-normal"
+                      data-testid="link-swmm5-api-github"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      EPA SWMM5 Source
+                    </a>
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    The SWMM 5 API allows external programs to run simulations, control them step-by-step,
+                    and read/write model data at runtime. Supports C/C++, Python, and Object Pascal.
+                    Version 5.2 by L. Rossman, US EPA.
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="api-overview" data-testid="tabs-swmm5-api-inner">
+                    <TabsList className="flex flex-wrap gap-1 mb-4" data-testid="tablist-swmm5-api-inner">
+                      <TabsTrigger value="api-overview" data-testid="tab-api-overview">Overview</TabsTrigger>
+                      <TabsTrigger value="api-c" data-testid="tab-api-c">C Header</TabsTrigger>
+                      <TabsTrigger value="api-python" data-testid="tab-api-python">Python</TabsTrigger>
+                      <TabsTrigger value="api-pascal" data-testid="tab-api-pascal">Pascal</TabsTrigger>
+                      <TabsTrigger value="api-examples" data-testid="tab-api-examples">Usage Examples</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="api-overview">
+                      <div className="space-y-6">
+                        <div className="bg-muted/40 rounded p-4">
+                          <pre className="text-xs font-mono whitespace-pre-wrap">{SWMM5_API_DOC.overview}</pre>
+                        </div>
+
+                        <div className="space-y-4">
+                          <h3 className="font-medium text-sm" data-testid="text-api-function-groups">API Function Groups</h3>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Card>
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm">Core Simulation</CardTitle>
+                              </CardHeader>
+                              <CardContent className="text-xs text-muted-foreground space-y-1 font-mono">
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">run</Badge>swmm_run(f1, f2, f3) — Complete simulation</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">init</Badge>swmm_open(f1, f2, f3) — Open and read network</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">start</Badge>swmm_start(saveFlag) — Begin simulation</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">step</Badge>swmm_step(&amp;t) — Advance one routing step</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">stride</Badge>swmm_stride(n, &amp;t) — Advance n steps</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">end</Badge>swmm_end() — End simulation</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">rpt</Badge>swmm_report() — Write report file</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">close</Badge>swmm_close() — Free memory</div>
+                              </CardContent>
+                            </Card>
+
+                            <Card>
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm">Data Access</CardTitle>
+                              </CardHeader>
+                              <CardContent className="text-xs text-muted-foreground space-y-1 font-mono">
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">count</Badge>swmm_getCount(objType) — Object count</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">name</Badge>swmm_getName(type, idx, ...) — Object ID</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">index</Badge>swmm_getIndex(type, name) — Object index</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">get</Badge>swmm_getValue(prop, idx) — Runtime value</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">set</Badge>swmm_setValue(prop, idx, val) — Modify value</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">saved</Badge>swmm_getSavedValue(prop, idx, t) — Saved result</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">err</Badge>swmm_getMassBalErr(...) — Continuity errors</div>
+                                <div><Badge variant="secondary" className="text-[10px] mr-2">ver</Badge>swmm_getVersion() — Version number</div>
+                              </CardContent>
+                            </Card>
+                          </div>
+
+                          <h3 className="font-medium text-sm mt-4" data-testid="text-api-call-sequence">Call Sequence</h3>
+                          <div className="bg-muted/40 rounded p-4">
+                            <pre className="text-xs font-mono whitespace-pre">{`Simple run:     swmm_run(f1, f2, f3)
+
+Step-by-step:   swmm_open(f1, f2, f3)
+                swmm_start(saveFlag)
+                loop { swmm_step(&t) } until t <= 0
+                swmm_end()
+                swmm_report()
+                swmm_close()
+
+With stride:    swmm_open(f1, f2, f3)
+                swmm_start(saveFlag)
+                loop { swmm_stride(n, &t) } until t <= 0
+                swmm_end()
+                swmm_report()
+                swmm_close()`}</pre>
+                          </div>
+
+                          <h3 className="font-medium text-sm mt-4" data-testid="text-api-property-table">Property Enum Ranges</h3>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-xs" data-testid="table-api-properties">
+                              <thead>
+                                <tr className="border-b">
+                                  <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Object</th>
+                                  <th className="text-left py-1.5 px-4 text-muted-foreground font-medium">Enum Range</th>
+                                  <th className="text-left py-1.5 px-4 text-muted-foreground font-medium">Key Properties</th>
+                                </tr>
+                              </thead>
+                              <tbody className="text-muted-foreground">
+                                <tr className="border-b border-border/50">
+                                  <td className="py-1.5 pr-4 font-mono">GAGE</td>
+                                  <td className="py-1.5 px-4">100</td>
+                                  <td className="py-1.5 px-4">RAINFALL</td>
+                                </tr>
+                                <tr className="border-b border-border/50">
+                                  <td className="py-1.5 pr-4 font-mono">SUBCATCH</td>
+                                  <td className="py-1.5 px-4">200-206</td>
+                                  <td className="py-1.5 px-4">AREA, RAINFALL, EVAP, INFIL, RUNOFF</td>
+                                </tr>
+                                <tr className="border-b border-border/50">
+                                  <td className="py-1.5 pr-4 font-mono">NODE</td>
+                                  <td className="py-1.5 px-4">300-309</td>
+                                  <td className="py-1.5 px-4">TYPE, ELEV, DEPTH, HEAD, VOLUME, INFLOW, OVERFLOW</td>
+                                </tr>
+                                <tr className="border-b border-border/50">
+                                  <td className="py-1.5 pr-4 font-mono">LINK</td>
+                                  <td className="py-1.5 px-4">400-414</td>
+                                  <td className="py-1.5 px-4">TYPE, NODES, LENGTH, SLOPE, FLOW, DEPTH, VELOCITY</td>
+                                </tr>
+                                <tr className="border-b border-border/50">
+                                  <td className="py-1.5 pr-4 font-mono">SYSTEM</td>
+                                  <td className="py-1.5 px-4">0-8</td>
+                                  <td className="py-1.5 px-4">STARTDATE, ELAPSEDTIME, ROUTESTEP, FLOWUNITS</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="api-c">
+                      <CodeBlock code={SWMM5_API_DOC.cHeader} language="c" />
+                    </TabsContent>
+
+                    <TabsContent value="api-python">
+                      <CodeBlock code={SWMM5_API_DOC.pythonWrapper} language="python" />
+                    </TabsContent>
+
+                    <TabsContent value="api-pascal">
+                      <CodeBlock code={SWMM5_API_DOC.pascalUnit} language="pascal" />
+                    </TabsContent>
+
+                    <TabsContent value="api-examples">
+                      <CodeBlock code={SWMM5_API_DOC.usageExamples} />
+                    </TabsContent>
+                  </Tabs>
                 </CardContent>
               </Card>
             </TabsContent>
