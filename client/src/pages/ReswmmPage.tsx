@@ -510,8 +510,10 @@ export default function ReswmmPage() {
   };
 
   const handleRunAfter = () => {
-    if (!parsed || !result || !originalContent) return;
-    const rebuilt = rebuildInpFile(originalContent, parsed, result, config);
+    if (!parsed || !originalContent) return;
+    const freshResult = discretizeConduits(parsed, config);
+    setResult(freshResult);
+    const rebuilt = rebuildInpFile(originalContent, parsed, freshResult, config);
     const baseName = fileName.replace(/\.inp$/i, '');
     runInpContent(rebuilt, `ReSWMM_${baseName}.inp`, 'after');
   };
