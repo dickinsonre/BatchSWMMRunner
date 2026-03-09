@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
@@ -86,7 +86,12 @@ function getContinuityErrorBadge(error: number | undefined): { variant: 'default
   return { variant: 'destructive', label: `${error.toFixed(3)}%` };
 }
 
-function reportToHtml(content: string): string {
+interface ReportHtmlResult {
+  html: string;
+  sections: { id: string; title: string }[];
+}
+
+function reportToHtml(content: string): ReportHtmlResult {
   const escaped = content
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -94,6 +99,8 @@ function reportToHtml(content: string): string {
 
   const lines = escaped.split('\n');
   const htmlLines: string[] = [];
+  const sections: { id: string; title: string }[] = [];
+  let sectionCounter = 0;
 
   const tsStartIndices = new Set<number>();
   for (let si = 0; si < lines.length; si++) {
@@ -114,6 +121,12 @@ function reportToHtml(content: string): string {
     return line.trim().split(/\s{2,}/).filter(s => s !== '');
   }
 
+  function addSection(title: string) {
+    const id = `rpt-section-${sectionCounter++}`;
+    sections.push({ id, title });
+    htmlLines.push(`<h2 id="${id}" style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${title}</h2>`);
+  }
+
   let li = 0;
   while (li < lines.length) {
     const line = lines[li];
@@ -126,17 +139,17 @@ function reportToHtml(content: string): string {
         const nextLine = li + 1 < lines.length ? lines[li + 1] : '';
         const nextTitle = nextLine.replace(/\*/g, '').trim();
         if (/^\s*\*{3,}\s*$/.test(nextLine) && nextTitle === '') {
-          htmlLines.push(`<h2 style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${titleOnSameLine}</h2>`);
+          addSection(titleOnSameLine);
           li += 2;
           continue;
         }
-        htmlLines.push(`<h2 style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${titleOnSameLine}</h2>`);
+        addSection(titleOnSameLine);
         li++;
         continue;
       }
       if (li + 2 < lines.length && /^\s*\*{3,}\s*$/.test(lines[li + 2])) {
         const sectionTitle = lines[li + 1].replace(/\*/g, '').trim();
-        htmlLines.push(`<h2 style="color:hsl(var(--primary));margin:1.5em 0 0.4em;font-size:1.1em;font-weight:700;border-bottom:2px solid hsl(var(--primary) / 0.3);padding-bottom:0.3em;">${sectionTitle}</h2>`);
+        addSection(sectionTitle);
         li += 3;
         continue;
       }
@@ -277,7 +290,71 @@ function reportToHtml(content: string): string {
     li++;
   }
 
-  return `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}</div>`;
+  return {
+    html: `<div style="padding:1em;line-height:1.6;">${htmlLines.join('\n')}</div>`,
+    sections,
+  };
+}
+
+function NavigableReportHtml({ content, testId }: { content: string; testId: string }) {
+  const { html, sections } = useMemo(() => reportToHtml(content), [content]);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const handleSectionClick = useCallback((id: string) => {
+    setActiveSection(id);
+    const container = contentRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement | null;
+    const target = contentRef.current?.querySelector(`#${id}`) as HTMLElement | null;
+    if (container && target) {
+      const offset = target.offsetTop - container.offsetTop;
+      container.scrollTo({ top: offset - 8, behavior: 'smooth' });
+    }
+  }, []);
+
+  if (sections.length === 0) {
+    return (
+      <ScrollArea className="h-[800px] rounded border">
+        <div
+          className="text-sm p-4 bg-background"
+          dangerouslySetInnerHTML={{ __html: html }}
+          data-testid={testId}
+        />
+      </ScrollArea>
+    );
+  }
+
+  return (
+    <div className="flex h-[800px] rounded border overflow-hidden" data-testid={testId}>
+      <div className="w-56 shrink-0 border-r bg-muted/30 overflow-y-auto">
+        <div className="p-2 border-b">
+          <p className="text-xs font-semibold text-muted-foreground px-1">Sections</p>
+        </div>
+        <nav className="p-1 space-y-0.5">
+          {sections.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => handleSectionClick(s.id)}
+              className={`w-full text-left px-2 py-1.5 text-xs rounded-md transition-colors hover-elevate ${
+                activeSection === s.id
+                  ? 'bg-primary/10 text-primary font-medium'
+                  : 'text-muted-foreground'
+              }`}
+              data-testid={`nav-section-${s.id}`}
+            >
+              {s.title}
+            </button>
+          ))}
+        </nav>
+      </div>
+      <ScrollArea className="flex-1">
+        <div
+          ref={contentRef}
+          className="text-sm p-4 bg-background"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </ScrollArea>
+    </div>
+  );
 }
 
 interface TableData {
@@ -929,13 +1006,10 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                 )}
                                 {result.reportContent && (
                                   <TabsContent value="html">
-                                    <ScrollArea className="h-[800px] rounded border">
-                                      <div
-                                        className="text-sm p-4 bg-background"
-                                        dangerouslySetInnerHTML={{ __html: reportToHtml(result.reportContent) }}
-                                        data-testid={`html-report-content-${result.id}`}
-                                      />
-                                    </ScrollArea>
+                                    <NavigableReportHtml
+                                      content={result.reportContent}
+                                      testId={`html-report-content-${result.id}`}
+                                    />
                                   </TabsContent>
                                 )}
                                 {result.reportContent && (
