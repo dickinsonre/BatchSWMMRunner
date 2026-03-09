@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
+import swmm5ApiDiagramPath from "@assets/image_1773083934176.png";
 
 const SWMM_INTEGRATION_CODE = `import { spawn } from "child_process";
 import fs from "fs";
@@ -1208,6 +1209,14 @@ export default function Documentation() {
 
                     <TabsContent value="api-overview">
                       <div className="space-y-6">
+                        <div className="rounded border overflow-hidden" data-testid="img-swmm5-api-diagram">
+                          <img
+                            src={swmm5ApiDiagramPath}
+                            alt="EPA SWMM5 API Header File Overview — Object models, workflow, properties, and utility functions"
+                            className="w-full h-auto"
+                          />
+                        </div>
+
                         <div className="bg-muted/40 rounded p-4">
                           <pre className="text-xs font-mono whitespace-pre-wrap">{SWMM5_API_DOC.overview}</pre>
                         </div>
