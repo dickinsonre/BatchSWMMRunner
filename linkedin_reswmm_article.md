@@ -25,9 +25,11 @@ Where:
 
 When a conduit is very long relative to its diameter, the CFL-stable timestep becomes large — not a problem. But when conduits are *short* relative to their celerity, or when the model has a mix of very long and very short pipes, the solver is forced to reduce the global timestep to accommodate the most restrictive element. This leads to longer runtimes and, in some cases, outright instability (Rossman, 2015).
 
-Conversely, conduits that are *too long* can produce inaccurate flow attenuation and timing because the solver cannot resolve the spatial variation of flow within that single computational element (James et al., 2010).
+Conversely, conduits that are *too long* can produce inaccurate flow attenuation and timing because the solver cannot resolve the spatial variation of flow within that single computational element. SWMM's link-node approach does not perform intra-conduit spatial discretization, which Vasconcelos et al. (2018) demonstrated causes significant accuracy problems during rapid filling conditions and mixed free-surface/pressurized flows. Their experimental work showed that inserting intermediate "dummy" junctions — a technique they call **Artificial Spatial Discretization (ASD)** — dramatically improves SWMM's ability to reproduce observed transient behavior.
 
-The practical fix? **Split long pipes into shorter segments.** Engineers have been doing this manually for decades. ReSWMM automates it.
+Pachaly et al. (2020) extended this work by comparing SWMM 5.1's calculation alternatives (EXTRAN vs. Preissmann slot) with and without spatial discretization. Their findings confirmed that adequate temporal *and* spatial discretization together reduce continuity errors and numerical instabilities, particularly in systems prone to pressurization and surcharging. A follow-up field evaluation (Pachaly et al., 2019) validated the discretization approach against real stormwater collection system data, recommending spatial resolutions as fine as 0.2 m for pipe filling events. The same team later applied these techniques to predict surges in Chicago's TARP tunnel system (Pachaly et al., 2021), demonstrating that SWMM with proper discretization can match purpose-built surge models.
+
+The practical fix? **Split long pipes into shorter segments.** Engineers have been doing this manually for decades. The original **ReSWMM** tool (https://github.com/ecotecnologias/ReSWMM) was developed to automate this process, implementing the time step recommendations from Vasconcelos et al. (2018) and the EXTRAN guidelines. BatchSWMM's ReSWMM engine builds on the same principles.
 
 ---
 
@@ -153,13 +155,23 @@ Akan, A. O. (2006). *Open Channel Hydraulics*. Butterworth-Heinemann. ISBN: 978-
 
 Courant, R., Friedrichs, K., & Lewy, H. (1928). Über die partiellen Differenzengleichungen der mathematischen Physik. *Mathematische Annalen*, 100(1), 32-74. https://doi.org/10.1007/BF01448839
 
+ecotecnologias. (2019). *ReSWMM* [Computer software]. GitHub. https://github.com/ecotecnologias/ReSWMM
+
 James, W., Rossman, L. A., & James, W. R. C. (2010). *User's Guide to SWMM 5*. CHI Press, Guelph, Ontario. ISBN: 978-0-9808853-5-4.
+
+Pachaly, R. L., Vasconcelos, J. G., Allasia, D. G., & Tassi, R. (2019). Field Evaluation of Discretized Model Setups for the Storm Water Management Model. *Journal of Water Management Modeling*, C463. https://www.chijournal.org/C463
+
+Pachaly, R. L., Vasconcelos, J. G., Allasia, D. G., Tassi, R., & Bocchi, J. P. P. (2020). Comparing SWMM 5.1 Calculation Alternatives to Represent Unsteady Stormwater Sewer Flows. *Journal of Hydraulic Engineering*, 146(7). https://doi.org/10.1061/(ASCE)HY.1943-7900.0001762
+
+Pachaly, R. L., Vasconcelos, J. G., & Allasia, D. G. (2021). Surge predictions in a large stormwater tunnel system using SWMM. *Urban Water Journal*, 18(8), 577-586. https://doi.org/10.1080/1573062X.2021.1916828
 
 Rossman, L. A. (2015). *Storm Water Management Model Reference Manual Volume I — Hydrology (Revised)*. EPA/600/R-15/162A. U.S. Environmental Protection Agency, Cincinnati, OH.
 
 Rossman, L. A. (2017). *Storm Water Management Model Reference Manual Volume II — Hydraulics*. EPA/600/R-17/111. U.S. Environmental Protection Agency, Cincinnati, OH.
 
 U.S. EPA. (2024). *Storm Water Management Model (SWMM) Version 5.2.4*. U.S. Environmental Protection Agency, Office of Research and Development. https://www.epa.gov/water-research/storm-water-management-model-swmm
+
+Vasconcelos, J. G., Wright, S. J., & Roe, P. L. (2018). Evaluating Storm Water Management Model Accuracy in Conditions of Mixed Flows. *Journal of Water Management Modeling*, C451. https://www.chijournal.org/C451
 
 ---
 
