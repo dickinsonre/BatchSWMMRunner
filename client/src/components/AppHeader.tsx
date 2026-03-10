@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Activity, CheckCircle2, Monitor } from "lucide-react";
+import { SiGithub } from "react-icons/si";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -100,6 +101,15 @@ export default function AppHeader({ swmmStatus: externalSwmmStatus }: AppHeaderP
                 </Link>
               );
             })}
+            <a
+              href="https://github.com/SWMMEnablement"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center h-9 w-9 rounded-md hover-elevate"
+              data-testid="link-github"
+            >
+              <SiGithub className="h-4 w-4" />
+            </a>
             <ThemeToggle />
           </div>
         </div>
