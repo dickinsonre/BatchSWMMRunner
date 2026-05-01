@@ -1197,8 +1197,8 @@ export default function Documentation() {
     <div className="min-h-screen bg-background flex flex-col">
       <AppHeader />
 
-      <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
-        <div className="space-y-8">
+      <main className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-4 md:py-8 flex-1">
+        <div className="space-y-6 md:space-y-8">
           <div>
             <h2 className="text-xl font-semibold mb-2" data-testid="text-docs-title">
               SWMM5 Integration Documentation
@@ -1211,7 +1211,7 @@ export default function Documentation() {
           </div>
 
           <Tabs defaultValue="faq" data-testid="tabs-documentation">
-            <TabsList className="flex flex-wrap gap-1" data-testid="tablist-documentation">
+            <TabsList className="flex flex-wrap gap-1 h-auto" data-testid="tablist-documentation">
               <TabsTrigger value="faq" data-testid="tab-faq">FAQ</TabsTrigger>
               <TabsTrigger value="swmm5-api" data-testid="tab-swmm5-api">SWMM5 API</TabsTrigger>
               <TabsTrigger value="reswmm" data-testid="tab-reswmm">ReSWMM Lengthening</TabsTrigger>
@@ -1763,7 +1763,7 @@ log            — [API Mode] prefix messages with version/step/error info`}</pr
       </main>
 
       <footer className="border-t mt-auto">
-        <div className="container max-w-6xl mx-auto px-8 py-4">
+        <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
             <p>BatchSWMM v1.0.0</p>
             <a

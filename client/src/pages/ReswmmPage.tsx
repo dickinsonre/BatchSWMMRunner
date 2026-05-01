@@ -659,7 +659,7 @@ export default function ReswmmPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <AppHeader />
-      <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
+      <main className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-4 md:py-8 flex-1">
         <div className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold" data-testid="text-reswmm-title">ReSWMM Conduit Discretization</h2>
@@ -685,7 +685,7 @@ export default function ReswmmPage() {
                 onDragOver={(e) => e.preventDefault()}
                 data-testid="card-reswmm-upload"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-4 sm:p-8">
                   <div className="flex flex-col items-center gap-4 text-center">
                     <Upload className="h-10 w-10 text-muted-foreground" />
                     <div>
@@ -707,7 +707,7 @@ export default function ReswmmPage() {
                 </CardContent>
               </Card>
               <Card data-testid="card-reswmm-samples">
-                <CardContent className="p-8">
+                <CardContent className="p-4 sm:p-8">
                   <div className="flex flex-col items-center gap-4 text-center">
                     <Database className="h-10 w-10 text-muted-foreground" />
                     <div>

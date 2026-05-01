@@ -35,22 +35,22 @@ export default function AppHeader({ swmmStatus: externalSwmmStatus }: AppHeaderP
 
   return (
     <header className="border-b">
-      <div className="container max-w-6xl mx-auto px-8 py-6">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3">
+      <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-6">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <Link href="/">
-              <div className="rounded-lg bg-primary p-2 cursor-pointer">
-                <Activity className="h-6 w-6 text-primary-foreground" data-testid="icon-app-logo" />
+              <div className="rounded-lg bg-primary p-1.5 sm:p-2 cursor-pointer flex-shrink-0">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" data-testid="icon-app-logo" />
               </div>
             </Link>
-            <div>
-              <h1 className="text-2xl font-semibold" data-testid="text-app-title">BatchSWMM</h1>
-              <p className="text-sm text-muted-foreground" data-testid="text-app-subtitle">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-2xl font-semibold truncate" data-testid="text-app-title">BatchSWMM</h1>
+              <p className="hidden sm:block text-sm text-muted-foreground truncate" data-testid="text-app-subtitle">
                 Batch EPA SWMM5 Processing Tool
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
             {swmmStatus && (
               <Tooltip>
                 <TooltipTrigger asChild>

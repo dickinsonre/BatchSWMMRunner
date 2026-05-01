@@ -342,8 +342,8 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <AppHeader swmmStatus={swmmStatus} />
 
-      <main className="container max-w-6xl mx-auto px-8 py-8 flex-1">
-        <div className="space-y-8">
+      <main className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-4 md:py-8 flex-1">
+        <div className="space-y-6 md:space-y-8">
           <section data-testid="section-workflow-steps">
             <WorkflowSteps 
               currentStep={processingState === 'completed' ? 'results' : processingState === 'processing' ? 'process' : 'upload'} 
@@ -613,10 +613,10 @@ export default function Home() {
       </main>
 
       <footer className="border-t mt-auto">
-        <div className="container max-w-6xl mx-auto px-8 py-4">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-4">
+          <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
             <p data-testid="text-footer-version">BatchSWMM v1.0.0</p>
-            <p className="font-mono" data-testid="text-footer-executable">
+            <p className="font-mono truncate max-w-full" data-testid="text-footer-executable">
               {swmmStatus?.found ? swmmStatus.path : 'simulation mode'}
             </p>
           </div>

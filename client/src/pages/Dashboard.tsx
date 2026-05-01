@@ -101,9 +101,9 @@ export default function Dashboard() {
 
   if (results.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-8">
+      <div className="min-h-screen flex items-center justify-center p-4 sm:p-8">
         <Card className="max-w-md w-full">
-          <CardContent className="p-8 text-center">
+          <CardContent className="p-6 sm:p-8 text-center">
             <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2" data-testid="text-no-results">No Results Available</h2>
             <p className="text-sm text-muted-foreground mb-4">
@@ -123,7 +123,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      <main className="container mx-auto px-4 py-6 space-y-6">
+      <main className="container mx-auto px-3 sm:px-4 py-4 md:py-6 space-y-4 md:space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4" data-testid="section-dashboard-stats">
           <Card>
             <CardContent className="p-4 text-center">
