@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -17,6 +17,7 @@ import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
 import SampleModels from "@/components/SampleModels";
 import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from "@/components/LiveApiDashboard";
+import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import type { SwmmStatus } from "@shared/schema";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
@@ -44,7 +45,9 @@ export default function Home() {
   const [outputFormat, setOutputFormat] = useState("all");
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
-  const [engineMode, setEngineMode] = useState<'executable' | 'api'>('executable');
+  const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm'>('executable');
+  const wasmCancelRef = useRef<{ current: boolean }>({ current: false });
+  const wasmTerminateRef = useRef<(() => void) | null>(null);
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
   const [apiSnapshots, setApiSnapshots] = useState<ApiSnapshotEntry[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
@@ -62,6 +65,11 @@ export default function Home() {
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
+      }
+      wasmCancelRef.current.current = true;
+      if (wasmTerminateRef.current) {
+        wasmTerminateRef.current();
+        wasmTerminateRef.current = null;
       }
     };
   }, []);
@@ -265,7 +273,101 @@ export default function Home() {
     startTimeRef.current = null;
   };
 
+  const handleStartWasmProcessing = () => {
+    const runnableFiles = (files as any[])
+      .filter(f => f.file)
+      .map(f => ({ id: f.id, name: f.name, file: f.file as File }));
+
+    if (runnableFiles.length === 0) {
+      toast({
+        title: "No Files",
+        description: "No runnable files found for WASM processing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setProcessingState('processing');
+    setCurrentFile(0);
+    setResults([]);
+    setLogs([{
+      timestamp: getTimestamp(),
+      message: `Starting in-browser WASM batch: ${runnableFiles.length} file(s)`,
+      type: 'info',
+    }]);
+    setFileProgressMap(new Map());
+    setApiSnapshots([]);
+    setStartTime(Date.now());
+    startTimeRef.current = Date.now();
+    wasmCancelRef.current = { current: false };
+
+    let completedCount = 0;
+
+    const terminate = runWasmBatch(
+      runnableFiles,
+      {
+        onFileStart: (fileIndex) => {
+          setCurrentFile(fileIndex);
+        },
+        onProgress: (p) => {
+          setFileProgressMap(prev => {
+            const next = new Map(prev);
+            next.set(p.fileId, {
+              fileId: p.fileId,
+              fileName: p.fileName,
+              percentage: p.percentage,
+              message: p.message,
+              status: 'running',
+            });
+            return next;
+          });
+        },
+        onResult: (result) => {
+          completedCount++;
+          setResults(prev => [...prev, result]);
+          setFileProgressMap(prev => {
+            const next = new Map(prev);
+            next.set(result.id, {
+              fileId: result.id,
+              fileName: result.fileName,
+              percentage: 100,
+              message: result.status === 'success' ? 'Complete' : 'Failed',
+              status: result.status === 'success' ? 'success' : 'failed',
+            });
+            return next;
+          });
+        },
+        onLog: (message, type) => {
+          setLogs(prev => [...prev, { timestamp: getTimestamp(), message, type }]);
+        },
+        onComplete: () => {
+          setProcessingState('completed');
+          if (startTimeRef.current) {
+            const elapsed = (Date.now() - startTimeRef.current) / 1000;
+            setElapsedTime(formatTime(elapsed));
+          }
+          wasmTerminateRef.current = null;
+          toast({
+            title: "Batch Processing Complete",
+            description: "All files processed in your browser via WebAssembly.",
+          });
+        },
+      },
+      wasmCancelRef.current,
+    );
+    wasmTerminateRef.current = terminate;
+
+    toast({
+      title: "Processing Started",
+      description: `Running ${runnableFiles.length} file${runnableFiles.length !== 1 ? 's' : ''} in-browser (WASM)...`,
+    });
+  };
+
   const handleStartProcessing = async () => {
+    if (engineMode === 'wasm') {
+      handleStartWasmProcessing();
+      return;
+    }
     try {
       const formData = new FormData();
       files.forEach((file: any) => {
@@ -322,6 +424,21 @@ export default function Home() {
   };
 
   const handleCancelProcessing = async () => {
+    if (engineMode === 'wasm') {
+      wasmCancelRef.current.current = true;
+      if (wasmTerminateRef.current) {
+        wasmTerminateRef.current();
+        wasmTerminateRef.current = null;
+      }
+      setProcessingState('idle');
+      setStartTime(null);
+      startTimeRef.current = null;
+      toast({
+        title: "Processing Cancelled",
+        description: "In-browser WASM processing was stopped.",
+      });
+      return;
+    }
     if (!jobId) return;
 
     try {
@@ -438,15 +555,14 @@ export default function Home() {
                     </>
                   )}
 
-                  {swmmStatus?.found && (
-                    <div className="pt-2 border-t border-border/50">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Engine Mode</p>
+                  <div className="pt-2 border-t border-border/50">
+                    <p className="text-xs font-medium text-muted-foreground mb-2">Engine Mode</p>
                       <div className="flex items-center gap-2 flex-wrap">
                         <Button
                           size="sm"
                           variant={engineMode === 'executable' ? 'default' : 'outline'}
                           onClick={() => setEngineMode('executable')}
-                          disabled={processingState === 'processing'}
+                          disabled={processingState === 'processing' || !swmmStatus?.found}
                           data-testid="button-mode-executable"
                           className="toggle-elevate"
                         >
@@ -464,6 +580,17 @@ export default function Home() {
                           <Cpu className="h-3.5 w-3.5 mr-1.5" />
                           SWMM5 API
                         </Button>
+                        <Button
+                          size="sm"
+                          variant={engineMode === 'wasm' ? 'default' : 'outline'}
+                          onClick={() => setEngineMode('wasm')}
+                          disabled={processingState === 'processing'}
+                          data-testid="button-mode-wasm"
+                          className="toggle-elevate"
+                        >
+                          <Globe className="h-3.5 w-3.5 mr-1.5" />
+                          WASM (Browser)
+                        </Button>
                         {swmmStatus?.apiAvailable ? (
                           <Badge variant="outline" className="text-green-600 border-green-500/30" data-testid="badge-api-available">
                             API v{swmmStatus.apiVersion ? (swmmStatus.apiVersion / 10000).toFixed(1) : '?'}
@@ -477,10 +604,11 @@ export default function Home() {
                       <p className="text-xs text-muted-foreground mt-1.5">
                         {engineMode === 'executable'
                           ? 'Spawns runswmm as a child process (standard mode).'
-                          : 'Uses SWMM5 shared library for step-by-step control with live data streaming.'}
+                          : engineMode === 'api'
+                          ? 'Uses SWMM5 shared library for step-by-step control with live data streaming.'
+                          : 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device.'}
                       </p>
                     </div>
-                  )}
                 </div>
               </div>
             </CardContent>

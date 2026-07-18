@@ -1,0 +1,1 @@
+- [SWMM WASM build](swmm-wasm-build.md) — emscripten recipe for the in-browser SWMM engine; writable EM_CACHE needed; artifacts served from client/public/wasm.
