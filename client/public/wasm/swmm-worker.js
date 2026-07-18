@@ -1,16 +1,24 @@
-importScripts('/wasm/swmm5.js');
+const ENGINES = {
+  swmm5: { script: '/wasm/swmm5.js', dir: '/wasm/', factory: 'createSwmmModule' },
+  swmm6: { script: '/wasm6/swmm6.js', dir: '/wasm6/', factory: 'createSwmm6Module' },
+};
 
-let modulePromise = null;
+const modulePromises = {};
 
-function getModule() {
-  if (!modulePromise) {
-    modulePromise = createSwmmModule({
-      locateFile: (path) => '/wasm/' + path,
+function getModule(engine) {
+  const cfg = ENGINES[engine] || ENGINES.swmm5;
+  const key = cfg.factory;
+  if (!modulePromises[key]) {
+    if (typeof self[cfg.factory] !== 'function') {
+      importScripts(cfg.script);
+    }
+    modulePromises[key] = self[cfg.factory]({
+      locateFile: (path) => cfg.dir + path,
       print: () => {},
       printErr: () => {},
     });
   }
-  return modulePromise;
+  return modulePromises[key];
 }
 
 function parseDurationDays(inpText) {
@@ -38,12 +46,12 @@ function parseDurationDays(inpText) {
 }
 
 self.onmessage = async (e) => {
-  const { type, id, fileName, inpText } = e.data;
+  const { type, id, fileName, inpText, engine } = e.data;
   if (type !== 'run') return;
 
   const t0 = Date.now();
   try {
-    const Module = await getModule();
+    const Module = await getModule(engine);
     const FS = Module.FS;
 
     const inpPath = '/input.inp';

@@ -70,6 +70,7 @@ export function runWasmBatch(
     onComplete: () => void;
   },
   cancelRef: { current: boolean },
+  engine: 'swmm5' | 'swmm6' = 'swmm5',
 ): () => void {
   const worker = new Worker('/wasm/swmm-worker.js');
   let index = 0;
@@ -91,10 +92,10 @@ export function runWasmBatch(
     const f = files[index];
     index++;
     callbacks.onFileStart(index, f.name);
-    callbacks.onLog(`Processing ${f.name} (WASM in-browser engine)...`, 'info');
+    callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM in-browser engine)...`, 'info');
     callbacks.onProgress({ fileId: f.id, fileName: f.name, percentage: 0, message: 'Loading model...' });
     const inpText = await f.file.text();
-    worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText });
+    worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine });
   };
 
   worker.onmessage = (e: MessageEvent) => {

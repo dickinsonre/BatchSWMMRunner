@@ -45,7 +45,7 @@ export default function Home() {
   const [outputFormat, setOutputFormat] = useState("all");
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
-  const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm'>('executable');
+  const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm' | 'wasm6'>('executable');
   const wasmCancelRef = useRef<{ current: boolean }>({ current: false });
   const wasmTerminateRef = useRef<(() => void) | null>(null);
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
@@ -274,6 +274,7 @@ export default function Home() {
   };
 
   const handleStartWasmProcessing = () => {
+    const wasmEngine = engineMode === 'wasm6' ? 'swmm6' : 'swmm5';
     const runnableFiles = (files as any[])
       .filter(f => f.file)
       .map(f => ({ id: f.id, name: f.name, file: f.file as File }));
@@ -292,7 +293,7 @@ export default function Home() {
     setResults([]);
     setLogs([{
       timestamp: getTimestamp(),
-      message: `Starting in-browser WASM batch: ${runnableFiles.length} file(s)`,
+      message: `Starting in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM batch: ${runnableFiles.length} file(s)`,
       type: 'info',
     }]);
     setFileProgressMap(new Map());
@@ -354,6 +355,7 @@ export default function Home() {
         },
       },
       wasmCancelRef.current,
+      wasmEngine,
     );
     wasmTerminateRef.current = terminate;
 
@@ -364,7 +366,7 @@ export default function Home() {
   };
 
   const handleStartProcessing = async () => {
-    if (engineMode === 'wasm') {
+    if (engineMode === 'wasm' || engineMode === 'wasm6') {
       handleStartWasmProcessing();
       return;
     }
@@ -424,7 +426,7 @@ export default function Home() {
   };
 
   const handleCancelProcessing = async () => {
-    if (engineMode === 'wasm') {
+    if (engineMode === 'wasm' || engineMode === 'wasm6') {
       wasmCancelRef.current.current = true;
       if (wasmTerminateRef.current) {
         wasmTerminateRef.current();
@@ -591,6 +593,17 @@ export default function Home() {
                           <Globe className="h-3.5 w-3.5 mr-1.5" />
                           WASM (Browser)
                         </Button>
+                        <Button
+                          size="sm"
+                          variant={engineMode === 'wasm6' ? 'default' : 'outline'}
+                          onClick={() => setEngineMode('wasm6')}
+                          disabled={processingState === 'processing'}
+                          data-testid="button-mode-wasm6"
+                          className="toggle-elevate"
+                        >
+                          <Globe className="h-3.5 w-3.5 mr-1.5" />
+                          SWMM6 (Browser)
+                        </Button>
                         {swmmStatus?.apiAvailable ? (
                           <Badge variant="outline" className="text-green-600 border-green-500/30" data-testid="badge-api-available">
                             API v{swmmStatus.apiVersion ? (swmmStatus.apiVersion / 10000).toFixed(1) : '?'}
@@ -606,7 +619,9 @@ export default function Home() {
                           ? 'Spawns runswmm as a child process (standard mode).'
                           : engineMode === 'api'
                           ? 'Uses SWMM5 shared library for step-by-step control with live data streaming.'
-                          : 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device.'}
+                          : engineMode === 'wasm'
+                          ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device.'
+                          : 'Runs the OpenSWMM SWMM6 engine (EPA SWMM 5.2.4 + extra link-depth validation warnings) as WebAssembly in your browser.'}
                       </p>
                     </div>
                 </div>
