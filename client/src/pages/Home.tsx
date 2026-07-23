@@ -32,6 +32,9 @@ interface PersistedSettings {
   outputFormat?: string;
   timeoutMinutes?: number;
   engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6';
+  startDate?: string;
+  endDate?: string;
+  routingStepSeconds?: number | null;
 }
 
 function loadSettings(): PersistedSettings {
@@ -68,6 +71,9 @@ export default function Home() {
   const [stopOnError, setStopOnError] = useState(savedSettingsRef.current.stopOnError ?? false);
   const [outputFormat, setOutputFormat] = useState(savedSettingsRef.current.outputFormat ?? "all");
   const [timeoutMinutes, setTimeoutMinutes] = useState(savedSettingsRef.current.timeoutMinutes ?? 10);
+  const [startDate, setStartDate] = useState(savedSettingsRef.current.startDate ?? '');
+  const [endDate, setEndDate] = useState(savedSettingsRef.current.endDate ?? '');
+  const [routingStepSeconds, setRoutingStepSeconds] = useState<number | null>(savedSettingsRef.current.routingStepSeconds ?? null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
   const [statusError, setStatusError] = useState(false);
@@ -86,13 +92,22 @@ export default function Home() {
     const settings: PersistedSettings = {
       reportStep, routingMethod, parallelProcessing, stopOnError,
       outputFormat, timeoutMinutes, engineMode,
+      startDate, endDate, routingStepSeconds,
     };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch {
       // localStorage unavailable (private mode, quota) — settings simply won't persist
     }
-  }, [reportStep, routingMethod, parallelProcessing, stopOnError, outputFormat, timeoutMinutes, engineMode]);
+  }, [reportStep, routingMethod, parallelProcessing, stopOnError, outputFormat, timeoutMinutes, engineMode, startDate, endDate, routingStepSeconds]);
+
+  const buildOverrides = () => ({
+    reportStepMinutes: reportStep > 0 ? reportStep : undefined,
+    flowRouting: routingMethod || undefined,
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
+    routingStepSeconds: routingStepSeconds && routingStepSeconds > 0 ? routingStepSeconds : undefined,
+  });
 
   useEffect(() => {
     fetch('/api/swmm-status')
@@ -434,6 +449,7 @@ export default function Home() {
       },
       wasmCancelRef.current,
       wasmEngine,
+      buildOverrides(),
     );
     wasmTerminateRef.current = terminate;
 
@@ -481,7 +497,7 @@ export default function Home() {
       const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engineMode, timeoutMinutes, stopOnError }),
+        body: JSON.stringify({ engineMode, timeoutMinutes, stopOnError, overrides: buildOverrides() }),
       });
 
       if (!startResponse.ok) {
@@ -565,6 +581,12 @@ export default function Home() {
               stopOnError={stopOnError}
               outputFormat={outputFormat}
               timeoutMinutes={timeoutMinutes}
+              startDate={startDate}
+              endDate={endDate}
+              routingStepSeconds={routingStepSeconds}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+              onRoutingStepSecondsChange={setRoutingStepSeconds}
               onTimeoutMinutesChange={setTimeoutMinutes}
               onReportStepChange={setReportStep}
               onRoutingMethodChange={setRoutingMethod}

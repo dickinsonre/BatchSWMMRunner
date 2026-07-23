@@ -1212,6 +1212,7 @@ export default function Documentation() {
 
           <Tabs defaultValue="faq" data-testid="tabs-documentation">
             <TabsList className="flex flex-wrap gap-1 h-auto" data-testid="tablist-documentation">
+              <TabsTrigger value="guide" data-testid="tab-guide">User Guide</TabsTrigger>
               <TabsTrigger value="faq" data-testid="tab-faq">FAQ</TabsTrigger>
               <TabsTrigger value="swmm5-api" data-testid="tab-swmm5-api">SWMM5 API</TabsTrigger>
               <TabsTrigger value="reswmm" data-testid="tab-reswmm">ReSWMM Lengthening</TabsTrigger>
@@ -1222,6 +1223,109 @@ export default function Documentation() {
               <TabsTrigger value="upload" data-testid="tab-upload">File Upload</TabsTrigger>
               <TabsTrigger value="schema" data-testid="tab-schema">Data Schema</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="guide">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base" data-testid="text-guide-engines-title">Engine Modes</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      BatchSWMM can run simulations with four different engines. All of them run the real EPA SWMM engine — the difference is where the computation happens.
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4 text-sm">
+                      <div data-testid="guide-engine-executable">
+                        <p className="font-medium">Executable (Server)</p>
+                        <p className="text-muted-foreground">
+                          Your files are uploaded to the server, which runs the compiled EPA SWMM 5.2.4 command-line engine (runswmm) on each file. This is the classic way SWMM runs and is a good default when the server engine is available. Progress streams back to your browser in real time.
+                        </p>
+                      </div>
+                      <div data-testid="guide-engine-api">
+                        <p className="font-medium">API (Server, step-by-step)</p>
+                        <p className="text-muted-foreground">
+                          Uses the SWMM5 shared library on the server to run the simulation one routing step at a time. This enables the Live API Dashboard: node depths, link flows, and velocities update on charts while the simulation runs. Slightly slower than the executable mode because of the per-step overhead.
+                        </p>
+                      </div>
+                      <div data-testid="guide-engine-wasm">
+                        <p className="font-medium">WASM (Browser)</p>
+                        <p className="text-muted-foreground">
+                          EPA SWMM 5.2.4 compiled to WebAssembly runs entirely inside your browser — files never leave your device. Great for privacy-sensitive models or when the server engine is unavailable. Performance depends on your computer, and very large models may run slower than on the server.
+                        </p>
+                      </div>
+                      <div data-testid="guide-engine-swmm6">
+                        <p className="font-medium">SWMM6 (Browser)</p>
+                        <p className="text-muted-foreground">
+                          The OpenSWMM SWMM6 fork (based on EPA SWMM 5.2.4) compiled to WebAssembly. Behaves like the WASM mode but adds extra validation, such as the WARN13 link-depth check. Useful for cross-checking results against the standard engine.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base" data-testid="text-guide-routing-title">Routing Methods</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      The routing method controls how SWMM moves flow through the conveyance network. You can override it for the whole batch in Simulation Settings.
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4 text-sm">
+                      <div data-testid="guide-routing-steady">
+                        <p className="font-medium">Steady Flow</p>
+                        <p className="text-muted-foreground">
+                          The simplest and fastest method. Assumes flow is uniform and steady within each time step — no channel storage, backwater, or pressurization effects. Best for quick screening runs or simple tree-shaped networks.
+                        </p>
+                      </div>
+                      <div data-testid="guide-routing-kinematic">
+                        <p className="font-medium">Kinematic Wave</p>
+                        <p className="text-muted-foreground">
+                          Accounts for channel storage and attenuation as flow travels downstream, but cannot model backwater, reverse flow, or surcharging. A good balance of speed and accuracy for dendritic (tree-like) systems with mild slopes. Allows large time steps.
+                        </p>
+                      </div>
+                      <div data-testid="guide-routing-dynamic">
+                        <p className="font-medium">Dynamic Wave</p>
+                        <p className="text-muted-foreground">
+                          Solves the full Saint-Venant equations, capturing backwater, looped networks, entrance/exit losses, pressurized flow, and flooding. The most accurate but slowest method, and it requires small routing steps (often 1–30 seconds) for numerical stability. Use this when nodes surcharge or the network has loops.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base" data-testid="text-guide-continuity-title">Understanding Continuity Errors</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Continuity errors tell you how well the simulation conserved water volume — the single most important quality check for a SWMM run.
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4 text-sm">
+                      <div data-testid="guide-ce-what">
+                        <p className="font-medium">What they measure</p>
+                        <p className="text-muted-foreground">
+                          SWMM reports two continuity errors as percentages. The runoff continuity error compares rainfall in versus runoff, infiltration, evaporation, and storage out on the land surface. The flow routing continuity error does the same for the pipe/channel network. A perfect simulation would be 0%.
+                        </p>
+                      </div>
+                      <div data-testid="guide-ce-thresholds">
+                        <p className="font-medium">How to interpret the numbers</p>
+                        <p className="text-muted-foreground">
+                          Below 1% is excellent — the model is numerically healthy. Between 1% and 5% is acceptable for many purposes but worth investigating. Above 5% means results may not be trustworthy: water is being artificially created or destroyed by numerical issues.
+                        </p>
+                      </div>
+                      <div data-testid="guide-ce-causes">
+                        <p className="font-medium">Common causes of high errors</p>
+                        <p className="text-muted-foreground">
+                          Routing time steps that are too long for dynamic wave routing; very short conduits (which force tiny stable time steps); abrupt cross-section or slope changes; nodes that repeatedly flood and drain; and report steps that are too coarse to capture rapid changes. Try reducing the routing step, lengthening very short conduits (the ReSWMM page can do this automatically), or switching routing methods.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             <TabsContent value="faq">
               <Card>

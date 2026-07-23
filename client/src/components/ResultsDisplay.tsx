@@ -10,6 +10,8 @@ import { useLocation } from "wouter";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
 import KeyResultsCharts from "./KeyResultsCharts";
+import BatchComparison from "./BatchComparison";
+import { generateHTMLReport } from "@/lib/reportGenerator";
 import ReportChatbot from "./ReportChatbot";
 import { setDashboardResults } from "@/lib/resultsStore";
 import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
@@ -718,6 +720,18 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
     URL.revokeObjectURL(url);
   };
 
+  const exportToPdf = () => {
+    const html = generateHTMLReport(results);
+    const win = window.open('', '_blank');
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(() => {
+      win.print();
+    }, 300);
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -802,6 +816,15 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
             >
               <Download className="h-4 w-4 mr-2" />
               Export Excel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToPdf}
+              data-testid="button-export-pdf"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export PDF
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -982,6 +1005,8 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
           </div>
         </CardContent>
       </Card>
+
+      <BatchComparison results={results} />
 
       <Card data-testid="card-results-list">
         <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">

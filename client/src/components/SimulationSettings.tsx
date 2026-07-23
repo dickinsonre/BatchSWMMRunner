@@ -19,6 +19,12 @@ interface SimulationSettingsProps {
   stopOnError: boolean;
   outputFormat: string;
   timeoutMinutes: number;
+  startDate: string;
+  endDate: string;
+  routingStepSeconds: number | null;
+  onStartDateChange: (value: string) => void;
+  onEndDateChange: (value: string) => void;
+  onRoutingStepSecondsChange: (value: number | null) => void;
   onReportStepChange: (value: number) => void;
   onRoutingMethodChange: (value: string) => void;
   onParallelProcessingChange: (value: boolean) => void;
@@ -35,6 +41,12 @@ export default function SimulationSettings({
   stopOnError,
   outputFormat,
   timeoutMinutes,
+  startDate,
+  endDate,
+  routingStepSeconds,
+  onStartDateChange,
+  onEndDateChange,
+  onRoutingStepSecondsChange,
   onReportStepChange,
   onRoutingMethodChange,
   onParallelProcessingChange,
@@ -83,6 +95,54 @@ export default function SimulationSettings({
                   <SelectItem value="dynamic" data-testid="option-dynamic">Dynamic Wave</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Batch Overrides (optional)</Label>
+            <p className="text-xs text-muted-foreground">
+              Leave blank to keep each file's own values. Filled-in values are applied to every file in the batch.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+              <div className="space-y-2">
+                <Label htmlFor="start-date">Start Date</Label>
+                <Input
+                  id="start-date"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => onStartDateChange(e.target.value)}
+                  disabled={disabled}
+                  data-testid="input-start-date"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="end-date">End Date</Label>
+                <Input
+                  id="end-date"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => onEndDateChange(e.target.value)}
+                  disabled={disabled}
+                  data-testid="input-end-date"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="routing-step">Routing Step (seconds)</Label>
+                <Input
+                  id="routing-step"
+                  type="number"
+                  min={1}
+                  max={3600}
+                  placeholder="From file"
+                  value={routingStepSeconds ?? ''}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    onRoutingStepSecondsChange(v === '' ? null : Number(v));
+                  }}
+                  disabled={disabled}
+                  data-testid="input-routing-step"
+                />
+              </div>
             </div>
           </div>
 

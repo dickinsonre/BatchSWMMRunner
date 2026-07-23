@@ -105,6 +105,15 @@ function analyzeResults(results: ProcessResult[]): ReportData {
   };
 }
 
+export function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function fmtNum(val: number | undefined | null, decimals = 3): string {
   if (val === undefined || val === null) return "N/A";
   return val.toFixed(decimals);
@@ -124,14 +133,14 @@ export function generateHTMLReport(results: ProcessResult[]): string {
   const ceRows = d.results
     .filter(r => r.status === "success")
     .map(r => `<tr>
-      <td style="padding:6px 10px;border:1px solid #e5e7eb;">${r.fileName}</td>
+      <td style="padding:6px 10px;border:1px solid #e5e7eb;">${escapeHtml(r.fileName)}</td>
       <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;${ceFlag(r.parsedMetrics?.runoffContinuityError)}">${fmtNum(r.parsedMetrics?.runoffContinuityError)}%</td>
       <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;${ceFlag(r.parsedMetrics?.routingContinuityError)}">${fmtNum(r.parsedMetrics?.routingContinuityError)}%</td>
     </tr>`).join("\n");
 
   const floodRows = d.floodedModels.length > 0
     ? d.floodedModels.map(m => `<tr>
-        <td style="padding:6px 10px;border:1px solid #e5e7eb;">${m.fileName}</td>
+        <td style="padding:6px 10px;border:1px solid #e5e7eb;">${escapeHtml(m.fileName)}</td>
         <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;">${m.nodesFlooded}</td>
         <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;">${m.floodingLoss !== undefined ? fmtNum(m.floodingLoss) : "N/A"}</td>
       </tr>`).join("\n")
@@ -140,14 +149,14 @@ export function generateHTMLReport(results: ProcessResult[]): string {
   const hydrologyRows = d.results
     .filter(r => r.status === "success" && r.parsedMetrics)
     .map(r => `<tr>
-      <td style="padding:6px 10px;border:1px solid #e5e7eb;">${r.fileName}</td>
+      <td style="padding:6px 10px;border:1px solid #e5e7eb;">${escapeHtml(r.fileName)}</td>
       <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;">${fmtNum(r.parsedMetrics?.totalPrecipitation)}</td>
       <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;">${fmtNum(r.parsedMetrics?.surfaceRunoff)}</td>
       <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;">${fmtNum(r.results?.peakFlow, 2)}</td>
       <td style="padding:6px 10px;border:1px solid #e5e7eb;text-align:right;">${fmtNum(r.results?.totalVolume, 2)}</td>
     </tr>`).join("\n");
 
-  const recItems = d.recommendations.map(r => `<li style="margin-bottom:6px;">${r}</li>`).join("\n");
+  const recItems = d.recommendations.map(r => `<li style="margin-bottom:6px;">${escapeHtml(r)}</li>`).join("\n");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -189,13 +198,13 @@ export function generateHTMLReport(results: ProcessResult[]): string {
 
 <h2>Continuity Errors</h2>
 <p>
-  <strong>Best Runoff CE:</strong> ${d.bestRunoffCE ? `${d.bestRunoffCE.fileName} (${fmtNum(d.bestRunoffCE.value)}%)` : "N/A"} |
-  <strong>Worst Runoff CE:</strong> ${d.worstRunoffCE ? `${d.worstRunoffCE.fileName} (${fmtNum(d.worstRunoffCE.value)}%)` : "N/A"} |
+  <strong>Best Runoff CE:</strong> ${d.bestRunoffCE ? `${escapeHtml(d.bestRunoffCE.fileName)} (${fmtNum(d.bestRunoffCE.value)}%)` : "N/A"} |
+  <strong>Worst Runoff CE:</strong> ${d.worstRunoffCE ? `${escapeHtml(d.worstRunoffCE.fileName)} (${fmtNum(d.worstRunoffCE.value)}%)` : "N/A"} |
   <strong>Average |Runoff CE|:</strong> ${d.avgRunoffCE !== null ? fmtNum(d.avgRunoffCE) + "%" : "N/A"}
 </p>
 <p>
-  <strong>Best Routing CE:</strong> ${d.bestRoutingCE ? `${d.bestRoutingCE.fileName} (${fmtNum(d.bestRoutingCE.value)}%)` : "N/A"} |
-  <strong>Worst Routing CE:</strong> ${d.worstRoutingCE ? `${d.worstRoutingCE.fileName} (${fmtNum(d.worstRoutingCE.value)}%)` : "N/A"} |
+  <strong>Best Routing CE:</strong> ${d.bestRoutingCE ? `${escapeHtml(d.bestRoutingCE.fileName)} (${fmtNum(d.bestRoutingCE.value)}%)` : "N/A"} |
+  <strong>Worst Routing CE:</strong> ${d.worstRoutingCE ? `${escapeHtml(d.worstRoutingCE.fileName)} (${fmtNum(d.worstRoutingCE.value)}%)` : "N/A"} |
   <strong>Average |Routing CE|:</strong> ${d.avgRoutingCE !== null ? fmtNum(d.avgRoutingCE) + "%" : "N/A"}
 </p>
 <table>

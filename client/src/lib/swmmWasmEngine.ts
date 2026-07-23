@@ -1,4 +1,5 @@
 import type { ParsedMetrics, ProcessResult } from "@shared/schema";
+import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
 
 export interface WasmProgress {
   fileId: string;
@@ -111,6 +112,7 @@ export function runWasmBatch(
   },
   cancelRef: { current: boolean },
   engine: 'swmm5' | 'swmm6' = 'swmm5',
+  overrides?: InpOverrides,
 ): () => void {
   const worker = new Worker('/wasm/swmm-worker.js');
   let index = 0;
@@ -134,7 +136,10 @@ export function runWasmBatch(
     callbacks.onFileStart(index, f.name);
     callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM in-browser engine)...`, 'info');
     callbacks.onProgress({ fileId: f.id, fileName: f.name, percentage: 0, message: 'Loading model...' });
-    const inpText = await f.file.text();
+    let inpText = await f.file.text();
+    if (overrides) {
+      inpText = applyInpOverrides(inpText, overrides);
+    }
     worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine });
   };
 

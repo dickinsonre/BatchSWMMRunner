@@ -12,6 +12,7 @@ import { z } from "zod";
 import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
+import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
 
 const MAX_UPLOAD_FILES = 100;
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
@@ -628,7 +629,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/batch/:jobId/start', async (req, res) => {
     try {
       const { jobId } = req.params;
-      const { engineMode, timeoutMinutes, stopOnError } = req.body || {};
+      const { engineMode, timeoutMinutes, stopOnError, overrides } = req.body || {};
+
+      const inpOverrides: InpOverrides = {};
+      if (overrides && typeof overrides === 'object') {
+        const rs = Number(overrides.reportStepMinutes);
+        if (Number.isFinite(rs) && rs > 0 && rs <= 1440) inpOverrides.reportStepMinutes = rs;
+        if (typeof overrides.flowRouting === 'string' && ['steady', 'kinematic', 'dynamic'].includes(overrides.flowRouting)) {
+          inpOverrides.flowRouting = overrides.flowRouting;
+        }
+        const isValidIsoDate = (s: string): boolean => {
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+          const d = new Date(`${s}T00:00:00Z`);
+          return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+        };
+        if (overrides.startDate !== undefined && overrides.startDate !== '') {
+          if (typeof overrides.startDate !== 'string' || !isValidIsoDate(overrides.startDate)) {
+            return res.status(400).json({ error: 'Invalid startDate override: must be a valid YYYY-MM-DD calendar date' });
+          }
+          inpOverrides.startDate = overrides.startDate;
+        }
+        if (overrides.endDate !== undefined && overrides.endDate !== '') {
+          if (typeof overrides.endDate !== 'string' || !isValidIsoDate(overrides.endDate)) {
+            return res.status(400).json({ error: 'Invalid endDate override: must be a valid YYYY-MM-DD calendar date' });
+          }
+          inpOverrides.endDate = overrides.endDate;
+        }
+        if (inpOverrides.startDate && inpOverrides.endDate && inpOverrides.startDate > inpOverrides.endDate) {
+          return res.status(400).json({ error: 'Invalid date overrides: startDate must be on or before endDate' });
+        }
+        const rts = Number(overrides.routingStepSeconds);
+        if (Number.isFinite(rts) && rts > 0 && rts <= 3600) inpOverrides.routingStepSeconds = rts;
+      }
       const job = await storage.getBatchJob(jobId);
 
       if (!job) {
@@ -654,7 +686,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       setTimeout(() => {
-        processFilesSequentially(jobId, job.files, engineMode || 'executable', timeoutMin * 60 * 1000, stopOnError === true);
+        processFilesSequentially(jobId, job.files, engineMode || 'executable', timeoutMin * 60 * 1000, stopOnError === true, inpOverrides);
       }, 500);
     } catch (error) {
       console.error('Start processing error:', error);
@@ -743,6 +775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     engineMode: string = 'executable',
     timeoutMs: number = DEFAULT_TIMEOUT_MINUTES * 60 * 1000,
     stopOnError: boolean = false,
+    overrides: InpOverrides = {},
   ) {
     const job = await storage.getBatchJob(jobId);
     if (!job) return;
@@ -788,7 +821,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           if (engineMode === 'api') {
             if (swmm5api.isApiAvailable()) {
-              result = await processSingleFileApi(jobId, file, entry);
+              result = await processSingleFileApi(jobId, file, entry, overrides);
             } else {
               result = makeEngineUnavailableResult(file, 'api', 'SWMM5 API (shared library) is unavailable — no simulation was performed');
               sendProgressUpdate(jobId, {
@@ -800,7 +833,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               });
             }
           } else {
-            result = await processSingleFile(jobId, file, entry);
+            result = await processSingleFile(jobId, file, entry, overrides);
           }
         } finally {
           clearTimeout(timeoutTimer);
@@ -908,9 +941,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     };
   }
 
-  function injectReportOptions(filePath: string): void {
+  function injectReportOptions(filePath: string, overrides?: InpOverrides): void {
     try {
       let content = fs.readFileSync(filePath, 'utf-8');
+      if (overrides) {
+        content = applyInpOverrides(content, overrides);
+      }
       const hasReportSection = /^\[REPORT\]/im.test(content);
 
       const reportBlock = [
@@ -944,14 +980,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
-  async function processSingleFileApi(jobId: string, file: { id: string; name: string; path: string }, entry?: ActiveJobEntry): Promise<ProcessResult> {
+  async function processSingleFileApi(jobId: string, file: { id: string; name: string; path: string }, entry?: ActiveJobEntry, overrides?: InpOverrides): Promise<ProcessResult> {
     const startTime = Date.now();
     const startedAt = new Date().toISOString();
     const inputPath = file.path;
     const reportPath = inputPath + '.rpt';
     const outputPath = inputPath + '.out';
 
-    injectReportOptions(inputPath);
+    injectReportOptions(inputPath, overrides);
 
     let inpContent: string | undefined;
     try {
@@ -1107,7 +1143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
-  async function processSingleFile(jobId: string, file: { id: string; name: string; path: string }, entry?: ActiveJobEntry): Promise<ProcessResult> {
+  async function processSingleFile(jobId: string, file: { id: string; name: string; path: string }, entry?: ActiveJobEntry, overrides?: InpOverrides): Promise<ProcessResult> {
     return new Promise((resolve) => {
       const startTime = Date.now();
       let swmmStatus = cachedSwmmStatus || detectSwmmPath();
@@ -1116,7 +1152,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const reportPath = inputPath + '.rpt';
       const outputPath = inputPath + '.out';
 
-      injectReportOptions(inputPath);
+      injectReportOptions(inputPath, overrides);
 
       let inpContent: string | undefined;
       try {
