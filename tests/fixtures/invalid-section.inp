@@ -1,0 +1,25 @@
+[TITLE]
+Invalid model - conduit references a node that does not exist
+
+[OPTIONS]
+FLOW_UNITS           CFS
+INFILTRATION         HORTON
+FLOW_ROUTING         KINWAVE
+START_DATE           01/01/2020
+START_TIME           00:00:00
+END_DATE             01/01/2020
+END_TIME             01:00:00
+REPORT_STEP          00:05:00
+ROUTING_STEP         0:00:30
+
+[JUNCTIONS]
+J1               100        4          0          0          0
+
+[OUTFALLS]
+O1               95         FREE                        NO
+
+[CONDUITS]
+C1               J1               MISSING_NODE     400        0.013      0          0          0          0
+
+[XSECTIONS]
+C1               CIRCULAR     1.5              0          0          0          1
