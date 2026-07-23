@@ -43,6 +43,7 @@ export default function Home() {
   const [parallelProcessing, setParallelProcessing] = useState(false);
   const [stopOnError, setStopOnError] = useState(false);
   const [outputFormat, setOutputFormat] = useState("all");
+  const [timeoutMinutes, setTimeoutMinutes] = useState(10);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
   const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm' | 'wasm6'>('executable');
@@ -137,7 +138,10 @@ export default function Home() {
             fileId: result.id,
             fileName: result.fileName,
             percentage: 100,
-            message: result.status === 'success' ? 'Complete' : 'Failed',
+            message: result.status === 'success' ? 'Complete'
+              : result.status === 'timeout' ? 'Timed out'
+              : result.status === 'cancelled' ? 'Cancelled'
+              : 'Failed',
             status: result.status === 'success' ? 'success' : 'failed',
           });
           return next;
@@ -146,6 +150,10 @@ export default function Home() {
           timestamp: getTimestamp(),
           message: result.status === 'success' 
             ? `${result.fileName} -- Success (${result.processingTime?.toFixed(1)}s)`
+            : result.status === 'timeout'
+            ? `${result.fileName} -- Timed out: ${result.error || 'Simulation exceeded timeout'}`
+            : result.status === 'cancelled'
+            ? `${result.fileName} -- Cancelled`
             : `${result.fileName} -- Error: ${result.error || 'Unknown error'}`,
           type: result.status === 'success' ? 'success' : 'error'
         }]);
@@ -271,6 +279,27 @@ export default function Home() {
     setFileProgressMap(new Map());
     setApiSnapshots([]);
     startTimeRef.current = null;
+  };
+
+  const handleDeleteBatch = async () => {
+    if (!jobId) return;
+    try {
+      const res = await fetch(`/api/batch/${jobId}`, { method: 'DELETE' });
+      if (!res.ok && res.status !== 404) {
+        throw new Error('Failed to delete batch');
+      }
+      handleClearAll();
+      toast({
+        title: "Batch Deleted",
+        description: "The batch job and its files were removed.",
+      });
+    } catch (err) {
+      toast({
+        title: "Delete Failed",
+        description: err instanceof Error ? err.message : 'Could not delete the batch.',
+        variant: "destructive",
+      });
+    }
   };
 
   const handleStartWasmProcessing = () => {
@@ -403,7 +432,7 @@ export default function Home() {
       const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engineMode }),
+        body: JSON.stringify({ engineMode, timeoutMinutes, stopOnError }),
       });
 
       if (!startResponse.ok) {
@@ -486,6 +515,8 @@ export default function Home() {
               parallelProcessing={parallelProcessing}
               stopOnError={stopOnError}
               outputFormat={outputFormat}
+              timeoutMinutes={timeoutMinutes}
+              onTimeoutMinutesChange={setTimeoutMinutes}
               onReportStepChange={setReportStep}
               onRoutingMethodChange={setRoutingMethod}
               onParallelProcessingChange={setParallelProcessing}
@@ -687,14 +718,26 @@ export default function Home() {
             )}
             
             {processingState === 'completed' && (
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={handleClearAll}
-                data-testid="button-reset"
-              >
-                Process New Batch
-              </Button>
+              <>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={handleClearAll}
+                  data-testid="button-reset"
+                >
+                  Process New Batch
+                </Button>
+                {jobId && (
+                  <Button
+                    size="lg"
+                    variant="destructive"
+                    onClick={handleDeleteBatch}
+                    data-testid="button-delete-batch"
+                  >
+                    Delete Batch
+                  </Button>
+                )}
+              </>
             )}
 
             {processingState === 'idle' && files.length === 0 && (

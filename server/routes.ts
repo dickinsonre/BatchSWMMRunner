@@ -12,8 +12,20 @@ import { z } from "zod";
 import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 
+const MAX_UPLOAD_FILES = 100;
+const MAX_FILE_SIZE = 25 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 250 * 1024 * 1024;
+const DEFAULT_TIMEOUT_MINUTES = 10;
+const MAX_TIMEOUT_MINUTES = 60;
+const RETENTION_HOURS = 24;
+const UPLOADS_DIR = path.join(process.cwd(), 'uploads');
+
 const upload = multer({
-  dest: 'uploads/',
+  dest: path.join(UPLOADS_DIR, 'tmp'),
+  limits: {
+    files: MAX_UPLOAD_FILES,
+    fileSize: MAX_FILE_SIZE,
+  },
   fileFilter: (req, file, cb) => {
     if (path.extname(file.originalname).toLowerCase() === '.inp') {
       cb(null, true);
@@ -22,6 +34,107 @@ const upload = multer({
     }
   },
 });
+
+interface ActiveJobEntry {
+  child?: ReturnType<typeof spawn>;
+  stopSignal: 'cancelled' | 'timeout' | null;
+  killTimer?: NodeJS.Timeout;
+}
+
+const activeJobs = new Map<string, ActiveJobEntry>();
+
+function getStopSignal(entry: ActiveJobEntry): 'cancelled' | 'timeout' | null {
+  return entry.stopSignal;
+}
+
+function jobDir(jobId: string): string {
+  return path.join(UPLOADS_DIR, jobId);
+}
+
+function cleanupJobFiles(jobId: string): void {
+  try {
+    const dir = jobDir(jobId);
+    if (fs.existsSync(dir)) {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  } catch (e) {
+    console.warn(`Failed to clean up files for job ${jobId}:`, e);
+  }
+}
+
+function killJobProcess(entry: ActiveJobEntry): void {
+  const child = entry.child;
+  if (!child || child.killed || child.exitCode !== null) return;
+  try {
+    child.kill('SIGTERM');
+  } catch {}
+  entry.killTimer = setTimeout(() => {
+    try {
+      if (child.exitCode === null && !child.killed) {
+        child.kill('SIGKILL');
+      }
+    } catch {}
+  }, 5000);
+}
+
+function removePartialOutputs(inputPath: string): void {
+  for (const ext of ['.rpt', '.out']) {
+    try {
+      const p = inputPath + ext;
+      if (fs.existsSync(p)) fs.unlinkSync(p);
+    } catch {}
+  }
+}
+
+function looksLikeSwmmInput(filePath: string): boolean {
+  try {
+    const fd = fs.openSync(filePath, 'r');
+    const buf = Buffer.alloc(64 * 1024);
+    const bytesRead = fs.readSync(fd, buf, 0, buf.length, 0);
+    fs.closeSync(fd);
+    const sample = buf.subarray(0, bytesRead);
+    let nonPrintable = 0;
+    for (let i = 0; i < sample.length; i++) {
+      const b = sample[i];
+      if (b === 0) return false;
+      if (b < 9 || (b > 13 && b < 32)) nonPrintable++;
+    }
+    if (sample.length > 0 && nonPrintable / sample.length > 0.05) return false;
+    const text = sample.toString('latin1');
+    return /^\s*\[\s*[A-Za-z_]+\s*\]/m.test(text);
+  } catch {
+    return false;
+  }
+}
+
+async function sweepStaleUploads(): Promise<void> {
+  try {
+    if (!fs.existsSync(UPLOADS_DIR)) return;
+    const cutoff = Date.now() - RETENTION_HOURS * 60 * 60 * 1000;
+    for (const entryName of fs.readdirSync(UPLOADS_DIR)) {
+      const full = path.join(UPLOADS_DIR, entryName);
+      try {
+        const stat = fs.statSync(full);
+        if (entryName === 'tmp' || stat.mtimeMs < cutoff || !stat.isDirectory()) {
+          fs.rmSync(full, { recursive: true, force: true });
+        }
+      } catch {}
+    }
+    const removedJobIds = await storage.deleteJobsOlderThan(new Date(cutoff));
+    for (const id of removedJobIds) {
+      cleanupJobFiles(id);
+    }
+    if (removedJobIds.length > 0) {
+      console.log(`Startup sweep: removed ${removedJobIds.length} expired batch job(s)`);
+    }
+  } catch (e) {
+    console.warn('Startup upload sweep failed:', e);
+  } finally {
+    try {
+      fs.mkdirSync(path.join(UPLOADS_DIR, 'tmp'), { recursive: true });
+    } catch {}
+  }
+}
 
 const COMMON_SWMM_PATHS = [
   path.join(process.cwd(), 'swmm-engine', 'runswmm'),
@@ -419,6 +532,8 @@ function validateSwmmReport(reportContent: string | undefined): { valid: boolean
 let cachedSwmmStatus: SwmmStatus | null = null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  sweepStaleUploads();
+
   const httpServer = createServer(app);
   const wss = new WebSocketServer({ 
     server: httpServer,
@@ -544,43 +659,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/upload', upload.array('files'), async (req, res) => {
-    try {
-      const files = req.files as Express.Multer.File[];
-      if (!files || files.length === 0) {
-        return res.status(400).json({ error: 'No files uploaded' });
+  app.post('/api/upload', (req, res) => {
+    upload.array('files')(req, res, async (err: any) => {
+      const files = (req.files || []) as Express.Multer.File[];
+      const discardUploads = () => {
+        for (const f of files) {
+          try { fs.unlinkSync(f.path); } catch {}
+        }
+      };
+
+      try {
+        if (err) {
+          discardUploads();
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ error: `Each file must be ${MAX_FILE_SIZE / (1024 * 1024)} MB or smaller` });
+          }
+          if (err.code === 'LIMIT_FILE_COUNT') {
+            return res.status(400).json({ error: `A batch may contain at most ${MAX_UPLOAD_FILES} files` });
+          }
+          return res.status(400).json({ error: err.message || 'Upload failed' });
+        }
+
+        if (files.length === 0) {
+          return res.status(400).json({ error: 'No files uploaded' });
+        }
+
+        const totalSize = files.reduce((acc, f) => acc + f.size, 0);
+        if (totalSize > MAX_TOTAL_SIZE) {
+          discardUploads();
+          return res.status(400).json({ error: `Total upload size must be ${MAX_TOTAL_SIZE / (1024 * 1024)} MB or smaller` });
+        }
+
+        const invalid = files.filter(f => !looksLikeSwmmInput(f.path));
+        if (invalid.length > 0) {
+          discardUploads();
+          return res.status(400).json({
+            error: `These files do not look like SWMM input files (no [SECTION] headers found): ${invalid.map(f => f.originalname).join(', ')}`,
+          });
+        }
+
+        const batchJob = await storage.createBatchJob([]);
+        const dir = jobDir(batchJob.id);
+        fs.mkdirSync(dir, { recursive: true });
+
+        const uploadedFiles = files.map((file, index) => {
+          const safeName = `${index}-${path.basename(file.originalname).replace(/[^A-Za-z0-9._-]/g, '_')}`;
+          const destPath = path.join(dir, safeName);
+          fs.renameSync(file.path, destPath);
+          return {
+            id: `${Date.now()}-${index}`,
+            name: file.originalname,
+            path: destPath,
+          };
+        });
+
+        const updated = await storage.updateBatchJob(batchJob.id, { files: uploadedFiles });
+        res.json(updated);
+      } catch (error) {
+        console.error('Upload error:', error);
+        discardUploads();
+        res.status(500).json({ error: 'Failed to upload files' });
       }
-
-      const uploadedFiles = files.map((file, index) => ({
-        id: `${Date.now()}-${index}`,
-        name: file.originalname,
-        path: file.path,
-      }));
-
-      const batchJob = await storage.createBatchJob(uploadedFiles);
-      res.json(batchJob);
-    } catch (error) {
-      console.error('Upload error:', error);
-      res.status(500).json({ error: 'Failed to upload files' });
-    }
+    });
   });
 
   app.post('/api/batch/:jobId/start', async (req, res) => {
     try {
       const { jobId } = req.params;
-      const { engineMode } = req.body || {};
+      const { engineMode, timeoutMinutes, stopOnError } = req.body || {};
       const job = await storage.getBatchJob(jobId);
 
       if (!job) {
         return res.status(404).json({ error: 'Batch job not found' });
       }
+      if (job.status === 'processing' || activeJobs.has(jobId)) {
+        return res.status(409).json({ error: 'Batch job is already processing' });
+      }
+      if (job.status !== 'idle') {
+        return res.status(409).json({ error: `Batch job already finished (status: ${job.status})` });
+      }
 
-      await storage.updateBatchJob(jobId, { status: 'processing' });
+      let timeoutMin = Number(timeoutMinutes);
+      if (!Number.isFinite(timeoutMin) || timeoutMin <= 0) timeoutMin = DEFAULT_TIMEOUT_MINUTES;
+      timeoutMin = Math.min(timeoutMin, MAX_TIMEOUT_MINUTES);
 
-      res.json({ message: 'Processing started', engineMode: engineMode || 'executable' });
+      await storage.updateBatchJob(jobId, { status: 'processing', engineMode: engineMode || 'executable' });
+
+      res.json({
+        message: 'Processing started',
+        engineMode: engineMode || 'executable',
+        timeoutMinutes: timeoutMin,
+      });
 
       setTimeout(() => {
-        processFilesSequentially(jobId, job.files, engineMode || 'executable');
+        processFilesSequentially(jobId, job.files, engineMode || 'executable', timeoutMin * 60 * 1000, stopOnError === true);
       }, 500);
     } catch (error) {
       console.error('Start processing error:', error);
@@ -591,11 +763,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/batch/:jobId/cancel', async (req, res) => {
     try {
       const { jobId } = req.params;
+      const job = await storage.getBatchJob(jobId);
+      if (!job) {
+        return res.status(404).json({ error: 'Batch job not found' });
+      }
+      if (job.status !== 'processing') {
+        return res.status(409).json({ error: `Cannot cancel a batch that is not processing (status: ${job.status})` });
+      }
       await storage.updateBatchJob(jobId, { status: 'cancelled' });
+
+      const entry = activeJobs.get(jobId);
+      if (entry) {
+        entry.stopSignal = 'cancelled';
+        killJobProcess(entry);
+      } else {
+        cleanupJobFiles(jobId);
+      }
+
       res.json({ message: 'Processing cancelled' });
     } catch (error) {
       console.error('Cancel processing error:', error);
       res.status(500).json({ error: 'Failed to cancel processing' });
+    }
+  });
+
+  app.delete('/api/batch/:jobId', async (req, res) => {
+    try {
+      const { jobId } = req.params;
+      const entry = activeJobs.get(jobId);
+      if (entry) {
+        return res.status(409).json({ error: 'Batch job is still processing — cancel it first' });
+      }
+      const deleted = await storage.deleteBatchJob(jobId);
+      cleanupJobFiles(jobId);
+      if (!deleted) {
+        return res.status(404).json({ error: 'Batch job not found' });
+      }
+      res.json({ message: 'Batch deleted' });
+    } catch (error) {
+      console.error('Delete batch error:', error);
+      res.status(500).json({ error: 'Failed to delete batch' });
+    }
+  });
+
+  app.get('/api/jobs/latest', async (req, res) => {
+    try {
+      const job = await storage.getLatestCompletedJob();
+      if (!job) {
+        return res.status(404).json({ error: 'No completed batch jobs found' });
+      }
+      res.json(job);
+    } catch (error) {
+      console.error('Latest job error:', error);
+      res.status(500).json({ error: 'Failed to get latest job' });
     }
   });
 
@@ -615,65 +835,153 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  async function processFilesSequentially(jobId: string, files: Array<{ id: string; name: string; path: string }>, engineMode: string = 'executable') {
+  async function processFilesSequentially(
+    jobId: string,
+    files: Array<{ id: string; name: string; path: string }>,
+    engineMode: string = 'executable',
+    timeoutMs: number = DEFAULT_TIMEOUT_MINUTES * 60 * 1000,
+    stopOnError: boolean = false,
+  ) {
     const job = await storage.getBatchJob(jobId);
     if (!job) return;
 
-    for (let i = 0; i < files.length; i++) {
-      const currentJob = await storage.getBatchJob(jobId);
-      if (currentJob?.status === 'cancelled') {
+    const entry: ActiveJobEntry = { stopSignal: null };
+    activeJobs.set(jobId, entry);
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        if (entry.stopSignal === 'cancelled') break;
+        const currentJob = await storage.getBatchJob(jobId);
+        if (!currentJob || currentJob.status === 'cancelled') {
+          entry.stopSignal = 'cancelled';
+          break;
+        }
+
+        const file = files[i];
+        await storage.updateBatchJob(jobId, { currentFile: i + 1 });
+
         sendProgressUpdate(jobId, {
-          type: 'cancelled',
+          type: 'progress',
+          currentFile: i + 1,
+          total: files.length,
+          fileName: file.name,
+          fileId: file.id,
         });
-        return;
-      }
 
-      const file = files[i];
-      await storage.updateBatchJob(jobId, { currentFile: i + 1 });
-      
-      sendProgressUpdate(jobId, {
-        type: 'progress',
-        currentFile: i + 1,
-        total: files.length,
-        fileName: file.name,
-        fileId: file.id,
-      });
+        const timeoutTimer = setTimeout(() => {
+          if (entry.stopSignal === null) {
+            entry.stopSignal = 'timeout';
+            killJobProcess(entry);
+            sendProgressUpdate(jobId, {
+              type: 'log',
+              fileId: file.id,
+              fileName: file.name,
+              text: `Timeout: ${file.name} exceeded ${Math.round(timeoutMs / 60000)} minute(s) and was stopped`,
+              stream: 'stderr',
+            });
+          }
+        }, timeoutMs);
 
-      let result: ProcessResult;
-      if (engineMode === 'api') {
-        if (swmm5api.isApiAvailable()) {
-          result = await processSingleFileApi(jobId, file);
-        } else {
-          result = makeEngineUnavailableResult(file, 'api', 'SWMM5 API (shared library) is unavailable — no simulation was performed');
+        let result: ProcessResult;
+        try {
+          if (engineMode === 'api') {
+            if (swmm5api.isApiAvailable()) {
+              result = await processSingleFileApi(jobId, file, entry);
+            } else {
+              result = makeEngineUnavailableResult(file, 'api', 'SWMM5 API (shared library) is unavailable — no simulation was performed');
+              sendProgressUpdate(jobId, {
+                type: 'log',
+                fileId: file.id,
+                fileName: file.name,
+                text: `SWMM5 API unavailable — ${file.name} was not simulated`,
+                stream: 'stderr',
+              });
+            }
+          } else {
+            result = await processSingleFile(jobId, file, entry);
+          }
+        } finally {
+          clearTimeout(timeoutTimer);
+          if (entry.killTimer) {
+            clearTimeout(entry.killTimer);
+            entry.killTimer = undefined;
+          }
+          entry.child = undefined;
+        }
+
+        const stopSignal = getStopSignal(entry);
+        if (stopSignal === 'cancelled' || stopSignal === 'timeout') {
+          result = {
+            ...result,
+            status: stopSignal,
+            error: stopSignal === 'timeout'
+              ? `Simulation exceeded the ${Math.round(timeoutMs / 60000)}-minute timeout and was stopped`
+              : 'Simulation was cancelled by the user',
+            reportContent: undefined,
+            parsedMetrics: undefined,
+          };
+          removePartialOutputs(file.path);
+        }
+
+        const updatedJob = await storage.getBatchJob(jobId);
+        if (updatedJob) {
+          await storage.updateBatchJob(jobId, {
+            results: [...updatedJob.results, result],
+          });
+        }
+
+        sendProgressUpdate(jobId, {
+          type: 'result',
+          result,
+        });
+
+        if (stopSignal === 'cancelled') break;
+
+        if (stopSignal === 'timeout') {
+          entry.stopSignal = null;
+          if (stopOnError) {
+            sendProgressUpdate(jobId, {
+              type: 'log',
+              fileId: file.id,
+              fileName: file.name,
+              text: 'Stop on Error is enabled — remaining files were not processed',
+              stream: 'stderr',
+            });
+            break;
+          }
+          continue;
+        }
+
+        if (stopOnError && result.status !== 'success') {
           sendProgressUpdate(jobId, {
             type: 'log',
             fileId: file.id,
             fileName: file.name,
-            text: `SWMM5 API unavailable — ${file.name} was not simulated`,
+            text: 'Stop on Error is enabled — remaining files were not processed',
             stream: 'stderr',
           });
+          break;
         }
+      }
+
+      const finalSignal = getStopSignal(entry);
+      if (finalSignal === 'cancelled') {
+        await storage.updateBatchJob(jobId, { status: 'cancelled' });
+        sendProgressUpdate(jobId, { type: 'cancelled' });
       } else {
-        result = await processSingleFile(jobId, file);
+        await storage.updateBatchJob(jobId, { status: 'completed' });
+        sendProgressUpdate(jobId, { type: 'completed' });
       }
-      
-      const updatedJob = await storage.getBatchJob(jobId);
-      if (updatedJob) {
-        await storage.updateBatchJob(jobId, {
-          results: [...updatedJob.results, result],
-        });
-      }
-
-      sendProgressUpdate(jobId, {
-        type: 'result',
-        result,
-      });
+    } catch (e) {
+      console.error(`Batch ${jobId} failed unexpectedly:`, e);
+      try {
+        await storage.updateBatchJob(jobId, { status: 'completed' });
+        sendProgressUpdate(jobId, { type: 'completed' });
+      } catch {}
+    } finally {
+      activeJobs.delete(jobId);
+      cleanupJobFiles(jobId);
     }
-
-    await storage.updateBatchJob(jobId, { status: 'completed' });
-    sendProgressUpdate(jobId, {
-      type: 'completed',
-    });
   }
 
   function makeEngineUnavailableResult(file: { id: string; name: string; path: string }, requestedEngine: string, message: string): ProcessResult {
@@ -734,7 +1042,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
-  async function processSingleFileApi(jobId: string, file: { id: string; name: string; path: string }): Promise<ProcessResult> {
+  async function processSingleFileApi(jobId: string, file: { id: string; name: string; path: string }, entry?: ActiveJobEntry): Promise<ProcessResult> {
     const startTime = Date.now();
     const startedAt = new Date().toISOString();
     const inputPath = file.path;
@@ -784,7 +1092,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             });
           }
         },
-        10
+        10,
+        entry ? () => entry.stopSignal : undefined
       );
 
       const processingTime = (Date.now() - startTime) / 1000;
@@ -896,7 +1205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
-  async function processSingleFile(jobId: string, file: { id: string; name: string; path: string }): Promise<ProcessResult> {
+  async function processSingleFile(jobId: string, file: { id: string; name: string; path: string }, entry?: ActiveJobEntry): Promise<ProcessResult> {
     return new Promise((resolve) => {
       const startTime = Date.now();
       let swmmStatus = cachedSwmmStatus || detectSwmmPath();
@@ -944,6 +1253,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log(`Running SWMM: ${runswmmPath} "${inputPath}" "${reportPath}" "${outputPath}"`);
       const childProcess = spawn(runswmmPath, [inputPath, reportPath, outputPath]);
+      if (entry) {
+        entry.child = childProcess;
+        if (entry.stopSignal) {
+          killJobProcess(entry);
+        }
+      }
 
       let errorOutput = '';
       let stdoutBuffer = '';

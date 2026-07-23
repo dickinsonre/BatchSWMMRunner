@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { pgTable, text, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
 
 export const parsedMetricsSchema = z.object({
   runoffContinuityError: z.number().optional(),
@@ -22,7 +23,7 @@ export const processResultSchema = z.object({
   id: z.string(),
   fileName: z.string(),
   filePath: z.string(),
-  status: z.enum(['success', 'failed']),
+  status: z.enum(['success', 'failed', 'cancelled', 'timeout']),
   error: z.string().optional(),
   processingTime: z.number().optional(),
   reportContent: z.string().optional(),
@@ -54,9 +55,21 @@ export const batchJobSchema = z.object({
   status: z.enum(['idle', 'processing', 'completed', 'cancelled']),
   currentFile: z.number(),
   results: z.array(processResultSchema),
+  engineMode: z.string().optional(),
+  createdAt: z.string().optional(),
 });
 
 export type BatchJob = z.infer<typeof batchJobSchema>;
+
+export const batchJobsTable = pgTable("batch_jobs", {
+  id: text("id").primaryKey(),
+  status: text("status").notNull().default('idle'),
+  currentFile: integer("current_file").notNull().default(0),
+  files: jsonb("files").notNull().$type<{ id: string; name: string; path: string }[]>(),
+  results: jsonb("results").notNull().default([]).$type<ProcessResult[]>(),
+  engineMode: text("engine_mode"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
 
 export const uploadFileSchema = z.object({
   name: z.string(),

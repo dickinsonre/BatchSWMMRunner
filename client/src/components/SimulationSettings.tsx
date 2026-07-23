@@ -18,11 +18,13 @@ interface SimulationSettingsProps {
   parallelProcessing: boolean;
   stopOnError: boolean;
   outputFormat: string;
+  timeoutMinutes: number;
   onReportStepChange: (value: number) => void;
   onRoutingMethodChange: (value: string) => void;
   onParallelProcessingChange: (value: boolean) => void;
   onStopOnErrorChange: (value: boolean) => void;
   onOutputFormatChange: (value: string) => void;
+  onTimeoutMinutesChange: (value: number) => void;
   disabled?: boolean;
 }
 
@@ -32,11 +34,13 @@ export default function SimulationSettings({
   parallelProcessing,
   stopOnError,
   outputFormat,
+  timeoutMinutes,
   onReportStepChange,
   onRoutingMethodChange,
   onParallelProcessingChange,
   onStopOnErrorChange,
   onOutputFormatChange,
+  onTimeoutMinutesChange,
   disabled = false,
 }: SimulationSettingsProps) {
   return (
@@ -79,6 +83,22 @@ export default function SimulationSettings({
                   <SelectItem value="dynamic" data-testid="option-dynamic">Dynamic Wave</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="timeout-minutes">Per-file timeout (minutes)</Label>
+              <Input
+                id="timeout-minutes"
+                type="number"
+                min={1}
+                max={60}
+                value={timeoutMinutes}
+                onChange={(e) => onTimeoutMinutesChange(Number(e.target.value))}
+                disabled={disabled}
+                data-testid="input-timeout-minutes"
+              />
             </div>
           </div>
 

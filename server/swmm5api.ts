@@ -176,6 +176,7 @@ export interface StepCallbackData {
 export interface ApiRunResult {
   success: boolean;
   error?: string;
+  stoppedBy?: 'cancelled' | 'timeout';
   version: number;
   totalSteps: number;
   massBalErr?: { runoff: number; flow: number; quality: number };
@@ -187,7 +188,8 @@ export async function runWithApi(
   reportPath: string,
   outputPath: string,
   onStep?: (data: StepCallbackData) => void,
-  snapshotInterval: number = 10
+  snapshotInterval: number = 10,
+  shouldStop?: () => 'cancelled' | 'timeout' | null
 ): Promise<ApiRunResult> {
   const api = ensureLoaded();
   const version = api.swmm_getVersion();
@@ -215,12 +217,24 @@ export async function runWithApi(
 
   let stepCount = 0;
   const elapsedArr = [0.0];
+  let stoppedBy: 'cancelled' | 'timeout' | null = null;
 
   while (true) {
+    if (shouldStop) {
+      const stop = shouldStop();
+      if (stop) {
+        stoppedBy = stop;
+        break;
+      }
+    }
     err = api.swmm_step(elapsedArr);
     if (err !== 0) break;
     if (elapsedArr[0] <= 0) break;
     stepCount++;
+
+    if (stepCount % 200 === 0) {
+      await new Promise<void>(r => setImmediate(r));
+    }
 
     if (onStep && stepCount % snapshotInterval === 0) {
       const percentComplete = totalStepsVal > 0
@@ -267,8 +281,23 @@ export async function runWithApi(
   const warnings = api.swmm_getWarnings();
 
   api.swmm_end();
-  api.swmm_report();
+  if (!stoppedBy) {
+    api.swmm_report();
+  }
   api.swmm_close();
+
+  if (stoppedBy) {
+    return {
+      success: false,
+      error: stoppedBy === 'timeout'
+        ? `Simulation timed out and was stopped after ${stepCount} steps`
+        : `Simulation was cancelled after ${stepCount} steps`,
+      stoppedBy,
+      version,
+      totalSteps: stepCount,
+      warnings,
+    };
+  }
 
   const lastErr = getError();
   if (lastErr.code !== 0) {

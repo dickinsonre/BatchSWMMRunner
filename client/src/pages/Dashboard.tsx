@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, FileText, AlertTriangle, Droplets, CheckCircle, XCircle, Clock, BarChart3, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,11 +35,20 @@ function getCEColor(val: number | undefined): string {
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
-  const { results, elapsedTime } = getDashboardResults();
+  const { results: storedResults, elapsedTime } = getDashboardResults();
+
+  const { data: latestJob } = useQuery<{ results: ProcessResult[] } | null>({
+    queryKey: ['/api/jobs/latest'],
+    enabled: storedResults.length === 0,
+  });
+
+  const results: ProcessResult[] = storedResults.length > 0
+    ? storedResults
+    : (latestJob?.results ?? []);
 
   const stats = useMemo(() => {
     const successful = results.filter(r => r.status === 'success');
-    const failed = results.filter(r => r.status === 'failed');
+    const failed = results.filter(r => r.status !== 'success');
     const withFlooding = successful.filter(r => r.parsedMetrics?.nodesFlooded && r.parsedMetrics.nodesFlooded > 0);
     const withWarnings = successful.filter(r => {
       const runoff = r.parsedMetrics?.runoffContinuityError;

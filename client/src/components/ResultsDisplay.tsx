@@ -53,7 +53,7 @@ export interface ProcessResult {
   id: string;
   fileName: string;
   filePath: string;
-  status: 'success' | 'failed';
+  status: 'success' | 'failed' | 'cancelled' | 'timeout';
   error?: string;
   processingTime?: number;
   reportContent?: string;
@@ -552,7 +552,7 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
   const [expandedReports, setExpandedReports] = useState<Set<string>>(new Set());
   
   const successCount = results.filter(r => r.status === 'success').length;
-  const failedCount = results.filter(r => r.status === 'failed').length;
+  const failedCount = results.filter(r => r.status === 'failed' || r.status === 'timeout' || r.status === 'cancelled').length;
 
   const continuityWarnings = results.filter(r => {
     const m = r.parsedMetrics;
@@ -785,6 +785,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                           <span className="text-green-600 flex items-center gap-1">
                             <CheckCircle className="h-3 w-3" /> OK
                           </span>
+                        ) : result.status === 'timeout' ? (
+                          <span className="text-yellow-600 flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> Timeout
+                          </span>
+                        ) : result.status === 'cancelled' ? (
+                          <span className="text-muted-foreground flex items-center gap-1">
+                            <XCircle className="h-3 w-3" /> Cancelled
+                          </span>
                         ) : (
                           <span className="text-destructive flex items-center gap-1">
                             <XCircle className="h-3 w-3" /> Fail
@@ -857,7 +865,7 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                           {result.fileName}
                         </p>
                         <Badge
-                          variant={result.status === 'success' ? 'default' : 'destructive'}
+                          variant={result.status === 'success' ? 'default' : result.status === 'failed' ? 'destructive' : 'secondary'}
                           data-testid={`badge-status-${result.id}`}
                         >
                           {result.status}
