@@ -10,6 +10,10 @@ export default defineConfig({
   },
   test: {
     include: ["tests/**/*.test.ts"],
+    // Integration tests share the uploads/ directory and each test file's
+    // server startup sweep clears uploads/tmp; running files in parallel
+    // causes races (ENOENT during multer writes). Run files serially.
+    fileParallelism: false,
     testTimeout: 60000,
     hookTimeout: 60000,
   },
