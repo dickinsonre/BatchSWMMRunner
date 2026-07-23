@@ -1235,12 +1235,12 @@ export default function Documentation() {
                   <div className="space-y-6">
                     <FaqItem
                       question="Do I need EPA SWMM installed to use BatchSWMM?"
-                      answer="No. BatchSWMM ships with a built-in EPA SWMM 5.2.4 engine (a compiled Linux binary) that runs automatically on the server. You do not need to install SWMM separately. If the engine is not found for any reason, the app falls back to Simulation Mode, which generates realistic mock reports so you can still explore the interface and features."
+                      answer="No. BatchSWMM ships with a built-in EPA SWMM 5.2.4 engine (a compiled Linux binary) that runs automatically on the server. You do not need to install SWMM separately. If the server engine is not found, server-side runs fail explicitly (no results are fabricated) — but the WASM browser engines still work, running simulations entirely in your browser."
                       testId="faq-swmm-required"
                     />
                     <FaqItem
-                      question="What is Simulation Mode?"
-                      answer="Simulation Mode activates automatically when the SWMM engine binary is not detected. In this mode, BatchSWMM generates realistic but synthetic report data with randomized metrics, continuity errors, and element results. This lets you test the upload workflow, view reports, explore charts and histograms, and use the AI Report Builder without running actual hydraulic simulations."
+                      question="What happens if the SWMM engine is unavailable?"
+                      answer="If the server-side SWMM engine binary is not detected, files sent for server processing fail with a clear 'engine unavailable' error — BatchSWMM never generates synthetic or simulated results. Every report you see comes from a real SWMM engine run. You can always use the WASM (Browser) or SWMM6 (Browser) engine modes, which run the real EPA SWMM engine compiled to WebAssembly directly in your browser."
                       testId="faq-simulation-mode"
                     />
                     <FaqItem
@@ -1637,7 +1637,7 @@ log            — [API Mode] prefix messages with version/step/error info`}</pr
                   <CardTitle className="text-base">SWMM Executable Invocation</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     The core function that processes a single .inp file. Checks for runswmm.exe,
-                    falls back to simulation mode if not found, and reads the .rpt report on success.
+                    fails explicitly if no engine is found, validates and reads the .rpt report on success.
                   </p>
                   <p className="text-xs text-muted-foreground font-mono">server/routes.ts</p>
                 </CardHeader>

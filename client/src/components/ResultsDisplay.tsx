@@ -63,6 +63,14 @@ export interface ProcessResult {
     totalVolume?: number;
   };
   parsedMetrics?: ParsedMetrics;
+  provenance?: {
+    requestedEngine: string;
+    actualEngine?: string;
+    engineVersion?: string;
+    startedAt?: string;
+    completedAt?: string;
+    exitCode?: number | null;
+  };
 }
 
 interface ResultsDisplayProps {
@@ -863,6 +871,18 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                           <Badge variant="secondary" className="text-yellow-700" data-testid={`badge-ce-warning-${result.id}`}>
                             <AlertTriangle className="h-3 w-3 mr-1" />
                             CE: {result.parsedMetrics.runoffContinuityError.toFixed(3)}%
+                          </Badge>
+                        )}
+                        {result.parsedMetrics?.reportWarnings && result.parsedMetrics.reportWarnings.length > 0 && (
+                          <Badge variant="secondary" className="text-yellow-700" data-testid={`badge-report-warnings-${result.id}`}>
+                            <AlertTriangle className="h-3 w-3 mr-1" />
+                            {result.parsedMetrics.reportWarnings.length} warning{result.parsedMetrics.reportWarnings.length !== 1 ? 's' : ''}
+                          </Badge>
+                        )}
+                        {result.provenance?.actualEngine && (
+                          <Badge variant="outline" data-testid={`badge-engine-${result.id}`}>
+                            {result.provenance.actualEngine}
+                            {result.provenance.engineVersion ? ` v${result.provenance.engineVersion}` : ''}
                           </Badge>
                         )}
                       </div>

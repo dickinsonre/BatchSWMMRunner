@@ -43,7 +43,10 @@ export default function Dashboard() {
     const withWarnings = successful.filter(r => {
       const runoff = r.parsedMetrics?.runoffContinuityError;
       const routing = r.parsedMetrics?.routingContinuityError;
-      return (runoff !== undefined && Math.abs(runoff) > 1) || (routing !== undefined && Math.abs(routing) > 1);
+      const reportWarnings = r.parsedMetrics?.reportWarnings;
+      return (runoff !== undefined && Math.abs(runoff) > 1) ||
+             (routing !== undefined && Math.abs(routing) > 1) ||
+             (reportWarnings !== undefined && reportWarnings.length > 0);
     });
     const avgProcessingTime = successful.length > 0
       ? successful.reduce((sum, r) => sum + (r.processingTime || 0), 0) / successful.length
@@ -54,11 +57,13 @@ export default function Dashboard() {
 
   const continuityData = useMemo(() => {
     return results
-      .filter(r => r.status === 'success')
+      .filter(r => r.status === 'success' &&
+        (r.parsedMetrics?.runoffContinuityError !== undefined ||
+         r.parsedMetrics?.routingContinuityError !== undefined))
       .map(r => ({
         name: r.fileName.replace('.inp', ''),
-        runoff: r.parsedMetrics?.runoffContinuityError ?? 0,
-        routing: r.parsedMetrics?.routingContinuityError ?? 0,
+        runoff: r.parsedMetrics?.runoffContinuityError ?? null,
+        routing: r.parsedMetrics?.routingContinuityError ?? null,
       }));
   }, [results]);
 
@@ -186,12 +191,12 @@ export default function Dashboard() {
                     <Legend wrapperStyle={{ fontSize: '11px' }} />
                     <Bar dataKey="runoff" name="Runoff CE" maxBarSize={30}>
                       {continuityData.map((entry, index) => (
-                        <Cell key={`runoff-${index}`} fill={getCEColor(entry.runoff)} />
+                        <Cell key={`runoff-${index}`} fill={getCEColor(entry.runoff ?? undefined)} />
                       ))}
                     </Bar>
                     <Bar dataKey="routing" name="Routing CE" maxBarSize={30}>
                       {continuityData.map((entry, index) => (
-                        <Cell key={`routing-${index}`} fill={getCEColor(entry.routing)} />
+                        <Cell key={`routing-${index}`} fill={getCEColor(entry.routing ?? undefined)} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -375,7 +380,7 @@ export default function Dashboard() {
                             )
                           ) : 'N/A'}
                         </td>
-                        <td className="py-2 px-3 text-xs">{r.parsedMetrics?.routingMethod ?? 'N/A'}</td>
+                        <td className="py-2 px-3 text-xs">{r.parsedMetrics?.flowRoutingMethod ?? 'N/A'}</td>
                         <td className="py-2 px-3 text-xs">{r.parsedMetrics?.infiltrationMethod ?? 'N/A'}</td>
                         <td className="py-2 px-3 text-right font-mono text-xs">
                           {r.processingTime != null ? `${r.processingTime.toFixed(1)}s` : 'N/A'}

@@ -67,7 +67,7 @@ export default function AppHeader({ swmmStatus: externalSwmmStatus }: AppHeaderP
                       ) : (
                         <>
                           <Monitor className="h-3 w-3 mr-1" />
-                          Simulation Mode
+                          Engine Unavailable
                         </>
                       )}
                     </Badge>
@@ -78,7 +78,7 @@ export default function AppHeader({ swmmStatus: externalSwmmStatus }: AppHeaderP
                   <p className="text-xs text-muted-foreground">
                     {swmmStatus.found
                       ? `Compiled C binary at: ${swmmStatus.path}`
-                      : 'No engine detected — using simulated results'}
+                      : 'No server engine detected — server-side runs will fail (browser WASM modes still work)'}
                   </p>
                 </TooltipContent>
               </Tooltip>

@@ -519,7 +519,7 @@ export default function Home() {
                     </>
                   ) : (
                     <>
-                      <p className="font-medium" data-testid="text-swmm-not-found">Simulation Mode Active</p>
+                      <p className="font-medium" data-testid="text-swmm-not-found">SWMM Engine Unavailable</p>
                       <p className="text-muted-foreground">
                         No SWMM engine was found. The app searched these locations:
                       </p>
@@ -542,7 +542,7 @@ export default function Home() {
                         set RUNSWMM_PATH=C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe
                       </pre>
                       <p className="text-muted-foreground text-xs">
-                        Without it, the app runs in <span className="font-medium text-foreground">simulation mode</span> with generated results.
+                        Without an engine, server-side runs will fail — <span className="font-medium text-foreground">no results are fabricated</span>. You can still use the WASM (Browser) engine modes below.
                         <a
                           href="https://www.epa.gov/water-research/storm-water-management-model-swmm"
                           target="_blank"
@@ -760,7 +760,7 @@ export default function Home() {
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
             <p data-testid="text-footer-version">BatchSWMM v1.0.0</p>
             <p className="font-mono truncate max-w-full" data-testid="text-footer-executable">
-              {swmmStatus?.found ? swmmStatus.path : 'simulation mode'}
+              {swmmStatus?.found ? swmmStatus.path : 'server engine unavailable'}
             </p>
           </div>
         </div>

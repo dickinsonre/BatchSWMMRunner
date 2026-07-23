@@ -12,6 +12,8 @@ export const parsedMetricsSchema = z.object({
   totalInflow: z.number().optional(),
   totalOutflow: z.number().optional(),
   floodingLoss: z.number().optional(),
+  reportWarnings: z.array(z.string()).optional(),
+  reportErrors: z.array(z.string()).optional(),
 });
 
 export type ParsedMetrics = z.infer<typeof parsedMetricsSchema>;
@@ -30,6 +32,14 @@ export const processResultSchema = z.object({
     totalVolume: z.number().optional(),
   }).optional(),
   parsedMetrics: parsedMetricsSchema.optional(),
+  provenance: z.object({
+    requestedEngine: z.string(),
+    actualEngine: z.string().optional(),
+    engineVersion: z.string().optional(),
+    startedAt: z.string().optional(),
+    completedAt: z.string().optional(),
+    exitCode: z.number().nullable().optional(),
+  }).optional(),
 });
 
 export type ProcessResult = z.infer<typeof processResultSchema>;
@@ -58,7 +68,7 @@ export type UploadFile = z.infer<typeof uploadFileSchema>;
 export const swmmStatusSchema = z.object({
   found: z.boolean(),
   path: z.string().optional(),
-  mode: z.enum(['live', 'simulation']),
+  mode: z.enum(['live', 'unavailable']),
   searchedPaths: z.array(z.string()).optional(),
   apiAvailable: z.boolean().optional(),
   apiVersion: z.number().optional(),

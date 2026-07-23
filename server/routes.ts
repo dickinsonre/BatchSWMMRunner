@@ -68,7 +68,7 @@ function detectSwmmPath(): SwmmStatus {
     searchedPaths.push('PATH lookup (not found)');
   }
 
-  return { found: false, mode: 'simulation', searchedPaths };
+  return { found: false, mode: 'unavailable', searchedPaths };
 }
 
 function enrichWithApiStatus(status: SwmmStatus): SwmmStatus {
@@ -373,7 +373,47 @@ function parseReportMetrics(reportContent: string): ParsedMetrics {
     metrics.floodingLoss = parseFloat(floodLoss[1]);
   }
 
+  const issues = extractReportIssues(reportContent);
+  if (issues.warnings.length > 0) metrics.reportWarnings = issues.warnings;
+  if (issues.errors.length > 0) metrics.reportErrors = issues.errors;
+
   return metrics;
+}
+
+const MAX_REPORT_ISSUES = 100;
+
+function extractReportIssues(reportContent: string): { warnings: string[]; errors: string[] } {
+  const warnings: string[] = [];
+  const errors: string[] = [];
+  for (const rawLine of reportContent.split('\n')) {
+    const line = rawLine.trim();
+    if (/^WARNING\b/i.test(line)) {
+      if (warnings.length < MAX_REPORT_ISSUES) warnings.push(line);
+    } else if (/^ERROR\b/i.test(line)) {
+      if (errors.length < MAX_REPORT_ISSUES) errors.push(line);
+    }
+  }
+  return { warnings, errors };
+}
+
+function extractEngineVersion(reportContent: string): string | undefined {
+  const m = reportContent.match(/EPA STORM WATER MANAGEMENT MODEL - VERSION\s+([\d.]+)(?:\s*\(Build\s+([\d.]+)\))?/i);
+  if (m) return m[2] || m[1];
+  return undefined;
+}
+
+function validateSwmmReport(reportContent: string | undefined): { valid: boolean; reason?: string } {
+  if (!reportContent || reportContent.trim().length === 0) {
+    return { valid: false, reason: 'Report file is empty — the engine did not produce output' };
+  }
+  if (!/EPA STORM WATER MANAGEMENT MODEL/i.test(reportContent)) {
+    return { valid: false, reason: 'Report file is missing the EPA SWMM header — output is not a valid SWMM report' };
+  }
+  const { errors } = extractReportIssues(reportContent);
+  if (errors.length > 0) {
+    return { valid: false, reason: `SWMM reported error(s): ${errors.slice(0, 5).join('; ')}` };
+  }
+  return { valid: true };
 }
 
 let cachedSwmmStatus: SwmmStatus | null = null;
@@ -599,10 +639,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileId: file.id,
       });
 
-      const useApi = engineMode === 'api' && swmm5api.isApiAvailable();
-      const result = useApi
-        ? await processSingleFileApi(jobId, file)
-        : await processSingleFile(jobId, file);
+      let result: ProcessResult;
+      if (engineMode === 'api') {
+        if (swmm5api.isApiAvailable()) {
+          result = await processSingleFileApi(jobId, file);
+        } else {
+          result = makeEngineUnavailableResult(file, 'api', 'SWMM5 API (shared library) is unavailable — no simulation was performed');
+          sendProgressUpdate(jobId, {
+            type: 'log',
+            fileId: file.id,
+            fileName: file.name,
+            text: `SWMM5 API unavailable — ${file.name} was not simulated`,
+            stream: 'stderr',
+          });
+        }
+      } else {
+        result = await processSingleFile(jobId, file);
+      }
       
       const updatedJob = await storage.getBatchJob(jobId);
       if (updatedJob) {
@@ -623,264 +676,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }
 
-  function generateTimeSeriesData(type: string, peakValue: number, totalVolume: number): string {
-    const timeSteps = [];
-    const hours = 24;
-    const interval = 15;
-    const totalSteps = (hours * 60) / interval;
-
-    for (let i = 0; i <= totalSteps; i++) {
-      const t = i / totalSteps;
-      const totalMinutes = i * interval;
-      const h = Math.floor(totalMinutes / 60);
-      const m = totalMinutes % 60;
-      const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-
-      const risePhase = t < 0.3 ? Math.pow(t / 0.3, 2) : 0;
-      const peakPhase = t >= 0.3 && t < 0.45 ? 1.0 - 0.2 * Math.pow((t - 0.375) / 0.075, 2) : 0;
-      const fallPhase = t >= 0.45 ? Math.exp(-3.5 * (t - 0.45)) : 0;
-      const hydrograph = risePhase + peakPhase + fallPhase;
-      const noise = 1 + (Math.random() - 0.5) * 0.08;
-      const value = peakValue * hydrograph * noise;
-
-      if (type === 'subcatchment') {
-        const precip = t >= 0.1 && t <= 0.4 ? (peakValue * 0.8 * (1 - Math.abs(t - 0.25) / 0.15) * noise).toFixed(2) : '0.00';
-        const runoff = (value * 0.62).toFixed(2);
-        const losses = (value * 0.18).toFixed(2);
-        const depth = (value * 0.004).toFixed(3);
-        timeSteps.push(`  01/01/2024  ${timeStr}       ${precip.padStart(8)}   ${runoff.padStart(8)}   ${losses.padStart(8)}   ${depth.padStart(8)}`);
-      } else if (type.startsWith('node')) {
-        const baseElev = type === 'node_out' ? 15 : type === 'node_j3' ? 42 : type === 'node_j2' ? 48 : 55;
-        const inflow = (value * 0.9).toFixed(2);
-        const flooding = value > peakValue * 0.9 ? ((value - peakValue * 0.9) * 0.3).toFixed(2) : '0.00';
-        const depth2 = (value * 0.03).toFixed(2);
-        const head = (baseElev + value * 0.03).toFixed(2);
-        timeSteps.push(`  01/01/2024  ${timeStr}       ${inflow.padStart(8)}   ${flooding.padStart(8)}   ${depth2.padStart(8)}   ${head.padStart(8)}`);
-      } else if (type.startsWith('link')) {
-        const flow = value.toFixed(2);
-        const velocity = (value * 0.15 + 0.1).toFixed(2);
-        const depth3 = (value * 0.025).toFixed(2);
-        const capacity = Math.min(value / (peakValue * 1.2), 1.0).toFixed(3);
-        timeSteps.push(`  01/01/2024  ${timeStr}       ${flow.padStart(8)}   ${velocity.padStart(8)}   ${depth3.padStart(8)}   ${capacity.padStart(8)}`);
-      }
-    }
-    return timeSteps.join('\n');
-  }
-
-  function generateSimulatedReport(fileName: string, peakFlow: number, totalVolume: number, processingTime: number): string {
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
-    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    const totalInflow = (totalVolume * 0.85).toFixed(3);
-    const totalOutflow = (totalVolume * 0.78).toFixed(3);
-    const peakRunoff = (peakFlow * 0.62).toFixed(3);
-    const continuityError = (Math.random() * 0.5 - 0.25).toFixed(3);
-    const nodesFlooded = Math.floor(Math.random() * 3);
-    const wetSteps = Math.floor(Math.random() * 500 + 200);
-
-    return `
-  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)
-  --------------------------------------------------------------
-
-  *************
-  EPA SWMM 5.2
-  *************
-
-  Input File:   ${fileName}
-  Report File:  ${fileName.replace('.inp', '.rpt')}
-  Output File:  ${fileName.replace('.inp', '.out')}
-
-  Analysis Date: ${dateStr}
-  Analysis Time: ${timeStr}
-  Elapsed Time:  ${processingTime.toFixed(1)} seconds
-
-  ****************
-  Analysis Options
-  ****************
-  Flow Units ............... CFS
-  Process Models:
-    Rainfall/Runoff ........ YES
-    RDII ................... NO
-    Snowmelt ............... NO
-    Groundwater ............ NO
-    Flow Routing ........... YES
-    Ponding Allowed ........ NO
-    Water Quality .......... NO
-  Infiltration Method ...... HORTON
-  Flow Routing Method ...... DYNWAVE
-  Surcharge Method ......... EXTRAN
-  Starting Date ............ 01/01/2024 00:00:00
-  Ending Date .............. 01/02/2024 00:00:00
-  Antecedent Dry Days ...... 5.0
-  Report Time Step ......... 00:15:00
-  Wet Time Step ............ 00:05:00
-  Dry Time Step ............ 01:00:00
-  Routing Time Step ........ 30.00 sec
-  Variable Time Step ....... YES
-
-  **************************        Volume         Depth
-  Runoff Quantity Continuity     acre-feet        inches
-  **************************     ---------       -------
-  Total Precipitation ......     ${(totalVolume * 1.12).toFixed(3)}       ${(totalVolume * 0.33).toFixed(3)}
-  Evaporation Loss .........         0.000         0.000
-  Infiltration Loss ........     ${(totalVolume * 0.22).toFixed(3)}       ${(totalVolume * 0.065).toFixed(3)}
-  Surface Runoff ...........     ${totalInflow}       ${(totalVolume * 0.28).toFixed(3)}
-  Final Storage ............     ${(totalVolume * 0.05).toFixed(3)}       ${(totalVolume * 0.015).toFixed(3)}
-  Continuity Error (%) .....     ${continuityError}
-
-  **************************        Volume        Volume
-  Flow Routing Continuity        acre-feet      10^6 gal
-  **************************     ---------     ---------
-  Dry Weather Inflow .......         0.000         0.000
-  Wet Weather Inflow .......     ${totalInflow}     ${totalVolume.toFixed(3)}
-  Groundwater Inflow .......         0.000         0.000
-  RDII Inflow ..............         0.000         0.000
-  External Inflow ..........         0.000         0.000
-  External Outflow .........     ${totalOutflow}     ${(totalVolume * 0.78).toFixed(3)}
-  Flooding Loss ............     ${(totalVolume * 0.02).toFixed(3)}     ${(totalVolume * 0.02).toFixed(3)}
-  Evaporation Loss .........         0.000         0.000
-  Exfiltration Loss ........         0.000         0.000
-  Initial Stored Volume ....         0.000         0.000
-  Final Stored Volume ......     ${(totalVolume * 0.05).toFixed(3)}     ${(totalVolume * 0.05).toFixed(3)}
-  Continuity Error (%) .....     ${continuityError}
-
-  ***************
-  Node Depth Summary
-  ***************
-
-  -------------------------------------------------------------------------
-                                 Average  Maximum  Maximum  Time of Max
-                                   Depth    Depth      HGL   Occurrence
-  Node                 Type       Feet     Feet     Feet   days hr:min
-  -------------------------------------------------------------------------
-  J1                   JUNCTION   ${(Math.random() * 2 + 0.5).toFixed(2)}     ${(Math.random() * 4 + 2).toFixed(2)}     ${(Math.random() * 100 + 50).toFixed(2)}      0  ${Math.floor(Math.random() * 12 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}
-  J2                   JUNCTION   ${(Math.random() * 2 + 0.3).toFixed(2)}     ${(Math.random() * 3 + 1).toFixed(2)}     ${(Math.random() * 100 + 45).toFixed(2)}      0  ${Math.floor(Math.random() * 12 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}
-  J3                   JUNCTION   ${(Math.random() * 1.5 + 0.2).toFixed(2)}     ${(Math.random() * 3 + 1.5).toFixed(2)}     ${(Math.random() * 100 + 40).toFixed(2)}      0  ${Math.floor(Math.random() * 12 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}
-  OUT1                 OUTFALL    ${(Math.random() * 1 + 0.1).toFixed(2)}     ${(Math.random() * 2 + 0.5).toFixed(2)}     ${(Math.random() * 30 + 10).toFixed(2)}      0  ${Math.floor(Math.random() * 12 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}
-
-  ***************
-  Node Flow Summary
-  ***************
-
-  ----------------------------------------------------------------------------------
-                                  Maximum  Time of Max   Lateral    Total   Maximum
-                                  Flooding   Occurrence   Inflow   Inflow   Flooded
-  Node                 Type          CFS   days hr:min      CFS      CFS    Minutes
-  ----------------------------------------------------------------------------------
-  J1                   JUNCTION      0.00      0  00:00    ${peakRunoff}    ${peakRunoff}      0.0
-  J2                   JUNCTION      0.00      0  00:00     0.000    ${peakRunoff}      0.0
-  J3                   JUNCTION      ${nodesFlooded > 0 ? (peakFlow * 0.1).toFixed(3) : '0.000'}      0  ${Math.floor(Math.random() * 6 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}     0.000    ${(peakFlow * 0.95).toFixed(3)}      ${nodesFlooded > 0 ? (Math.random() * 30 + 5).toFixed(1) : '0.0'}
-  OUT1                 OUTFALL       0.00      0  00:00     0.000    ${peakFlow.toFixed(3)}      0.0
-
-  ***************
-  Link Flow Summary
-  ***************
-
-  ----------------------------------------------------------------------------------
-                                     Maximum  Time of Max      Max/    Max/
-                                      |Flow|   Occurrence     Full     Full
-  Link                     Type         CFS   days hr:min    Flow    Depth
-  ----------------------------------------------------------------------------------
-  C1                       CONDUIT    ${peakRunoff}      0  ${Math.floor(Math.random() * 6 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}    ${(Math.random() * 0.5 + 0.3).toFixed(2)}    ${(Math.random() * 0.4 + 0.3).toFixed(2)}
-  C2                       CONDUIT    ${(peakFlow * 0.85).toFixed(3)}      0  ${Math.floor(Math.random() * 6 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}    ${(Math.random() * 0.6 + 0.3).toFixed(2)}    ${(Math.random() * 0.5 + 0.3).toFixed(2)}
-  C3                       CONDUIT    ${peakFlow.toFixed(3)}      0  ${Math.floor(Math.random() * 6 + 1)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}    ${(Math.random() * 0.7 + 0.2).toFixed(2)}    ${(Math.random() * 0.5 + 0.3).toFixed(2)}
-
-  *************************
-  Conduit Surcharge Summary
-  *************************
-
-  No conduits were surcharged.
-
-  *********************
-  Node Flooding Summary
-  *********************
-
-  ${nodesFlooded > 0 ? `Flooding was detected at ${nodesFlooded} node(s).` : 'No nodes were flooded.'}
-
-  ********************
-  Routing Time Step Summary
-  ********************
-
-  Minimum Time Step           :     ${(Math.random() * 5 + 1).toFixed(2)} sec
-  Average Time Step           :    ${(Math.random() * 15 + 10).toFixed(2)} sec
-  Maximum Time Step           :    30.00 sec
-  Percent in Steady State     :     0.00
-  Average Iterations per Step :     ${(Math.random() * 1.5 + 1.5).toFixed(2)}
-  Percent Not Converging      :     ${(Math.random() * 2).toFixed(2)}
-  Time Step Frequencies       :
-     ${wetSteps} ( ${((wetSteps / (wetSteps + 100)) * 100).toFixed(1)}%)  are Wet Weather Steps
-
-  Analysis begun on:  ${dateStr}  ${timeStr}
-  Total Elapsed Time: ${processingTime.toFixed(1)} seconds
-
-  ********************************
-  Subcatchment Runoff Time Series
-  ********************************
-
-  <<< Subcatchment S1 >>>
-
-  Date        Time        Precip     Runoff     Losses     Depth
-  Day         Hour:Min    in/hr      CFS        CFS        Feet
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('subcatchment', peakFlow, totalVolume)}
-
-  ********************************
-  Node Results Time Series
-  ********************************
-
-  <<< Node J1 >>>
-
-  Date        Time        Inflow     Flooding   Depth      Head
-  Day         Hour:Min    CFS        CFS        Feet       Feet
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('node_j1', peakFlow, totalVolume)}
-
-  <<< Node J2 >>>
-
-  Date        Time        Inflow     Flooding   Depth      Head
-  Day         Hour:Min    CFS        CFS        Feet       Feet
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('node_j2', peakFlow * 0.9, totalVolume)}
-
-  <<< Node J3 >>>
-
-  Date        Time        Inflow     Flooding   Depth      Head
-  Day         Hour:Min    CFS        CFS        Feet       Feet
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('node_j3', peakFlow * 0.85, totalVolume)}
-
-  <<< Node OUT1 >>>
-
-  Date        Time        Inflow     Flooding   Depth      Head
-  Day         Hour:Min    CFS        CFS        Feet       Feet
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('node_out', peakFlow * 0.8, totalVolume)}
-
-  ********************************
-  Link Results Time Series
-  ********************************
-
-  <<< Link C1 >>>
-
-  Date        Time        Flow       Velocity   Depth      Capacity
-  Day         Hour:Min    CFS        ft/sec     Feet       fraction
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('link_c1', peakFlow * 0.6, totalVolume)}
-
-  <<< Link C2 >>>
-
-  Date        Time        Flow       Velocity   Depth      Capacity
-  Day         Hour:Min    CFS        ft/sec     Feet       fraction
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('link_c2', peakFlow * 0.8, totalVolume)}
-
-  <<< Link C3 >>>
-
-  Date        Time        Flow       Velocity   Depth      Capacity
-  Day         Hour:Min    CFS        ft/sec     Feet       fraction
-  ----------  ----------  ---------- ---------- ---------- ----------
-${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
-`.trimStart();
+  function makeEngineUnavailableResult(file: { id: string; name: string; path: string }, requestedEngine: string, message: string): ProcessResult {
+    let inpContent: string | undefined;
+    try {
+      inpContent = fs.readFileSync(file.path, 'utf-8');
+    } catch {}
+    const now = new Date().toISOString();
+    return {
+      id: file.id,
+      fileName: file.name,
+      filePath: file.path,
+      status: 'failed',
+      error: `Engine unavailable — no simulation was performed. ${message}`,
+      processingTime: 0,
+      inpContent,
+      provenance: {
+        requestedEngine,
+        startedAt: now,
+        completedAt: now,
+      },
+    };
   }
 
   function injectReportOptions(filePath: string): void {
@@ -921,6 +736,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
 
   async function processSingleFileApi(jobId: string, file: { id: string; name: string; path: string }): Promise<ProcessResult> {
     const startTime = Date.now();
+    const startedAt = new Date().toISOString();
     const inputPath = file.path;
     const reportPath = inputPath + '.rpt';
     const outputPath = inputPath + '.out';
@@ -990,6 +806,14 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         stream: 'stdout',
       });
 
+      const provenance = {
+        requestedEngine: 'api',
+        actualEngine: 'api',
+        engineVersion: apiResult.version != null ? String(apiResult.version) : undefined,
+        startedAt,
+        completedAt: new Date().toISOString(),
+      };
+
       if (!apiResult.success) {
         return {
           id: file.id,
@@ -999,28 +823,46 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
           error: apiResult.error || 'API simulation failed',
           processingTime,
           inpContent,
+          provenance,
         };
       }
 
-      let reportContent: string | undefined;
+      let rawReport: string | undefined;
       try {
         if (fs.existsSync(reportPath)) {
-          reportContent = fs.readFileSync(reportPath, 'utf-8');
+          rawReport = fs.readFileSync(reportPath, 'utf-8');
         }
       } catch (e) {
         console.warn(`Could not read report file: ${reportPath}`);
       }
 
+      const validation = validateSwmmReport(rawReport);
+      if (!validation.valid) {
+        return {
+          id: file.id,
+          fileName: file.name,
+          filePath: file.path,
+          status: 'failed',
+          error: validation.reason || 'SWMM API run produced an invalid report',
+          processingTime,
+          reportContent: rawReport,
+          inpContent,
+          parsedMetrics: rawReport ? parseReportMetrics(rawReport) : undefined,
+          provenance,
+        };
+      }
+
+      let reportContent = rawReport!;
       try {
         const timeSeriesData = parseSwmmOutputBinary(outputPath);
         if (timeSeriesData) {
-          reportContent = (reportContent || '') + '\n' + timeSeriesData;
+          reportContent = reportContent + '\n' + timeSeriesData;
         }
       } catch (e) {
         console.warn(`Could not parse SWMM output binary: ${outputPath}`);
       }
 
-      const parsedMetrics = reportContent ? parseReportMetrics(reportContent) : undefined;
+      const parsedMetrics = parseReportMetrics(reportContent);
 
       return {
         id: file.id,
@@ -1032,6 +874,7 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         inpContent,
         results: { peakFlow: undefined, totalVolume: undefined },
         parsedMetrics,
+        provenance,
       };
     } catch (e: any) {
       const processingTime = (Date.now() - startTime) / 1000;
@@ -1043,6 +886,12 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
         error: `API mode error: ${e.message}`,
         processingTime,
         inpContent,
+        provenance: {
+          requestedEngine: 'api',
+          actualEngine: 'api',
+          startedAt,
+          completedAt: new Date().toISOString(),
+        },
       };
     }
   }
@@ -1066,62 +915,32 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
       }
 
       if (swmmStatus.found && !fs.existsSync(runswmmPath)) {
-        console.warn(`SWMM binary no longer exists at ${runswmmPath}, falling back to simulation mode`);
-        swmmStatus = { found: false, mode: 'simulation', searchedPaths: swmmStatus.searchedPaths || [] };
+        console.warn(`SWMM binary no longer exists at ${runswmmPath}`);
+        swmmStatus = { found: false, mode: 'unavailable', searchedPaths: swmmStatus.searchedPaths || [] };
         cachedSwmmStatus = swmmStatus;
       }
 
       if (!swmmStatus.found) {
-        console.warn(`runswmm.exe not found, simulating processing for ${file.name}`);
-        const simulatedTime = 1000 + Math.random() * 2000;
-        const progressSteps = 10;
-        const stepInterval = simulatedTime / progressSteps;
-        let currentStep = 0;
-
-        const progressTimer = setInterval(() => {
-          currentStep++;
-          if (currentStep <= progressSteps) {
-            const pct = Math.round((currentStep / progressSteps) * 100);
-            sendProgressUpdate(jobId, {
-              type: 'file_progress',
-              fileId: file.id,
-              fileName: file.name,
-              percentage: pct,
-              message: pct < 30 ? 'Reading input data...' : pct < 60 ? 'Running simulation...' : pct < 90 ? 'Computing results...' : 'Writing output...',
-            });
-          }
-        }, stepInterval);
-
-        setTimeout(() => {
-          clearInterval(progressTimer);
-          sendProgressUpdate(jobId, {
-            type: 'file_progress',
-            fileId: file.id,
-            fileName: file.name,
-            percentage: 100,
-            message: 'Complete',
-          });
-
-          const processingTime = (Date.now() - startTime) / 1000;
-          const peakFlow = Math.random() * 100 + 10;
-          const totalVolume = Math.random() * 50 + 5;
-          const reportContent = generateSimulatedReport(file.name, peakFlow, totalVolume, processingTime);
-          const parsedMetrics = parseReportMetrics(reportContent);
-
-          resolve({
-            id: file.id,
-            fileName: file.name,
-            filePath: file.path,
-            status: 'success',
-            processingTime,
-            reportContent,
-            inpContent,
-            results: { peakFlow, totalVolume },
-            parsedMetrics,
-          });
-        }, simulatedTime);
+        console.warn(`SWMM executable not found — refusing to simulate ${file.name}`);
+        sendProgressUpdate(jobId, {
+          type: 'file_progress',
+          fileId: file.id,
+          fileName: file.name,
+          percentage: 100,
+          message: 'Engine unavailable',
+        });
+        sendProgressUpdate(jobId, {
+          type: 'log',
+          fileId: file.id,
+          fileName: file.name,
+          text: `SWMM executable not found — ${file.name} was not simulated`,
+          stream: 'stderr',
+        });
+        resolve(makeEngineUnavailableResult(file, 'executable', 'The SWMM executable was not found on this server.'));
         return;
       }
+
+      const startedAt = new Date().toISOString();
 
       console.log(`Running SWMM: ${runswmmPath} "${inputPath}" "${reportPath}" "${outputPath}"`);
       const childProcess = spawn(runswmmPath, [inputPath, reportPath, outputPath]);
@@ -1179,39 +998,52 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
 
         console.log(`SWMM finished for ${file.name}: exit code ${code}, report exists: ${fs.existsSync(reportPath)}`);
 
+        const provenance = {
+          requestedEngine: 'executable',
+          actualEngine: 'executable',
+          startedAt,
+          completedAt: new Date().toISOString(),
+          exitCode: code,
+        };
+
         if (code === 0) {
-          let reportContent: string | undefined;
+          let rawReport: string | undefined;
           try {
             if (fs.existsSync(reportPath)) {
-              reportContent = fs.readFileSync(reportPath, 'utf-8');
+              rawReport = fs.readFileSync(reportPath, 'utf-8');
             }
           } catch (e) {
             console.warn(`Could not read report file: ${reportPath}`);
           }
 
-          try {
-            const timeSeriesData = parseSwmmOutputBinary(outputPath);
-            if (timeSeriesData) {
-              reportContent = (reportContent || '') + '\n' + timeSeriesData;
-            }
-          } catch (e) {
-            console.warn(`Could not parse SWMM output binary: ${outputPath}`);
-          }
-
-          if (!reportContent) {
+          const validation = validateSwmmReport(rawReport);
+          if (!validation.valid) {
             resolve({
               id: file.id,
               fileName: file.name,
               filePath: file.path,
               status: 'failed',
-              error: 'SWMM exited successfully but no report file was generated',
-              processingTime: (Date.now() - startTime) / 1000,
+              error: validation.reason || 'SWMM produced an invalid report',
+              processingTime,
+              reportContent: rawReport,
               inpContent,
+              parsedMetrics: rawReport ? parseReportMetrics(rawReport) : undefined,
+              provenance,
             });
             return;
           }
 
-          const parsedMetrics = reportContent ? parseReportMetrics(reportContent) : undefined;
+          let reportContent = rawReport!;
+          try {
+            const timeSeriesData = parseSwmmOutputBinary(outputPath);
+            if (timeSeriesData) {
+              reportContent = reportContent + '\n' + timeSeriesData;
+            }
+          } catch (e) {
+            console.warn(`Could not parse SWMM output binary: ${outputPath}`);
+          }
+
+          const parsedMetrics = parseReportMetrics(reportContent);
 
           resolve({
             id: file.id,
@@ -1226,16 +1058,32 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
               totalVolume: undefined,
             },
             parsedMetrics,
+            provenance: {
+              ...provenance,
+              engineVersion: extractEngineVersion(rawReport!),
+            },
           });
         } else {
+          let rawReport: string | undefined;
+          try {
+            if (fs.existsSync(reportPath)) {
+              rawReport = fs.readFileSync(reportPath, 'utf-8');
+            }
+          } catch {}
+          const issues = rawReport ? extractReportIssues(rawReport) : { warnings: [], errors: [] };
           resolve({
             id: file.id,
             fileName: file.name,
             filePath: file.path,
             status: 'failed',
-            error: errorOutput || `Process exited with code ${code}`,
+            error: issues.errors.length > 0
+              ? issues.errors.join('\n')
+              : (errorOutput || `Process exited with code ${code}`),
             processingTime,
+            reportContent: rawReport,
             inpContent,
+            parsedMetrics: rawReport ? parseReportMetrics(rawReport) : undefined,
+            provenance,
           });
         }
       });
@@ -1250,6 +1098,13 @@ ${generateTimeSeriesData('link_c3', peakFlow * 0.95, totalVolume)}
           error: err.message,
           processingTime,
           inpContent,
+          provenance: {
+            requestedEngine: 'executable',
+            actualEngine: 'executable',
+            startedAt,
+            completedAt: new Date().toISOString(),
+            exitCode: null,
+          },
         });
       });
     });
