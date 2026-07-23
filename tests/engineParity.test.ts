@@ -29,7 +29,7 @@ function runExecutable(): string {
   return report;
 }
 
-async function runWasm(jsPath = WASM_JS, factoryName = "createSwmmModule", wasmFile = "swmm5.wasm"): Promise<string> {
+async function runWasm(jsPath = WASM_JS, factoryName = "createSwmmModule", wasmFile = "swmm5.wasm", inputText = inpText): Promise<string> {
   // The emscripten bundle doesn't reliably expose its factory through
   // require() here, so evaluate the script and grab the factory directly.
   const src = fs.readFileSync(jsPath, "utf-8");
@@ -46,7 +46,7 @@ async function runWasm(jsPath = WASM_JS, factoryName = "createSwmmModule", wasmF
     printErr: () => {},
   });
   const FS = Module.FS;
-  FS.writeFile("/input.inp", inpText);
+  FS.writeFile("/input.inp", inputText);
 
   let err = Module.ccall("swmm_open", "number", ["string", "string", "string"], ["/input.inp", "/report.rpt", "/output.out"]);
   if (err === 0) {
@@ -137,4 +137,12 @@ describe.runIf(swmm6Present)("engine parity: executable vs SWMM6 WASM", () => {
     // storage node). The fixture model should not trigger it.
     expect(wasm6Report).not.toMatch(/WARNING 13/);
   });
+
+  it("emits WARNING 13 when a link opening exceeds a storage node's max depth", async () => {
+    // Fixture: storage node ST1 (max depth 2 ft, zero surcharge depth) whose
+    // outgoing conduit C2 has a 3 ft circular opening — crown exceeds max depth.
+    const warnInp = fs.readFileSync(path.join(FIXTURES, "warn13-model.inp"), "utf-8");
+    const report = await runWasm(WASM6_JS, "createSwmm6Module", "swmm6.wasm", warnInp);
+    expect(report).toMatch(/WARNING 13: link opening exceeds maximum depth for Node ST1/);
+  }, 60000);
 });
