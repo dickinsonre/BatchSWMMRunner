@@ -1452,8 +1452,8 @@ Key guidelines for HTML reports:
 
 When the user asks questions about the data, answer based on the report content provided.
 
-${reportContent ? `\n--- SWMM REPORT (.rpt) CONTENT ---\n${reportContent.substring(0, 30000)}\n--- END REPORT ---` : ''}
-${inpContent ? `\n--- SWMM INPUT (.inp) CONTENT ---\n${inpContent.substring(0, 15000)}\n--- END INPUT ---` : ''}`;
+${reportContent ? `\n--- SWMM REPORT (.rpt) CONTENT${reportContent.length > 30000 ? ` (TRUNCATED: showing first 30,000 of ${reportContent.length.toLocaleString()} characters; the remainder was omitted — tell the user if they ask about data that may be in the omitted portion)` : ''} ---\n${reportContent.substring(0, 30000)}\n--- END REPORT${reportContent.length > 30000 ? ' (TRUNCATED)' : ''} ---` : ''}
+${inpContent ? `\n--- SWMM INPUT (.inp) CONTENT${inpContent.length > 15000 ? ` (TRUNCATED: showing first 15,000 of ${inpContent.length.toLocaleString()} characters; the remainder was omitted — tell the user if they ask about data that may be in the omitted portion)` : ''} ---\n${inpContent.substring(0, 15000)}\n--- END INPUT${inpContent.length > 15000 ? ' (TRUNCATED)' : ''} ---` : ''}`;
 
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');

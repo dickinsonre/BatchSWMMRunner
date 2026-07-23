@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { FolderOpen, Upload, FileText, X, BarChart3, Network, Settings2, CircleDot, Triangle, Square, Droplets, MapPin, Activity, Pipette, Play, Loader2, ArrowLeft } from "lucide-react";
+import { FolderOpen, Upload, FileText, X, BarChart3, Network, Settings2, CircleDot, Triangle, Square, Droplets, MapPin, Activity, Pipette, Play, Loader2, ArrowLeft, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,7 @@ function buildHistogramData(lengths: number[], binCount = 15) {
     const lo = min + i * binWidth;
     const hi = lo + binWidth;
     const count = lengths.filter(l => (i === binCount - 1) ? (l >= lo && l <= hi) : (l >= lo && l < hi)).length;
-    bins.push({ range: `${lo.toFixed(0)}`, count });
+    bins.push({ range: `${lo.toFixed(0)}\u2013${hi.toFixed(0)}`, count });
   }
   return bins;
 }
@@ -97,6 +97,8 @@ function NetworkMap({ parsed }: { parsed: ParsedInpFile }) {
     ...parsed.weirs.map(w => ({ from: w.from, to: w.to, type: 'weir' as const })),
     ...parsed.orifices.map(o => ({ from: o.from, to: o.to, type: 'orifice' as const })),
   ];
+
+  const skippedLinkCount = allLinks.filter(link => !coordMap.has(link.from) || !coordMap.has(link.to)).length;
 
   return (
     <div className="w-full overflow-auto">
@@ -169,6 +171,12 @@ function NetworkMap({ parsed }: { parsed: ParsedInpFile }) {
           );
         })}
       </svg>
+      {skippedLinkCount > 0 && (
+        <div className="flex items-center gap-1.5 justify-center mt-2 text-xs text-yellow-600" data-testid="text-map-skipped-links">
+          <AlertTriangle className="h-3.5 w-3.5" />
+          {skippedLinkCount} link{skippedLinkCount !== 1 ? 's' : ''} not drawn (missing node coordinates)
+        </div>
+      )}
       <div className="flex items-center gap-4 justify-center mt-2 text-xs text-muted-foreground flex-wrap">
         <span className="flex items-center gap-1">
           <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'hsl(210, 70%, 50%)' }} />
@@ -383,13 +391,13 @@ function ComparePanel({ files }: { files: LoadedFile[] }) {
       <h3 className="text-lg font-semibold" data-testid="text-compare-title">
         Comparing {files.length} Files
       </h3>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto max-w-full border rounded-md">
+        <table className="w-full min-w-max text-sm">
           <thead>
             <tr className="border-b">
-              <th className="text-left p-2 font-medium">Metric</th>
+              <th className="text-left p-2 font-medium sticky left-0 bg-background z-10">Metric</th>
               {files.map(f => (
-                <th key={f.id} className="text-right p-2 font-medium">{f.name}</th>
+                <th key={f.id} className="text-right p-2 font-medium whitespace-nowrap max-w-[220px] overflow-hidden text-ellipsis" title={f.name}>{f.name}</th>
               ))}
             </tr>
           </thead>
@@ -406,14 +414,14 @@ function ComparePanel({ files }: { files: LoadedFile[] }) {
               { label: 'Rain Gages', key: 'raingages' as const },
             ].map(row => (
               <tr key={row.key} className="border-b">
-                <td className="p-2 text-muted-foreground">{row.label}</td>
+                <td className="p-2 text-muted-foreground sticky left-0 bg-background z-10">{row.label}</td>
                 {files.map(f => (
                   <td key={f.id} className="text-right p-2 font-medium">{f.parsed.counts[row.key]}</td>
                 ))}
               </tr>
             ))}
             <tr className="border-b">
-              <td className="p-2 text-muted-foreground">Flow Units</td>
+              <td className="p-2 text-muted-foreground sticky left-0 bg-background z-10">Flow Units</td>
               {files.map(f => (
                 <td key={f.id} className="text-right p-2">
                   <Badge variant="secondary">{f.parsed.options.flowUnits || 'N/A'}</Badge>
@@ -421,7 +429,7 @@ function ComparePanel({ files }: { files: LoadedFile[] }) {
               ))}
             </tr>
             <tr className="border-b">
-              <td className="p-2 text-muted-foreground">Routing</td>
+              <td className="p-2 text-muted-foreground sticky left-0 bg-background z-10">Routing</td>
               {files.map(f => (
                 <td key={f.id} className="text-right p-2">
                   <Badge variant="secondary">{f.parsed.options.routingMethod || 'N/A'}</Badge>
@@ -429,7 +437,7 @@ function ComparePanel({ files }: { files: LoadedFile[] }) {
               ))}
             </tr>
             <tr className="border-b">
-              <td className="p-2 text-muted-foreground">Avg Conduit Length</td>
+              <td className="p-2 text-muted-foreground sticky left-0 bg-background z-10">Avg Conduit Length</td>
               {files.map(f => {
                 const ls = f.parsed.conduits.map(c => c.length);
                 const avg = ls.length > 0 ? (ls.reduce((a, b) => a + b, 0) / ls.length) : 0;

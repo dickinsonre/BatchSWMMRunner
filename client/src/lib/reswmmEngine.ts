@@ -49,6 +49,75 @@ export interface CflAnalysis {
   conservativeTimeStep: number;
 }
 
+/**
+ * Effective hydraulic depth used for wave celerity (sqrt(g*D)) and dx/D sizing.
+ * For circular pipes this is the diameter (geom1). For non-circular shapes we
+ * use the full-flow hydraulic diameter Dh = 4A/P (or standard SWMM full-flow
+ * hydraulic radius factors), instead of naively treating geom1 as a diameter.
+ */
+export function hydraulicDiameter(xs: XSectionData | undefined): number {
+  if (!xs) return 1;
+  const g1 = parseFloat(xs.geom1) || 0;
+  const g2 = Number(xs.geom2) || 0;
+  const shape = (xs.shape || '').toUpperCase();
+
+  switch (shape) {
+    case 'CIRCULAR':
+    case 'FORCE_MAIN':
+    case 'FILLED_CIRCULAR':
+      return g1 > 0 ? g1 : 1;
+    case 'RECT_CLOSED': {
+      // geom1 = full height, geom2 = top width; Dh = 4A/P = 2HW/(H+W)
+      if (g1 > 0 && g2 > 0) return (2 * g1 * g2) / (g1 + g2);
+      return g1 > 0 ? g1 : 1;
+    }
+    case 'RECT_OPEN': {
+      // Open channel at full depth: A = H*W, P = W + 2H, Dh = 4A/P
+      if (g1 > 0 && g2 > 0) return (4 * g1 * g2) / (g2 + 2 * g1);
+      return g1 > 0 ? g1 : 1;
+    }
+    case 'EGG':
+      // SWMM full-flow hydraulic radius Rfull = 0.1931*H → Dh = 4R
+      return g1 > 0 ? 4 * 0.1931 * g1 : 1;
+    case 'HORSESHOE':
+      // Rfull = 0.2538*H → Dh = 4R
+      return g1 > 0 ? 4 * 0.2538 * g1 : 1;
+    case 'GOTHIC':
+      return g1 > 0 ? 4 * 0.2269 * g1 : 1;
+    case 'CATENARY':
+      return g1 > 0 ? 4 * 0.2337 * g1 : 1;
+    case 'BASKETHANDLE':
+      return g1 > 0 ? 4 * 0.2464 * g1 : 1;
+    case 'SEMIELLIPTICAL':
+      return g1 > 0 ? 4 * 0.2420 * g1 : 1;
+    case 'SEMICIRCULAR':
+      return g1 > 0 ? 4 * 0.2944 * g1 : 1;
+    case 'ARCH': {
+      // Approximate full-flow: A ≈ 0.7879*H*W, P ≈ perimeter of rounded-top box.
+      // Use Dh = 4A/P with P approximated as W + 2H (conservative).
+      if (g1 > 0 && g2 > 0) return (4 * 0.7879 * g1 * g2) / (g2 + 2 * g1);
+      return g1 > 0 ? g1 : 1;
+    }
+    case 'HORIZ_ELLIPSE':
+    case 'VERT_ELLIPSE': {
+      // Ellipse: A = pi*a*b/... use Dh = 4A/P with Ramanujan perimeter approx
+      if (g1 > 0 && g2 > 0) {
+        const a = g1 / 2;
+        const b = g2 / 2;
+        const area = Math.PI * a * b;
+        const h = ((a - b) ** 2) / ((a + b) ** 2);
+        const perim = Math.PI * (a + b) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)));
+        return (4 * area) / perim;
+      }
+      return g1 > 0 ? g1 : 1;
+    }
+    default:
+      // TRAPEZOIDAL, TRIANGULAR, PARABOLIC, POWER, IRREGULAR, DUMMY, etc.
+      // fall back to full depth (geom1) as the characteristic depth.
+      return g1 > 0 ? g1 : 1;
+  }
+}
+
 export function computeCflAnalysis(parsed: ParsedInpFile): CflAnalysis[] {
   const xsMap = new Map<string, XSectionData>();
   for (const xs of parsed.xsections) {
@@ -60,7 +129,7 @@ export function computeCflAnalysis(parsed: ParsedInpFile): CflAnalysis[] {
 
   return parsed.conduits.map(c => {
     const xs = xsMap.get(c.name);
-    const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
+    const diameter = hydraulicDiameter(xs);
     const celerity = Math.sqrt(g * diameter);
     const standardTs = celerity > 0 ? c.length / celerity : 999;
     return {
@@ -111,7 +180,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
   if (config.lengtheningEnabled && config.lengtheningStep > 0) {
     for (const conduit of workingConduits) {
       const xs = xsMap.get(conduit.name);
-      const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
+      const diameter = hydraulicDiameter(xs);
       const celerity = Math.sqrt(g * diameter);
       const minLength = +(celerity * config.lengtheningStep).toFixed(2);
       if (conduit.length < minLength) {
@@ -134,7 +203,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
 
   for (const conduit of workingConduits) {
     const xs = xsMap.get(conduit.name);
-    const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
+    const diameter = hydraulicDiameter(xs);
 
     let targetLen: number;
     if (config.method === 'fixed_interval') {

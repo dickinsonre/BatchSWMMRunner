@@ -16,6 +16,7 @@ import {
   discretizeConduits,
   rebuildInpFile,
   computeCflAnalysis,
+  hydraulicDiameter,
   type ReswmmConfig,
   type DiscretizedResult,
   type CflAnalysis,
@@ -23,7 +24,7 @@ import {
 } from "@/lib/reswmmEngine";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
-  ResponsiveContainer, Legend,
+  ResponsiveContainer, Legend, ReferenceLine,
 } from "recharts";
 import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
 import { useToast } from "@/hooks/use-toast";
@@ -178,6 +179,19 @@ interface SimComparisonProps {
   afterElapsed: string;
   beforeLabel: string;
   afterLabel: string;
+  config?: ReswmmConfig;
+  stats?: DiscretizedResult['stats'];
+  beforeChecksum?: string;
+  afterChecksum?: string;
+}
+
+function fnv1aChecksum(content: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < content.length; i++) {
+    hash ^= content.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return hash.toString(16).padStart(8, '0');
 }
 
 function getContinuityColor(error: number | undefined): string {
@@ -188,9 +202,37 @@ function getContinuityColor(error: number | undefined): string {
   return 'text-red-600';
 }
 
-function SimulationComparison({ beforeResult, afterResult, beforeElapsed, afterElapsed, beforeLabel, afterLabel }: SimComparisonProps) {
+function SimulationComparison({ beforeResult, afterResult, beforeElapsed, afterElapsed, beforeLabel, afterLabel, config, stats, beforeChecksum, afterChecksum }: SimComparisonProps) {
   const bm = beforeResult.parsedMetrics;
   const am = afterResult.parsedMetrics;
+
+  const engineLabel = (r: ProcessResult) => {
+    const p = r.provenance;
+    if (!p) return 'N/A';
+    const engine = p.actualEngine || p.requestedEngine;
+    return p.engineVersion ? `${engine} v${p.engineVersion}` : engine;
+  };
+
+  const identityRows: { label: string; before: string; after: string }[] = [
+    { label: 'File', before: beforeLabel, after: afterLabel },
+    { label: 'Engine', before: engineLabel(beforeResult), after: engineLabel(afterResult) },
+    ...(config ? [{
+      label: 'Discretization',
+      before: 'None (original)',
+      after: config.method === 'fixed_interval'
+        ? `Fixed interval ${config.fixedMinLength}\u2013${config.fixedMaxLength}${config.lengtheningEnabled && config.lengtheningStep > 0 ? `, lengthening ${config.lengtheningStep}s` : ''}`
+        : `\u0394x/D ratio ${config.dxDRatio}${config.lengtheningEnabled && config.lengtheningStep > 0 ? `, lengthening ${config.lengtheningStep}s` : ''}`,
+    }] : []),
+    ...(stats ? [
+      { label: 'Conduits', before: String(stats.originalConduitCount), after: `${stats.newConduitCount} (+${stats.newConduitCount - stats.originalConduitCount})` },
+      { label: 'Junctions Added', before: '\u2014', after: `+${stats.newJunctionCount}` },
+    ] : []),
+    ...(beforeChecksum && afterChecksum ? [{
+      label: 'INP Checksum (FNV-1a)',
+      before: beforeChecksum,
+      after: afterChecksum,
+    }] : []),
+  ];
 
   const comparisonRows = [
     { label: 'Status', before: beforeResult.status, after: afterResult.status, type: 'status' as const },
@@ -209,10 +251,10 @@ function SimulationComparison({ beforeResult, afterResult, beforeElapsed, afterE
 
   const chartData = [
     bm?.runoffContinuityError !== undefined && am?.runoffContinuityError !== undefined
-      ? { metric: 'Runoff CE (%)', before: Math.abs(bm.runoffContinuityError), after: Math.abs(am.runoffContinuityError) }
+      ? { metric: 'Runoff CE (%)', before: bm.runoffContinuityError, after: am.runoffContinuityError }
       : null,
     bm?.routingContinuityError !== undefined && am?.routingContinuityError !== undefined
-      ? { metric: 'Routing CE (%)', before: Math.abs(bm.routingContinuityError), after: Math.abs(am.routingContinuityError) }
+      ? { metric: 'Routing CE (%)', before: bm.routingContinuityError, after: am.routingContinuityError }
       : null,
     bm?.nodesFlooded !== undefined && am?.nodesFlooded !== undefined
       ? { metric: 'Nodes Flooded', before: bm.nodesFlooded, after: am.nodesFlooded }
@@ -264,6 +306,35 @@ function SimulationComparison({ beforeResult, afterResult, beforeElapsed, afterE
       <p className="text-sm text-muted-foreground">
         Side-by-side comparison of SWMM simulation results for the original and discretized models.
       </p>
+
+      <Card data-testid="card-sim-identity-table">
+        <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Run Identity</CardTitle>
+          <Info className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="table-sim-identity">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-2 pr-4 text-muted-foreground font-medium"></th>
+                  <th className="text-right py-2 px-4 text-muted-foreground font-medium">Original</th>
+                  <th className="text-right py-2 pl-4 text-muted-foreground font-medium">Discretized</th>
+                </tr>
+              </thead>
+              <tbody>
+                {identityRows.map((row) => (
+                  <tr key={row.label} className="border-b border-border/50">
+                    <td className="py-2 pr-4 text-muted-foreground">{row.label}</td>
+                    <td className="text-right py-2 px-4 font-mono text-xs break-all">{row.before}</td>
+                    <td className="text-right py-2 pl-4 font-mono text-xs break-all">{row.after}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card data-testid="card-sim-comparison-table">
         <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
@@ -317,6 +388,7 @@ function SimulationComparison({ beforeResult, afterResult, beforeElapsed, afterE
                   <YAxis tick={{ fontSize: 10 }} />
                   <RechartsTooltip />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeWidth={1} />
                   <Bar dataKey="before" name="Original" fill="hsl(210, 85%, 50%)" fillOpacity={0.8} />
                   <Bar dataKey="after" name="Discretized" fill="hsl(142, 60%, 40%)" fillOpacity={0.8} />
                 </BarChart>
@@ -616,7 +688,7 @@ export default function ReswmmPage() {
     const g = isUS ? 32.174 : 9.81;
     return result.newConduits.map(c => {
       const xs = xsMap.get(c.name);
-      const diameter = xs ? (parseFloat(xs.geom1) || 1) : 1;
+      const diameter = hydraulicDiameter(xs);
       const celerity = Math.sqrt(g * diameter);
       const standardTs = celerity > 0 ? c.length / celerity : 999;
       return { conduitName: c.name, length: c.length, diameter, standardTimeStep: standardTs, conservativeTimeStep: standardTs * 0.10 };
@@ -637,6 +709,15 @@ export default function ReswmmPage() {
     if (!result) return [];
     return result.newConduits;
   }, [result]);
+
+  const beforeChecksum = useMemo(
+    () => (originalContent ? fnv1aChecksum(originalContent) : ''),
+    [originalContent],
+  );
+  const afterChecksum = useMemo(() => {
+    if (!parsed || !result || !originalContent) return '';
+    return fnv1aChecksum(rebuildInpFile(originalContent, parsed, result, config));
+  }, [parsed, result, originalContent, config]);
 
   const newElementNames = useMemo(() => {
     if (!result) return new Set<string>();
@@ -1279,7 +1360,7 @@ export default function ReswmmPage() {
                               a mean CFL time step of <strong>{meanCflBefore.toFixed(1)} s</strong>.
                               After discretization, the mean conduit length is <strong>{afterStats.mean.toFixed(1)} {flowUnit}</strong> ({lengthChange >= 0 ? '+' : ''}{lengthChange.toFixed(1)}%)
                               and the mean CFL time step is <strong>{meanCflAfter.toFixed(1)} s</strong> ({cflChange >= 0 ? '+' : ''}{cflChange.toFixed(1)}%),
-                              resulting in {(result.stats?.newConduitCount ?? 0).toLocaleString()} conduits (from {(result.stats?.originalConduitCount ?? 0).toLocaleString()}) with {(result.stats?.splitConduits ?? 0).toLocaleString()} conduits split
+                              resulting in {(result.stats?.newConduitCount ?? 0).toLocaleString()} conduits (from {(result.stats?.originalConduitCount ?? 0).toLocaleString()}) with {(result.stats?.splitCount ?? 0).toLocaleString()} conduits split
                               and {(result.stats?.newJunctionCount ?? 0).toLocaleString()} intermediate junctions added.
                             </p>
                           </CardContent>
@@ -1397,6 +1478,10 @@ export default function ReswmmPage() {
                         afterElapsed={afterRunElapsed}
                         beforeLabel={fileName}
                         afterLabel={`ReSWMM_${fileName.replace(/\.inp$/i, '')}.inp`}
+                        config={config}
+                        stats={result.stats}
+                        beforeChecksum={beforeChecksum}
+                        afterChecksum={afterChecksum}
                       />
                     )}
                   </div>

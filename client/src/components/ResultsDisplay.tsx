@@ -15,7 +15,7 @@ import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenera
 
 const MAX_PREVIEW_LINES = 2000;
 
-function LargeTextViewer({ content, testId }: { content: string; testId: string }) {
+function LargeTextViewer({ content, testId, downloadName }: { content: string; testId: string; downloadName?: string }) {
   const [showFull, setShowFull] = useState(false);
   const lineCount = useMemo(() => content.split('\n').length, [content]);
   const isTruncated = lineCount > MAX_PREVIEW_LINES && !showFull;
@@ -23,13 +23,31 @@ function LargeTextViewer({ content, testId }: { content: string; testId: string 
     ? content.split('\n').slice(0, MAX_PREVIEW_LINES).join('\n')
     : content;
 
+  const handleDownloadFull = () => {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = downloadName || 'full-content.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
+      {isTruncated && (
+        <div className="flex items-center gap-2 flex-wrap px-4 py-2 border-b bg-yellow-500/10 text-xs" data-testid={`notice-truncated-${testId}`}>
+          <AlertTriangle className="h-3.5 w-3.5 text-yellow-600 shrink-0" />
+          <span>
+            Preview truncated: showing the first {MAX_PREVIEW_LINES.toLocaleString()} of {lineCount.toLocaleString()} lines. The full content is preserved — use "Show All" or download it.
+          </span>
+        </div>
+      )}
       <pre className="text-xs p-4 font-mono whitespace-pre overflow-x-auto bg-muted" data-testid={testId}>
         {displayContent}
       </pre>
       {lineCount > MAX_PREVIEW_LINES && (
-        <div className="flex items-center justify-center gap-3 p-3 border-t bg-muted/50">
+        <div className="flex items-center justify-center gap-3 flex-wrap p-3 border-t bg-muted/50">
           <span className="text-xs text-muted-foreground">
             {isTruncated
               ? `Showing first ${MAX_PREVIEW_LINES.toLocaleString()} of ${lineCount.toLocaleString()} lines`
@@ -42,6 +60,15 @@ function LargeTextViewer({ content, testId }: { content: string; testId: string 
             data-testid={`button-toggle-full-${testId}`}
           >
             {isTruncated ? 'Show All' : 'Show Less'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDownloadFull}
+            data-testid={`button-download-full-${testId}`}
+          >
+            <Download className="h-3.5 w-3.5 mr-1" />
+            Download Full
           </Button>
         </div>
       )}
@@ -1007,14 +1034,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                 {result.inpContent && (
                                   <TabsContent value="inp">
                                     <ScrollArea className="h-[800px] rounded border">
-                                      <LargeTextViewer content={result.inpContent!} testId={`text-inp-content-${result.id}`} />
+                                      <LargeTextViewer content={result.inpContent!} testId={`text-inp-content-${result.id}`} downloadName={result.fileName} />
                                     </ScrollArea>
                                   </TabsContent>
                                 )}
                                 {result.reportContent && (
                                   <TabsContent value="text">
                                     <ScrollArea className="h-[800px] rounded border">
-                                      <LargeTextViewer content={result.reportContent!} testId={`text-report-content-${result.id}`} />
+                                      <LargeTextViewer content={result.reportContent!} testId={`text-report-content-${result.id}`} downloadName={result.fileName.replace(/\.inp$/i, '') + '.rpt'} />
                                     </ScrollArea>
                                   </TabsContent>
                                 )}
