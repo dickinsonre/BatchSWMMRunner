@@ -22,6 +22,29 @@ import type { SwmmStatus } from "@shared/schema";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
+const SETTINGS_KEY = 'batchswmm-settings';
+
+interface PersistedSettings {
+  reportStep?: number;
+  routingMethod?: string;
+  parallelProcessing?: boolean;
+  stopOnError?: boolean;
+  outputFormat?: string;
+  timeoutMinutes?: number;
+  engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6';
+}
+
+function loadSettings(): PersistedSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return typeof parsed === 'object' && parsed !== null ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
 function formatTime(seconds: number): string {
   if (seconds < 60) return `${Math.round(seconds)}s`;
   const mins = Math.floor(seconds / 60);
@@ -38,15 +61,17 @@ export default function Home() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<string>('');
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
-  const [reportStep, setReportStep] = useState(15);
-  const [routingMethod, setRoutingMethod] = useState("dynamic");
-  const [parallelProcessing, setParallelProcessing] = useState(false);
-  const [stopOnError, setStopOnError] = useState(false);
-  const [outputFormat, setOutputFormat] = useState("all");
-  const [timeoutMinutes, setTimeoutMinutes] = useState(10);
+  const savedSettingsRef = useRef<PersistedSettings>(loadSettings());
+  const [reportStep, setReportStep] = useState(savedSettingsRef.current.reportStep ?? 15);
+  const [routingMethod, setRoutingMethod] = useState(savedSettingsRef.current.routingMethod ?? "dynamic");
+  const [parallelProcessing, setParallelProcessing] = useState(savedSettingsRef.current.parallelProcessing ?? false);
+  const [stopOnError, setStopOnError] = useState(savedSettingsRef.current.stopOnError ?? false);
+  const [outputFormat, setOutputFormat] = useState(savedSettingsRef.current.outputFormat ?? "all");
+  const [timeoutMinutes, setTimeoutMinutes] = useState(savedSettingsRef.current.timeoutMinutes ?? 10);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
-  const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm' | 'wasm6'>('executable');
+  const [statusError, setStatusError] = useState(false);
+  const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm' | 'wasm6'>(savedSettingsRef.current.engineMode ?? 'executable');
   const wasmCancelRef = useRef<{ current: boolean }>({ current: false });
   const wasmTerminateRef = useRef<(() => void) | null>(null);
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
@@ -58,10 +83,32 @@ export default function Home() {
   const totalSize = files.reduce((acc, f: any) => acc + (f.file?.size || 0), 0);
 
   useEffect(() => {
+    const settings: PersistedSettings = {
+      reportStep, routingMethod, parallelProcessing, stopOnError,
+      outputFormat, timeoutMinutes, engineMode,
+    };
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch {
+      // localStorage unavailable (private mode, quota) — settings simply won't persist
+    }
+  }, [reportStep, routingMethod, parallelProcessing, stopOnError, outputFormat, timeoutMinutes, engineMode]);
+
+  useEffect(() => {
     fetch('/api/swmm-status')
       .then(res => res.json())
-      .then((data: SwmmStatus) => setSwmmStatus(data))
-      .catch(err => console.error('Failed to fetch SWMM status:', err));
+      .then((data: SwmmStatus) => {
+        setSwmmStatus(data);
+        setEngineMode(prev => {
+          if (prev === 'executable' && !data.found) return 'wasm';
+          if (prev === 'api' && !data.apiAvailable) return data.found ? 'executable' : 'wasm';
+          return prev;
+        });
+      })
+      .catch(err => {
+        console.error('Failed to fetch SWMM status:', err);
+        setStatusError(true);
+      });
 
     return () => {
       if (wsRef.current) {
@@ -244,6 +291,7 @@ export default function Home() {
       id: `${Date.now()}-${index}`,
       name: file.name,
       path: file.webkitRelativePath || file.name,
+      size: file.size,
       file,
     })) as any;
     setFiles(prev => [...prev, ...newFiles]);
@@ -257,6 +305,7 @@ export default function Home() {
         id: `sample-${Date.now()}-${index}`,
         name: file.name,
         path: file.name,
+        size: file.size,
         file,
       })) as any;
       return [...prev, ...newFiles];
@@ -538,7 +587,21 @@ export default function Home() {
                   <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 )}
                 <div className="space-y-2 text-sm flex-1">
-                  {swmmStatus?.found ? (
+                  {!swmmStatus && !statusError ? (
+                    <>
+                      <p className="font-medium" data-testid="text-swmm-checking">Checking for a server-side SWMM engine…</p>
+                      <p className="text-muted-foreground text-xs">
+                        Browser (WASM) engine modes are always available and run entirely on your device.
+                      </p>
+                    </>
+                  ) : !swmmStatus && statusError ? (
+                    <>
+                      <p className="font-medium" data-testid="text-swmm-status-error">Could not check server engine status</p>
+                      <p className="text-muted-foreground text-xs">
+                        The server didn't respond to the engine status check. You can still use the WASM (Browser) engine modes below — they run entirely in your browser.
+                      </p>
+                    </>
+                  ) : swmmStatus?.found ? (
                     <>
                       <p className="font-medium text-green-700 dark:text-green-400" data-testid="text-swmm-found">SWMM5 Engine Detected</p>
                       <p className="text-muted-foreground">

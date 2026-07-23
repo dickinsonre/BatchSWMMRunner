@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, Fragment } from "react";
 import { useLocation } from "wouter";
 import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
+import KeyResultsCharts from "./KeyResultsCharts";
 import ReportChatbot from "./ReportChatbot";
 import { setDashboardResults } from "@/lib/resultsStore";
 import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
@@ -392,13 +393,13 @@ function NavigableReportHtml({ content, testId }: { content: string; testId: str
   );
 }
 
-interface TableData {
+export interface TableData {
   sectionTitle: string;
   headers: string[];
   rows: string[][];
 }
 
-function extractTablesFromReport(content: string): TableData[] {
+export function extractTablesFromReport(content: string): TableData[] {
   const lines = content.split('\n');
   const tables: TableData[] = [];
   let currentSection = '';
@@ -577,6 +578,26 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
   const [, setLocation] = useLocation();
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
   const [expandedReports, setExpandedReports] = useState<Set<string>>(new Set());
+  const [expandedDiagnostics, setExpandedDiagnostics] = useState<Set<string>>(new Set());
+
+  const getDiagnostics = (r: ProcessResult): { errors: string[]; warnings: string[] } => {
+    const errors: string[] = [];
+    if (r.error) errors.push(r.error);
+    if (r.parsedMetrics?.reportErrors) {
+      for (const e of r.parsedMetrics.reportErrors) {
+        if (!errors.includes(e)) errors.push(e);
+      }
+    }
+    return { errors, warnings: r.parsedMetrics?.reportWarnings ?? [] };
+  };
+
+  const toggleDiagnostics = (id: string) => {
+    setExpandedDiagnostics(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
   
   const successCount = results.filter(r => r.status === 'success').length;
   const failedCount = results.filter(r => r.status === 'failed' || r.status === 'timeout' || r.status === 'cancelled').length;
@@ -658,6 +679,45 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
     document.body.removeChild(link);
   };
 
+  const exportToExcel = () => {
+    const headers = [
+      'File Name', 'Status', 'Peak Flow (CFS)', 'Total Volume (MG)',
+      'Runoff CE (%)', 'Routing CE (%)', 'Nodes Flooded', 'Flooding Summary',
+      'Flow Routing', 'Processing Time (s)', 'Error'
+    ];
+    const esc = (s: string) => {
+      const guarded = /^[=+@]/.test(s) ? `'${s}` : s;
+      return guarded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    };
+    const rows = results.map(r => [
+      r.fileName,
+      r.status,
+      r.results?.peakFlow?.toFixed(2) || 'N/A',
+      r.results?.totalVolume?.toFixed(2) || 'N/A',
+      r.parsedMetrics?.runoffContinuityError?.toFixed(3) || 'N/A',
+      r.parsedMetrics?.routingContinuityError?.toFixed(3) || 'N/A',
+      r.parsedMetrics?.nodesFlooded?.toString() || 'N/A',
+      r.parsedMetrics?.floodingSummary || 'N/A',
+      r.parsedMetrics?.flowRoutingMethod || 'N/A',
+      r.processingTime?.toFixed(1) || 'N/A',
+      r.error || ''
+    ]);
+    const table = `<table><thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${
+      rows.map(row => `<tr>${row.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')
+    }</tbody></table>`;
+    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"/><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Results</x:Name><x:WorksheetOptions/></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>${table}</body></html>`;
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `batch-swmm-results-${new Date().toISOString().slice(0,10)}.xls`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -734,6 +794,15 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
               <Download className="h-4 w-4 mr-2" />
               Export CSV
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToExcel}
+              data-testid="button-export-excel"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export Excel
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -797,15 +866,20 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                   <th className="text-right py-2 px-2 font-medium">Routing CE</th>
                   <th className="text-center py-2 px-2 font-medium">Flooding</th>
                   <th className="text-right py-2 px-2 font-medium">Time</th>
+                  <th className="text-center py-2 px-2 font-medium">Diagnostics</th>
                 </tr>
               </thead>
               <tbody>
                 {results.map((result) => {
                   const runoffCE = getContinuityErrorBadge(result.parsedMetrics?.runoffContinuityError);
                   const routingCE = getContinuityErrorBadge(result.parsedMetrics?.routingContinuityError);
+                  const diag = getDiagnostics(result);
+                  const hasDiag = diag.errors.length > 0 || diag.warnings.length > 0;
+                  const diagOpen = expandedDiagnostics.has(result.id);
 
                   return (
-                    <tr key={result.id} className="border-b last:border-0" data-testid={`row-summary-${result.id}`}>
+                    <Fragment key={result.id}>
+                    <tr className="border-b last:border-0" data-testid={`row-summary-${result.id}`}>
                       <td className="py-2 px-2 font-mono text-xs">{result.fileName}</td>
                       <td className="py-2 px-2">
                         {result.status === 'success' ? (
@@ -859,7 +933,48 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                       <td className="py-2 px-2 text-right font-mono text-xs">
                         {result.processingTime != null ? `${result.processingTime.toFixed(1)}s` : 'N/A'}
                       </td>
+                      <td className="py-2 px-2 text-center">
+                        {hasDiag ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleDiagnostics(result.id)}
+                            data-testid={`button-diagnostics-${result.id}`}
+                          >
+                            {diag.errors.length > 0 ? (
+                              <XCircle className="h-3.5 w-3.5 mr-1 text-destructive" />
+                            ) : (
+                              <AlertTriangle className="h-3.5 w-3.5 mr-1 text-yellow-600" />
+                            )}
+                            {diag.errors.length + diag.warnings.length}
+                            {diagOpen ? <ChevronDown className="h-3 w-3 ml-1" /> : <ChevronRight className="h-3 w-3 ml-1" />}
+                          </Button>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
+                      </td>
                     </tr>
+                    {hasDiag && diagOpen && (
+                      <tr className="border-b last:border-0 bg-muted/30" data-testid={`row-diagnostics-${result.id}`}>
+                        <td colSpan={9} className="py-2 px-3">
+                          <div className="space-y-1 text-xs font-mono">
+                            {diag.errors.map((e, i) => (
+                              <div key={`e-${i}`} className="text-destructive flex gap-2" data-testid={`text-diag-error-${result.id}-${i}`}>
+                                <XCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                                <span className="whitespace-pre-wrap">{e}</span>
+                              </div>
+                            ))}
+                            {diag.warnings.map((w, i) => (
+                              <div key={`w-${i}`} className="text-yellow-700 dark:text-yellow-500 flex gap-2" data-testid={`text-diag-warning-${result.id}-${i}`}>
+                                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                                <span className="whitespace-pre-wrap">{w}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   );
                 })}
               </tbody>
@@ -1013,6 +1128,12 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                     </TabsTrigger>
                                   )}
                                   {result.reportContent && (
+                                    <TabsTrigger value="key-charts" data-testid={`tab-report-key-charts-${result.id}`}>
+                                      <BarChart3 className="h-3 w-3 mr-1" />
+                                      Key Charts
+                                    </TabsTrigger>
+                                  )}
+                                  {result.reportContent && (
                                     <TabsTrigger value="histograms" data-testid={`tab-report-histograms-${result.id}`}>
                                       <BarChart2 className="h-3 w-3 mr-1" />
                                       RPT Histograms
@@ -1050,6 +1171,15 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                                     <div className="rounded border p-4 bg-background" data-testid={`graphs-report-content-${result.id}`}>
                                       <InteractiveCharts reportContent={result.reportContent} />
                                     </div>
+                                  </TabsContent>
+                                )}
+                                {result.reportContent && (
+                                  <TabsContent value="key-charts">
+                                    <ScrollArea className="h-[800px] rounded border">
+                                      <div className="p-4 bg-background" data-testid={`key-charts-content-${result.id}`}>
+                                        <KeyResultsCharts reportContent={result.reportContent} />
+                                      </div>
+                                    </ScrollArea>
                                   </TabsContent>
                                 )}
                                 {result.reportContent && (
