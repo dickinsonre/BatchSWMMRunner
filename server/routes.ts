@@ -152,6 +152,48 @@ const COMMON_SWMM_PATHS = [
   '/usr/bin/swmm5',
 ];
 
+const BUNDLED_LOADER = path.join(process.cwd(), 'swmm-engine', 'libs', 'ld-linux-x86-64.so.2');
+const BUNDLED_LIB_DIR = path.join(process.cwd(), 'swmm-engine', 'libs');
+const loaderChoiceCache = new Map<string, boolean>();
+
+function canExecuteDirectly(binPath: string): boolean {
+  try {
+    execSync(`"${binPath}"`, { encoding: 'utf-8', timeout: 10000, stdio: 'pipe' });
+    return true;
+  } catch (err: any) {
+    // ENOENT here means the ELF interpreter (glibc loader) is missing, not the file itself.
+    if (err && (err.code === 'ENOENT' || /ENOENT/.test(String(err.message)))) return false;
+    // Any other failure (e.g. non-zero exit for "Not Enough Arguments") means it executed fine.
+    return true;
+  }
+}
+
+// Returns the command + argument prefix needed to run the SWMM binary.
+// If the binary's dynamic loader is missing (common in deployments where the
+// dev-time /nix/store glibc path doesn't exist), fall back to the glibc
+// loader + libs bundled in swmm-engine/libs/.
+function resolveSwmmInvocation(binPath: string): { cmd: string; argsPrefix: string[] } | null {
+  let useLoader = loaderChoiceCache.get(binPath);
+  if (useLoader === undefined) {
+    if (canExecuteDirectly(binPath)) {
+      useLoader = false;
+    } else if (fs.existsSync(BUNDLED_LOADER)) {
+      useLoader = true;
+    } else {
+      loaderChoiceCache.set(binPath, false);
+      return null;
+    }
+    loaderChoiceCache.set(binPath, useLoader);
+    if (useLoader) {
+      console.log(`SWMM binary ${binPath} needs bundled glibc loader (${BUNDLED_LOADER})`);
+    }
+  }
+  if (useLoader) {
+    return { cmd: BUNDLED_LOADER, argsPrefix: ['--library-path', BUNDLED_LIB_DIR, binPath] };
+  }
+  return { cmd: binPath, argsPrefix: [] };
+}
+
 function detectSwmmPath(): SwmmStatus {
   const envPath = process.env.RUNSWMM_PATH;
   const searchedPaths: string[] = [];
@@ -1189,8 +1231,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const startedAt = new Date().toISOString();
 
-      console.log(`Running SWMM: ${runswmmPath} "${inputPath}" "${reportPath}" "${outputPath}"`);
-      const childProcess = spawn(runswmmPath, [inputPath, reportPath, outputPath]);
+      const invocation = resolveSwmmInvocation(runswmmPath);
+      if (!invocation) {
+        broadcastToJob(jobId, {
+          type: 'log',
+          fileId: file.id,
+          fileName: file.name,
+          text: `SWMM executable at ${runswmmPath} cannot run on this system (missing runtime libraries) — ${file.name} was not simulated`,
+          stream: 'stderr',
+        });
+        resolve(makeEngineUnavailableResult(file, 'executable', 'The SWMM executable exists but cannot run on this server (missing runtime libraries).'));
+        return;
+      }
+
+      console.log(`Running SWMM: ${invocation.cmd} ${[...invocation.argsPrefix, inputPath, reportPath, outputPath].map(a => `"${a}"`).join(' ')}`);
+      const childProcess = spawn(invocation.cmd, [...invocation.argsPrefix, inputPath, reportPath, outputPath]);
       if (entry) {
         entry.child = childProcess;
         if (entry.stopSignal) {

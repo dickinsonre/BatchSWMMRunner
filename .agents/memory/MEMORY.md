@@ -1,2 +1,3 @@
 - [SWMM WASM build](swmm-wasm-build.md) — emscripten recipe for the in-browser SWMM engine; writable EM_CACHE needed; artifacts served from client/public/wasm.
 - [Test suite quirks](test-suite-quirks.md) — vitest must run files serially (shared uploads dir); load WASM engine in node via new Function + wasmBinary, not require.
+- [SWMM binary in deployments](swmm-deployment-glibc.md) — runswmm's nix glibc interpreter is absent in published deployments (spawn ENOENT); run via bundled loader in swmm-engine/libs.
