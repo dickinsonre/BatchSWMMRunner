@@ -327,6 +327,39 @@ export default function Home() {
     });
   };
 
+  // Agent/deep-link support: ?engine=executable|api|wasm|wasm6 preselects the
+  // engine mode; ?sample=Name.inp (comma-separated for multiple) auto-loads
+  // sample models. Example: /?engine=wasm6&sample=Demo_extran2.inp
+  const deepLinkHandledRef = useRef(false);
+  useEffect(() => {
+    if (deepLinkHandledRef.current) return;
+    deepLinkHandledRef.current = true;
+    const params = new URLSearchParams(window.location.search);
+    const engine = params.get('engine');
+    if (engine === 'executable' || engine === 'api' || engine === 'wasm' || engine === 'wasm6') {
+      setEngineMode(engine);
+    }
+    const sample = params.get('sample');
+    if (sample) {
+      const names = sample.split(',').map(s => s.trim()).filter(Boolean)
+        .map(n => n.toLowerCase().endsWith('.inp') ? n : `${n}.inp`);
+      Promise.allSettled(names.map(async name => {
+        const res = await fetch(`/api/samples/${encodeURIComponent(name)}`);
+        if (!res.ok) throw new Error(name);
+        const text = await res.text();
+        return new File([text], name, { type: 'text/plain' });
+      })).then(settled => {
+        const loaded = settled.filter((s): s is PromiseFulfilledResult<File> => s.status === 'fulfilled').map(s => s.value);
+        const failed = settled.filter(s => s.status === 'rejected').map(s => String((s as PromiseRejectedResult).reason?.message ?? 'unknown'));
+        if (loaded.length > 0) handleSamplesLoaded(loaded);
+        if (failed.length > 0) {
+          toast({ title: 'Sample not found', description: failed.join(', '), variant: 'destructive' });
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleRemoveFile = (id: string) => {
     setFiles(prev => prev.filter(f => f.id !== id));
   };

@@ -84,6 +84,7 @@ export default function FileUploadZone({ onFilesSelected, selectedCount, totalSi
             type="file"
             multiple
             accept=".inp"
+            aria-label="Select SWMM input files (.inp)"
             onChange={handleFileInput}
             className="hidden"
             data-testid="input-file"
@@ -91,6 +92,7 @@ export default function FileUploadZone({ onFilesSelected, selectedCount, totalSi
           <input
             id="directory-input"
             type="file"
+            aria-label="Select a directory of SWMM input files"
             onChange={handleDirectoryInput}
             className="hidden"
             data-testid="input-directory"

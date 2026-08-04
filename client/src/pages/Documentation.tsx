@@ -1222,7 +1222,64 @@ export default function Documentation() {
               <TabsTrigger value="websocket" data-testid="tab-websocket">WebSocket</TabsTrigger>
               <TabsTrigger value="upload" data-testid="tab-upload">File Upload</TabsTrigger>
               <TabsTrigger value="schema" data-testid="tab-schema">Data Schema</TabsTrigger>
+              <TabsTrigger value="automation" data-testid="tab-automation">Automation &amp; API</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="automation">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base" data-testid="text-automation-title">Automating BatchSWMM</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      BatchSWMM is built to be driven by scripts and AI browser agents (Comet, operator-style tools, Playwright, etc.).
+                      A machine-readable summary of everything on this page is served at{" "}
+                      <a href="/llms.txt" className="underline font-mono" target="_blank" rel="noreferrer">/llms.txt</a>.
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-sm">
+                    <div>
+                      <h3 className="font-medium mb-1">Deep links</h3>
+                      <p className="text-muted-foreground mb-2">Query parameters on the home page preconfigure the app:</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li><code className="font-mono bg-muted px-1 rounded">?engine=executable|api|wasm|wasm6</code> — preselect the engine mode</li>
+                        <li><code className="font-mono bg-muted px-1 rounded">?sample=Demo_extran2.inp</code> — auto-load a sample model (comma-separate for several)</li>
+                        <li>Example: <code className="font-mono bg-muted px-1 rounded">/?engine=wasm6&amp;sample=Demo_extran2.inp,Demo_exam1.inp</code></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="font-medium mb-1">Stable UI selectors</h3>
+                      <p className="text-muted-foreground mb-2">
+                        Every workflow control has a <code className="font-mono bg-muted px-1 rounded">data-testid</code>:
+                        upload (<code className="font-mono bg-muted px-1 rounded">button-browse-files</code>, <code className="font-mono bg-muted px-1 rounded">input-file</code>),
+                        sample picker (<code className="font-mono bg-muted px-1 rounded">select-sample-model</code>, selecting an option loads it immediately),
+                        engine modes (<code className="font-mono bg-muted px-1 rounded">button-mode-executable/api/wasm/wasm6</code>),
+                        run (<code className="font-mono bg-muted px-1 rounded">button-start-processing</code>),
+                        cancel (<code className="font-mono bg-muted px-1 rounded">button-cancel-processing</code>),
+                        and per-file result tabs and export buttons.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-medium mb-1">HTTP API (server-side engine modes)</h3>
+                      <p className="text-muted-foreground mb-2">
+                        Typical flow: <code className="font-mono bg-muted px-1 rounded">POST /api/upload</code> (multipart, repeated <code className="font-mono bg-muted px-1 rounded">files</code> field, .inp only)
+                        → <code className="font-mono bg-muted px-1 rounded">POST /api/batch/&#123;jobId&#125;/start</code>
+                        → poll <code className="font-mono bg-muted px-1 rounded">GET /api/batch/&#123;jobId&#125;</code> until completed. The job JSON embeds every file's report text and results.
+                      </p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li><code className="font-mono bg-muted px-1 rounded">GET /api/samples</code>, <code className="font-mono bg-muted px-1 rounded">GET /api/samples/&#123;filename&#125;</code> — bundled sample models</li>
+                        <li><code className="font-mono bg-muted px-1 rounded">POST /api/batch/&#123;jobId&#125;/start</code> — body accepts <code className="font-mono bg-muted px-1 rounded">engineMode</code>, <code className="font-mono bg-muted px-1 rounded">timeoutMinutes</code>, <code className="font-mono bg-muted px-1 rounded">stopOnError</code>, and <code className="font-mono bg-muted px-1 rounded">overrides</code> (report step, routing method, dates, routing step)</li>
+                        <li><code className="font-mono bg-muted px-1 rounded">POST /api/batch/&#123;jobId&#125;/cancel</code>, <code className="font-mono bg-muted px-1 rounded">DELETE /api/batch/&#123;jobId&#125;</code>, <code className="font-mono bg-muted px-1 rounded">GET /api/jobs/latest</code></li>
+                        <li><code className="font-mono bg-muted px-1 rounded">GET /api/swmm-status</code> — engine availability</li>
+                        <li><code className="font-mono bg-muted px-1 rounded">WS /api/ws?jobId=…</code> — live progress stream</li>
+                      </ul>
+                      <p className="text-muted-foreground mt-2">
+                        The WASM engines (<code className="font-mono bg-muted px-1 rounded">wasm</code>, <code className="font-mono bg-muted px-1 rounded">wasm6</code>) run entirely in the browser page, so they are only reachable through the UI, not this API.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             <TabsContent value="guide">
               <div className="space-y-6">

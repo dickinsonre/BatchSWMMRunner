@@ -95,7 +95,7 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
             onValueChange={handleSelect}
             disabled={disabled || loading}
           >
-            <SelectTrigger className="flex-1 min-w-[200px]" data-testid="select-sample-model">
+            <SelectTrigger className="flex-1 min-w-[200px]" data-testid="select-sample-model" aria-label="Select a sample model">
               <SelectValue placeholder="Select a sample model..." />
             </SelectTrigger>
             <SelectContent>

@@ -283,7 +283,7 @@ function ChartView({ allSeries }: ChartViewProps) {
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex-shrink-0">
           <Select value={activeSection} onValueChange={handleSectionChange}>
-            <SelectTrigger className="w-64" data-testid="select-chart-section">
+            <SelectTrigger className="w-64" data-testid="select-chart-section" aria-label="Select chart section">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

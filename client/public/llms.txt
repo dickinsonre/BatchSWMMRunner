@@ -1,0 +1,53 @@
+# BatchSWMM
+
+> Batch EPA SWMM5 processing tool. Upload one or more SWMM .inp models, run them
+> through an EPA SWMM engine (native executable, SWMM5 shared-library API, or an
+> in-browser WebAssembly build of SWMM5 / OpenSWMM "SWMM6" 5.3), and inspect
+> report summaries, time-series graphs, and continuity errors for each file.
+
+## For browser agents (UI automation)
+
+All key controls carry stable `data-testid` attributes:
+
+- Upload: `card-upload-zone`, `button-browse-files`, `input-file` (hidden file input, accepts .inp)
+- Sample models: `select-sample-model` (dropdown; selecting an option loads it immediately), `option-sample-<Name.inp>`, `button-load-samples` (Load All)
+- Engine mode: `button-mode-executable`, `button-mode-api`, `button-mode-wasm`, `button-mode-wasm6`
+- Run: `button-start-processing`, cancel: `button-cancel-processing`, reset: `button-reset`
+- Result tabs (per file): `tab-report-inp-*`, RPT Text, RPT Graphs, Key Charts, RPT Histograms, RPT HTML, AI Report
+- Exports: `button-export-csv`, `button-export-excel`, `button-export-pdf`, `button-download-report-*`
+
+Deep links (query params on `/`):
+
+- `?engine=executable|api|wasm|wasm6` — preselect the engine mode
+- `?sample=Demo_extran2.inp` — auto-load a sample model (comma-separate for several)
+- Example: `/?engine=wasm6&sample=Demo_extran2.inp,Demo_exam1.inp`
+
+Note: the `wasm` and `wasm6` engines run entirely in the browser page; the batch
+HTTP API below only covers the server-side `executable` and `api` engine modes.
+
+## HTTP API (server-side runs)
+
+- `GET /api/samples` — list bundled sample models `[{name, size, title}]`
+- `GET /api/samples/{filename}` — fetch a sample .inp file's text
+- `POST /api/upload` — multipart/form-data, repeated `files` field, .inp only
+  (max 100 files, 25 MB each). Returns a batch job object with `id`.
+- `POST /api/batch/{jobId}/start` — JSON body: `{engineMode?: "executable"|"api",
+  timeoutMinutes?, stopOnError?, overrides?: {reportStepMinutes?, flowRouting?:
+  "steady"|"kinematic"|"dynamic", startDate?: "YYYY-MM-DD", endDate?,
+  routingStepSeconds?}}`. Starts processing asynchronously.
+- `GET /api/batch/{jobId}` — poll job status; the finished job JSON embeds each
+  file's results, including full report text.
+- `POST /api/batch/{jobId}/cancel` — cancel a running batch
+- `DELETE /api/batch/{jobId}` — delete a non-running batch
+- `GET /api/jobs/latest` — latest completed batch job
+- `GET /api/swmm-status` — which engines are available on the server
+- `WS /api/ws?jobId={jobId}` — live progress/result event stream (alternative to polling)
+
+Typical automated run: POST /api/upload → POST /api/batch/{id}/start → poll
+GET /api/batch/{id} until `status` is `completed` → read per-file results from
+the job JSON.
+
+## Docs
+
+- /documentation — user guide, FAQ, engine-mode reference, and an Automation
+  section mirroring this file
