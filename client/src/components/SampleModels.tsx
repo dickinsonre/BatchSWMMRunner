@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Download, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,20 +37,25 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
     queryKey: ['/api/samples'],
   });
 
-  const handleLoad = async () => {
-    if (!selectedName) return;
+  const loadSample = async (name: string) => {
+    if (!name) return;
     setLoading(true);
     try {
-      const response = await fetch(`/api/samples/${selectedName}`);
+      const response = await fetch(`/api/samples/${name}`);
       if (!response.ok) throw new Error('Failed to fetch sample');
       const blob = await response.blob();
-      const file = new File([blob], selectedName, { type: 'application/octet-stream' });
+      const file = new File([blob], name, { type: 'application/octet-stream' });
       onSamplesLoaded([file]);
     } catch (error) {
       console.error('Failed to load sample model:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSelect = (name: string) => {
+    setSelectedName(name);
+    loadSample(name);
   };
 
   const handleLoadAll = async () => {
@@ -87,7 +92,7 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
         <div className="flex items-center gap-2 flex-wrap">
           <Select
             value={selectedName}
-            onValueChange={setSelectedName}
+            onValueChange={handleSelect}
             disabled={disabled || loading}
           >
             <SelectTrigger className="flex-1 min-w-[200px]" data-testid="select-sample-model">
@@ -102,15 +107,9 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
               ))}
             </SelectContent>
           </Select>
-          <Button
-            size="sm"
-            onClick={handleLoad}
-            disabled={disabled || !selectedName || loading}
-            data-testid="button-load-sample"
-          >
-            <Download className="h-3 w-3 mr-1" />
-            {loading ? "Loading..." : "Load"}
-          </Button>
+          {loading && (
+            <span className="text-xs text-muted-foreground" data-testid="text-sample-loading">Loading...</span>
+          )}
           <Button
             variant="outline"
             size="sm"
