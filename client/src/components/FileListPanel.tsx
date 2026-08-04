@@ -3,7 +3,6 @@ import { FileText, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface FileItem {
   id: string;
@@ -88,7 +87,7 @@ export default function FileListPanel({ files, onRemoveFile, onClearAll }: FileL
             Showing {filteredFiles.length} of {files.length} files
           </p>
         )}
-        <ScrollArea className="max-h-96">
+        <div className="max-h-96 overflow-y-auto pr-1">
           <div className="space-y-2">
             {filteredFiles.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4" data-testid="text-no-matches">
@@ -125,7 +124,7 @@ export default function FileListPanel({ files, onRemoveFile, onClearAll }: FileL
               </div>
             ))}
           </div>
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );
