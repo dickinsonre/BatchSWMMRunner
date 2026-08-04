@@ -5,7 +5,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { spawn, execSync } from "child_process";
+import { spawn, spawnSync, execSync } from "child_process";
 import { storage } from "./storage";
 import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus, type SweepResult, type SweepConfig, type DesignStormConfig } from "@shared/schema";
 import { z } from "zod";
@@ -157,15 +157,20 @@ const BUNDLED_LIB_DIR = path.join(process.cwd(), 'swmm-engine', 'libs');
 const loaderChoiceCache = new Map<string, boolean>();
 
 function canExecuteDirectly(binPath: string): boolean {
-  try {
-    execSync(`"${binPath}"`, { encoding: 'utf-8', timeout: 10000, stdio: 'pipe' });
-    return true;
-  } catch (err: any) {
-    // ENOENT here means the ELF interpreter (glibc loader) is missing, not the file itself.
-    if (err && (err.code === 'ENOENT' || /ENOENT/.test(String(err.message)))) return false;
-    // Any other failure (e.g. non-zero exit for "Not Enough Arguments") means it executed fine.
-    return true;
+  // Use spawnSync WITHOUT a shell so a missing ELF interpreter (glibc loader)
+  // surfaces as error.code === 'ENOENT', exactly like the real spawn() call
+  // later. A shell-based probe (execSync) reports exit code 127 instead of
+  // ENOENT, which made deployments wrongly believe the binary runs directly.
+  const result = spawnSync(binPath, [], { timeout: 10000, stdio: 'pipe' });
+  if (result.error) {
+    const code = (result.error as NodeJS.ErrnoException).code;
+    // A timeout means the process actually started and ran — it executes fine.
+    if (code === 'ETIMEDOUT') return true;
+    // ENOENT (missing ELF interpreter) or EACCES: cannot run directly.
+    return false;
   }
+  // Non-zero exit (e.g. "Not Enough Arguments") still means it executed fine.
+  return true;
 }
 
 // Returns the command + argument prefix needed to run the SWMM binary.
@@ -180,7 +185,8 @@ function resolveSwmmInvocation(binPath: string): { cmd: string; argsPrefix: stri
     } else if (fs.existsSync(BUNDLED_LOADER)) {
       useLoader = true;
     } else {
-      loaderChoiceCache.set(binPath, false);
+      // Do NOT cache: caching false would mean "run direct" on retry, but we
+      // just proved the binary can't run directly and no loader is available.
       return null;
     }
     loaderChoiceCache.set(binPath, useLoader);

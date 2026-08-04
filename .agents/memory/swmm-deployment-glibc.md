@@ -10,3 +10,5 @@ The native `runswmm` ELF binary (and `libswmm5.so`) are dynamically linked again
 **Why:** no static libc is available in the Nix dev environment (`gcc -static` fails with "cannot find -lc"), so static relinking wasn't an option.
 
 **How to apply:** if the SWMM engine is ever recompiled, re-copy the matching loader/libs (from `ldd runswmm` output) into `swmm-engine/libs/`, keeping the loader ABI-compatible with the binary. Detection of "engine available" should always verify actual executability, not just file existence.
+
+**Probe gotcha (Aug 2026):** the executability probe must use `spawnSync` WITHOUT a shell. A shell-based probe (`execSync`) reports a missing ELF interpreter as exit code 127, not ENOENT, so the server wrongly picked direct invocation in deployments and the real `spawn()` then failed with ENOENT. The probe must match the semantics of the actual spawn call. Treat ETIMEDOUT as "runs fine" (process started); never cache "run direct" when the no-loader fallback path returns null.
