@@ -1,0 +1,14 @@
+#ifndef LEGACY_SWMM_VERSION_H
+#define LEGACY_SWMM_VERSION_H
+#define LEGACY_SWMM_VERSION_MAJOR       5
+#define LEGACY_SWMM_VERSION_MINOR       3
+#define LEGACY_SWMM_VERSION_PATCH       0
+#define LEGACY_SWMM_VERSION             "5.3.0"
+#define LEGACY_SWMM_VERSION_FULL        "5.3.0"
+#define OPENSWMM_LEGACY_PRERELEASE      ""
+#define OPENSWMM_LEGACY_FULL_VERSION    "5.3.0"
+#define LEGACY_SWMM_VERSION_INT         (LEGACY_SWMM_VERSION_MAJOR * 10000 \
+                                       + LEGACY_SWMM_VERSION_MINOR * 1000  \
+                                       + LEGACY_SWMM_VERSION_PATCH)
+#define PROJECT_VERSION_SWMM_FORMAT     LEGACY_SWMM_VERSION_INT
+#endif

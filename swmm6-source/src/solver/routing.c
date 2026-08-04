@@ -37,6 +37,9 @@
 //   Build 5.2.0:
 //   - Support added for street flow capture and sewer backflow thru inlets.
 //   - Shell sort replaces insertion sort for sorting Event array.
+//   Build 5.3.0:
+//   - Route flows when there is at least one node/link to ensure nodal seepage
+//     is applied even with node only models.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -119,7 +122,7 @@ int routing_open()
 
     // --- initialize flow and quality routing systems
     flowrout_init(RouteModel);
-    if ( Fhotstart1.mode == NO_FILE ) qualrout_init();
+    if ( FhotstartInput.mode == NO_FILE ) qualrout_init();
 
     // --- initialize routing events
     if ( NumEvents > 0 ) sortEvents();
@@ -147,8 +150,12 @@ void routing_close(int routingModel)
     FREE(SortedLinks);
 }
 
-//=============================================================================
-
+/*!
+* \brief Determines time step used for flow routing at current time period.
+* \param[in] routingModel Routing method code
+* \param[in] fixedStep User-supplied time step (sec)
+* \return Time step used for flow routing (sec)
+*/
 double routing_getRoutingStep(int routingModel, double fixedStep)
 //
 //  Input:   routingModel = routing method code
@@ -262,6 +269,101 @@ void routing_execute(int routingModel, double routingStep)
 
     // --- update mass balance totals over the current half time step
     massbal_updateRoutingTotals(routingStep / 2.);
+
+    // --- A3 parity tracing (env-gated, zero cost when SWMM_TRACE_RSTEP
+    //     unset): one CSV row per routing step, format-matched to the
+    //     refactored trace in SWMMEngine::stepRouting for first-divergence
+    //     hunting between the engines.
+    {
+        static FILE* traceFile = NULL;
+        static int   traceInit = FALSE;
+        if ( !traceInit )
+        {
+            char* p = getenv("SWMM_TRACE_RSTEP");
+            traceInit = TRUE;
+            if ( p && *p )
+            {
+                traceFile = fopen(p, "w");
+                if ( traceFile )
+                    fprintf(traceFile,
+                        "step,new_ms,dt_ms,iters,qsum,ysum,lsum,rosum,qhash,yhash\n");
+            }
+        }
+        if ( traceFile )
+        {
+            static long traceSn = 0;
+            extern long SwmmTraceRstepSn;   /* defined in dwflow.c */
+            int tj;
+            double qSum = 0.0, ySum = 0.0, lSum = 0.0, roSum = 0.0;
+            /* FNV-1a 64-bit hashes over the raw bit patterns of link flow &
+               node depth (element order) — exact first-divergence detector
+               (the %a sums absorb small-magnitude element diffs). */
+            unsigned long long qHash = 14695981039346656037ULL;
+            unsigned long long yHash = 14695981039346656037ULL;
+            unsigned long long bits;
+            for (tj = 0; tj < Nobjects[LINK]; tj++)
+            {
+                qSum += Link[tj].newFlow;
+                memcpy(&bits, &Link[tj].newFlow, sizeof bits);
+                qHash = (qHash ^ bits) * 1099511628211ULL;
+            }
+            for (tj = 0; tj < Nobjects[NODE]; tj++)
+            {
+                ySum += Node[tj].newDepth;
+                memcpy(&bits, &Node[tj].newDepth, sizeof bits);
+                yHash = (yHash ^ bits) * 1099511628211ULL;
+            }
+            for (tj = 0; tj < Nobjects[NODE]; tj++) lSum += Node[tj].newLatFlow;
+            for (tj = 0; tj < Nobjects[SUBCATCH]; tj++)
+                roSum += Subcatch[tj].newRunoff;
+            fprintf(traceFile, "%ld,%.6f,%.6f,%d,%a,%a,%a,%a,%016llx,%016llx\n",
+                    ++traceSn,
+                    NewRoutingTime, 1000.0*routingStep, trialsCount, qSum, ySum,
+                    lSum, roSum, qHash, yHash);
+            SwmmTraceRstepSn = traceSn;   /* step-gate for dwflow link trace */
+
+            // Optional per-element dump at one step (SWMM_TRACE_DUMP_STEP=N):
+            // writes "<trace>.dumpN" with per-link newFlow/dqdh and per-node
+            // newDepth/inflow/outflow in %a for element-level first-divergence
+            // pinpointing against the refactored engine.
+            {
+                static long dumpStep = -1;
+                static int  dumpInit = FALSE;
+                if ( !dumpInit )
+                {
+                    char* d = getenv("SWMM_TRACE_DUMP_STEP");
+                    dumpInit = TRUE;
+                    if ( d && *d ) dumpStep = atol(d);
+                }
+                if ( traceSn == dumpStep )
+                {
+                    char fname[512];
+                    FILE* df;
+                    snprintf(fname, sizeof(fname), "%s.dump%ld",
+                             getenv("SWMM_TRACE_RSTEP"), dumpStep);
+                    df = fopen(fname, "w");
+                    if ( df )
+                    {
+                        for (tj = 0; tj < Nobjects[LINK]; tj++)
+                            fprintf(df, "L,%d,%a,%a\n", tj,
+                                    Link[tj].newFlow, Link[tj].dqdh);
+                        for (tj = 0; tj < Nobjects[NODE]; tj++)
+                            fprintf(df, "N,%d,%a,%a,%a,%a,%a\n", tj,
+                                    Node[tj].newDepth, Node[tj].inflow,
+                                    Node[tj].outflow, Node[tj].newLatFlow,
+                                    Node[tj].oldLatFlow);
+                        for (tj = 0; tj < Nobjects[SUBCATCH]; tj++)
+                            fprintf(df, "S,%d,%a,%a,%a,%a\n", tj,
+                                    Subcatch[tj].newRunoff,
+                                    Subcatch[tj].rainfall,
+                                    Subcatch[tj].infilLoss,
+                                    Subcatch[tj].oldRunoff);
+                        fclose(df);
+                    }
+                }
+            }
+        }
+    }
 }
 
 //=============================================================================
@@ -410,8 +512,9 @@ int  routeFlow(int routingModel, double routingStep)
     for (j = 0; j < Nobjects[NODE]; j++)
         node_initFlows(j, routingStep);
 
-    // --- route flow through the drainage network
-    if ( Nobjects[LINK] > 0 )
+    // --- route flow through the drainage network if there is at least
+    //     one link or node
+    if ( Nobjects[LINK] > 0 || Nobjects[NODE] > 0)
     {
         stepCount = flowrout_execute(SortedLinks, routingModel, routingStep);
     }
@@ -489,6 +592,18 @@ void addExternalInflows(DateTime currentDate)
                 massbal_addInflowQual(EXTERNAL_INFLOW, p, w);
             }
             inflow = inflow->next;
+        }
+
+        // --- add api mass fluxes to node's inflow
+        for (p = 0; p < Nobjects[POLLUT]; p++)
+        {
+            w = Node[j].apiExtQualMassFlux[p];
+
+            if (w > 0.0)
+            {
+                Node[j].newQual[p] += w;
+                massbal_addInflowQual(EXTERNAL_INFLOW, p, w);
+            }
         }
     }
 }

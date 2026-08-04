@@ -47,6 +47,8 @@
 //   Build 5.2.4:
 //   - Conduit evap+seepage outflow split evenly between outflow from
 //     conduit's upstream and non-outfall downstream nodes.
+//   Build 5.3.0:
+//   - Enable drainage in isolated storage with surcharge enabled.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -112,14 +114,10 @@ static double getVariableStep(double maxStep);
 static double getLinkStep(double tMin, int *minLink);
 static double getNodeStep(double tMin, int *minNode);
 
-//=============================================================================
-
+/*!
+* \brief Initializes dynamic wave routing method.
+*/
 void dynwave_init()
-//
-//  Input:   none
-//  Output:  none
-//  Purpose: initializes dynamic wave routing method.
-//
 {
     int i, j;
     double z;
@@ -172,14 +170,10 @@ void  dynwave_close()
     FREE(Xnode);
 }
 
-//=============================================================================
-
+/*!
+* \brief Adjusts dynamic wave routing options.
+*/
 void dynwave_validate()
-//
-//  Input:   none
-//  Output:  none
-//  Purpose: adjusts dynamic wave routing options.
-//
 {
     if ( MinRouteStep > RouteStep ) MinRouteStep = RouteStep;
     if ( MinRouteStep < MINTIMESTEP ) MinRouteStep = MINTIMESTEP;
@@ -190,14 +184,12 @@ void dynwave_validate()
     if ( MaxTrials == 0 ) MaxTrials = DEFAULT_MAXTRIALS;
 }
 
-//=============================================================================
-
+/*!
+* \brief Computes variable routing time step if applicable.
+* \param[in] fixedStep User-supplied fixed time step (sec)
+* \return Returns routing time step (sec)
+*/
 double dynwave_getRoutingStep(double fixedStep)
-//
-//  Input:   fixedStep = user-supplied fixed time step (sec)
-//  Output:  returns routing time step (sec)
-//  Purpose: computes variable routing time step if applicable.
-//
 {
     // --- use user-supplied fixed step if variable step option turned off
     //     or if its smaller than the min. allowable variable time step
@@ -219,15 +211,11 @@ double dynwave_getRoutingStep(double fixedStep)
     return VariableStep;
 }
 
-//=============================================================================
-
+/*!
+* \brief Routes flows through drainage network over current time step.
+* \param[in] tStep Time step (sec)
+*/
 int dynwave_execute(double tStep)
-//
-//  Input:   links = array of topo sorted links indexes
-//           tStep = time step (sec)
-//  Output:  returns number of iterations used
-//  Purpose: routes flows through drainage network over current time step.
-//
 {
     int converged;
 
@@ -268,7 +256,15 @@ void updateConvergenceStats()
     int i;
     NonConvergeCount++;
     for (i = 0; i < Nobjects[NODE]; i++)
+    {
+        // --- skip outfalls: findNodeDepths never tests them for convergence
+        //     (their flag stays FALSE so outfall-connected links are not
+        //     bypassed), so counting them here wrongly ranked boundary nodes
+        //     under "Most Frequent Nonconverging Nodes". Diagnostic-only
+        //     change: hydraulic convergence & bypass logic are unaffected.
+        if ( Node[i].type == OUTFALL ) continue;
         stats_updateConvergenceStats(i, Xnode[i].converged);
+    }
 }
 
 //=============================================================================
@@ -382,7 +378,6 @@ void  findLimitedLinks()
 void findLinkFlows(double dt)
 {
     int i;
-
     // --- find new flow in each non-dummy conduit
 #pragma omp parallel num_threads(NumThreads)
 {
@@ -606,9 +601,10 @@ int findNodeDepths(double dt)
 
     // --- compute new depth for all non-outfall nodes and determine if
     //     depth change from previous iteration is below tolerance
+    // 
 #pragma omp parallel num_threads(NumThreads)
 {
-    #pragma omp for private(yOld)
+   #pragma omp for private(yOld)
     for ( i = 0; i < Nobjects[NODE]; i++ )
     {
         if ( Node[i].type == OUTFALL ) continue;
@@ -661,7 +657,7 @@ void setNodeDepth(int i, double dt)
     canPond = (AllowPonding && Node[i].pondedArea > 0.0);
     isPonded = (canPond && Node[i].newDepth > Node[i].fullDepth);
 
-    // --- initialize values
+    // --- initialize value    
     yCrown = Node[i].crownElev - Node[i].invertElev;
     yOld = Node[i].oldDepth;
     yLast = Node[i].newDepth;
@@ -690,8 +686,11 @@ void setNodeDepth(int i, double dt)
         else isSurcharged = (yCrown > 0.0 && yLast > yCrown);
     }
 
-    // --- if node not surcharged, base depth change on surface area        
-    if (!isSurcharged)
+    // --- if node not surcharged, base depth change on surface area  
+    // or storage node is surcharged but there is not a flow change with response to head
+    // An example is a storage node that has external inflows and outflows
+    // but not connecting links.    
+    if (!isSurcharged || (Node[i].type == STORAGE && Xnode[i].sumdqdh == 0.0))
     {
         dy = dV / surfArea;
         yNew = yOld + dy;
@@ -709,7 +708,6 @@ void setNodeDepth(int i, double dt)
         if ( isPonded && yNew < Node[i].fullDepth )
             yNew = Node[i].fullDepth - FUDGE;
     }
-
     // --- if node surcharged, base depth change on dqdh
     //     NOTE: depth change is w.r.t depth from previous
     //     iteration; also, do not apply under-relaxation.
@@ -759,6 +757,43 @@ void setNodeDepth(int i, double dt)
 
     // --- save new depth for node
     Node[i].newDepth = yNew;
+
+    // --- A3 parity term tracing for one node (SWMM_TRACE_NODE=<index>,
+    //     first 64 invocations; requires SWMM_TRACE_RSTEP for the path)
+    {
+        static FILE* nf = NULL;
+        static long  nfTarget = -2;
+        static long  nfSkip = 0;
+        static int   nfCount = 0;
+        if ( nfTarget == -2 )
+        {
+            char* p = getenv("SWMM_TRACE_NODE");
+            char* tr = getenv("SWMM_TRACE_RSTEP");
+            char* sk = getenv("SWMM_TRACE_SKIP");
+            nfTarget = -1;
+            if ( sk && *sk ) nfSkip = atol(sk);
+            if ( p && *p && tr && *tr )
+            {
+                char fname[512];
+                nfTarget = atol(p);
+                snprintf(fname, sizeof(fname), "%s.node%ld", tr, nfTarget);
+                nf = fopen(fname, "w");
+                if ( nf ) fprintf(nf,
+                    "n,yOld,yLast,dQ,dV,surfArea,sumdqdh,surch,yNew\n");
+            }
+        }
+        if ( nf && i == nfTarget )
+        {
+            ++nfCount;
+            if ( nfCount > nfSkip && nfCount <= nfSkip + 128 )
+            {
+                fprintf(nf, "%d,%a,%a,%a,%a,%a,%a,%d,%a\n", nfCount,
+                        yOld, yLast, dQ, dV, surfArea, Xnode[i].sumdqdh,
+                        isSurcharged, yNew);
+                if ( nfCount >= nfSkip + 128 ) { fclose(nf); nf = NULL; }
+            }
+        }
+    }
 }
 
 //=============================================================================

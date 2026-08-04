@@ -56,6 +56,10 @@
 //   - Default Inertial Damping changed from SOME to PARTIAL_DAMPING.
 //   - Default CourantFactor changed from 0 (fixed routing time step)
 //   - to 0.75 (variable time step)
+//   Build 5.3.0:
+//   - Fixed potential precision loss when calculating TotalDuration.
+//   - Memory allocation and reading options for saving multiple hotstart files
+//   - Added support for api provided pollutant fluxes
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -67,7 +71,7 @@
 #if defined(_OPENMP)
   #include <omp.h>     
 #else
-  int omp_get_max_threads(void) { return 1;}
+  extern int omp_get_max_threads(void); /* fallback provided in swmm5.c (WASM build fix) */
 #endif
 
 #include "headers.h"
@@ -101,27 +105,31 @@ static char     MemPoolAllocated;      // TRUE if memory pool allocated
 //-----------------------------------------------------------------------------
 static void initPointers(void);
 static void setDefaults(void);
-static void openFiles(const char *f1, const char *f2, const char *f3);
+
+/*!
+* \brief Opens a project's input and report files.
+* \param[in] inp_file SWMM input file
+* \param[in] rpt_file SWMM report file
+* \param[in] out_file SWMM output file
+*/
+static void openFiles(const char *inp_file, const char *rpt_file, const char *out_file);
 static void createObjects(void);
 static void deleteObjects(void);
 static void createHashTables(void);
 static void deleteHashTables(void);
 
 
-//=============================================================================
-
-void project_open(const char *f1, const char *f2, const char *f3)
-//
-//  Input:   f1 = pointer to name of input file
-//           f2 = pointer to name of report file
-//           f3 = pointer to name of binary output file
-//  Output:  none
-//  Purpose: opens a new SWMM project.
-//
+/*!
+* \brief Opens a new SWMM project
+* \param[in] inp_file SWMM input file
+* \param[in] rpt_file SWMM report file
+* \param[in] out_file SWMM output file
+*/
+void project_open(const char *inp_file, const char *rpt_file, const char *out_file)
 {
     initPointers();
     setDefaults();
-    openFiles(f1, f2, f3);
+    openFiles(inp_file, rpt_file, out_file);
 }
 
 //=============================================================================
@@ -162,7 +170,7 @@ void project_readInput()
     else
     {
         // --- compute total duration of simulation in seconds
-        TotalDuration = floor((EndDateTime - StartDateTime) * SECperDAY);
+        TotalDuration = floor((EndDate - StartDate) * SECperDAY + (EndTime - StartTime) * SECperDAY);
 
         // --- reporting step must be <= total duration
         if ( (double)ReportStep > TotalDuration )
@@ -284,7 +292,7 @@ void project_close()
 
 //=============================================================================
 
-int  project_init(void)
+int project_init(void)
 //
 //  Input:   none
 //  Output:  returns an error code
@@ -331,7 +339,7 @@ int  project_init(void)
 
 //=============================================================================
 
-int   project_addObject(int type, char *id, int n)
+int project_addObject(int type, char *id, int n)
 //
 //  Input:   type = object type
 //           id   = object ID string
@@ -374,7 +382,7 @@ int project_findObject(int type, const char *id)
 
 //=============================================================================
 
-char  *project_findID(int type, char *id)
+char *project_findID(int type, char *id)
 //
 //  Input:   type = object type
 //           id   = ID name being sought
@@ -387,7 +395,7 @@ char  *project_findID(int type, char *id)
 
 //=============================================================================
 
-double ** project_createMatrix(int nrows, int ncols)
+double **project_createMatrix(int nrows, int ncols)
 //
 //  Input:   nrows = number of rows (0-based)
 //           ncols = number of columns (0-based)
@@ -460,7 +468,16 @@ int project_readOption(char* s1, char* s2)
 
     // --- determine which option is being read
     k = findmatch(s1, OptionWords);
-    if ( k < 0 ) return error_setInpError(ERR_KEYWORD, s1);
+    if ( k < 0 )
+    {
+        // --- unknown option key: warn and ignore
+        char warnMsg[MAXLINE+1];
+        snprintf(warnMsg, MAXLINE,
+            "\n  WARNING: Unknown option keyword '%s' in [OPTIONS] section - option will be ignored.", s1);
+        report_writeLine(warnMsg);
+        report_invokeWarningCallback(warnMsg);
+        return 0;
+    }
     switch ( k )
     {
       // --- choice of flow units
@@ -801,6 +818,8 @@ void initPointers()
     Snowmelt = NULL;
     Event    = NULL;
     MemPoolAllocated = FALSE;
+    FhotstartOutputs = (TFile*)calloc(MAXHOTSTARTFILES, sizeof(TFile)); //allow users to save up to 10 hotstart files
+
 }
 
 //=============================================================================
@@ -823,20 +842,27 @@ void setDefaults()
    Fclimate.mode   = NO_FILE; 
    Frunoff.mode    = NO_FILE;
    Frdii.mode      = NO_FILE;
-   Fhotstart1.mode = NO_FILE;
-   Fhotstart2.mode = NO_FILE;
+   FhotstartInput.mode = NO_FILE;
    Finflows.mode   = NO_FILE;
    Foutflows.mode  = NO_FILE;
    Frain.file      = NULL;
    Fclimate.file   = NULL;
    Frunoff.file    = NULL;
    Frdii.file      = NULL;
-   Fhotstart1.file = NULL;
-   Fhotstart2.file = NULL;
+   FhotstartInput.file = NULL;
    Finflows.file   = NULL;
    Foutflows.file  = NULL;
    Fout.file       = NULL;
    Fout.mode       = NO_FILE;
+
+   
+   for (i = 0; i < MAXHOTSTARTFILES; i++)
+   {
+       FhotstartOutputs[i].file = NULL;
+       FhotstartOutputs[i].mode = NO_FILE;
+       FhotstartOutputs[i].saveDateTime = 0;
+   }
+
 
    // Analysis options
    UnitSystem      = US;               // US unit system
@@ -949,16 +975,13 @@ void setDefaults()
    Adjust.hydconFactor = 1.0;
 }
 
-//=============================================================================
-
-void openFiles(const char *f1, const char *f2, const char *f3)
-//
-//  Input:   f1 = name of input file
-//           f2 = name of report file
-//           f3 = name of binary output file
-//  Output:  none
-//  Purpose: opens a project's input and report files.
-//
+/*!
+* \brief Opens a project's input and report files.
+* \param[in] inp_file SWMM input file
+* \param[in] rpt_file SWMM report file
+* \param[in] out_file SWMM output file
+*/
+void openFiles(const char *inp_file, const char *rpt_file, const char *out_file)
 {
     // --- initialize file pointers to NULL
     Finp.file = NULL;
@@ -966,12 +989,12 @@ void openFiles(const char *f1, const char *f2, const char *f3)
     Fout.file = NULL;
 
     // --- save file names
-    sstrncpy(Finp.name, f1, MAXFNAME);
-    sstrncpy(Frpt.name, f2, MAXFNAME);
-    sstrncpy(Fout.name, f3, MAXFNAME);
+    sstrncpy(Finp.name, inp_file, MAXFNAME);
+    sstrncpy(Frpt.name, rpt_file, MAXFNAME);
+    sstrncpy(Fout.name, out_file, MAXFNAME);
 
     // --- check that file names are not identical
-    if (strcomp(f1, f2) || strcomp(f1, f3) || strcomp(f2, f3))
+    if (strcomp(inp_file, rpt_file) || strcomp(inp_file, out_file) || strcomp(rpt_file, out_file))
     {
         writecon(FMT11);
         ErrorCode = ERR_FILE_NAME;
@@ -979,14 +1002,14 @@ void openFiles(const char *f1, const char *f2, const char *f3)
     }
 
     // --- open input and report files
-    if ((Finp.file = fopen(f1,"rt")) == NULL)
+    if ((Finp.file = fopen(inp_file,"rt")) == NULL)
     {
         writecon(FMT12);
-        writecon(f1);
+        writecon(inp_file);
         ErrorCode = ERR_INP_FILE;
         return;
     }
-    if ((Frpt.file = fopen(f2,"wt")) == NULL)
+    if ((Frpt.file = fopen(rpt_file,"wt")) == NULL)
     {
        writecon(FMT13);
        ErrorCode = ERR_RPT_FILE;
@@ -1031,6 +1054,7 @@ void createObjects()
     UnitHyd  = (TUnitHyd *)  calloc(Nobjects[UNITHYD],  sizeof(TUnitHyd));
     Snowmelt = (TSnowmelt *) calloc(Nobjects[SNOWMELT], sizeof(TSnowmelt));
     Shape    = (TShape *)    calloc(Nobjects[SHAPE],    sizeof(TShape));
+  
 
     // --- create array of detailed routing event periods
     Event = (TEvent *) calloc((size_t)NumEvents+1, sizeof(TEvent));
@@ -1060,8 +1084,8 @@ void createObjects()
     // --- allocate memory for water quality state variables
     for (j = 0; j < Nobjects[SUBCATCH]; j++)
     {
-        Subcatch[j].initBuildup =
-                              (double *) calloc(Nobjects[POLLUT], sizeof(double));
+        Subcatch[j].initBuildup = (double *) calloc(Nobjects[POLLUT], sizeof(double));
+        Subcatch[j].apiExtBuildup = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Subcatch[j].oldQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Subcatch[j].newQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Subcatch[j].pondedQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
@@ -1071,6 +1095,7 @@ void createObjects()
     {
         Node[j].oldQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Node[j].newQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
+        Node[j].apiExtQualMassFlux = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Node[j].extInflow = NULL;
         Node[j].dwfInflow = NULL;
         Node[j].rdiiInflow = NULL;
@@ -1082,6 +1107,7 @@ void createObjects()
         Link[j].oldQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Link[j].newQual = (double *) calloc(Nobjects[POLLUT], sizeof(double));
         Link[j].totalLoad = (double *) calloc(Nobjects[POLLUT], sizeof(double));
+        Link[j].apiExtQualMassFlux = (double *) calloc(Nobjects[POLLUT], sizeof(double));
     }
 
     // --- allocate memory for land use buildup/washoff functions
@@ -1134,9 +1160,12 @@ void createObjects()
         Subcatch[j].gwDeepFlowExpr = NULL;
         Subcatch[j].snowpack    = NULL;
         Subcatch[j].lidArea     = 0.0;
+        Subcatch[j].rainScaleFactor = 1.0;
+        Subcatch[j].snowScaleFactor = 1.0;
         for (k = 0; k < Nobjects[POLLUT]; k++)
         {
             Subcatch[j].initBuildup[k] = 0.0;
+            Subcatch[j].apiExtBuildup[k] = 0.0;
         }
     }
 
@@ -1210,6 +1239,7 @@ void deleteObjects()
     if ( Subcatch ) for (j = 0; j < Nobjects[SUBCATCH]; j++)
     {
         FREE(Subcatch[j].initBuildup);
+        FREE(Subcatch[j].apiExtBuildup);
         FREE(Subcatch[j].oldQual);
         FREE(Subcatch[j].newQual);
         FREE(Subcatch[j].pondedQual);
@@ -1219,12 +1249,14 @@ void deleteObjects()
     {
         FREE(Node[j].oldQual);
         FREE(Node[j].newQual);
+        FREE(Node[j].apiExtQualMassFlux)
     }
     if ( Link ) for (j = 0; j < Nobjects[LINK]; j++)
     {
         FREE(Link[j].oldQual);
         FREE(Link[j].newQual);
         FREE(Link[j].totalLoad);
+        FREE(Link[j].apiExtQualMassFlux);
         // Any inlet assigned to Link[j].inlet is freed in inlet_delete().
     }
 
@@ -1297,6 +1329,7 @@ void deleteObjects()
     FREE(Snowmelt);
     FREE(Shape);
     FREE(Event);
+    FREE(FhotstartOutputs);
 }
 
 //=============================================================================

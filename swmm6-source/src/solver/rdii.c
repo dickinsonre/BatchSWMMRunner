@@ -112,6 +112,7 @@ extern double Qcf[];                   // flow units conversion factors
 // --- functions used to create a RDII file
 static int    readOldUHFormat(int j, int m, char* tok[], int ntoks);
 static void   setUnitHydParams(int j, int i, int m, double x[]);
+static int    markUnitHydParams(int j, int i, int m);
 static void   createRdiiFile(void);
 static int    getNumRdiiNodes(void);
 static void   validateRdii(void);
@@ -193,14 +194,11 @@ int rdii_readRdiiInflow(char* tok[], int ntoks)
     return 0;
 }
 
-//=============================================================================
-
-void rdii_initUnitHyd(int j)
-//
-//  Input:   j = UH group index
-//  Output:  none
-//  Purpose: initializes properties of a unit hydrograph group.
-//
+/*!
+* \brief Initializes properties of a unit hydrograph group.
+* \param[in] unitHydIndex Unit hydrograph group index
+*/
+void rdii_initUnitHyd(int unitHydIndex)
 {
     int i;                             // individual UH index
     int m;                             // month index
@@ -209,12 +207,13 @@ void rdii_initUnitHyd(int j)
     {
         for (i=0; i<3; i++)
         {
-            UnitHyd[j].iaMax[m][i]   = 0.0;
-            UnitHyd[j].iaRecov[m][i] = 0.0;
-            UnitHyd[j].iaInit[m][i]  = 0.0;
-            UnitHyd[j].r[m][i]       = 0.0;
-            UnitHyd[j].tPeak[m][i]   = 0;
-            UnitHyd[j].tBase[m][i]   = 0;
+            UnitHyd[unitHydIndex].iaMax[m][i]   = 0.0;
+            UnitHyd[unitHydIndex].iaRecov[m][i] = 0.0;
+            UnitHyd[unitHydIndex].iaInit[m][i]  = 0.0;
+            UnitHyd[unitHydIndex].r[m][i]       = 0.0;
+            UnitHyd[unitHydIndex].tPeak[m][i]   = 0;
+            UnitHyd[unitHydIndex].tBase[m][i]   = 0;
+            UnitHyd[unitHydIndex].paramsSet[m][i] = FALSE;
         }
     }
 }
@@ -283,6 +282,11 @@ int rdii_readUnitHydParams(char* tok[], int ntoks)
         }
     }
 
+    // --- issue warning if UH params were previously assigned to this month
+    //     (e.g. an ALL entry overriding earlier month-specific entries)
+    if ( markUnitHydParams(j, k, m) )
+        report_writeWarningMsg(WARN13, UnitHyd[j].ID);
+
     // --- save UH params
     setUnitHydParams(j, k, m, x);
     return 0;
@@ -302,6 +306,7 @@ int readOldUHFormat(int j, int m, char* tok[], int ntoks)
 //
 {
     int    i, k;
+    int    wasSet = FALSE;
     double p[9], x[6];
 
     // --- check for proper number of tokens
@@ -325,6 +330,13 @@ int readOldUHFormat(int j, int m, char* tok[], int ntoks)
         }
     }
 
+    // --- issue warning if UH params were previously assigned to this month
+    for ( k = 0; k < 3; k++)
+    {
+        if ( markUnitHydParams(j, k, m) ) wasSet = TRUE;
+    }
+    if ( wasSet ) report_writeWarningMsg(WARN13, UnitHyd[j].ID);
+
     // --- save UH parameters
     for ( k = 0; k < 3; k++)
     {
@@ -335,6 +347,43 @@ int readOldUHFormat(int j, int m, char* tok[], int ntoks)
         }
     }
     return 0;
+}
+
+//=============================================================================
+
+int markUnitHydParams(int j, int i, int m)
+//
+//  Input:   j = unit hydrograph index
+//           i = type of UH response (short, medium or long term)
+//           m = month of year (0 = all months)
+//  Output:  returns TRUE if parameters were previously assigned to any
+//           month covered by m
+//  Purpose: records the months that UH parameters have been assigned to
+//           so that repeated assignments to the same month can be flagged.
+//
+{
+    int m1, m2;                        // start/end month indexes
+    int wasSet = FALSE;
+
+    // --- find range of months that share same parameter values
+    if ( m == 0 )
+    {
+        m1 = 0;
+        m2 = 11;
+    }
+    else
+    {
+        m1 = m-1;
+        m2 = m1;
+    }
+
+    // --- check & mark each month in the range
+    for (m=m1; m<=m2; m++)
+    {
+        if ( UnitHyd[j].paramsSet[m][i] ) wasSet = TRUE;
+        UnitHyd[j].paramsSet[m][i] = TRUE;
+    }
+    return wasSet;
 }
 
 //=============================================================================
@@ -386,17 +435,17 @@ void setUnitHydParams(int j, int i, int m, double x[])
 
 //=============================================================================
 
-void rdii_deleteRdiiInflow(int j)
+void rdii_deleteRdiiInflow(int nodeIndex)
 //
 //  Input:   j = node index
 //  Output:  none
 //  Purpose: deletes the RDII inflow object for a node.
 //
 {
-    if ( Node[j].rdiiInflow )
+    if ( Node[nodeIndex].rdiiInflow )
     {
-        free(Node[j].rdiiInflow);
-        Node[j].rdiiInflow = NULL;
+        free(Node[nodeIndex].rdiiInflow);
+        Node[nodeIndex].rdiiInflow = NULL;
     }
 }
 
@@ -404,13 +453,10 @@ void rdii_deleteRdiiInflow(int j)
 //=============================================================================
 //                 Reading Inflow Data From a RDII File
 //=============================================================================
-
+/*!
+* \brief Opens an exisiting RDII interface file or creates a new one.
+*/
 void rdii_openRdii()
-//
-//  Input:   none
-//  Output:  none
-//  Purpose: opens an exisiting RDII interface file or creates a new one.
-//
 {
     char  fStamp[] = FILE_STAMP;
 
@@ -492,14 +538,10 @@ void openRdiiTextFile()
     }
 }
 
-//=============================================================================
-
+/*!
+* \brief Closes the RDII interface file.
+*/
 void rdii_closeRdii()
-//
-//  Input:   none
-//  Output:  none
-//  Purpose: closes the RDII interface file.
-//
 {
     if ( Frdii.file ) fclose(Frdii.file);
     if ( Frdii.mode == SCRATCH_FILE ) remove(Frdii.name);
@@ -507,14 +549,12 @@ void rdii_closeRdii()
     FREE(RdiiNodeFlow);
 }
 
-//=============================================================================
-
+/*!
+* \brief Finds number of RDII inflows at a specified date.
+* \param[in] aDate Current date/time
+* \return Returns 0 if no RDII flow or number of nodes with RDII inflows
+*/
 int rdii_getNumRdiiFlows(DateTime aDate)
-//
-//  Input:   aDate = current date/time
-//  Output:  returns 0 if no RDII flow or number of nodes with RDII inflows
-//  Purpose: finds number of RDII inflows at a specified date.
-//
 {
     // --- default result is 0 indicating no RDII inflow at specified date
     if ( NumRdiiNodes == 0 ) return 0;
@@ -537,21 +577,18 @@ int rdii_getNumRdiiFlows(DateTime aDate)
     return 0;
 }
 
-//=============================================================================
-
-void rdii_getRdiiFlow(int i, int* j, double* q)
-//
-//  Input:   i = RDII node index
-//           j = pointer to project node index
-//           q = pointer to RDII flow rate
-//  Output:  sets node index and RDII inflow for node
-//  Purpose: finds index and current RDII inflow for an RDII node.
-//
+/*!
+* \brief Finds index and current RDII inflow for an RDII node.
+* \param[in] index RDII node index
+* \param[out] nodeIndex Node index
+* \param[out] q RDII flow rate
+*/
+void rdii_getRdiiFlow(int index, int* nodeIndex, double* q)
 {
-    if ( i >= 0 && i < NumRdiiNodes )
+    if ( index >= 0 && index < NumRdiiNodes )
     {
-        *j = RdiiNodeIndex[i];
-        *q = RdiiNodeFlow[i];
+        *nodeIndex = RdiiNodeIndex[index];
+        *q = RdiiNodeFlow[index];
     }
 }
 

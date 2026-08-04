@@ -112,12 +112,12 @@ int report_readOptions(char* tok[], int ntoks)
             return error_setInpError(ERR_KEYWORD, tok[1]);
         switch (k)
         {
-        case 0: RptFlags.disabled = m;   return 0; // DISABLED
-        case 1: RptFlags.input = m;      return 0; // INPUT
-        case 5: RptFlags.continuity = m; return 0; // CONTINUITY
-        case 6: RptFlags.flowStats = m;  return 0; // FLOWSTATS
-        case 7: RptFlags.controls = m;   return 0; // CONTROLS
-        case 8: RptFlags.averages = m;   return 0; // AVERAGES
+        case 0: RptFlags.disabled = (char)m;   return 0; // DISABLED
+        case 1: RptFlags.input = (char)m;      return 0; // INPUT
+        case 5: RptFlags.continuity = (char)m; return 0; // CONTINUITY
+        case 6: RptFlags.flowStats = (char)m;  return 0; // FLOWSTATS
+        case 7: RptFlags.controls = (char)m;   return 0; // CONTROLS
+        case 8: RptFlags.averages = (char)m;   return 0; // AVERAGES
         case 9: return 0;                          // NODESTATS deprecated
         default: return error_setInpError(ERR_KEYWORD, tok[1]);
         }
@@ -1482,6 +1482,21 @@ void report_writeInputErrorMsg(int k, int sect, char* line, long lineCount)
 
 //=============================================================================
 
+void report_invokeWarningCallback(const char* msg)
+//
+//  Input:   msg = warning message text
+//  Output:  none
+//  Purpose: forwards a warning to the registered callback, if any. Leading
+//           whitespace/newlines are skipped so hosts get a clean log line.
+//
+{
+    if ( WarningCallback == NULL || msg == NULL ) return;
+    while ( *msg == '\n' || *msg == '\r' || *msg == ' ' || *msg == '\t' ) msg++;
+    WarningCallback(msg, WarningCallbackData);
+}
+
+//=============================================================================
+
 void report_writeWarningMsg(char* msg, char* id)
 //
 //  Input:   msg = text of warning message
@@ -1492,6 +1507,14 @@ void report_writeWarningMsg(char* msg, char* id)
 {
     fprintf(Frpt.file, "\n  %s %s", msg, id);
     Warnings++;
+
+    // --- also stream the warning to a registered host callback
+    if ( WarningCallback != NULL )
+    {
+        char buf[MAXMSG + 1];
+        snprintf(buf, MAXMSG, "%s %s", msg, id);
+        report_invokeWarningCallback(buf);
+    }
 }
 
 //=============================================================================

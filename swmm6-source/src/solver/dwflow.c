@@ -32,9 +32,16 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <math.h>
+#include <stdlib.h>   // getenv/atol for the env-gated A3 parity trace
 #include "headers.h"
 
 static const  double MAXVELOCITY =  50.;     // max. allowable velocity (ft/sec)
+
+// A3 parity tracing: routing-step serial (set by the RSTEP trace in
+// routing.c) so the per-link term trace can be gated on a step number
+// (SWMM_TRACE_LSTEP) instead of an invocation count — bypassed links make
+// invocation counts hard to predict.
+long SwmmTraceRstepSn = 0;
 
 static int    getFlowClass(int link, double q, double h1, double h2,
               double y1, double y2, double* criticalDepth, double* normalDepth,
@@ -52,18 +59,15 @@ static double getHydRad(TXsect* xsect, double y);
 static double checkNormalFlow(int j, double q, double y1, double y2,
               double a1, double r1);
 
-//=============================================================================
-
-void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
-//
-//  Input:   j        = link index
-//           steps    = number of iteration steps taken
-//           omega    = under-relaxation parameter
-//           dt       = time step (sec)
-//  Output:  returns new flow value (cfs)
-//  Purpose: updates flow in conduit link by solving finite difference
-//           form of continuity and momentum equations.
-//
+/*!
+* \brief Updates flow in conduit link by solving finite difference
+* form of continuity and momentum equations.
+* \param[in] linkIndex Link index
+* \param[in] steps Number of iteration steps taken
+* \param[in] omega Under-relaxation parameter
+* \param[in] dt Time step (sec)
+*/
+void  dwflow_findConduitFlow(int linkIndex, int steps, double omega, double dt)
 {
     int    k;                          // index of conduit
     int    n1, n2;                     // indexes of end nodes
@@ -87,28 +91,28 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
     double denom;                      // denominator of flow update formula
     double q;                          // new flow value (cfs)
     double barrels;                    // number of barrels in conduit
-    TXsect* xsect = &Link[j].xsect;    // ptr. to conduit's cross section data
+    TXsect* xsect = &Link[linkIndex].xsect;    // ptr. to conduit's cross section data
     char   isFull = FALSE;             // TRUE if conduit flowing full
     char   isClosed = FALSE;           // TRUE if conduit closed
 
 
 
     // --- adjust isClosed status by any control action
-    if ( Link[j].setting == 0 ) isClosed = TRUE;
+    if ( Link[linkIndex].setting == 0 ) isClosed = TRUE;
 
     // --- get flow from last time step & previous iteration
-    k =  Link[j].subIndex;
+    k =  Link[linkIndex].subIndex;
     barrels = Conduit[k].barrels;
-    qOld = Link[j].oldFlow / barrels;
+    qOld = Link[linkIndex].oldFlow / barrels;
     qLast = Conduit[k].q1;
     Conduit[k].evapLossRate = 0.0; 
     Conduit[k].seepLossRate = 0.0;
 
     // --- get most current heads at upstream and downstream ends of conduit
-    n1 = Link[j].node1;
-    n2 = Link[j].node2;
-    z1 = Node[n1].invertElev + Link[j].offset1;
-    z2 = Node[n2].invertElev + Link[j].offset2;
+    n1 = Link[linkIndex].node1;
+    n2 = Link[linkIndex].node2;
+    z1 = Node[n1].invertElev + Link[linkIndex].offset1;
+    z2 = Node[n2].invertElev + Link[linkIndex].offset2;
     h1 = Node[n1].newDepth + Node[n1].invertElev;
     h2 = Node[n2].newDepth + Node[n2].invertElev;
     h1 = MAX(h1, z1);
@@ -137,7 +141,7 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
 
     // --- find surface area contributions to upstream and downstream nodes
     //     based on previous iteration's flow estimate
-    findSurfArea(j, qLast, length, &h1, &h2, &y1, &y2);
+    findSurfArea(linkIndex, qLast, length, &h1, &h2, &y1, &y2);
 
     // --- compute area at each end of conduit & hyd. radius at upstream end
     wSlot = getSlotWidth(xsect, y1);
@@ -162,20 +166,20 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
          y2 >= xsect->yFull) isFull = TRUE;
 
     // --- set new flow to zero if conduit is dry or if flap gate is closed
-    if ( Link[j].flowClass == DRY ||
-         Link[j].flowClass == UP_DRY ||
-         Link[j].flowClass == DN_DRY ||
+    if ( Link[linkIndex].flowClass == DRY ||
+         Link[linkIndex].flowClass == UP_DRY ||
+         Link[linkIndex].flowClass == DN_DRY ||
          isClosed ||
          aMid <= FUDGE )
     {
         Conduit[k].a1 = 0.5 * (a1 + a2);
         Conduit[k].q1 = 0.0;;
         Conduit[k].q2 = 0.0;
-        Link[j].dqdh  = GRAVITY * dt * aMid / length * barrels;
-        Link[j].froude = 0.0;
-        Link[j].newDepth = MIN(yMid, Link[j].xsect.yFull);
-        Link[j].newVolume = Conduit[k].a1 * link_getLength(j) * barrels;
-        Link[j].newFlow = 0.0;
+        Link[linkIndex].dqdh  = GRAVITY * dt * aMid / length * barrels;
+        Link[linkIndex].froude = 0.0;
+        Link[linkIndex].newDepth = MIN(yMid, Link[linkIndex].xsect.yFull);
+        Link[linkIndex].newVolume = Conduit[k].a1 * link_getLength(linkIndex) * barrels;
+        Link[linkIndex].newFlow = 0.0;
         return;
     }
 
@@ -184,14 +188,14 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
     if ( fabs(v) > MAXVELOCITY )  v = MAXVELOCITY * SGN(qLast);
 
     // --- compute Froude No.
-    Link[j].froude = link_getFroude(j, v, yMid);
-    if ( Link[j].flowClass == SUBCRITICAL &&
-         Link[j].froude > 1.0 ) Link[j].flowClass = SUPCRITICAL;
+    Link[linkIndex].froude = link_getFroude(linkIndex, v, yMid);
+    if ( Link[linkIndex].flowClass == SUBCRITICAL &&
+         Link[linkIndex].froude > 1.0 ) Link[linkIndex].flowClass = SUPCRITICAL;
 
     // --- find inertial damping factor (sigma)
-    if      ( Link[j].froude <= 0.5 ) sigma = 1.0;
-    else if ( Link[j].froude >= 1.0 ) sigma = 0.0;
-    else    sigma = 2.0 * (1.0 - Link[j].froude);
+    if      ( Link[linkIndex].froude <= 0.5 ) sigma = 1.0;
+    else if ( Link[linkIndex].froude >= 1.0 ) sigma = 0.0;
+    else    sigma = 2.0 * (1.0 - Link[linkIndex].froude);
 
     // --- get upstream-weighted area & hyd. radius based on damping factor
     //     (modified version of R. Dickinson's slope weighting)
@@ -210,7 +214,7 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
     // --- compute terms of momentum eqn.:
     // --- 1. friction slope term
     if ( xsect->type == FORCE_MAIN && isFull )
-         dq1 = dt * forcemain_getFricSlope(j, fabs(v), rMid);
+         dq1 = dt * forcemain_getFricSlope(linkIndex, fabs(v), rMid);
     else dq1 = dt * Conduit[k].roughFactor / pow(rWtd, 1.33333) * fabs(v);
 
     // --- 2. energy slope term
@@ -229,33 +233,85 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
     dq5 = 0.0;
     if ( Conduit[k].hasLosses )
     {
-        dq5 = findLocalLosses(j, a1, a2, aMid, qLast) / 2.0 / length * dt;
+        dq5 = findLocalLosses(linkIndex, a1, a2, aMid, qLast) / 2.0 / length * dt;
     }
 
     // --- 6. term for evap and seepage losses per unit length
-    dq6 = link_getLossRate(j, DW, qLast, dt) * 2.5 * dt * v / link_getLength(j);
+    dq6 = link_getLossRate(linkIndex, DW, qLast, dt) * 2.5 * dt * v / link_getLength(linkIndex);
 
     // --- combine terms to find new conduit flow
     denom = 1.0 + dq1 + dq5;
     q = (qOld - dq2 + dq3 + dq4 + dq6) / denom;
 
     // --- compute derivative of flow w.r.t. head
-    Link[j].dqdh = 1.0 / denom  * GRAVITY * dt * aWtd / length * barrels;
+    Link[linkIndex].dqdh = 1.0 / denom  * GRAVITY * dt * aWtd / length * barrels;
+
+    // --- A3 parity term tracing for one link (SWMM_TRACE_LINK=<index>,
+    //     first 64 invocations; requires SWMM_TRACE_RSTEP for the path)
+    {
+        static FILE* lf = NULL;
+        static long  lfTarget = -2;
+        static long  lfSkip = 0;
+        static long  lfStep = 0;
+        static int   lfCount = 0;
+        static int   lfRows = 0;
+        if ( lfTarget == -2 )
+        {
+            char* p = getenv("SWMM_TRACE_LINK");
+            char* tr = getenv("SWMM_TRACE_RSTEP");
+            char* sk = getenv("SWMM_TRACE_SKIP");
+            char* ls = getenv("SWMM_TRACE_LSTEP");
+            lfTarget = -1;
+            if ( sk && *sk ) lfSkip = atol(sk);
+            if ( ls && *ls ) lfStep = atol(ls);
+            if ( p && *p && tr && *tr )
+            {
+                char fname[512];
+                lfTarget = atol(p);
+                snprintf(fname, sizeof(fname), "%s.link%ld", tr, lfTarget);
+                lf = fopen(fname, "w");
+                if ( lf ) fprintf(lf,
+                    "n,qLast,v,sigma,rho,aWtd,rWtd,dq1,dq2,dq3,dq4,dq5,dq6,qOld,q,sa1,sa2,fc,y1,yMid,a1,aMid,r1,rMid\n");
+            }
+        }
+        if ( lf && linkIndex == lfTarget )
+        {
+            int inWindow;
+            ++lfCount;
+            /* SWMM_TRACE_LSTEP=N: capture while computing routing step >= N
+               (the RSTEP serial increments at the END of each step, so during
+               step N the serial still reads N-1). Otherwise use the
+               invocation-count window (SWMM_TRACE_SKIP). */
+            inWindow = lfStep > 0 ? (SwmmTraceRstepSn + 1 >= lfStep)
+                                  : (lfCount > lfSkip);
+            if ( inWindow && lfRows < 128 )
+            {
+                ++lfRows;
+                fprintf(lf, "%d,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%d,%a,%a,%a,%a,%a,%a\n",
+                        lfCount, qLast, v, sigma, rho, aWtd, rWtd,
+                        dq1, dq2, dq3, dq4, dq5, dq6, qOld, q,
+                        Link[linkIndex].surfArea1, Link[linkIndex].surfArea2,
+                        Link[linkIndex].flowClass,
+                        y1, yMid, a1, aMid, r1, rMid);
+                if ( lfRows >= 128 ) { fclose(lf); lf = NULL; }
+            }
+        }
+    }
 
     // --- check if any flow limitation applies
-    Link[j].inletControl = FALSE;
-    Link[j].normalFlow = FALSE;
+    Link[linkIndex].inletControl = FALSE;
+    Link[linkIndex].normalFlow = FALSE;
     if ( q > 0.0 )
     {
         // --- check for inlet controlled culvert flow
         if ( xsect->culvertCode > 0 && !isFull )
-            q = culvert_getInflow(j, q, h1);
+            q = culvert_getInflow(linkIndex, q, h1);
 
         // --- check for normal flow limitation based on surface slope & Fr
-        else if (NormalFlowLtd != NEITHER && y1 < Link[j].xsect.yFull &&
-                ( Link[j].flowClass == SUBCRITICAL || 
-                  Link[j].flowClass == SUPCRITICAL ))
-            q = checkNormalFlow(j, q, y1, y2, a1, r1);
+        else if (NormalFlowLtd != NEITHER && y1 < Link[linkIndex].xsect.yFull &&
+                ( Link[linkIndex].flowClass == SUBCRITICAL || 
+                  Link[linkIndex].flowClass == SUPCRITICAL ))
+            q = checkNormalFlow(linkIndex, q, y1, y2, a1, r1);
     }
 
     // --- apply under-relaxation weighting between new & old flows;
@@ -267,13 +323,13 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
     }
 
     // --- check if user-supplied flow limit applies
-    if ( Link[j].qLimit > 0.0 )
+    if ( Link[linkIndex].qLimit > 0.0 )
     {
-         if ( fabs(q) > Link[j].qLimit ) q = SGN(q) * Link[j].qLimit;
+         if ( fabs(q) > Link[linkIndex].qLimit ) q = SGN(q) * Link[linkIndex].qLimit;
     }
 
     // --- check for reverse flow with closed flap gate
-    if ( link_setFlapGate(j, n1, n2, q) ) q = 0.0;
+    if ( link_setFlapGate(linkIndex, n1, n2, q) ) q = 0.0;
 
     // --- do not allow flow out of a dry node
     //     (as suggested by R. Dickinson)
@@ -284,12 +340,12 @@ void  dwflow_findConduitFlow(int j, int steps, double omega, double dt)
     Conduit[k].a1 = aMid;
     Conduit[k].q1 = q;
     Conduit[k].q2 = q;
-    Link[j].newDepth  = MIN(yMid, xsect->yFull);
+    Link[linkIndex].newDepth  = MIN(yMid, xsect->yFull);
     aMid = (a1 + a2) / 2.0;
 //  aMid = MIN(aMid, xsect->aFull);  //Slot can have aMid > aFull 
     Conduit[k].fullState = link_getFullState(a1, a2, xsect->aFull);
-    Link[j].newVolume = aMid * link_getLength(j) * barrels;
-    Link[j].newFlow = q * barrels;
+    Link[linkIndex].newVolume = aMid * link_getLength(linkIndex) * barrels;
+    Link[linkIndex].newFlow = q * barrels;
 }
 
 //=============================================================================

@@ -48,6 +48,9 @@
 //   - Warning for conduit elevation drop < MIN_DELTA_Z restored.
 //   Build 5.2.4:
 //   - Conduit evap+seepage loss under DW routing limited by conduit volume.
+//   Build 5.3.0:
+//   - Modified to use global constants defined in consts.h.
+//   - Support added for API provided pollutant fluxes and inflows.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -452,10 +455,12 @@ void  link_validate(int j)
         Node[n].fullDepth = MAX(Node[n].fullDepth,
                             Link[j].offset1 + Link[j].xsect.yFull);
     }
+    // OpenSWMM fork extra validation: warn when a link opening exceeds a
+    // storage node's max depth (ported from the fork's earlier release branch)
     else if ( Node[n].fullDepth > 0.0 &&
               Link[j].offset1 + Link[j].xsect.yFull > Node[n].fullDepth )
     {
-        report_writeWarningMsg(WARN13, Node[n].ID);
+        report_writeWarningMsg(WARN13L, Node[n].ID);
     }
 
     // --- do same for downstream node only for conduit links
@@ -1145,7 +1150,7 @@ void  conduit_validate(int j, int k)
     //     (factor of 0.3 is for circular pipe 95% full)
     // NOTE: this factor was used in the past for a modified version of
     //       Kinematic Wave routing but is now deprecated.
-    aa = Conduit[k].beta / sqrt(32.2) *
+    aa = Conduit[k].beta / sqrt(GRAVITY) *
          pow(Link[j].xsect.yFull, 0.1666667) * 0.3;
     if ( aa >= 1.0 ) Conduit[k].superCritical = TRUE;
     else             Conduit[k].superCritical = FALSE;
@@ -1934,6 +1939,43 @@ double orifice_getInflow(int j)
     {
         ratio = (h2 - hcrest) / (h1 - hcrest);
         q *= pow( (1.0 - pow(ratio, 1.5)), 0.385);
+    }
+
+    // --- A3 parity term tracing for one orifice (SWMM_TRACE_ORIF=<index>,
+    //     step-gated via SWMM_TRACE_LSTEP; requires SWMM_TRACE_RSTEP)
+    {
+        extern long SwmmTraceRstepSn;
+        static FILE* of = NULL;
+        static long  ofTarget = -2;
+        static long  ofStep = 0;
+        static int   ofRows = 0;
+        if ( ofTarget == -2 )
+        {
+            char* p = getenv("SWMM_TRACE_ORIF");
+            char* tr = getenv("SWMM_TRACE_RSTEP");
+            char* ls = getenv("SWMM_TRACE_LSTEP");
+            ofTarget = -1;
+            if ( ls && *ls ) ofStep = atol(ls);
+            if ( p && *p && tr && *tr )
+            {
+                char fname[512];
+                ofTarget = atol(p);
+                snprintf(fname, sizeof(fname), "%s.orif%ld", tr, ofTarget);
+                of = fopen(fname, "w");
+                if ( of ) fprintf(of,
+                    "h1,h2,hcrest,hcrown,f,head,cWeir,cOrif,hCrit,dqdh,q\n");
+            }
+        }
+        if ( of && j == ofTarget &&
+             (ofStep <= 0 || SwmmTraceRstepSn + 1 >= ofStep) && ofRows < 128 )
+        {
+            ++ofRows;
+            fprintf(of, "%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a\n",
+                    h1, h2, hcrest, hcrown, f, head,
+                    Orifice[k].cWeir, Orifice[k].cOrif, Orifice[k].hCrit,
+                    Link[j].dqdh, q);
+            if ( ofRows >= 128 ) { fclose(of); of = NULL; }
+        }
     }
     return q;
 }

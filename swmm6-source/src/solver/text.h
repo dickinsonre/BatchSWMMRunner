@@ -24,8 +24,9 @@
 
 #define FMT03 " There are errors.\n"
 #define FMT04 " There are warnings.\n"
+#include "legacy_version.h"
 #define FMT08 \
-  "\n  EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)"
+  "\n  OPENSWMM ENGINE - VERSION " LEGACY_SWMM_VERSION_FULL
 #define FMT09 \
   "\n  ------------------------------------------------------------"
 #define FMT10 "\n"
@@ -60,6 +61,10 @@
 #define WARN12 \
 "WARNING 12: inlet removed due to unsupported shape for Conduit"
 #define WARN13 \
+"WARNING 13: parameters for same month provided more than once for Unit Hydrograph"
+// OpenSWMM fork extra validation (ported from the fork's earlier release branch;
+// dropped in swmm6_rel legacy engine, re-applied for BatchSWMM's SWMM6 mode):
+#define WARN13L \
 "WARNING 13: link opening exceeds maximum depth for Node"
 
 // Analysis Option Keywords

@@ -87,7 +87,7 @@ void flowrout_init(int routingModel)
         dynwave_init();
 
         // --- initialize node & link depths if not using a hotstart file
-        if ( Fhotstart1.mode == NO_FILE )
+        if ( FhotstartInput.mode == NO_FILE )
         {
             initNodeDepths();
             initLinkDepths();
@@ -102,8 +102,10 @@ void flowrout_init(int routingModel)
     initLinks(routingModel);
 }
 
-//=============================================================================
-
+/*!
+* \brief Closes down flow routing system.
+* \param[in] routingModel Routing model code
+*/
 void  flowrout_close(int routingModel)
 //
 //  Input:   routingModel = routing method code
@@ -114,8 +116,12 @@ void  flowrout_close(int routingModel)
     if ( routingModel == DW ) dynwave_close();
 }
 
-//=============================================================================
-
+/*!
+* \brief Finds variable time step for dynamic wave routing.
+* \param[in] routingModel Type of routing model
+* \param[in] fixedStep User-supplied time step (sec)
+* \return Returns adjusted value of routing time step (sec)
+*/
 double flowrout_getRoutingStep(int routingModel, double fixedStep)
 //
 //  Input:   routingModel = type of routing method used

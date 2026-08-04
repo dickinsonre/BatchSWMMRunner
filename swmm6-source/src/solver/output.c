@@ -28,6 +28,9 @@
 //   - Large file support added.
 //   Build5.2.1:
 //   - Corrects the definition of F_OFF for non-Microsoft C/C++ compilers.
+//   Build5.3.0:
+//   - Save max of averaged node depths per reporting period when saving node
+//     results with average turned on. Fix suggested by @MitchHeineman (CDM).
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -36,6 +39,8 @@
   #define F_OFF __int64
   #define F_SEEK _fseeki64
 #else              // Other platforms
+  #include <sys/types.h>
+  #include <unistd.h>
   #define F_OFF off_t
   #define F_SEEK fseeko
 #endif
@@ -50,8 +55,17 @@
 #define REAL4 float
 #define REAL8 double
 
-enum InputDataType {INPUT_TYPE_CODE, INPUT_AREA, INPUT_INVERT, INPUT_MAX_DEPTH,
-                    INPUT_OFFSET, INPUT_LENGTH};
+enum InputDataType {
+    INPUT_TYPE_CODE, 
+    INPUT_AREA, 
+    INPUT_INVERT,
+    OUTPUT_INVERT,
+    INPUT_MAX_DEPTH,
+    OUTPUT_MAX_DEPTH,
+    INPUT_OFFSET, 
+    OUTPUT_OFFSET,
+    INPUT_LENGTH
+};
 
 typedef struct
 {
@@ -116,14 +130,10 @@ static void output_saveAvgResults(FILE* file);
 //  output_readLinkResults        (called by report_Links)
 
 
-//=============================================================================
-
+/*!
+* \brief Writes basic project data to binary output file.
+*/
 int output_open()
-//
-//  Input:   none
-//  Output:  returns an error code
-//  Purpose: writes basic project data to binary output file.
-//
 {
     int   j;
     int   m;
@@ -220,7 +230,7 @@ int output_open()
     }
     for (j=0; j<NumPolluts; j++) output_saveID(Pollut[j].ID, Fout.file);
 
-    // --- save codes of pollutant concentration units
+    // --- save units of pollutant concentration units
     for (j=0; j<NumPolluts; j++)
     {
         k = Pollut[j].units;
@@ -267,7 +277,7 @@ int output_open()
     fwrite(&k, sizeof(INT4), 1, Fout.file);
     k = INPUT_OFFSET;
     fwrite(&k, sizeof(INT4), 1, Fout.file);
-    k = INPUT_OFFSET;
+    k = OUTPUT_OFFSET;
     fwrite(&k, sizeof(INT4), 1, Fout.file);
     k = INPUT_MAX_DEPTH;
     fwrite(&k, sizeof(INT4), 1, Fout.file);
@@ -422,7 +432,6 @@ void  output_checkFileSize()
 }
 */
 
-//=============================================================================
 
 void output_openOutFile()
 //
@@ -452,8 +461,10 @@ void output_openOutFile()
     }
 }
 
-//=============================================================================
-
+/*!
+* \brief Writes computed results for current report time to binary file.
+* \param[in] reportTime Elapsed simulation time (millisec)
+*/
 void output_saveResults(double reportTime)
 //
 //  Input:   reportTime = elapsed simulation time (millisec)
@@ -510,14 +521,10 @@ void output_saveResults(double reportTime)
     Nperiods++;
 }
 
-//=============================================================================
-
+/*!
+* \brief Writes closing records to binary file.
+*/
 void output_end()
-//
-//  Input:   none
-//  Output:  none
-//  Purpose: writes closing records to binary file.
-//
 {
     INT4 k;
     fwrite(&IDStartPos, sizeof(INT4), 1, Fout.file);
@@ -534,14 +541,10 @@ void output_end()
     }
 }
 
-//=============================================================================
-
+/*!
+* \brief Frees memory used for accessing the binary file.
+*/
 void output_close()
-//
-//  Input:   none
-//  Output:  none
-//  Purpose: frees memory used for accessing the binary file.
-//
 {
     FREE(SubcatchResults);
     FREE(NodeResults);
@@ -694,15 +697,13 @@ void output_saveLinkResults(double reportTime, FILE* file)
     }
 }
 
-//=============================================================================
-
+/*!
+* \brief Retrieves the date/time for a specific reporting period
+* from the binary output file.
+* \param[in] period Index of reporting time period
+* \param[out] days Date/time value
+*/
 void output_readDateTime(long period, DateTime* days)
-//
-//  Input:   period = index of reporting time period
-//  Output:  days = date/time value
-//  Purpose: retrieves the date/time for a specific reporting period
-//           from the binary output file.
-//
 {
     F_OFF p = period;
     F_OFF bytePos = OutputStartPos + (p-1)*BytesPerPeriod;
@@ -711,16 +712,13 @@ void output_readDateTime(long period, DateTime* days)
     fread(days, sizeof(REAL8), 1, Fout.file);
 }
 
-//=============================================================================
-
+/*!
+* \brief Reads computed results for a subcatchment at a specific time
+* period.
+* \param[in] period Index of reporting time period
+* \param[in] index Subcatchment index in binary output file
+*/
 void output_readSubcatchResults(long period, int index)
-//
-//  Input:   period = index of reporting time period
-//           index = subcatchment index in binary output file
-//  Output:  none
-//  Purpose: reads computed results for a subcatchment at a specific time
-//           period.
-//
 {
     long offset = index*NumSubcatchVars;
     F_OFF p = period;
@@ -730,15 +728,12 @@ void output_readSubcatchResults(long period, int index)
     fread(SubcatchResults, sizeof(REAL4), NumSubcatchVars, Fout.file);
 }
 
-//=============================================================================
-
+/*!
+* \brief Reads computed results for a node at a specific time period.
+* \param[in] period Index of reporting time period
+* \param[in] index Node index in binary output file
+*/
 void output_readNodeResults(long period, int index)
-//
-//  Input:   period = index of reporting time period
-//           index = node index in binary output file
-//  Output:  none
-//  Purpose: reads computed results for a node at a specific time period.
-//
 {
     long offset = NumSubcatch*NumSubcatchVars + index*NumNodeVars;
     F_OFF p = period;
@@ -748,15 +743,12 @@ void output_readNodeResults(long period, int index)
     fread(NodeResults, sizeof(REAL4), NumNodeVars, Fout.file);
 }
 
-//=============================================================================
-
+/*!
+* \brief Reads computed results for a link at a specific time period.
+* \param[in] period Index of reporting time period
+* \param[in] index Link index in binary output file
+*/
 void output_readLinkResults(long period, int index)
-//
-//  Input:   period = index of reporting time period
-//           index = link index in binary output file
-//  Output:  none
-//  Purpose: reads computed results for a link at a specific time period.
-//
 {
     long offset = (NumSubcatch*NumSubcatchVars + NumNodes*NumNodeVars + index*NumLinkVars);
     F_OFF p = period;
@@ -928,7 +920,7 @@ void output_saveAvgResults(FILE* file)
     // --- update each node's max depth and contribution to system storage
     for (i = 0; i < Nobjects[NODE]; i++)
     {
-        stats_updateMaxNodeDepth(i, Node[i].newDepth * UCF(LENGTH));
+        stats_updateMaxNodeDepth(i, AvgNodeResults[i].xAvg[NODE_DEPTH] * UCF(LENGTH) / Nsteps);
         SysResults[SYS_STORAGE] += (REAL4)(Node[i].newVolume * UCF(VOLUME));
     }
 

@@ -14,6 +14,8 @@
 //   - Function added to create a transect for a Street cross-section.
 //   Build 5.2.4:
 //   - Corrected street transect points in transect_createStreetTransect.
+//   Build 5.3.0:
+//   - Modified to use global constants defined in consts.h.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -305,6 +307,29 @@ void createTables(TTransect *transect, double ymin, double ymax)
 
     // --- set width at 0 height equal to width at 4% of max. height
     transect->widthTbl[0] = transect->widthTbl[1];
+
+    // --- A3 transect-table parity dump (env-gated)
+    {
+        char* p = getenv("SWMM_TRACE_TRANSECT");
+        if ( p && *p )
+        {
+            char fn[512];
+            FILE* tf;
+            int q;
+            snprintf(fn, sizeof(fn), "%s.leg.%s", p, transect->ID);
+            tf = fopen(fn, "w");
+            if ( tf )
+            {
+                fprintf(tf, "yFull=%a aFull=%a rFull=%a wMax=%a\n",
+                        transect->yFull, transect->aFull, transect->rFull,
+                        transect->wMax);
+                for (q = 0; q < transect->nTbl; q++)
+                    fprintf(tf, "%d,%a,%a,%a\n", q, transect->areaTbl[q],
+                            transect->hradTbl[q], transect->widthTbl[q]);
+                fclose(tf);
+            }
+        }
+    }
 }
 
 //=============================================================================
@@ -321,6 +346,7 @@ int  setManning(double n[])
     {
         if ( n[i] < 0.0 ) return ERR_NUMBER;
     }
+    if ( n[3] == 0.0 ) return ERR_TRANSECT_MANNING;
     if ( n[1] > 0.0 ) Nleft = n[1];
     if ( n[2] > 0.0 ) Nright = n[2];
     if ( n[3] > 0.0 ) Nchannel = n[3];
@@ -460,7 +486,7 @@ void  getGeometry(TTransect *transect, int i, double y)
     if ( aSum == 0.0 )
         transect->hradTbl[i] = transect->hradTbl[i-1];
     else
-        transect->hradTbl[i] = pow(qSum * Nchannel / 1.49 / aSum, 1.5);
+        transect->hradTbl[i] = pow(qSum * Nchannel / PHI / aSum, 1.5);
 }
 
 //=============================================================================

@@ -1256,7 +1256,7 @@ export default function Documentation() {
                       <div data-testid="guide-engine-swmm6">
                         <p className="font-medium">SWMM6 (Browser)</p>
                         <p className="text-muted-foreground">
-                          The OpenSWMM SWMM6 fork (based on EPA SWMM 5.2.4) compiled to WebAssembly. Behaves like the WASM mode but adds extra validation, such as the WARN13 link-depth check. Useful for cross-checking results against the standard engine.
+                          The OpenSWMM SWMM6 fork (swmm6_rel release branch, legacy engine v5.3.0) compiled to WebAssembly. Behaves like the WASM mode but adds extra validation, such as the WARN13 link-depth check. Useful for cross-checking results against the standard engine.
                         </p>
                       </div>
                     </div>

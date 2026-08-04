@@ -125,7 +125,8 @@ describe.runIf(swmm6Present)("engine parity: executable vs SWMM6 WASM", () => {
   }, 120000);
 
   it("SWMM6 engine produces a valid SWMM report", () => {
-    expect(wasm6Report).toMatch(/EPA STORM WATER MANAGEMENT MODEL/);
+    // swmm6_rel legacy engine brands its report header as OPENSWMM ENGINE
+    expect(wasm6Report).toMatch(/OPENSWMM ENGINE|EPA STORM WATER MANAGEMENT MODEL/);
   });
 
   it("key metrics agree within tolerance", () => {

@@ -68,10 +68,13 @@
 //   - Support added for mutiple infiltration methods within a project.
 //   Build 5.2.0:
 //   - Covered property added to RAIN_BARREL parameters
-//   Build 5.2.3
+//   Build 5.2.3:
 //   - Fixed double counting of initial water volume in green roof drain mat.
-//   Build 5.2.4
+//   Build 5.2.4:
 //   - Fixed test for invalid data in readDrainData function.
+//   Build 5.3.0:
+//   - Modified to use global constants defined in consts.h.
+//   - Updated to route runoff from closed rain barrel to pervious area.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -149,6 +152,7 @@ static TLidProc*  LidProcs;            // array of LID processes
 static int        LidCount;            // number of LID processes
 static TLidGroup* LidGroups;           // array of LID process groups
 static int        GroupCount;          // number of LID groups (subcatchments)
+static int        LidUnitsCount;       // number of LID units in all groups
 
 static double     EvapRate;            // evaporation rate (ft/s)
 static double     NativeInfil;         // native soil infil. rate (ft/s)
@@ -788,7 +792,32 @@ int readDrainData(int j, char* toks[], int ntoks)
     LidProcs[j].drain.qCurve = i;
     return 0;
 }
- 
+
+//=============================================================================
+
+int lid_setDrainParams(int lidIndex, double coeff, double expon, double offset)
+//
+//  Purpose: updates the underdrain flow parameters of a LID process at
+//           runtime (API support). The drain parameters are read live each
+//           step (lidproc.c), so an edit takes effect on the next step.
+//  Input:   lidIndex = LID process index
+//           coeff    = underdrain flow coeff. (in/hr or mm/hr)
+//           expon    = underdrain head exponent
+//           offset   = offset height of underdrain (in or mm)
+//  Output:  returns 0 if successful, 1 for a bad index, 2 for a bad value
+//           (units match readDrainData; the API wrapper maps the codes).
+//
+{
+    if ( LidProcs == NULL || lidIndex < 0 || lidIndex >= LidCount )
+        return 1;
+    if ( coeff < 0.0 || expon < 0.0 || offset < 0.0 )
+        return 2;
+    LidProcs[lidIndex].drain.coeff  = coeff;
+    LidProcs[lidIndex].drain.expon  = expon;
+    LidProcs[lidIndex].drain.offset = offset / UCF(RAINDEPTH);
+    return 0;
+}
+
 //=============================================================================
 
 int readDrainMatData(int j, char* toks[], int ntoks)
@@ -1041,14 +1070,14 @@ void validateLidProc(int j)
             report_writeErrorMsg(ERR_LID_PARAMS, Msg);
         }
         else LidProcs[j].surface.alpha = 
-            1.49 * sqrt(LidProcs[j].surface.surfSlope) /
+            PHI * sqrt(LidProcs[j].surface.surfSlope) /
                 LidProcs[j].surface.roughness;
     }
     else
     {
         //... compute surface overland flow coeff.
         if ( LidProcs[j].surface.roughness > 0.0 )
-            LidProcs[j].surface.alpha = 1.49 / LidProcs[j].surface.roughness *
+            LidProcs[j].surface.alpha = PHI / LidProcs[j].surface.roughness *
                                         sqrt(LidProcs[j].surface.surfSlope);
         else LidProcs[j].surface.alpha = 0.0;
     }
@@ -1056,7 +1085,7 @@ void validateLidProc(int j)
     //... compute drainage mat layer's flow coeff.
     if ( LidProcs[j].drainMat.roughness > 0.0 )
     {
-        LidProcs[j].drainMat.alpha = 1.49 / LidProcs[j].drainMat.roughness *
+        LidProcs[j].drainMat.alpha = PHI / LidProcs[j].drainMat.roughness *
                                     sqrt(LidProcs[j].surface.surfSlope);
     }
     else LidProcs[j].drainMat.alpha = 0.0;
@@ -1618,6 +1647,7 @@ void lid_getRunoff(int j, double tStep)
     TLidGroup  theLidGroup;       // group of LIDs placed in the subcatchment
     TLidList*  lidList;           // list of LID units in the group
     TLidUnit*  lidUnit;           // a member of the list of LID units
+    TSubcatch* subcatch;          // subcatchment being analyzed
     double lidArea;               // area of an LID unit
     double qImperv = 0.0;         // runoff from impervious areas (cfs)
     double qPerv = 0.0;           // runoff from pervious areas (cfs)
@@ -1632,16 +1662,19 @@ void lid_getRunoff(int j, double tStep)
     lidList = theLidGroup->lidList;
     if ( !lidList ) return;
 
+    // ... get subcatchment being analyzed
+    subcatch = &Subcatch[j];
+
     //... determine if evaporation can occur
-    EvapRate = Evap.rate;
-    if ( Evap.dryOnly && Subcatch[j].rainfall > 0.0 ) EvapRate = 0.0;
+    //    (uses any externally prescribed PET rate; DRY_ONLY handled within)
+    EvapRate = subcatch_getEvapRate(j);
 
     //... find subcatchment's infiltration rate into native soil
     findNativeInfil(j, tStep);
 
     //... get impervious and pervious area runoff from non-LID
     //    portion of subcatchment (cfs)
-    if ( Subcatch[j].area > Subcatch[j].lidArea )
+    if (subcatch->area > subcatch->lidArea )
     {    
         qImperv = getImpervAreaRunoff(j);
         qPerv = getPervAreaRunoff(j);
@@ -1664,13 +1697,23 @@ void lid_getRunoff(int j, double tStep)
             //... update total runoff volume treated
             VlidIn += lidInflow * lidArea * tStep;
 
-            //... add rainfall onto LID inflow (ft/s)
-            lidInflow = lidInflow + getRainInflow(j, lidUnit);
+            TLidProc* lidProc = &LidProcs[lidUnit->lidIndex];
+            if (lidProc->lidType == RAIN_BARREL &&
+                lidProc->storage.covered == TRUE)
+            {
+                // Add runoff from closed rain barrel to return (cfs)
+                qReturn += subcatch->rainfall * subcatch->lidArea;
+			}
+            else
+            {
+                //... add rainfall onto LID inflow (ft/s)
+                lidInflow = lidInflow + subcatch->rainfall;
+            }
 
             // ... add upstream runon only if LID occupies full subcatchment
-            if ( Subcatch[j].area == Subcatch[j].lidArea )
+            if (subcatch->area >= subcatch->lidArea)
             {
-                lidInflow += Subcatch[j].runon;
+                lidInflow += subcatch->runon;
             }
 
             //... evaluate the LID unit's performance, updating the LID group's
@@ -1772,7 +1815,7 @@ double getImpervAreaRunoff(int j)
     {
         q *= Subcatch[j].subArea[IMPERV0].fOutlet;
     }
-    nonLidArea = Subcatch[j].area - Subcatch[j].lidArea;
+    nonLidArea = MAX(0.0, Subcatch[j].area - Subcatch[j].lidArea);
     return q * nonLidArea;
 }
 
@@ -1798,7 +1841,7 @@ double getPervAreaRunoff(int j)
     {
         q *= Subcatch[j].subArea[PERV].fOutlet;
     }
-    nonLidArea = Subcatch[j].area - Subcatch[j].lidArea;
+    nonLidArea = MAX(0.0, Subcatch[j].area - Subcatch[j].lidArea);
     return q * nonLidArea;
 }
 

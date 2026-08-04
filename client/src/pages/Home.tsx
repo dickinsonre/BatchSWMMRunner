@@ -737,7 +737,7 @@ export default function Home() {
                           ? 'Uses SWMM5 shared library for step-by-step control with live data streaming.'
                           : engineMode === 'wasm'
                           ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device.'
-                          : 'Runs the OpenSWMM SWMM6 engine (EPA SWMM 5.2.4 + extra link-depth validation warnings) as WebAssembly in your browser.'}
+                          : 'Runs the OpenSWMM SWMM6 engine (swmm6_rel release, legacy engine v5.3.0 with extra link-depth validation warnings) as WebAssembly in your browser.'}
                       </p>
                     </div>
                 </div>

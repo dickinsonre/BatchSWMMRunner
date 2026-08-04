@@ -30,6 +30,9 @@
 //   - Fixes bug in summary statistics when Report Start date > Start Date.
 //   Build 5.2.0:
 //   - Support for relative file names added.
+//   - Support for writing multiple output hotstart files for given times
+//   Build 5.3.0:
+//   - Implemented option to save multiple hotstart files at different times
 //-----------------------------------------------------------------------------
 
 #ifndef GLOBALS_H
@@ -44,8 +47,8 @@ EXTERN TFile
                   Frain,                    // Rainfall file
                   Frunoff,                  // Runoff file
                   Frdii,                    // RDII inflow file
-                  Fhotstart1,               // Hot start input file
-                  Fhotstart2,               // Hot start output file
+                  FhotstartInput,           // Hot start input file
+                  *FhotstartOutputs,        // Hot start output files
                   Finflows,                 // Inflows routing file
                   Foutflows;                // Outflows routing file
 
@@ -167,6 +170,13 @@ EXTERN TTransect* Transect;                 // Array of transect data
 EXTERN TStreet*   Street;                   // Array of defined Street cross-sections
 EXTERN TShape*    Shape;                    // Array of custom conduit shapes
 EXTERN TEvent*    Event;                    // Array of routing events
+
+// Process-global warning callback. When set (via swmm_setWarningCallback), the
+// engine invokes it for each warning in addition to writing the .rpt line, so a
+// host can stream warnings live. Raw function-pointer type (not the public
+// typedef) to avoid include-order coupling; the types are compatible.
+EXTERN void (*WarningCallback)(const char *message, void *userData);
+EXTERN void*  WarningCallbackData;          // Opaque user data for the callback
 
 
 #endif //GLOBALS_H

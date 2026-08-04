@@ -30,6 +30,9 @@
 //   - Support added for relative file names.
 //   Build 5.2.2:
 //   - Prevent re-reading a time series file from start once end is reached.
+//   Build 5.3.0:
+//   - Check for comment first before parsing line when reading table to 
+//     prevent overflow of arrays when comment line is very long.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_DEPRECATE
 
@@ -41,8 +44,8 @@
 //-----------------------------------------------------------------------------
 //  Local functions
 //-----------------------------------------------------------------------------
-int    table_getNextFileEntry(TTable* table, double* x, double* y);
-int    table_parseFileLine(char* line, TTable* table, double* x, double* y);
+int table_getNextFileEntry(TTable* table, double* x, double* y);
+int table_parseFileLine(char* line, TTable* table, double* x, double* y);
 double table_interpolate(double x, double x1, double y1, double x2, double y2);
 
 
@@ -228,7 +231,7 @@ int table_addEntry(TTable* table, double x, double y)
 
 //=============================================================================
 
-void   table_deleteEntries(TTable *table)
+void table_deleteEntries(TTable *table)
 //
 //  Input:   table = pointer to a TTable structure
 //  Output:  none
@@ -257,7 +260,7 @@ void   table_deleteEntries(TTable *table)
 
 //=============================================================================
 
-void   table_init(TTable *table)
+void table_init(TTable *table)
 //
 //  Input:   table = pointer to a TTable structure
 //  Output:  none
@@ -282,7 +285,7 @@ void   table_init(TTable *table)
 
 //=============================================================================
 
-int   table_validate(TTable *table)
+int table_validate(TTable *table)
 //
 //  Input:   table = pointer to a TTable structure
 //  Output:  returns error code
@@ -297,14 +300,16 @@ int   table_validate(TTable *table)
     if ( table->file.mode == USE_FILE )
     {
         table->file.file = fopen(table->file.name, "rt");
-        if ( table->file.file == NULL ) return ERR_TABLE_FILE_OPEN;
+        if ( table->file.file == NULL )
+            return ERR_TABLE_FILE_OPEN;
     }
 
     // --- retrieve the first data entry in the table
     result = table_getFirstEntry(table, &x1, &y1);
 
     // --- return error condition if external file has no valid data
-    if ( !result && table->file.mode == USE_FILE ) return ERR_TABLE_FILE_READ;
+    if ( !result && table->file.mode == USE_FILE )
+        return ERR_TABLE_FILE_READ;
 
     // --- retrieve successive table entries and check for non-increasing x-values
     while ( table_getNextEntry(table, &x2, &y2) )
@@ -727,7 +732,7 @@ double table_getStorageDepth(TTable *table, double v)
 
 //=============================================================================
 
-void   table_tseriesInit(TTable *table)
+void table_tseriesInit(TTable *table)
 //
 //  Input:   table = pointer to a TTable structure
 //  Output:  none
@@ -805,7 +810,7 @@ double table_tseriesLookup(TTable *table, double x, char extend)
 
 //=============================================================================
 
-int  table_getNextFileEntry(TTable* table, double* x, double* y)
+int table_getNextFileEntry(TTable* table, double* x, double* y)
 //
 //  Input:   table = pointer to a TTable structure
 //           x = pointer to a date (as decimal days)
@@ -830,7 +835,7 @@ int  table_getNextFileEntry(TTable* table, double* x, double* y)
 
 //=============================================================================
 
-int  table_parseFileLine(char* line, TTable* table, double* x, double* y)
+int table_parseFileLine(char* line, TTable* table, double* x, double* y)
 //
 //  Input:   table = pointer to a TTable structure
 //           x = pointer to a date (as decimal days)
@@ -842,22 +847,43 @@ int  table_parseFileLine(char* line, TTable* table, double* x, double* y)
 //  Purpose: parses a line of time series data from an external file.
 //
 {
-    int   n;
-    char  s1[50],
-          s2[50],
-          s3[50];
+    int   n = 0;
+    char  *s1 = NULL,
+          *s2 = NULL,
+          *s3 = NULL;
+
     char* tStr;              // time as string
     char* yStr;              // value as string
     double yy;               // value as double
     DateTime d;              // day portion of date/time value
     DateTime t;              // time portion of date/time value
 
-    // --- get 3 string tokens from line and check if its a comment
-    n = sscanf(line, "%s %s %s", s1, s2, s3);
-
     // --- return if line is blank or is a comment
-    tStr = strtok(line, SEPSTR);
+    tStr = strtok(line, TBLSEPSTR);
     if ( tStr == NULL || *tStr == ';' ) return -1;
+
+
+    // --- get 3 string tokens from line
+    while (tStr != NULL)
+    {
+        switch (n)
+        {
+        case 0:
+            s1 = tStr;
+            n++;
+            break;
+		case 1:
+			s2 = tStr;
+            n++;
+            break;
+		case 2:
+			s3 = tStr;
+            n++;
+            break;
+        }
+
+        tStr = strtok(NULL, TBLSEPSTR);
+    }
 
     // --- line only has a time and a value
     if ( n == 2 )
