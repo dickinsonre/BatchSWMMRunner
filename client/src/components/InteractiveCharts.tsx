@@ -46,7 +46,7 @@ function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
       i++;
       if (i < lines.length) {
         const titleLine = lines[i].trim();
-        if (/Time Series$/i.test(titleLine)) {
+        if (/Time Series( Results)?$/i.test(titleLine)) {
           const sectionTitle = titleLine;
           i++;
           while (i < lines.length && /^\s*\*{3,}\s*$/.test(lines[i])) i++;
@@ -60,13 +60,27 @@ function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
             if (elemMatch) {
               const elementName = elemMatch[1];
               i++;
-              while (i < lines.length && lines[i].trim() === '') i++;
+              // Skip blank lines and leading dashed separators (SWMM6 places
+              // a dashed line before the column headers).
+              while (i < lines.length && (lines[i].trim() === '' || /^\s*-{3,}\s*$/.test(lines[i]))) i++;
               const colLine = lines[i] || '';
-              const columns = colLine.trim().split(/\s{2,}/).filter(c => c && c !== 'Date' && c !== 'Time');
-              i++;
-              const unitLine = lines[i] || '';
-              const units = unitLine.trim().split(/\s{2,}/).filter(u => u && u !== 'Day' && u !== 'Hour:Min');
-              i++;
+              let columns: string[];
+              let units: string[];
+              if (/\bDate\b/.test(colLine)) {
+                // SWMM5 layout:  Date  Time  <names>  /  Day  Hour:Min  <units>
+                columns = colLine.trim().split(/\s{2,}/).filter(c => c && c !== 'Date' && c !== 'Time');
+                i++;
+                const unitLine = lines[i] || '';
+                units = unitLine.trim().split(/\s{2,}/).filter(u => u && u !== 'Day' && u !== 'Hour:Min');
+                i++;
+              } else {
+                // SWMM6 (OpenSWMM 5.3) layout:  <names>  /  Date  Time  <units>
+                columns = colLine.trim().split(/\s{2,}/).filter(Boolean);
+                i++;
+                const unitLine = lines[i] || '';
+                units = unitLine.trim().split(/\s{2,}/).filter(u => u && u !== 'Date' && u !== 'Time');
+                i++;
+              }
               while (i < lines.length && /^\s*-{3,}/.test(lines[i])) i++;
 
               const data: TimeSeriesEntry[] = [];
