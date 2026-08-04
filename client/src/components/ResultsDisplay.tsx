@@ -264,7 +264,7 @@ function reportToHtml(content: string): ReportHtmlResult {
       continue;
     }
 
-    if (/EPA STORM WATER MANAGEMENT MODEL/.test(line)) {
+    if (/EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE/.test(line)) {
       htmlLines.push(`<h1 style="color:hsl(var(--primary));font-size:1.3em;font-weight:700;margin-bottom:0.2em;">${line.trim()}</h1>`);
       li++; continue;
     }

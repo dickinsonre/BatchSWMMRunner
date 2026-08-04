@@ -133,7 +133,7 @@ describe("validateSwmmReport", () => {
   it("rejects a report without the EPA SWMM header", () => {
     const r = validateSwmmReport("some random text output");
     expect(r.valid).toBe(false);
-    expect(r.reason).toMatch(/missing the EPA SWMM header/);
+    expect(r.reason).toMatch(/missing the SWMM engine header/);
   });
 
   it("rejects a report containing ERROR lines", () => {

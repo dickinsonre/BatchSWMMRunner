@@ -17,7 +17,7 @@ export function extractReportIssues(reportContent: string): { warnings: string[]
 }
 
 export function extractEngineVersion(reportContent: string): string | undefined {
-  const m = reportContent.match(/EPA STORM WATER MANAGEMENT MODEL - VERSION\s+([\d.]+)(?:\s*\(Build\s+([\d.]+)\))?/i);
+  const m = reportContent.match(/(?:EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE) - VERSION\s+([\d.]+)(?:\s*\(Build\s+([\d.]+)\))?/i);
   if (m) return m[2] || m[1];
   return undefined;
 }
@@ -26,8 +26,8 @@ export function validateSwmmReport(reportContent: string | undefined): { valid: 
   if (!reportContent || reportContent.trim().length === 0) {
     return { valid: false, reason: 'Report file is empty — the engine did not produce output' };
   }
-  if (!/EPA STORM WATER MANAGEMENT MODEL/i.test(reportContent)) {
-    return { valid: false, reason: 'Report file is missing the EPA SWMM header — output is not a valid SWMM report' };
+  if (!/EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE/i.test(reportContent)) {
+    return { valid: false, reason: 'Report file is missing the SWMM engine header — output is not a valid SWMM report' };
   }
   const { errors } = extractReportIssues(reportContent);
   if (errors.length > 0) {
