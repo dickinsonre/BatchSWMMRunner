@@ -9,6 +9,21 @@ export const PITCH_SEEN_KEY = "batchswmm-pitch-seen";
 
 const nextSteps: { title: string; detail: string; done?: boolean }[] = [
   {
+    title: "Keep your batches private",
+    detail: "Jobs, results, and live progress streams are now tied to your browser session — nobody else can see or cancel your runs.",
+    done: true,
+  },
+  {
+    title: "Handle big batches without bloating",
+    detail: "Large report text now lives in its own storage and loads on demand, so result lists stay fast even for 100-file batches.",
+    done: true,
+  },
+  {
+    title: "Honest settings, real ZIP export, and CI",
+    detail: "Parallel processing is now truly wired to the in-browser engines, results download as a ZIP of .rpt/.inp files, and every change is checked by automated typecheck + tests.",
+    done: true,
+  },
+  {
     title: "Verify graphs for in-browser (WASM) runs on real models",
     detail: "Confirm the new time-series charts work end-to-end for browser-based SWMM5 and SWMM6 runs — in progress now.",
   },
@@ -88,7 +103,7 @@ export default function ElevatorPitch() {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
               <p>Per-file pass/fail status, continuity errors, full report text, interactive time-series graphs, key charts and histograms.</p>
-              <p>CSV/Excel/PDF exports, an AI report assistant, ReSWMM conduit lengthening, and an HTTP API plus deep links so scripts and browser agents can drive it.</p>
+              <p>CSV/Excel/PDF exports, a ZIP download of all .rpt/.inp outputs, an AI report assistant, ReSWMM conduit lengthening, and an HTTP API plus deep links so scripts and browser agents can drive it.</p>
             </CardContent>
           </Card>
         </div>
