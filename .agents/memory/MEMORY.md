@@ -2,3 +2,4 @@
 - [Test suite quirks](test-suite-quirks.md) — vitest must run files serially (shared uploads dir); load WASM engine in node via new Function + wasmBinary, not require.
 - [SWMM binary in deployments](swmm-deployment-glibc.md) — runswmm's nix glibc interpreter is absent in published deployments (spawn ENOENT); run via bundled loader in swmm-engine/libs.
 - [SWMM report flags](swmm-report-flags.md) — [REPORT] flags gate .out contents too; WASM swmm_report writes rpt time series, CLI does not.
+- [GitHub workflow scope](github-workflow-scope.md) — pushes adding .github/workflows are rejected (token lacks workflow scope); fix is user-side, not a retry.
