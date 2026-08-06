@@ -671,6 +671,26 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
     }
   });
 
+  // Full report/input text for one file, fetched on demand when the user
+  // opens a result — kept out of job reads and progress messages.
+  app.get('/api/batch/:jobId/results/:resultId/content', async (req, res) => {
+    try {
+      const { jobId, resultId } = req.params;
+      const job = await storage.getBatchJob(jobId);
+      if (!job || !ownsJob(req, job)) {
+        return res.status(404).json({ error: 'Batch job not found' });
+      }
+      const artifacts = await storage.getBatchResultArtifacts(jobId, resultId);
+      if (!artifacts) {
+        return res.status(404).json({ error: 'Result not found' });
+      }
+      res.json(artifacts);
+    } catch (error) {
+      console.error('Get result content error:', error);
+      res.status(500).json({ error: 'Failed to get result content' });
+    }
+  });
+
   async function processFilesSequentially(
     jobId: string,
     files: Array<{ id: string; name: string; path: string }>,
@@ -767,16 +787,14 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
           removePartialOutputs(file.path);
         }
 
-        const updatedJob = await storage.getBatchJob(jobId);
-        if (updatedJob) {
-          await storage.updateBatchJob(jobId, {
-            results: [...updatedJob.results, result],
-          });
-        }
+        // Persist one row per file (large report/input text stays out of the
+        // job row); stream only the light summary — the browser fetches full
+        // text on demand when the user opens a result.
+        const summary = await storage.appendBatchResult(jobId, i, result);
 
         sendProgressUpdate(jobId, {
           type: 'result',
-          result,
+          result: summary,
         });
 
         if (stopSignal === 'cancelled') break;

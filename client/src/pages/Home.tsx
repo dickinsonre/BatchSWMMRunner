@@ -387,6 +387,46 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Server batches stream light result summaries; full report/input text is
+  // fetched here on demand and merged into state.
+  const mergeContent = (resultId: string, content: { reportContent?: string; inpContent?: string }) => {
+    setResults(prev => prev.map(r => r.id === resultId
+      ? { ...r, reportContent: content.reportContent, inpContent: content.inpContent }
+      : r));
+  };
+
+  const fetchResultContent = async (resultId: string): Promise<{ reportContent?: string; inpContent?: string } | null> => {
+    if (!jobId) return null;
+    const res = await fetch(`/api/batch/${jobId}/results/${resultId}/content`);
+    if (!res.ok) {
+      toast({
+        title: "Could not load report",
+        description: "The full report text is no longer available on the server.",
+        variant: "destructive",
+      });
+      return null;
+    }
+    return res.json();
+  };
+
+  const handleLoadContent = async (resultId: string) => {
+    const content = await fetchResultContent(resultId);
+    if (content) mergeContent(resultId, content);
+  };
+
+  const handleLoadAllContent = async (): Promise<ProcessResult[]> => {
+    const missing = results.filter(r => !r.reportContent && !r.inpContent && (r.hasReport || r.hasInp));
+    if (missing.length === 0 || !jobId) return results;
+    const loaded = new Map<string, { reportContent?: string; inpContent?: string }>();
+    for (const r of missing) {
+      const content = await fetchResultContent(r.id);
+      if (content) loaded.set(r.id, content);
+    }
+    const full = results.map(r => loaded.has(r.id) ? { ...r, ...loaded.get(r.id)! } : r);
+    setResults(full);
+    return full;
+  };
+
   const handleRemoveFile = (id: string) => {
     setFiles(prev => prev.filter(f => f.id !== id));
   };
@@ -936,7 +976,12 @@ export default function Home() {
                 <ProcessingLog logs={logs} defaultCollapsed={true} />
               </section>
               <section data-testid="section-results">
-                <ResultsDisplay results={results} elapsedTime={elapsedTime} />
+                <ResultsDisplay
+                  results={results}
+                  elapsedTime={elapsedTime}
+                  onLoadContent={handleLoadContent}
+                  onLoadAllContent={handleLoadAllContent}
+                />
               </section>
             </>
           )}

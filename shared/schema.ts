@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pgTable, text, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, jsonb, timestamp, primaryKey } from "drizzle-orm/pg-core";
 
 export const parsedMetricsSchema = z.object({
   runoffContinuityError: z.number().optional(),
@@ -33,6 +33,10 @@ export const processResultSchema = z.object({
     totalVolume: z.number().optional(),
   }).optional(),
   parsedMetrics: parsedMetricsSchema.optional(),
+  // Set on light summaries when the full report/input text is stored
+  // separately and can be fetched on demand.
+  hasReport: z.boolean().optional(),
+  hasInp: z.boolean().optional(),
   provenance: z.object({
     requestedEngine: z.string(),
     actualEngine: z.string().optional(),
@@ -73,6 +77,18 @@ export const batchJobsTable = pgTable("batch_jobs", {
   ownerId: text("owner_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// One row per processed file. Large artifacts (report/input text) live in
+// their own columns so job reads can select the light summary only — the
+// batch_jobs row is never rewritten with accumulated results.
+export const batchResultsTable = pgTable("batch_results", {
+  jobId: text("job_id").notNull(),
+  resultId: text("result_id").notNull(),
+  seq: integer("seq").notNull(),
+  summary: jsonb("summary").notNull().$type<ProcessResult>(),
+  reportContent: text("report_content"),
+  inpContent: text("inp_content"),
+}, (t) => [primaryKey({ columns: [t.jobId, t.resultId] })]);
 
 export const uploadFileSchema = z.object({
   name: z.string(),

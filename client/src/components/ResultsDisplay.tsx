@@ -93,6 +93,9 @@ export interface ProcessResult {
     totalVolume?: number;
   };
   parsedMetrics?: ParsedMetrics;
+  /** Light-summary flags: full text exists server-side and loads on demand. */
+  hasReport?: boolean;
+  hasInp?: boolean;
   provenance?: {
     requestedEngine: string;
     actualEngine?: string;
@@ -106,6 +109,10 @@ export interface ProcessResult {
 interface ResultsDisplayProps {
   results: ProcessResult[];
   elapsedTime?: string;
+  /** Fetch the full report/input text for one result (server-run batches). */
+  onLoadContent?: (resultId: string) => Promise<void>;
+  /** Fetch full text for every result; returns the completed array (for exports/dashboard). */
+  onLoadAllContent?: () => Promise<ProcessResult[]>;
 }
 
 function getContinuityErrorColor(error: number | undefined): string {
@@ -576,11 +583,41 @@ function ReportHistograms({ reportContent }: { reportContent: string }) {
   );
 }
 
-export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayProps) {
+export default function ResultsDisplay({ results, elapsedTime, onLoadContent, onLoadAllContent }: ResultsDisplayProps) {
   const [, setLocation] = useLocation();
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
   const [expandedReports, setExpandedReports] = useState<Set<string>>(new Set());
   const [expandedDiagnostics, setExpandedDiagnostics] = useState<Set<string>>(new Set());
+  const [loadingContent, setLoadingContent] = useState<Set<string>>(new Set());
+  const [loadingAll, setLoadingAll] = useState(false);
+
+  const needsContentFetch = (r: ProcessResult) =>
+    !r.reportContent && !r.inpContent && !!(r.hasReport || r.hasInp);
+
+  const fetchContentFor = async (result: ProcessResult) => {
+    if (!onLoadContent || !needsContentFetch(result) || loadingContent.has(result.id)) return;
+    setLoadingContent(prev => new Set(prev).add(result.id));
+    try {
+      await onLoadContent(result.id);
+    } finally {
+      setLoadingContent(prev => {
+        const next = new Set(prev);
+        next.delete(result.id);
+        return next;
+      });
+    }
+  };
+
+  /** Full results for exports/dashboard: fetch any missing text first. */
+  const withFullContent = async (): Promise<ProcessResult[]> => {
+    if (!onLoadAllContent || !results.some(needsContentFetch)) return results;
+    setLoadingAll(true);
+    try {
+      return await onLoadAllContent();
+    } finally {
+      setLoadingAll(false);
+    }
+  };
 
   const getDiagnostics = (r: ProcessResult): { errors: string[]; warnings: string[] } => {
     const errors: string[] = [];
@@ -623,12 +660,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
     setExpandedErrors(newExpanded);
   };
 
-  const toggleReport = (id: string) => {
+  const toggleReport = (result: ProcessResult) => {
     const newExpanded = new Set(expandedReports);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
+    if (newExpanded.has(result.id)) {
+      newExpanded.delete(result.id);
     } else {
-      newExpanded.add(id);
+      newExpanded.add(result.id);
+      // Lazy-load the full report/input text the first time a result opens.
+      void fetchContentFor(result);
     }
     setExpandedReports(newExpanded);
   };
@@ -720,8 +759,8 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
     URL.revokeObjectURL(url);
   };
 
-  const exportToPdf = () => {
-    const html = generateHTMLReport(results);
+  const exportToPdf = async () => {
+    const html = generateHTMLReport(await withFullContent());
     const win = window.open('', '_blank');
     if (!win) return;
     win.document.write(html);
@@ -840,14 +879,14 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
-                  onClick={() => generateAndDownloadReport(results, "html")}
+                  onClick={async () => generateAndDownloadReport(await withFullContent(), "html")}
                   data-testid="menu-report-html"
                 >
                   <Globe className="h-4 w-4 mr-2" />
                   HTML Report
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => generateAndDownloadReport(results, "markdown")}
+                  onClick={async () => generateAndDownloadReport(await withFullContent(), "markdown")}
                   data-testid="menu-report-markdown"
                 >
                   <FileText className="h-4 w-4 mr-2" />
@@ -865,11 +904,12 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
             <Button
               variant="default"
               size="sm"
-              onClick={() => {
-                setDashboardResults(results, elapsedTime);
+              onClick={async () => {
+                setDashboardResults(await withFullContent(), elapsedTime);
                 setLocation('/dashboard');
               }}
               data-testid="button-open-dashboard"
+              disabled={loadingAll}
             >
               <LayoutDashboard className="h-4 w-4 mr-2" />
               Open in Results Dashboard
@@ -1102,11 +1142,11 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                           )}
                         </div>
                       )}
-                      {(result.reportContent || result.inpContent) && (
+                      {(result.reportContent || result.inpContent || result.hasReport || result.hasInp) && (
                         <div className="mt-2">
                           <div className="flex items-center gap-2 flex-wrap">
                             <button
-                              onClick={() => toggleReport(result.id)}
+                              onClick={() => toggleReport(result)}
                               className="flex items-center gap-1 text-xs text-primary hover-elevate rounded px-2 py-1"
                               data-testid={`button-toggle-report-${result.id}`}
                             >
@@ -1130,7 +1170,13 @@ export default function ResultsDisplay({ results, elapsedTime }: ResultsDisplayP
                               </Button>
                             )}
                           </div>
-                          {expandedReports.has(result.id) && (
+                          {expandedReports.has(result.id) && needsContentFetch(result) && (
+                            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground px-2 py-3" data-testid={`loading-content-${result.id}`}>
+                              <Clock className="h-3.5 w-3.5 animate-pulse" />
+                              Loading full report…
+                            </div>
+                          )}
+                          {expandedReports.has(result.id) && !needsContentFetch(result) && (
                             <div className="mt-2">
                               <Tabs defaultValue={result.inpContent ? "inp" : "text"} data-testid={`tabs-report-${result.id}`}>
                                 <TabsList>
