@@ -8,6 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import type { SwmmStatus } from "@shared/schema";
 
 const navItems = [
+  { label: "Elevator Pitch", href: "/pitch" },
   { label: "Batch Processing", href: "/" },
   { label: "Folder View", href: "/folder" },
   { label: "ReSWMM", href: "/reswmm" },

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
+import { PITCH_SEEN_KEY } from "@/pages/ElevatorPitch";
 import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal, Globe, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -86,6 +88,7 @@ export default function Home() {
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const { toast } = useToast();
+  const [, navigate] = useLocation();
 
   const totalSize = files.reduce((acc, f: any) => acc + (f.file?.size || 0), 0);
 
@@ -336,6 +339,16 @@ export default function Home() {
     if (deepLinkHandledRef.current) return;
     deepLinkHandledRef.current = true;
     const params = new URLSearchParams(window.location.search);
+    // First visit: show the Elevator Pitch opening screen (skipped when a
+    // deep link brings agents/users straight into the workflow).
+    if (Array.from(params.keys()).length === 0) {
+      let seen = true;
+      try { seen = !!localStorage.getItem(PITCH_SEEN_KEY); } catch { /* ignore */ }
+      if (!seen) {
+        navigate('/pitch');
+        return;
+      }
+    }
     const engine = params.get('engine');
     if (engine === 'executable' || engine === 'api' || engine === 'wasm' || engine === 'wasm6') {
       setEngineMode(engine);
