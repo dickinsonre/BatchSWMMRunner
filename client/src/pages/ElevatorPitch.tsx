@@ -48,8 +48,9 @@ export default function ElevatorPitch() {
             Run a whole folder of SWMM models. Get answers, not busywork.
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto" data-testid="text-pitch-subtitle">
-            BatchSWMM is a batch runner for EPA SWMM — the industry-standard stormwater and
-            sewer simulation engine — with four engines, instant graphs, and AI-assisted reports.
+            BatchSWMM is a batch runner for EPA SWMM5, SWMM6 and other SWMM engines — the
+            industry-standard stormwater and sewer simulators — with four engine modes,
+            instant graphs, and AI-assisted reports.
           </p>
           <Button size="lg" onClick={getStarted} data-testid="button-get-started">
             Get Started <ArrowRight className="ml-2 h-4 w-4" />
