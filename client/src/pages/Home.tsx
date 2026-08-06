@@ -105,6 +105,19 @@ export default function Home() {
     }
   }, [reportStep, routingMethod, parallelProcessing, stopOnError, outputFormat, timeoutMinutes, engineMode, startDate, endDate, routingStepSeconds]);
 
+  // Warn before tab close while an in-browser WASM batch is running,
+  // since Web Worker simulations die with the tab.
+  useEffect(() => {
+    const isWasmRunning = processingState === 'processing' && (engineMode === 'wasm' || engineMode === 'wasm6');
+    if (!isWasmRunning) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [processingState, engineMode]);
+
   const buildOverrides = () => ({
     reportStepMinutes: reportStep > 0 ? reportStep : undefined,
     flowRouting: routingMethod || undefined,

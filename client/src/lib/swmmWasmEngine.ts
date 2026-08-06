@@ -101,6 +101,20 @@ interface WorkerDoneMsg {
   elapsedMs: number;
 }
 
+// Files larger than this (bytes) force sequential processing to keep
+// per-worker WASM heap usage in check.
+const LARGE_FILE_THRESHOLD = 10 * 1024 * 1024; // 10 MB
+const MAX_WORKERS = 4;
+
+export function computeWasmConcurrency(
+  fileCount: number,
+  maxFileSize: number,
+  hardwareConcurrency: number = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 2,
+): number {
+  if (maxFileSize > LARGE_FILE_THRESHOLD) return 1;
+  return Math.max(1, Math.min(hardwareConcurrency - 1, fileCount, MAX_WORKERS));
+}
+
 export function runWasmBatch(
   files: { id: string; name: string; file: File }[],
   callbacks: {
@@ -114,93 +128,153 @@ export function runWasmBatch(
   engine: 'swmm5' | 'swmm6' = 'swmm5',
   overrides?: InpOverrides,
 ): () => void {
-  const worker = new Worker('/wasm/swmm-worker.js');
-  let index = 0;
-  let terminated = false;
+  const maxFileSize = files.reduce((m, f) => Math.max(m, f.file.size || 0), 0);
+  const poolSize = computeWasmConcurrency(files.length, maxFileSize);
+  if (maxFileSize > LARGE_FILE_THRESHOLD && files.length > 1) {
+    callbacks.onLog(
+      `Large model detected (${(maxFileSize / (1024 * 1024)).toFixed(1)} MB) — running files sequentially to conserve memory.`,
+      'info',
+    );
+  } else if (poolSize > 1) {
+    callbacks.onLog(`Running up to ${poolSize} simulations in parallel.`, 'info');
+  }
 
-  const terminate = () => {
+  const workers: Worker[] = [];
+  let index = 0;
+  let startedCount = 0;
+  let doneCount = 0;
+  let terminated = false;
+  let completed = false;
+
+  // Terminates all workers and closes the batch WITHOUT signaling normal
+  // completion. Used for cancellation and fatal worker errors.
+  const cancel = () => {
     if (!terminated) {
       terminated = true;
-      worker.terminate();
+      for (const w of workers) w.terminate();
+      workers.length = 0;
     }
   };
 
-  const runNext = async () => {
-    if (cancelRef.current || index >= files.length) {
-      terminate();
-      callbacks.onComplete();
+  // Normal completion: only called after every file has produced a result
+  // (or the batch was empty). Exactly-once.
+  const finish = () => {
+    if (completed || terminated) return;
+    completed = true;
+    cancel();
+    callbacks.onComplete();
+  };
+
+  const runNext = async (worker: Worker) => {
+    if (cancelRef.current || terminated) {
+      cancel();
+      return;
+    }
+    if (index >= files.length) {
+      // No more work for this worker; finish once all in-flight files are done.
+      if (doneCount >= files.length) finish();
       return;
     }
     const f = files[index];
     index++;
-    callbacks.onFileStart(index, f.name);
+    startedCount++;
+    callbacks.onFileStart(startedCount, f.name);
     callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM in-browser engine)...`, 'info');
     callbacks.onProgress({ fileId: f.id, fileName: f.name, percentage: 0, message: 'Loading model...' });
     let inpText = await f.file.text();
+    if (cancelRef.current || terminated) {
+      cancel();
+      return;
+    }
     if (overrides) {
       inpText = applyInpOverrides(inpText, overrides);
     }
     worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine });
   };
 
-  worker.onmessage = (e: MessageEvent) => {
-    const data = e.data;
-    if (data.type === 'progress') {
-      callbacks.onProgress({
-        fileId: data.id,
-        fileName: data.fileName,
-        percentage: data.percentage,
-        message: data.message,
-      });
-    } else if (data.type === 'done') {
-      const d = data as WorkerDoneMsg;
-      const metrics = d.rptText ? parseReportMetricsClient(d.rptText) : undefined;
-      const engineName = engine === 'swmm6' ? 'wasm6' : 'wasm';
+  const handleDone = (worker: Worker, d: WorkerDoneMsg) => {
+    const metrics = d.rptText ? parseReportMetricsClient(d.rptText) : undefined;
+    const engineName = engine === 'swmm6' ? 'wasm6' : 'wasm';
 
-      let ok = d.ok;
-      let error = ok ? undefined : (d.errMsg || 'Simulation failed');
-      if (ok) {
-        const validation = validateSwmmReportClient(d.rptText);
-        if (!validation.valid) {
-          ok = false;
-          error = validation.reason;
-        }
+    let ok = d.ok;
+    let error = ok ? undefined : (d.errMsg || 'Simulation failed');
+    if (ok) {
+      const validation = validateSwmmReportClient(d.rptText);
+      if (!validation.valid) {
+        ok = false;
+        error = validation.reason;
       }
+    }
 
-      const result: ProcessResult = {
-        id: d.id,
-        fileName: d.fileName,
-        filePath: d.fileName,
-        status: ok ? 'success' : 'failed',
-        error,
-        processingTime: d.elapsedMs / 1000,
-        reportContent: d.rptText || undefined,
-        parsedMetrics: metrics,
-        provenance: {
-          requestedEngine: engineName,
-          actualEngine: engineName,
-          engineVersion: d.rptText ? extractEngineVersionClient(d.rptText) : undefined,
-          startedAt: new Date(Date.now() - d.elapsedMs).toISOString(),
-          completedAt: new Date().toISOString(),
-        },
-      };
-      callbacks.onResult(result);
-      callbacks.onLog(
-        ok
-          ? `${d.fileName} -- Success (${(d.elapsedMs / 1000).toFixed(1)}s, WASM)${d.warnings ? `, ${d.warnings} warning(s)` : ''}`
-          : `${d.fileName} -- Error: ${error || 'Unknown error'}`,
-        ok ? 'success' : 'error',
-      );
-      runNext();
+    const result: ProcessResult = {
+      id: d.id,
+      fileName: d.fileName,
+      filePath: d.fileName,
+      status: ok ? 'success' : 'failed',
+      error,
+      processingTime: d.elapsedMs / 1000,
+      reportContent: d.rptText || undefined,
+      parsedMetrics: metrics,
+      provenance: {
+        requestedEngine: engineName,
+        actualEngine: engineName,
+        engineVersion: d.rptText ? extractEngineVersionClient(d.rptText) : undefined,
+        startedAt: new Date(Date.now() - d.elapsedMs).toISOString(),
+        completedAt: new Date().toISOString(),
+      },
+    };
+    callbacks.onResult(result);
+    callbacks.onLog(
+      ok
+        ? `${d.fileName} -- Success (${(d.elapsedMs / 1000).toFixed(1)}s, WASM)${d.warnings ? `, ${d.warnings} warning(s)` : ''}`
+        : `${d.fileName} -- Error: ${error || 'Unknown error'}`,
+      ok ? 'success' : 'error',
+    );
+    doneCount++;
+    if (doneCount >= files.length) {
+      finish();
+    } else {
+      runNext(worker);
     }
   };
 
-  worker.onerror = (err) => {
-    callbacks.onLog(`WASM worker error: ${err.message}`, 'error');
-    terminate();
+  // Fatal worker error: stop everything, but still signal completion so the
+  // UI does not hang (mirrors the previous single-worker behavior).
+  const failBatch = () => {
+    if (completed) return;
+    completed = true;
+    cancel();
     callbacks.onComplete();
   };
 
-  runNext();
-  return terminate;
+  for (let i = 0; i < poolSize; i++) {
+    const worker = new Worker('/wasm/swmm-worker.js');
+    workers.push(worker);
+
+    worker.onmessage = (e: MessageEvent) => {
+      const data = e.data;
+      if (data.type === 'progress') {
+        callbacks.onProgress({
+          fileId: data.id,
+          fileName: data.fileName,
+          percentage: data.percentage,
+          message: data.message,
+        });
+      } else if (data.type === 'done') {
+        handleDone(worker, data as WorkerDoneMsg);
+      }
+    };
+
+    worker.onerror = (err) => {
+      callbacks.onLog(`WASM worker error: ${err.message}`, 'error');
+      failBatch();
+    };
+  }
+
+  if (files.length === 0) {
+    finish();
+  } else {
+    for (const w of workers) runNext(w);
+  }
+  return cancel;
 }
