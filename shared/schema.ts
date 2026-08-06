@@ -52,7 +52,7 @@ export const batchJobSchema = z.object({
     name: z.string(),
     path: z.string(),
   })),
-  status: z.enum(['idle', 'processing', 'completed', 'cancelled']),
+  status: z.enum(['idle', 'processing', 'completed', 'cancelled', 'failed']),
   currentFile: z.number(),
   results: z.array(processResultSchema),
   engineMode: z.string().optional(),

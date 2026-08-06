@@ -12,6 +12,7 @@ import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStat
 import { z } from "zod";
 import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
+import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
 import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
 import { parseSwmmOutputBinary, reportHasTimeSeries } from "./swmmOutParser";
@@ -215,6 +216,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const clients = new Map<string, WebSocket>();
   const messageBuffers = new Map<string, any[]>();
+  // Serializes SWMM5 shared-library (API mode) runs across all jobs — the
+  // native library has process-global state and is not safe to run concurrently.
+  const apiRunLimit = pLimit(1);
 
   cachedSwmmStatus = detectSwmmPath();
   console.log(`SWMM detection: mode=${cachedSwmmStatus.mode}, path=${cachedSwmmStatus.path || 'N/A'}`);
@@ -255,7 +259,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!messageBuffers.has(jobId)) {
         messageBuffers.set(jobId, []);
       }
-      messageBuffers.get(jobId)!.push(data);
+      const buffer = messageBuffers.get(jobId)!;
+      buffer.push(data);
+      // Bound the buffer so a never-connecting client can't leak memory:
+      // keep the most recent messages only.
+      const MAX_BUFFERED_MESSAGES = 500;
+      if (buffer.length > MAX_BUFFERED_MESSAGES) {
+        buffer.splice(0, buffer.length - MAX_BUFFERED_MESSAGES);
+      }
     }
   }
 
@@ -591,7 +602,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           if (engineMode === 'api') {
             if (swmm5api.isApiAvailable()) {
-              result = await processSingleFileApi(jobId, file, entry, overrides);
+              // The SWMM5 shared library holds process-global model state, so
+              // API-mode runs from concurrent jobs must never overlap.
+              result = await apiRunLimit(() => processSingleFileApi(jobId, file, entry, overrides));
             } else {
               result = makeEngineUnavailableResult(file, 'api', 'SWMM5 API (shared library) is unavailable — no simulation was performed');
               sendProgressUpdate(jobId, {
@@ -680,12 +693,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (e) {
       console.error(`Batch ${jobId} failed unexpectedly:`, e);
       try {
-        await storage.updateBatchJob(jobId, { status: 'completed' });
+        await storage.updateBatchJob(jobId, { status: 'failed' });
+        sendProgressUpdate(jobId, {
+          type: 'log',
+          text: `Batch processing failed unexpectedly: ${e instanceof Error ? e.message : String(e)}`,
+          stream: 'stderr',
+        });
         sendProgressUpdate(jobId, { type: 'completed' });
       } catch {}
     } finally {
       activeJobs.delete(jobId);
       cleanupJobFiles(jobId);
+      messageBuffers.delete(jobId);
     }
   }
 
@@ -959,7 +978,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const invocation = resolveSwmmInvocation(runswmmPath);
       if (!invocation) {
-        broadcastToJob(jobId, {
+        sendProgressUpdate(jobId, {
           type: 'log',
           fileId: file.id,
           fileName: file.name,

@@ -55,7 +55,9 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    // Log instead of rethrowing: throwing after responding creates an
+    // unhandled exception that can crash the server.
+    console.error("Unhandled request error:", err);
   });
 
   // importantly only setup vite in development and after
