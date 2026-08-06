@@ -126,7 +126,7 @@ export default function Dashboard() {
             </p>
             <Button onClick={() => setLocation('/')} data-testid="button-back-to-home">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to BatchSWMM
+              Back to BatchSWMM56
             </Button>
           </CardContent>
         </Card>

@@ -1,6 +1,6 @@
-# BatchSWMM
+# BatchSWMM56
 
-> Batch EPA SWMM5 processing tool. Upload one or more SWMM .inp models, run them
+> Batch runner for EPA SWMM5, SWMM6 and other SWMM engines. Upload one or more SWMM .inp models, run them
 > through an EPA SWMM engine (native executable, SWMM5 shared-library API, or an
 > in-browser WebAssembly build of SWMM5 / OpenSWMM "SWMM6" 5.3), and inspect
 > report summaries, time-series graphs, and continuity errors for each file.

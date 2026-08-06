@@ -1,8 +1,8 @@
-# BatchSWMM - Batch EPA SWMM5 Processing Tool
+# BatchSWMM56 - Batch Runner for EPA SWMM5, SWMM6 & Other SWMM Engines
 
 ## Overview
 
-BatchSWMM is a local desktop application designed for batch processing EPA SWMM (Storm Water Management Model) `.inp` files. The application provides real-time progress tracking via WebSocket connections and displays comprehensive results summaries. Built as a full-stack TypeScript application, it uses React for the frontend and Express for the backend, with a focus on professional engineering/technical workflows.
+BatchSWMM56 (formerly BatchSWMM) is a web application for batch processing EPA SWMM (Storm Water Management Model) `.inp` files across four engine modes (native executable, SWMM5 shared-library API, and in-browser WASM builds of SWMM5 and OpenSWMM "SWMM6"). The application provides real-time progress tracking via WebSocket connections and displays comprehensive results summaries. Built as a full-stack TypeScript application, it uses React for the frontend and Express for the backend, with a focus on professional engineering/technical workflows.
 
 ## Recent Changes
 
@@ -10,7 +10,7 @@ BatchSWMM is a local desktop application designed for batch processing EPA SWMM 
 - **Jul 2026**: Added WASM (Browser) engine mode — EPA SWMM 5.2.4 compiled to WebAssembly with Emscripten (`client/public/wasm/swmm5.js` + `swmm5.wasm`), run in a web worker (`swmm-worker.js`) via `client/src/lib/swmmWasmEngine.ts`; batches process entirely in the browser (no upload), with progress, cancel, report parsing, and results identical to server modes; engine mode selector now always visible (Executable/API disabled when unavailable)
 - **Mar 2026 (latest)**: Added Live API Dashboard — real-time line charts (Node Depths, Link Flows, Link Velocity) and data tables that update during API mode simulations via WebSocket `api_snapshot` messages; persists after completion showing final simulation data
 - **Mar 2026**: Added Full SWMM5 API Guide (5,408-line markdown) as searchable documentation tab — fetched at runtime from `/api/swmm5-api-guide`, rendered with react-markdown + remark-gfm + @tailwindcss/typography prose styling, includes search/filter functionality
-- **Mar 2026**: Added SWMM5 API Mode — compiled EPA SWMM 5.2.4 as shared library (`libswmm5.so`), created `server/swmm5api.ts` FFI bridge via koffi wrapping all 20 API functions, added API mode toggle on Home page with step-by-step simulation control, live node/link data streaming via WebSocket, and BatchSWMM API Mode documentation tab
+- **Mar 2026**: Added SWMM5 API Mode — compiled EPA SWMM 5.2.4 as shared library (`libswmm5.so`), created `server/swmm5api.ts` FFI bridge via koffi wrapping all 20 API functions, added API mode toggle on Home page with step-by-step simulation control, live node/link data streaming via WebSocket, and BatchSWMM56 API Mode documentation tab
 - **Mar 2026**: Updated HANDOVER.md to 1,599 lines with accurate file line counts (routes.ts 1,018, total key files 8,484), dedicated binary output parser section, corrected architecture diagram, comprehensive 21-section table of contents
 - **Mar 2026**: Added SWMM `.out` binary parser (`parseSwmmOutputBinary()` in `server/routes.ts`) — reads EPA SWMM 5.2 binary format (magic 516114522), extracts node/link time series for interactive charts; max 2,000 periods, OLE date conversion
 - **Mar 2026**: Added "Run SWMM" feature to ReSWMM page with before/after SimulationComparison (side-by-side table + grouped bar charts)

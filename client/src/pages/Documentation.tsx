@@ -244,7 +244,7 @@ const SWMM5_C_REFERENCE = `/*
  * Version 5.2
  *
  * SWMM5 is written in C and maintained by the US EPA.
- * BatchSWMM does NOT embed or compile the SWMM5 C source code.
+ * BatchSWMM56 does NOT embed or compile the SWMM5 C source code.
  * Instead, it calls the pre-compiled runswmm.exe executable
  * as an external process using Node.js child_process.spawn().
  *
@@ -279,7 +279,7 @@ const SWMM5_C_REFERENCE = `/*
 // int  swmm_getMassBalErr(float* runoffErr, float* flowErr, float* qualErr);
 // int  swmm_getVersion(void);
 
-// ── How BatchSWMM calls it (TypeScript) ───────────────────────
+// ── How BatchSWMM56 calls it (TypeScript) ───────────────────────
 //
 // const childProcess = spawn(runswmmPath, [
 //   inputPath,    // .inp file
@@ -1204,7 +1204,7 @@ export default function Documentation() {
               SWMM5 Integration Documentation
             </h2>
             <p className="text-sm text-muted-foreground mb-6" data-testid="text-docs-subtitle">
-              Complete source code showing how BatchSWMM integrates with EPA SWMM5.
+              Complete source code showing how BatchSWMM56 integrates with EPA SWMM5.
               The app calls the pre-compiled <code className="font-mono bg-muted px-1 rounded">runswmm.exe</code> as
               an external process — it does not embed or compile the SWMM5 C engine directly.
             </p>
@@ -1229,9 +1229,9 @@ export default function Documentation() {
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-base" data-testid="text-automation-title">Automating BatchSWMM</CardTitle>
+                    <CardTitle className="text-base" data-testid="text-automation-title">Automating BatchSWMM56</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      BatchSWMM is built to be driven by scripts and AI browser agents (Comet, operator-style tools, Playwright, etc.).
+                      BatchSWMM56 is built to be driven by scripts and AI browser agents (Comet, operator-style tools, Playwright, etc.).
                       A machine-readable summary of everything on this page is served at{" "}
                       <a href="/llms.txt" className="underline font-mono" target="_blank" rel="noreferrer">/llms.txt</a>.
                     </p>
@@ -1287,7 +1287,7 @@ export default function Documentation() {
                   <CardHeader>
                     <CardTitle className="text-base" data-testid="text-guide-engines-title">Engine Modes</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      BatchSWMM can run simulations with four different engines. All of them run the real EPA SWMM engine — the difference is where the computation happens.
+                      BatchSWMM56 can run simulations with four different engines. All of them run the real EPA SWMM engine — the difference is where the computation happens.
                     </p>
                   </CardHeader>
                   <CardContent>
@@ -1389,39 +1389,39 @@ export default function Documentation() {
                 <CardHeader>
                   <CardTitle className="text-base" data-testid="text-faq-title">Frequently Asked Questions</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Common questions about BatchSWMM, EPA SWMM, and how to get the most out of the application.
+                    Common questions about BatchSWMM56, EPA SWMM, and how to get the most out of the application.
                   </p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
                     <FaqItem
-                      question="Do I need EPA SWMM installed to use BatchSWMM?"
-                      answer="No. BatchSWMM ships with a built-in EPA SWMM 5.2.4 engine (a compiled Linux binary) that runs automatically on the server. You do not need to install SWMM separately. If the server engine is not found, server-side runs fail explicitly (no results are fabricated) — but the WASM browser engines still work, running simulations entirely in your browser."
+                      question="Do I need EPA SWMM installed to use BatchSWMM56?"
+                      answer="No. BatchSWMM56 ships with a built-in EPA SWMM 5.2.4 engine (a compiled Linux binary) that runs automatically on the server. You do not need to install SWMM separately. If the server engine is not found, server-side runs fail explicitly (no results are fabricated) — but the WASM browser engines still work, running simulations entirely in your browser."
                       testId="faq-swmm-required"
                     />
                     <FaqItem
                       question="What happens if the SWMM engine is unavailable?"
-                      answer="If the server-side SWMM engine binary is not detected, files sent for server processing fail with a clear 'engine unavailable' error — BatchSWMM never generates synthetic or simulated results. Every report you see comes from a real SWMM engine run. You can always use the WASM (Browser) or SWMM6 (Browser) engine modes, which run the real EPA SWMM engine compiled to WebAssembly directly in your browser."
+                      answer="If the server-side SWMM engine binary is not detected, files sent for server processing fail with a clear 'engine unavailable' error — BatchSWMM56 never generates synthetic or simulated results. Every report you see comes from a real SWMM engine run. You can always use the WASM (Browser) or SWMM6 (Browser) engine modes, which run the real EPA SWMM engine compiled to WebAssembly directly in your browser."
                       testId="faq-simulation-mode"
                     />
                     <FaqItem
-                      question="What file types does BatchSWMM accept?"
-                      answer="BatchSWMM accepts only EPA SWMM .inp (input) files. These are plain-text files that define the drainage network, rainfall data, simulation parameters, and all other model inputs. You can upload multiple .inp files at once for batch processing."
+                      question="What file types does BatchSWMM56 accept?"
+                      answer="BatchSWMM56 accepts only EPA SWMM .inp (input) files. These are plain-text files that define the drainage network, rainfall data, simulation parameters, and all other model inputs. You can upload multiple .inp files at once for batch processing."
                       testId="faq-file-types"
                     />
                     <FaqItem
                       question="What output files does a SWMM simulation produce?"
-                      answer="Each simulation produces two output files: a .rpt (report) file containing human-readable summary tables, continuity checks, and element-by-element results; and a .out (binary output) file containing time series data for all nodes, links, subcatchments, and system variables. BatchSWMM parses both files to populate the RPT Text, RPT Graphs, RPT Histograms, and RPT HTML tabs."
+                      answer="Each simulation produces two output files: a .rpt (report) file containing human-readable summary tables, continuity checks, and element-by-element results; and a .out (binary output) file containing time series data for all nodes, links, subcatchments, and system variables. BatchSWMM56 parses both files to populate the RPT Text, RPT Graphs, RPT Histograms, and RPT HTML tabs."
                       testId="faq-output-files"
                     />
                     <FaqItem
                       question="What is ReSWMM?"
-                      answer="ReSWMM is a conduit discretization tool built into BatchSWMM. It splits long conduits into smaller segments using either a fixed interval or a dx/D ratio method. It also includes automatic conduit lengthening to satisfy the Courant-Friedrichs-Lewy (CFL) stability criterion for dynamic wave routing. ReSWMM processes .inp files client-side and produces a modified .inp file ready for simulation."
+                      answer="ReSWMM is a conduit discretization tool built into BatchSWMM56. It splits long conduits into smaller segments using either a fixed interval or a dx/D ratio method. It also includes automatic conduit lengthening to satisfy the Courant-Friedrichs-Lewy (CFL) stability criterion for dynamic wave routing. ReSWMM processes .inp files client-side and produces a modified .inp file ready for simulation."
                       testId="faq-reswmm"
                     />
                     <FaqItem
                       question="How does batch processing work?"
-                      answer="Upload one or more .inp files, then click Process. BatchSWMM processes each file sequentially through the SWMM engine, streaming real-time progress updates to your browser via WebSocket. Each file gets its own progress bar showing the simulation percentage. Results appear as each file completes, with full report viewing, charts, and download options."
+                      answer="Upload one or more .inp files, then click Process. BatchSWMM56 processes each file sequentially through the SWMM engine, streaming real-time progress updates to your browser via WebSocket. Each file gets its own progress bar showing the simulation percentage. Results appear as each file completes, with full report viewing, charts, and download options."
                       testId="faq-batch-processing"
                     />
                     <FaqItem
@@ -1431,7 +1431,7 @@ export default function Documentation() {
                     />
                     <FaqItem
                       question="Can I compare simulation results?"
-                      answer="Yes. The ReSWMM page includes a simulation comparison feature. After running SWMM on both the original and discretized .inp files, BatchSWMM displays a side-by-side comparison table and grouped bar charts showing differences in peak flows, total volumes, and other key metrics."
+                      answer="Yes. The ReSWMM page includes a simulation comparison feature. After running SWMM on both the original and discretized .inp files, BatchSWMM56 displays a side-by-side comparison table and grouped bar charts showing differences in peak flows, total volumes, and other key metrics."
                       testId="faq-comparison"
                     />
                     <FaqItem
@@ -1440,8 +1440,8 @@ export default function Documentation() {
                       testId="faq-continuity"
                     />
                     <FaqItem
-                      question="What version of EPA SWMM does BatchSWMM use?"
-                      answer="BatchSWMM uses EPA SWMM version 5.2.4 (version code 52004). The engine is compiled from the official EPA source code available at github.com/USEPA/Stormwater-Management-Model. EPA SWMM 5 is public domain software that may be freely copied and distributed."
+                      question="What version of EPA SWMM does BatchSWMM56 use?"
+                      answer="BatchSWMM56 uses EPA SWMM version 5.2.4 (version code 52004). The engine is compiled from the official EPA source code available at github.com/USEPA/Stormwater-Management-Model. EPA SWMM 5 is public domain software that may be freely copied and distributed."
                       testId="faq-version"
                     />
                     <FaqItem
@@ -1455,8 +1455,8 @@ export default function Documentation() {
                       testId="faq-data-storage"
                     />
                     <FaqItem
-                      question="Can I use BatchSWMM on Windows or Mac?"
-                      answer="BatchSWMM runs as a web application, so you access it through your browser on any operating system. The SWMM engine runs on the server (Linux). If you deploy BatchSWMM locally on Windows, it will look for runswmm.exe in standard EPA SWMM installation paths automatically."
+                      question="Can I use BatchSWMM56 on Windows or Mac?"
+                      answer="BatchSWMM56 runs as a web application, so you access it through your browser on any operating system. The SWMM engine runs on the server (Linux). If you deploy BatchSWMM56 locally on Windows, it will look for runswmm.exe in standard EPA SWMM installation paths automatically."
                       testId="faq-platforms"
                     />
                   </div>
@@ -1495,7 +1495,7 @@ export default function Documentation() {
                       <TabsTrigger value="api-python" data-testid="tab-api-python">Python</TabsTrigger>
                       <TabsTrigger value="api-pascal" data-testid="tab-api-pascal">Pascal</TabsTrigger>
                       <TabsTrigger value="api-examples" data-testid="tab-api-examples">Usage Examples</TabsTrigger>
-                      <TabsTrigger value="api-batchswmm" data-testid="tab-api-batchswmm">BatchSWMM API Mode</TabsTrigger>
+                      <TabsTrigger value="api-batchswmm" data-testid="tab-api-batchswmm">BatchSWMM56 API Mode</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="api-full-guide">
@@ -1642,9 +1642,9 @@ With stride:    swmm_open(f1, f2, f3)
                         </div>
 
                         <div className="bg-muted/40 rounded p-4">
-                          <h3 className="font-medium text-sm mb-3" data-testid="text-batchswmm-api-mode-title">BatchSWMM API Mode</h3>
+                          <h3 className="font-medium text-sm mb-3" data-testid="text-batchswmm-api-mode-title">BatchSWMM56 API Mode</h3>
                           <p className="text-sm text-muted-foreground mb-4">
-                            BatchSWMM offers two engine modes for running SWMM simulations. Users can toggle between
+                            BatchSWMM56 offers two engine modes for running SWMM simulations. Users can toggle between
                             them on the Home page before starting a batch run.
                           </p>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -1675,7 +1675,7 @@ With stride:    swmm_open(f1, f2, f3)
 
                         <div className="space-y-3">
                           <h4 className="font-medium text-sm">Architecture</h4>
-                          <pre className="text-xs font-mono bg-muted/40 p-4 rounded whitespace-pre-wrap">{`BatchSWMM API Mode Architecture
+                          <pre className="text-xs font-mono bg-muted/40 p-4 rounded whitespace-pre-wrap">{`BatchSWMM56 API Mode Architecture
 ================================
 
 Source:   EPA SWMM 5.2.4 (github.com/USEPA/Stormwater-Management-Model)
@@ -1779,11 +1779,11 @@ log            — [API Mode] prefix messages with version/step/error info`}</pr
                     </a>
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    SWMM5 is written in C by the US EPA. BatchSWMM calls the compiled executable
+                    SWMM5 is written in C by the US EPA. BatchSWMM56 calls the compiled executable
                     (<code className="font-mono bg-muted px-1 rounded">runswmm.exe</code>) via
                     Node.js <code className="font-mono bg-muted px-1 rounded">child_process.spawn()</code>.
                     Below is a reference guide to the SWMM5 C API, module structure, and how
-                    BatchSWMM interfaces with it.
+                    BatchSWMM56 interfaces with it.
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -1878,7 +1878,7 @@ log            — [API Mode] prefix messages with version/step/error info`}</pr
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                 <div className="space-y-3">
-                  <h3 className="font-medium">How BatchSWMM Uses SWMM5</h3>
+                  <h3 className="font-medium">How BatchSWMM56 Uses SWMM5</h3>
                   <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
                     <li>User uploads .inp files through the browser</li>
                     <li>Backend stores files temporarily in uploads/ folder</li>
@@ -1926,7 +1926,7 @@ log            — [API Mode] prefix messages with version/step/error info`}</pr
       <footer className="border-t mt-auto">
         <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
-            <p>BatchSWMM v1.0.0</p>
+            <p>BatchSWMM56 v1.0.0</p>
             <a
               href="https://github.com/USEPA/Stormwater-Management-Model"
               target="_blank"

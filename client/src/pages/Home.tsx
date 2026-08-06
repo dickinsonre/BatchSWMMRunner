@@ -961,7 +961,7 @@ export default function Home() {
       <footer className="border-t mt-auto">
         <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
-            <p data-testid="text-footer-version">BatchSWMM v1.0.0</p>
+            <p data-testid="text-footer-version">BatchSWMM56 v1.0.0</p>
             <p className="font-mono truncate max-w-full" data-testid="text-footer-executable">
               {swmmStatus?.found ? swmmStatus.path : 'server engine unavailable'}
             </p>

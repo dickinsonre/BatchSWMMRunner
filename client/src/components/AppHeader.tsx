@@ -45,9 +45,9 @@ export default function AppHeader({ swmmStatus: externalSwmmStatus }: AppHeaderP
               </div>
             </Link>
             <div className="min-w-0">
-              <h1 className="text-lg sm:text-2xl font-semibold truncate" data-testid="text-app-title">BatchSWMM</h1>
+              <h1 className="text-lg sm:text-2xl font-semibold truncate" data-testid="text-app-title">BatchSWMM56</h1>
               <p className="hidden sm:block text-sm text-muted-foreground truncate" data-testid="text-app-subtitle">
-                Batch EPA SWMM5 Processing Tool
+                Batch Runner for EPA SWMM5, SWMM6 &amp; Other SWMM Engines
               </p>
             </div>
           </div>
