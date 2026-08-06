@@ -82,6 +82,9 @@ describe("batch processing (executable engine)", () => {
     const r = done.results[0];
     expect(r.status).toBe("success");
     expect(r.reportContent).toMatch(/EPA STORM WATER MANAGEMENT MODEL/);
+    // Time series parsed from the binary .out must be appended so RPT Graphs work
+    expect(r.reportContent).toMatch(/Results Time Series/);
+    expect(r.reportContent).toContain("<<<");
     expect(r.provenance?.requestedEngine).toBe("executable");
     expect(r.provenance?.actualEngine).toBe("executable");
     expect(r.provenance?.exitCode).toBe(0);

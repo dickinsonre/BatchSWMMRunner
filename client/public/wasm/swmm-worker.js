@@ -1,3 +1,5 @@
+importScripts('/wasm/swmm-out-parser.js');
+
 const ENGINES = {
   swmm5: { script: '/wasm/swmm5.js', dir: '/wasm/', factory: 'createSwmmModule' },
   swmm6: { script: '/wasm6/swmm6.js', dir: '/wasm6/', factory: 'createSwmm6Module' },
@@ -108,6 +110,17 @@ self.onmessage = async (e) => {
 
     let rptText = '';
     try { rptText = FS.readFile(rptPath, { encoding: 'utf8' }); } catch (_) {}
+
+    // SWMM writes detailed time series to the binary .out (not the .rpt) when
+    // an output file is used. Append rpt-style time-series sections parsed
+    // from the .out so RPT Graphs work in every engine mode.
+    if (err === 0 && rptText && !self.SwmmOutParser.reportHasTimeSeries(rptText)) {
+      try {
+        const outBytes = FS.readFile(outPath);
+        const tsText = self.SwmmOutParser.parseSwmmOutBinary(outBytes);
+        if (tsText) rptText = rptText + '\n' + tsText;
+      } catch (_) {}
+    }
 
     self.postMessage({
       type: 'done',
