@@ -6,3 +6,4 @@ description: Non-obvious constraints for running/extending the vitest suite (upl
 - The emscripten SWMM bundle returns an empty object via `require()` in this environment; load it with `new Function(src + 'return createSwmmModule;')` and pass `wasmBinary: fs.readFileSync(...wasm)` or instantiation tries `fetch()` and fails.
 - To simulate a broken/empty-report engine in integration tests, point `RUNSWMM_PATH` at a fake shell script before creating the app (detection reads env at call time).
 - Fractional `timeoutMinutes` (e.g. 0.02 ≈ 1.2s) is accepted by the batch start API — handy for fast timeout tests.
+- Under `"type":"module"`, `require()` of a plain UMD .js (e.g. the shared .out parser) returns an empty namespace; load it with `new Function("self", src)(scope)` like importScripts would.
