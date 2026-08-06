@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -16,8 +15,9 @@ interface SimulationSettingsProps {
   reportStep: number;
   routingMethod: string;
   parallelProcessing: boolean;
+  /** Parallel runs are only available for in-browser (WASM) engines. */
+  parallelSupported: boolean;
   stopOnError: boolean;
-  outputFormat: string;
   timeoutMinutes: number;
   startDate: string;
   endDate: string;
@@ -29,7 +29,6 @@ interface SimulationSettingsProps {
   onRoutingMethodChange: (value: string) => void;
   onParallelProcessingChange: (value: boolean) => void;
   onStopOnErrorChange: (value: boolean) => void;
-  onOutputFormatChange: (value: string) => void;
   onTimeoutMinutesChange: (value: number) => void;
   disabled?: boolean;
 }
@@ -38,8 +37,8 @@ export default function SimulationSettings({
   reportStep,
   routingMethod,
   parallelProcessing,
+  parallelSupported,
   stopOnError,
-  outputFormat,
   timeoutMinutes,
   startDate,
   endDate,
@@ -51,7 +50,6 @@ export default function SimulationSettings({
   onRoutingMethodChange,
   onParallelProcessingChange,
   onStopOnErrorChange,
-  onOutputFormatChange,
   onTimeoutMinutesChange,
   disabled = false,
 }: SimulationSettingsProps) {
@@ -163,17 +161,24 @@ export default function SimulationSettings({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="parallel-processing"
-                checked={parallelProcessing}
-                onCheckedChange={(checked) => onParallelProcessingChange(checked === true)}
-                disabled={disabled}
-                data-testid="checkbox-parallel-processing"
-              />
-              <Label htmlFor="parallel-processing" className="text-sm font-normal cursor-pointer">
-                Process files in parallel
-              </Label>
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="parallel-processing"
+                  checked={parallelSupported && parallelProcessing}
+                  onCheckedChange={(checked) => onParallelProcessingChange(checked === true)}
+                  disabled={disabled || !parallelSupported}
+                  data-testid="checkbox-parallel-processing"
+                />
+                <Label htmlFor="parallel-processing" className="text-sm font-normal cursor-pointer">
+                  Process files in parallel
+                </Label>
+              </div>
+              <p className="text-xs text-muted-foreground pl-6" data-testid="text-parallel-hint">
+                {parallelSupported
+                  ? 'Runs several files at once in browser workers (up to 4, based on your device).'
+                  : 'Available for the in-browser (WASM) engines only — server engines run files one at a time.'}
+              </p>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -187,30 +192,6 @@ export default function SimulationSettings({
                 Stop if any file fails
               </Label>
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Output Format</Label>
-            <RadioGroup
-              value={outputFormat}
-              onValueChange={onOutputFormatChange}
-              disabled={disabled}
-              className="flex gap-6"
-              data-testid="radio-output-format"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="all" id="output-all" data-testid="radio-output-all" />
-                <Label htmlFor="output-all" className="text-sm font-normal cursor-pointer">
-                  All files
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="zip" id="output-zip" data-testid="radio-output-zip" />
-                <Label htmlFor="output-zip" className="text-sm font-normal cursor-pointer">
-                  ZIP archive
-                </Label>
-              </div>
-            </RadioGroup>
           </div>
         </div>
       </CardContent>

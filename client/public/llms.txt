@@ -36,7 +36,9 @@ HTTP API below only covers the server-side `executable` and `api` engine modes.
   "steady"|"kinematic"|"dynamic", startDate?: "YYYY-MM-DD", endDate?,
   routingStepSeconds?}}`. Starts processing asynchronously.
 - `GET /api/batch/{jobId}` — poll job status; the finished job JSON embeds each
-  file's results, including full report text.
+  file's result summary (metrics, status, `hasReport`/`hasInp` flags).
+- `GET /api/batch/{jobId}/results/{resultId}/content` — fetch a result's full
+  report and input text: `{reportContent, inpContent}`.
 - `POST /api/batch/{jobId}/cancel` — cancel a running batch
 - `DELETE /api/batch/{jobId}` — delete a non-running batch
 - `GET /api/jobs/latest` — latest completed batch job
@@ -44,8 +46,10 @@ HTTP API below only covers the server-side `executable` and `api` engine modes.
 - `WS /api/ws?jobId={jobId}` — live progress/result event stream (alternative to polling)
 
 Typical automated run: POST /api/upload → POST /api/batch/{id}/start → poll
-GET /api/batch/{id} until `status` is `completed` → read per-file results from
-the job JSON.
+GET /api/batch/{id} until `status` is `completed` → read per-file summaries from
+the job JSON and fetch full report text via the `/content` endpoint as needed.
+Note: jobs are tied to the browser session (cookie) that uploaded them and are
+deleted after 24 hours.
 
 ## Docs
 

@@ -127,10 +127,13 @@ export function runWasmBatch(
   cancelRef: { current: boolean },
   engine: 'swmm5' | 'swmm6' = 'swmm5',
   overrides?: InpOverrides,
+  parallel: boolean = true,
 ): () => void {
   const maxFileSize = files.reduce((m, f) => Math.max(m, f.file.size || 0), 0);
-  const poolSize = computeWasmConcurrency(files.length, maxFileSize);
-  if (maxFileSize > LARGE_FILE_THRESHOLD && files.length > 1) {
+  const poolSize = parallel ? computeWasmConcurrency(files.length, maxFileSize) : 1;
+  if (!parallel && files.length > 1) {
+    callbacks.onLog('Parallel processing is off — running files one at a time.', 'info');
+  } else if (maxFileSize > LARGE_FILE_THRESHOLD && files.length > 1) {
     callbacks.onLog(
       `Large model detected (${(maxFileSize / (1024 * 1024)).toFixed(1)} MB) — running files sequentially to conserve memory.`,
       'info',

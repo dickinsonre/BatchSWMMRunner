@@ -908,7 +908,7 @@ export default function FolderView() {
                 ) : compareMode && compareFiles.length >= 2 ? (
                   <ComparePanel files={compareFiles} />
                 ) : selectedFile ? (
-                  <FileDetailPanel file={selectedFile} onRun={handleRunFile} isRunning={runState === 'uploading' || runState === 'processing'} />
+                  <FileDetailPanel file={selectedFile} onRun={handleRunFile} isRunning={false} />
                 ) : (
                   <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
                     <MapPin className="h-8 w-8 mb-3 opacity-50" />

@@ -13,6 +13,7 @@ import KeyResultsCharts from "./KeyResultsCharts";
 import BatchComparison from "./BatchComparison";
 import { generateHTMLReport } from "@/lib/reportGenerator";
 import ReportChatbot from "./ReportChatbot";
+import JSZip from "jszip";
 import { setDashboardResults } from "@/lib/resultsStore";
 import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
 
@@ -759,6 +760,43 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
     URL.revokeObjectURL(url);
   };
 
+  const exportToZip = async () => {
+    const full = await withFullContent();
+    const zip = new JSZip();
+    const usedNames = new Set<string>();
+    const uniqueName = (name: string) => {
+      let candidate = name;
+      let n = 2;
+      while (usedNames.has(candidate)) {
+        const dot = name.lastIndexOf('.');
+        candidate = dot > 0 ? `${name.slice(0, dot)}-${n}${name.slice(dot)}` : `${name}-${n}`;
+        n++;
+      }
+      usedNames.add(candidate);
+      return candidate;
+    };
+    let fileCount = 0;
+    for (const r of full) {
+      const base = r.fileName.replace(/\.inp$/i, '');
+      if (r.reportContent) {
+        zip.file(uniqueName(`${base}.rpt`), r.reportContent);
+        fileCount++;
+      }
+      if (r.inpContent) {
+        zip.file(uniqueName(`${base}.inp`), r.inpContent);
+        fileCount++;
+      }
+    }
+    if (fileCount === 0) return;
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `batch-swmm-outputs-${new Date().toISOString().slice(0, 10)}.zip`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const exportToPdf = async () => {
     const html = generateHTMLReport(await withFullContent());
     const win = window.open('', '_blank');
@@ -864,6 +902,16 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
             >
               <Download className="h-4 w-4 mr-2" />
               Export PDF
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToZip}
+              disabled={loadingAll}
+              data-testid="button-export-zip"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              {loadingAll ? 'Preparing…' : 'Download ZIP'}
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

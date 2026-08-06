@@ -32,7 +32,6 @@ interface PersistedSettings {
   routingMethod?: string;
   parallelProcessing?: boolean;
   stopOnError?: boolean;
-  outputFormat?: string;
   timeoutMinutes?: number;
   engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6';
   startDate?: string;
@@ -72,7 +71,6 @@ export default function Home() {
   const [routingMethod, setRoutingMethod] = useState(savedSettingsRef.current.routingMethod ?? "dynamic");
   const [parallelProcessing, setParallelProcessing] = useState(savedSettingsRef.current.parallelProcessing ?? false);
   const [stopOnError, setStopOnError] = useState(savedSettingsRef.current.stopOnError ?? false);
-  const [outputFormat, setOutputFormat] = useState(savedSettingsRef.current.outputFormat ?? "all");
   const [timeoutMinutes, setTimeoutMinutes] = useState(savedSettingsRef.current.timeoutMinutes ?? 10);
   const [startDate, setStartDate] = useState(savedSettingsRef.current.startDate ?? '');
   const [endDate, setEndDate] = useState(savedSettingsRef.current.endDate ?? '');
@@ -95,7 +93,7 @@ export default function Home() {
   useEffect(() => {
     const settings: PersistedSettings = {
       reportStep, routingMethod, parallelProcessing, stopOnError,
-      outputFormat, timeoutMinutes, engineMode,
+      timeoutMinutes, engineMode,
       startDate, endDate, routingStepSeconds,
     };
     try {
@@ -103,7 +101,7 @@ export default function Home() {
     } catch {
       // localStorage unavailable (private mode, quota) — settings simply won't persist
     }
-  }, [reportStep, routingMethod, parallelProcessing, stopOnError, outputFormat, timeoutMinutes, engineMode, startDate, endDate, routingStepSeconds]);
+  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, engineMode, startDate, endDate, routingStepSeconds]);
 
   // Warn before tab close while an in-browser WASM batch is running,
   // since Web Worker simulations die with the tab.
@@ -550,6 +548,7 @@ export default function Home() {
       wasmCancelRef.current,
       wasmEngine,
       buildOverrides(),
+      parallelProcessing,
     );
     wasmTerminateRef.current = terminate;
 
@@ -678,8 +677,8 @@ export default function Home() {
               reportStep={reportStep}
               routingMethod={routingMethod}
               parallelProcessing={parallelProcessing}
+              parallelSupported={engineMode === 'wasm' || engineMode === 'wasm6'}
               stopOnError={stopOnError}
-              outputFormat={outputFormat}
               timeoutMinutes={timeoutMinutes}
               startDate={startDate}
               endDate={endDate}
@@ -692,7 +691,6 @@ export default function Home() {
               onRoutingMethodChange={setRoutingMethod}
               onParallelProcessingChange={setParallelProcessing}
               onStopOnErrorChange={setStopOnError}
-              onOutputFormatChange={setOutputFormat}
               disabled={processingState === 'processing'}
             />
           </section>
