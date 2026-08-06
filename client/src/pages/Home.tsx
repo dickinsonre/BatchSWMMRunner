@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal, Globe } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal, Globe, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -707,7 +708,22 @@ export default function Home() {
                   )}
 
                   <div className="pt-2 border-t border-border/50">
-                    <p className="text-xs font-medium text-muted-foreground mb-2">Engine Mode</p>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <p className="text-xs font-medium text-muted-foreground">Engine Mode</p>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button type="button" aria-label="Engine mode explanations" data-testid="button-engine-mode-info" className="text-muted-foreground hover:text-foreground">
+                            <Info className="h-3.5 w-3.5" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-sm space-y-1.5" data-testid="tooltip-engine-modes">
+                          <p><span className="font-semibold">Executable</span> — runs the native EPA SWMM 5.2 program on the server. Fastest; the standard choice.</p>
+                          <p><span className="font-semibold">SWMM5 API</span> — runs on the server via the SWMM5 shared library, with live step-by-step data (see the API dashboard).</p>
+                          <p><span className="font-semibold">WASM (Browser)</span> — runs EPA SWMM 5.2 entirely in your browser via WebAssembly. Works even if the server engine is unavailable.</p>
+                          <p><span className="font-semibold">SWMM6 (Browser)</span> — runs the OpenSWMM engine (swmm6_rel, legacy engine v5.3.0 with extra link-depth validation warnings) in your browser.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <Button
                           size="sm"
