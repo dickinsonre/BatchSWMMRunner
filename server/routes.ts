@@ -1,5 +1,7 @@
-import type { Express } from "express";
+import type { Express, Request, RequestHandler } from "express";
 import express from "express";
+import rateLimit from "express-rate-limit";
+import { randomUUID } from "crypto";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
@@ -7,7 +9,7 @@ import path from "path";
 import fs from "fs";
 import { spawn, execSync } from "child_process";
 import { resolveSwmmInvocation } from "./swmmInvocation";
-import { storage } from "./storage";
+import { storage, ensureStorageSchema } from "./storage";
 import { uploadFileSchema, type ProcessResult, type ParsedMetrics, type SwmmStatus, type SweepResult, type SweepConfig, type DesignStormConfig } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
@@ -23,6 +25,7 @@ const MAX_TOTAL_SIZE = 250 * 1024 * 1024;
 const DEFAULT_TIMEOUT_MINUTES = 10;
 const MAX_TIMEOUT_MINUTES = 60;
 const RETENTION_HOURS = 24;
+const MAX_CONCURRENT_JOBS = 4;
 const UPLOADS_DIR = path.join(process.cwd(), 'uploads');
 
 const upload = multer({
@@ -205,7 +208,75 @@ function enrichWithApiStatus(status: SwmmStatus): SwmmStatus {
 
 let cachedSwmmStatus: SwmmStatus | null = null;
 
-export async function registerRoutes(app: Express): Promise<Server> {
+// ── Anonymous session ownership helpers ─────────────────────────────
+// Jobs are stamped with the visitor's session ownerId. Requests from other
+// sessions get a 404 (not 403) so job IDs cannot be probed for existence.
+
+function getOwnerId(req: Request): string | null {
+  return (req as any).session?.ownerId ?? null;
+}
+
+function ensureOwnerId(req: Request): string | null {
+  const session = (req as any).session;
+  if (!session) return null; // no session middleware (test harness)
+  if (!session.ownerId) session.ownerId = randomUUID();
+  return session.ownerId;
+}
+
+function ownsJob(req: Request, job: { ownerId?: string | null }): boolean {
+  if (!job.ownerId) {
+    // Jobs without an owner (created before sessions existed, or by a harness
+    // without session middleware) are only accessible when sessions are off
+    // entirely. With sessions enabled, legacy jobs are denied by default —
+    // they expire within the 24h retention window anyway.
+    return !(req as any).session;
+  }
+  return job.ownerId === getOwnerId(req);
+}
+
+/** Minimal response shim so express-session can parse a WebSocket upgrade request. */
+function makeSessionResShim(): any {
+  return {
+    getHeader() { return undefined; },
+    setHeader() {},
+    writeHead() {},
+    end() {},
+    on() {},
+    once() {},
+    emit() {},
+    removeListener() {},
+    finished: false,
+    headersSent: false,
+  };
+}
+
+/** Strip server filesystem paths and the owner id before sending a job to the browser. */
+function sanitizeJob<T extends { ownerId?: string | null; files: { id: string; name: string; path: string }[] }>(job: T): Omit<T, 'ownerId'> {
+  const { ownerId, ...rest } = job;
+  return {
+    ...rest,
+    files: job.files.map(f => ({ id: f.id, name: f.name, path: f.name })),
+  };
+}
+
+/** Public view of engine availability — no server filesystem paths. */
+function sanitizeSwmmStatus(status: SwmmStatus): SwmmStatus {
+  const { path: _path, searchedPaths: _searched, ...rest } = status;
+  return rest;
+}
+
+function makeLimiter(max: number, message: string): RequestHandler {
+  return rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: message },
+  });
+}
+
+export async function registerRoutes(app: Express, sessionMiddleware?: RequestHandler): Promise<Server> {
+  await ensureStorageSchema();
   sweepStaleUploads();
 
   const httpServer = createServer(app);
@@ -223,9 +294,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   cachedSwmmStatus = detectSwmmPath();
   console.log(`SWMM detection: mode=${cachedSwmmStatus.mode}, path=${cachedSwmmStatus.path || 'N/A'}`);
 
-  wss.on('connection', (ws, req) => {
+  wss.on('connection', async (ws, req) => {
     const url = new URL(req.url!, `http://${req.headers.host}`);
     const jobId = url.searchParams.get('jobId');
+
+    // Verify the connecting browser owns this job before streaming progress.
+    if (jobId && sessionMiddleware) {
+      try {
+        await new Promise<void>((resolve) => sessionMiddleware(req as any, makeSessionResShim(), () => resolve()));
+        const job = await storage.getBatchJob(jobId);
+        if (!job || !ownsJob(req as any, job)) {
+          ws.close(4403, 'Not authorized for this job');
+          return;
+        }
+      } catch (e) {
+        console.warn('WebSocket auth failed:', e);
+        ws.close(1011, 'Authorization error');
+        return;
+      }
+    }
+
     if (jobId) {
       clients.set(jobId, ws);
       console.log(`WebSocket client connected for job: ${jobId}`);
@@ -274,12 +362,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!cachedSwmmStatus) {
       cachedSwmmStatus = detectSwmmPath();
     }
-    res.json(enrichWithApiStatus(cachedSwmmStatus));
+    res.json(sanitizeSwmmStatus(enrichWithApiStatus(cachedSwmmStatus)));
   });
 
-  app.post('/api/swmm-status/refresh', async (_req, res) => {
+  app.post('/api/swmm-status/refresh', makeLimiter(30, 'Too many engine refresh requests — try again later'), async (_req, res) => {
     cachedSwmmStatus = detectSwmmPath();
-    res.json(enrichWithApiStatus(cachedSwmmStatus));
+    res.json(sanitizeSwmmStatus(enrichWithApiStatus(cachedSwmmStatus)));
   });
 
   app.get('/api/swmm5-api-guide', async (_req, res) => {
@@ -343,7 +431,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/upload', (req, res) => {
+  const uploadLimiter = makeLimiter(30, 'Too many uploads — try again in a few minutes');
+  const startLimiter = makeLimiter(60, 'Too many batch starts — try again in a few minutes');
+  const aiLimiter = makeLimiter(20, 'Too many AI requests — try again in a few minutes');
+
+  app.post('/api/upload', uploadLimiter, (req, res) => {
     upload.array('files')(req, res, async (err: any) => {
       const files = (req.files || []) as Express.Multer.File[];
       const discardUploads = () => {
@@ -382,7 +474,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
 
-        const batchJob = await storage.createBatchJob([]);
+        const ownerId = ensureOwnerId(req);
+        const batchJob = await storage.createBatchJob([], undefined, ownerId);
         const dir = jobDir(batchJob.id);
         fs.mkdirSync(dir, { recursive: true });
 
@@ -398,7 +491,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         const updated = await storage.updateBatchJob(batchJob.id, { files: uploadedFiles });
-        res.json(updated);
+        res.json(updated ? sanitizeJob(updated) : updated);
       } catch (error) {
         console.error('Upload error:', error);
         discardUploads();
@@ -407,9 +500,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  app.post('/api/batch/:jobId/start', async (req, res) => {
+  app.post('/api/batch/:jobId/start', startLimiter, async (req, res) => {
+    const { jobId } = req.params;
+
+    // ── Synchronous admission ─────────────────────────────────────────
+    // Check-and-reserve before any await so parallel start requests can
+    // neither exceed MAX_CONCURRENT_JOBS nor start the same job twice.
+    if (activeJobs.has(jobId)) {
+      return res.status(409).json({ error: 'Batch job is already processing' });
+    }
+    if (activeJobs.size >= MAX_CONCURRENT_JOBS) {
+      return res.status(429).json({ error: 'The server is busy running other batches — try again in a few minutes' });
+    }
+    const reservedEntry: ActiveJobEntry = { stopSignal: null };
+    activeJobs.set(jobId, reservedEntry);
+    let admitted = false;
+
     try {
-      const { jobId } = req.params;
       const { engineMode, timeoutMinutes, stopOnError, overrides } = req.body || {};
 
       const inpOverrides: InpOverrides = {};
@@ -444,10 +551,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       const job = await storage.getBatchJob(jobId);
 
-      if (!job) {
+      if (!job || !ownsJob(req, job)) {
         return res.status(404).json({ error: 'Batch job not found' });
       }
-      if (job.status === 'processing' || activeJobs.has(jobId)) {
+      if (job.status === 'processing') {
         return res.status(409).json({ error: 'Batch job is already processing' });
       }
       if (job.status !== 'idle') {
@@ -459,6 +566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       timeoutMin = Math.min(timeoutMin, MAX_TIMEOUT_MINUTES);
 
       await storage.updateBatchJob(jobId, { status: 'processing', engineMode: engineMode || 'executable' });
+      admitted = true;
 
       res.json({
         message: 'Processing started',
@@ -472,6 +580,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Start processing error:', error);
       res.status(500).json({ error: 'Failed to start processing' });
+    } finally {
+      // Release the reserved slot on any validation failure or error so
+      // rejected requests never hold capacity.
+      if (!admitted) {
+        activeJobs.delete(jobId);
+      }
     }
   });
 
@@ -479,7 +593,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { jobId } = req.params;
       const job = await storage.getBatchJob(jobId);
-      if (!job) {
+      if (!job || !ownsJob(req, job)) {
         return res.status(404).json({ error: 'Batch job not found' });
       }
       if (job.status !== 'processing') {
@@ -505,6 +619,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete('/api/batch/:jobId', async (req, res) => {
     try {
       const { jobId } = req.params;
+      const job = await storage.getBatchJob(jobId);
+      if (!job || !ownsJob(req, job)) {
+        return res.status(404).json({ error: 'Batch job not found' });
+      }
       const entry = activeJobs.get(jobId);
       if (entry) {
         return res.status(409).json({ error: 'Batch job is still processing — cancel it first' });
@@ -523,11 +641,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/jobs/latest', async (req, res) => {
     try {
-      const job = await storage.getLatestCompletedJob();
+      // Only ever return the caller's own latest job. Visitors without a
+      // session (who therefore own no jobs) get a 404.
+      const ownerId = getOwnerId(req);
+      const job = ownerId ? await storage.getLatestCompletedJob(ownerId) : undefined;
       if (!job) {
         return res.status(404).json({ error: 'No completed batch jobs found' });
       }
-      res.json(job);
+      res.json(sanitizeJob(job));
     } catch (error) {
       console.error('Latest job error:', error);
       res.status(500).json({ error: 'Failed to get latest job' });
@@ -539,11 +660,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { jobId } = req.params;
       const job = await storage.getBatchJob(jobId);
 
-      if (!job) {
+      if (!job || !ownsJob(req, job)) {
         return res.status(404).json({ error: 'Batch job not found' });
       }
 
-      res.json(job);
+      res.json(sanitizeJob(job));
     } catch (error) {
       console.error('Get batch job error:', error);
       res.status(500).json({ error: 'Failed to get batch job' });
@@ -559,9 +680,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     overrides: InpOverrides = {},
   ) {
     const job = await storage.getBatchJob(jobId);
-    if (!job) return;
+    if (!job) {
+      activeJobs.delete(jobId);
+      return;
+    }
 
-    const entry: ActiveJobEntry = { stopSignal: null };
+    // Reuse the entry reserved by the start endpoint (it may already carry a
+    // stop signal if the user cancelled during the start delay).
+    const entry: ActiveJobEntry = activeJobs.get(jobId) ?? { stopSignal: null };
     activeJobs.set(jobId, entry);
 
     try {
@@ -696,7 +822,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.updateBatchJob(jobId, { status: 'failed' });
         sendProgressUpdate(jobId, {
           type: 'log',
-          text: `Batch processing failed unexpectedly: ${e instanceof Error ? e.message : String(e)}`,
+          text: 'Batch processing failed unexpectedly due to a server error. Please try again.',
           stream: 'stderr',
         });
         sendProgressUpdate(jobId, { type: 'completed' });
@@ -717,7 +843,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return {
       id: file.id,
       fileName: file.name,
-      filePath: file.path,
+      filePath: file.name,
       status: 'failed',
       error: `Engine unavailable — no simulation was performed. ${message}`,
       processingTime: 0,
@@ -854,7 +980,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return {
           id: file.id,
           fileName: file.name,
-          filePath: file.path,
+          filePath: file.name,
           status: 'failed',
           error: apiResult.error || 'API simulation failed',
           processingTime,
@@ -877,7 +1003,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return {
           id: file.id,
           fileName: file.name,
-          filePath: file.path,
+          filePath: file.name,
           status: 'failed',
           error: validation.reason || 'SWMM API run produced an invalid report',
           processingTime,
@@ -901,7 +1027,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return {
         id: file.id,
         fileName: file.name,
-        filePath: file.path,
+        filePath: file.name,
         status: 'success',
         processingTime,
         reportContent,
@@ -915,7 +1041,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return {
         id: file.id,
         fileName: file.name,
-        filePath: file.path,
+        filePath: file.name,
         status: 'failed',
         error: `API mode error: ${e.message}`,
         processingTime,
@@ -1074,7 +1200,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             resolve({
               id: file.id,
               fileName: file.name,
-              filePath: file.path,
+              filePath: file.name,
               status: 'failed',
               error: validation.reason || 'SWMM produced an invalid report',
               processingTime,
@@ -1099,7 +1225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           resolve({
             id: file.id,
             fileName: file.name,
-            filePath: file.path,
+            filePath: file.name,
             status: 'success',
             processingTime,
             reportContent,
@@ -1125,7 +1251,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           resolve({
             id: file.id,
             fileName: file.name,
-            filePath: file.path,
+            filePath: file.name,
             status: 'failed',
             error: issues.errors.length > 0
               ? issues.errors.join('\n')
@@ -1144,7 +1270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         resolve({
           id: file.id,
           fileName: file.name,
-          filePath: file.path,
+          filePath: file.name,
           status: 'failed',
           error: err.message,
           processingTime,
@@ -1166,8 +1292,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
   });
 
-  app.post('/api/chat-report', express.json({ limit: '50mb' }), async (req, res) => {
+  app.post('/api/chat-report', aiLimiter, express.json({ limit: '50mb' }), async (req, res) => {
     try {
+      // Establish an anonymous session so AI usage is attributable and the
+      // per-IP rate limit above can't be trivially reset.
+      ensureOwnerId(req);
       const { messages, reportContent, inpContent } = req.body;
       if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({ error: 'messages array is required' });

@@ -686,9 +686,6 @@ export default function Home() {
                   ) : swmmStatus?.found ? (
                     <>
                       <p className="font-medium text-green-700 dark:text-green-400" data-testid="text-swmm-found">SWMM5 Engine Detected</p>
-                      <p className="text-muted-foreground">
-                        Found at: <span className="font-mono text-xs">{swmmStatus.path}</span>
-                      </p>
                       <p className="text-muted-foreground text-xs">
                         Simulations will run using the real SWMM engine.
                       </p>
@@ -697,20 +694,8 @@ export default function Home() {
                     <>
                       <p className="font-medium" data-testid="text-swmm-not-found">SWMM Engine Unavailable</p>
                       <p className="text-muted-foreground">
-                        No SWMM engine was found. The app searched these locations:
+                        No SWMM engine was found on the server.
                       </p>
-                      {swmmStatus?.searchedPaths && swmmStatus.searchedPaths.length > 0 && (
-                        <details className="text-xs">
-                          <summary className="cursor-pointer text-muted-foreground">
-                            Searched {swmmStatus.searchedPaths.length} locations
-                          </summary>
-                          <ul className="font-mono text-muted-foreground space-y-0.5 mt-1 pl-4">
-                            {swmmStatus.searchedPaths.map((p, i) => (
-                              <li key={i}>{p}</li>
-                            ))}
-                          </ul>
-                        </details>
-                      )}
                       <p className="text-muted-foreground">
                         To use real SWMM processing, install EPA SWMM and set the path:
                       </p>
@@ -963,7 +948,7 @@ export default function Home() {
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
             <p data-testid="text-footer-version">BatchSWMM56 v1.0.0</p>
             <p className="font-mono truncate max-w-full" data-testid="text-footer-executable">
-              {swmmStatus?.found ? swmmStatus.path : 'server engine unavailable'}
+              {swmmStatus?.found ? 'server engine ready' : 'server engine unavailable'}
             </p>
           </div>
         </div>

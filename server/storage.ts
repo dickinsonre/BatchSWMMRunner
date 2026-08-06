@@ -1,15 +1,15 @@
 import { type BatchJob, type ProcessResult, batchJobsTable } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
-import { eq, desc, lt } from "drizzle-orm";
+import { eq, desc, lt, and, sql } from "drizzle-orm";
 
 export interface IStorage {
   getBatchJob(id: string): Promise<BatchJob | undefined>;
-  createBatchJob(files: { id: string; name: string; path: string }[], engineMode?: string): Promise<BatchJob>;
+  createBatchJob(files: { id: string; name: string; path: string }[], engineMode?: string, ownerId?: string | null): Promise<BatchJob>;
   updateBatchJob(id: string, updates: Partial<BatchJob>): Promise<BatchJob | undefined>;
   deleteBatchJob(id: string): Promise<boolean>;
   listBatchJobs(): Promise<BatchJob[]>;
-  getLatestCompletedJob(): Promise<BatchJob | undefined>;
+  getLatestCompletedJob(ownerId?: string | null): Promise<BatchJob | undefined>;
   deleteJobsOlderThan(date: Date): Promise<string[]>;
 }
 
@@ -21,6 +21,7 @@ function rowToJob(row: typeof batchJobsTable.$inferSelect): BatchJob {
     currentFile: row.currentFile,
     results: (row.results || []) as ProcessResult[],
     engineMode: row.engineMode ?? undefined,
+    ownerId: row.ownerId ?? null,
     createdAt: row.createdAt?.toISOString(),
   };
 }
@@ -31,7 +32,7 @@ export class DatabaseStorage implements IStorage {
     return row ? rowToJob(row) : undefined;
   }
 
-  async createBatchJob(files: { id: string; name: string; path: string }[], engineMode?: string): Promise<BatchJob> {
+  async createBatchJob(files: { id: string; name: string; path: string }[], engineMode?: string, ownerId?: string | null): Promise<BatchJob> {
     const id = randomUUID();
     const [row] = await db.insert(batchJobsTable).values({
       id,
@@ -40,6 +41,7 @@ export class DatabaseStorage implements IStorage {
       files,
       results: [],
       engineMode: engineMode ?? null,
+      ownerId: ownerId ?? null,
     }).returning();
     return rowToJob(row);
   }
@@ -66,9 +68,12 @@ export class DatabaseStorage implements IStorage {
     return rows.map(rowToJob);
   }
 
-  async getLatestCompletedJob(): Promise<BatchJob | undefined> {
+  async getLatestCompletedJob(ownerId?: string | null): Promise<BatchJob | undefined> {
+    const conditions = ownerId !== undefined
+      ? and(eq(batchJobsTable.status, 'completed'), eq(batchJobsTable.ownerId, ownerId ?? ''))
+      : eq(batchJobsTable.status, 'completed');
     const rows = await db.select().from(batchJobsTable)
-      .where(eq(batchJobsTable.status, 'completed'))
+      .where(conditions)
       .orderBy(desc(batchJobsTable.createdAt))
       .limit(1);
     return rows.length > 0 ? rowToJob(rows[0]) : undefined;
@@ -83,3 +88,14 @@ export class DatabaseStorage implements IStorage {
 }
 
 export const storage = new DatabaseStorage();
+
+/**
+ * Idempotent runtime migration so existing deployments (which only run
+ * `npm run start`, with no migration step) pick up the owner_id column.
+ * Mirrors migrations/0001_add_batch_jobs_owner_id.sql.
+ */
+export async function ensureStorageSchema(): Promise<void> {
+  await db.execute(sql`ALTER TABLE batch_jobs ADD COLUMN IF NOT EXISTS owner_id text`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS batch_jobs_owner_status_created_idx
+    ON batch_jobs (owner_id, status, created_at DESC)`);
+}

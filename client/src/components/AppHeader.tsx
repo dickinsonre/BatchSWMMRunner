@@ -78,7 +78,7 @@ export default function AppHeader({ swmmStatus: externalSwmmStatus }: AppHeaderP
                   <p className="font-medium">EPA SWMM 5.2.4 Native Engine</p>
                   <p className="text-xs text-muted-foreground">
                     {swmmStatus.found
-                      ? `Compiled C binary at: ${swmmStatus.path}`
+                      ? 'Compiled C binary available on the server'
                       : 'No server engine detected — server-side runs will fail (browser WASM modes still work)'}
                   </p>
                 </TooltipContent>

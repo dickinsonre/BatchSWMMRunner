@@ -57,6 +57,8 @@ export const batchJobSchema = z.object({
   results: z.array(processResultSchema),
   engineMode: z.string().optional(),
   createdAt: z.string().optional(),
+  // Server-side only: anonymous session owner. Stripped before sending to clients.
+  ownerId: z.string().nullable().optional(),
 });
 
 export type BatchJob = z.infer<typeof batchJobSchema>;
@@ -68,6 +70,7 @@ export const batchJobsTable = pgTable("batch_jobs", {
   files: jsonb("files").notNull().$type<{ id: string; name: string; path: string }[]>(),
   results: jsonb("results").notNull().default([]).$type<ProcessResult[]>(),
   engineMode: text("engine_mode"),
+  ownerId: text("owner_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -80,6 +83,8 @@ export type UploadFile = z.infer<typeof uploadFileSchema>;
 
 export const swmmStatusSchema = z.object({
   found: z.boolean(),
+  // path/searchedPaths are server-side only; they are stripped from API
+  // responses so filesystem paths never reach the browser.
   path: z.string().optional(),
   mode: z.enum(['live', 'unavailable']),
   searchedPaths: z.array(z.string()).optional(),
