@@ -63,6 +63,49 @@ async function readErrorMessage(res: Response, fallback: string): Promise<string
   return fallback;
 }
 
+// Hosting infrastructure caps a single HTTP request at ~32 MB, so large
+// batches are uploaded in several smaller chunks: the first chunk creates the
+// job, the rest are appended to it before the batch starts.
+const UPLOAD_CHUNK_BYTES = 20 * 1024 * 1024;
+
+async function uploadFilesChunked(
+  fileItems: any[],
+  isCancelled?: () => boolean,
+): Promise<any> {
+  const toSend: File[] = fileItems.map(f => f.file).filter((f: any): f is File => !!f);
+  const chunks: File[][] = [];
+  let current: File[] = [];
+  let currentBytes = 0;
+  for (const file of toSend) {
+    if (current.length > 0 && currentBytes + file.size > UPLOAD_CHUNK_BYTES) {
+      chunks.push(current);
+      current = [];
+      currentBytes = 0;
+    }
+    current.push(file);
+    currentBytes += file.size;
+  }
+  if (current.length > 0) chunks.push(current);
+
+  let batchJob: any = null;
+  for (let i = 0; i < chunks.length; i++) {
+    if (isCancelled?.()) {
+      if (batchJob) fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
+      throw new Error('Comparison cancelled');
+    }
+    const formData = new FormData();
+    chunks[i].forEach(file => formData.append('files', file));
+    const url = i === 0 ? '/api/upload' : `/api/batch/${batchJob.id}/files`;
+    const res = await fetch(url, { method: 'POST', body: formData });
+    if (!res.ok) {
+      if (batchJob) fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
+      throw new Error(await readErrorMessage(res, 'Failed to upload files'));
+    }
+    batchJob = await res.json();
+  }
+  return batchJob;
+}
+
 function formatTime(seconds: number): string {
   if (seconds < 60) return `${Math.round(seconds)}s`;
   const mins = Math.floor(seconds / 60);
@@ -669,12 +712,8 @@ export default function Home() {
   const runServerEngineOnce = async (
     engine: 'executable' | 'api',
   ): Promise<{ jobId: string; results: ProcessResult[] }> => {
-    const formData = new FormData();
-    files.forEach((file: any) => { if (file.file) formData.append('files', file.file); });
     if (comparisonCancelRef.current.cancelled) throw new Error('Comparison cancelled');
-    const uploadResponse = await fetch('/api/upload', { method: 'POST', body: formData });
-    if (!uploadResponse.ok) throw new Error(await readErrorMessage(uploadResponse, 'Failed to upload files'));
-    const batchJob = await uploadResponse.json();
+    const batchJob = await uploadFilesChunked(files, () => comparisonCancelRef.current.cancelled);
     comparisonCancelRef.current.jobId = batchJob.id;
     if (comparisonCancelRef.current.cancelled) {
       // Cancelled while the upload was in flight — don't start the job.
@@ -895,23 +934,7 @@ export default function Home() {
       return;
     }
     try {
-      const formData = new FormData();
-      files.forEach((file: any) => {
-        if (file.file) {
-          formData.append('files', file.file);
-        }
-      });
-
-      const uploadResponse = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error(await readErrorMessage(uploadResponse, 'Failed to upload files'));
-      }
-
-      const batchJob = await uploadResponse.json();
+      const batchJob = await uploadFilesChunked(files);
       setJobId(batchJob.id);
       setProcessingState('processing');
       setCurrentFile(0);

@@ -52,6 +52,23 @@ interface ActiveJobEntry {
 
 const activeJobs = new Map<string, ActiveJobEntry>();
 
+// Serializes chunked-upload appends per job so concurrent appends can't
+// overwrite each other's file lists or bypass the aggregate size/count caps.
+const appendLocks = new Map<string, Promise<void>>();
+async function withAppendLock(jobId: string, fn: () => Promise<void>): Promise<void> {
+  const prev = appendLocks.get(jobId) || Promise.resolve();
+  let release!: () => void;
+  const next = new Promise<void>(r => { release = r; });
+  appendLocks.set(jobId, prev.then(() => next));
+  await prev;
+  try {
+    await fn();
+  } finally {
+    release();
+    if (appendLocks.get(jobId) === next) appendLocks.delete(jobId);
+  }
+}
+
 function getStopSignal(entry: ActiveJobEntry): 'cancelled' | 'timeout' | null {
   return entry.stopSignal;
 }
@@ -464,7 +481,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
     res.json(GITHUB_MODELS_REPO);
   });
 
-  const uploadLimiter = makeLimiter(30, 'Too many uploads — try again in a few minutes');
+  const uploadLimiter = makeLimiter(60, 'Too many uploads — try again in a few minutes');
   const startLimiter = makeLimiter(60, 'Too many batch starts — try again in a few minutes');
   const aiLimiter = makeLimiter(20, 'Too many AI requests — try again in a few minutes');
 
@@ -533,6 +550,103 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
     });
   });
 
+  // Append more files to an existing (not yet started) batch. Large uploads
+  // are sent in several chunks because hosting infrastructure caps a single
+  // HTTP request at ~32 MB — the first chunk goes to /api/upload, the rest
+  // land here.
+  app.post('/api/batch/:jobId/files', uploadLimiter, (req, res) => {
+    upload.array('files')(req, res, async (err: any) => {
+      const files = (req.files || []) as Express.Multer.File[];
+      const discardUploads = () => {
+        for (const f of files) {
+          try { fs.unlinkSync(f.path); } catch {}
+        }
+      };
+
+      try {
+        if (err) {
+          discardUploads();
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ error: `Each file must be ${MAX_FILE_SIZE / (1024 * 1024)} MB or smaller` });
+          }
+          if (err.code === 'LIMIT_FILE_COUNT') {
+            return res.status(400).json({ error: `A batch may contain at most ${MAX_UPLOAD_FILES} files` });
+          }
+          return res.status(400).json({ error: err.message || 'Upload failed' });
+        }
+
+        if (files.length === 0) {
+          return res.status(400).json({ error: 'No files uploaded' });
+        }
+
+        // Everything from the job read to the file-list write happens under a
+        // per-job lock so concurrent appends serialize, and a job that has
+        // been reserved for starting (activeJobs) can no longer be appended to.
+        await withAppendLock(req.params.jobId, async () => {
+          const job = await storage.getBatchJob(req.params.jobId);
+          if (!job || !ownsJob(req, job)) {
+            discardUploads();
+            res.status(404).json({ error: 'Batch job not found' });
+            return;
+          }
+          if (job.status !== 'idle' || activeJobs.has(job.id)) {
+            discardUploads();
+            res.status(409).json({ error: 'Files can only be added before the batch starts' });
+            return;
+          }
+
+          const existing = job.files || [];
+          if (existing.length + files.length > MAX_UPLOAD_FILES) {
+            discardUploads();
+            res.status(400).json({ error: `A batch may contain at most ${MAX_UPLOAD_FILES} files` });
+            return;
+          }
+
+          let existingBytes = 0;
+          for (const f of existing) {
+            try { existingBytes += fs.statSync(f.path).size; } catch {}
+          }
+          const totalSize = existingBytes + files.reduce((acc, f) => acc + f.size, 0);
+          if (totalSize > MAX_TOTAL_SIZE) {
+            discardUploads();
+            res.status(400).json({ error: `Total upload size must be ${MAX_TOTAL_SIZE / (1024 * 1024)} MB or smaller` });
+            return;
+          }
+
+          const invalid = files.filter(f => !looksLikeSwmmInput(f.path));
+          if (invalid.length > 0) {
+            discardUploads();
+            res.status(400).json({
+              error: `These files do not look like SWMM input files (no [SECTION] headers found): ${invalid.map(f => f.originalname).join(', ')}`,
+            });
+            return;
+          }
+
+          const dir = jobDir(job.id);
+          fs.mkdirSync(dir, { recursive: true });
+          const offset = existing.length;
+          const appended = files.map((file, index) => {
+            const safeName = `${offset + index}-${path.basename(file.originalname).replace(/[^A-Za-z0-9._-]/g, '_')}`;
+            const destPath = path.join(dir, safeName);
+            fs.renameSync(file.path, destPath);
+            return {
+              id: `${Date.now()}-${offset + index}`,
+              name: file.originalname,
+              path: destPath,
+            };
+          });
+
+          const updated = await storage.updateBatchJob(job.id, { files: [...existing, ...appended] });
+          res.json(updated ? sanitizeJob(updated) : updated);
+        });
+      } catch (error) {
+        console.error('Upload append error:', error);
+        discardUploads();
+        res.status(500).json({ error: 'Failed to upload files' });
+      }
+    });
+  });
+
   app.post('/api/batch/:jobId/start', startLimiter, async (req, res) => {
     const { jobId } = req.params;
 
@@ -582,6 +696,10 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
         const rts = Number(overrides.routingStepSeconds);
         if (Number.isFinite(rts) && rts > 0 && rts <= 3600) inpOverrides.routingStepSeconds = rts;
       }
+      // Wait for any in-flight chunked-upload append to finish before reading
+      // the file list; new appends are rejected once this job is reserved in
+      // activeJobs above, so the list read here is final.
+      await (appendLocks.get(jobId) || Promise.resolve());
       const job = await storage.getBatchJob(jobId);
 
       if (!job || !ownsJob(req, job)) {

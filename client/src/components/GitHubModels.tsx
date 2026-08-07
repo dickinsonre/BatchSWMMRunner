@@ -36,7 +36,7 @@ interface GitHubModelsProps {
 
 // Guardrails per pull — mirror the server upload limits (100 files / 250 MB
 // total) so GitHub-sourced batches behave exactly like uploaded ones.
-export const MAX_GITHUB_FILES = 100;
+export const MAX_GITHUB_FILES = 500;
 export const MAX_GITHUB_TOTAL_BYTES = 250 * 1024 * 1024;
 
 function formatFileSize(bytes: number): string {

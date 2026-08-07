@@ -3,3 +3,4 @@
 - [SWMM binary in deployments](swmm-deployment-glibc.md) — runswmm's nix glibc interpreter is absent in published deployments (spawn ENOENT); run via bundled loader in swmm-engine/libs.
 - [SWMM report flags](swmm-report-flags.md) — [REPORT] flags gate .out contents too; WASM swmm_report writes rpt time series, CLI does not.
 - [GitHub workflow scope](github-workflow-scope.md) — pushes adding .github/workflows are rejected (token lacks workflow scope); fix is user-side, not a retry.
+- [Deployment request size cap](deploy-request-size-cap.md) — published deployments drop HTTP requests over ~32 MB before they reach the app; uploads must be chunked.

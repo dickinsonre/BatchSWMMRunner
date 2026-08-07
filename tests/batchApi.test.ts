@@ -64,6 +64,45 @@ describe("upload validation", () => {
     }
   });
 
+  it("appends chunked-upload files to an idle batch and rejects appends after start", async () => {
+    ensureUploadTmpDir();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "chunk-inp-"));
+    const mk = (name: string) => {
+      const p = path.join(tmpDir, name);
+      fs.writeFileSync(p, "[TITLE]\ntiny\n[JUNCTIONS]\nJ1 1 1\n");
+      return p;
+    };
+    try {
+      // First chunk creates the job.
+      const first = await request(app).post("/api/upload").attach("files", mk("a.inp"));
+      expect(first.status).toBe(200);
+      const jobId = first.body.id;
+
+      // Second chunk appends.
+      const append = await request(app)
+        .post(`/api/batch/${jobId}/files`)
+        .attach("files", mk("b.inp"))
+        .attach("files", mk("c.inp"));
+      expect(append.status).toBe(200);
+      expect(append.body.files).toHaveLength(3);
+
+      // Appending to a job that doesn't exist fails cleanly.
+      const missing = await request(app).post(`/api/batch/no-such-job/files`).attach("files", mk("d.inp"));
+      expect(missing.status).toBe(404);
+
+      // Once the batch is started, appends are rejected.
+      const started = await startBatch(jobId);
+      expect(started.status).toBe(200);
+      const late = await request(app)
+        .post(`/api/batch/${jobId}/files`)
+        .attach("files", mk("e.inp"));
+      expect(late.status).toBe(409);
+      await waitForJob(app, jobId).catch(() => {});
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it("rejects empty uploads", async () => {
     const res = await request(app).post("/api/upload");
     expect(res.status).toBe(400);
