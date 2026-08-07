@@ -150,6 +150,67 @@ describe('runWasmBatch worker pool', () => {
     expect(MockWorker.instances[0].terminated).toBe(true);
   });
 
+  it('parallel=false uses a single worker and runs files in order', async () => {
+    const files = [makeFile('a.inp'), makeFile('b.inp'), makeFile('c.inp')];
+    const cb = makeCallbacks();
+    runWasmBatch(files, cb, { current: false }, 'swmm5', undefined, false);
+    await flush();
+
+    // Only one worker despite 8 hardware cores and 3 files.
+    expect(MockWorker.instances.length).toBe(1);
+    const w = MockWorker.instances[0];
+    expect(w.posted.length).toBe(1);
+    expect(w.posted[0].fileName).toBe('a.inp');
+    expect(cb.onLog).toHaveBeenCalledWith(
+      'Parallel processing is off — running files one at a time.',
+      'info',
+    );
+
+    // Files are dispatched serially, in order, on the same worker.
+    w.emitDone();
+    await flush();
+    expect(w.posted.length).toBe(2);
+    expect(w.posted[1].fileName).toBe('b.inp');
+    expect(cb.onComplete).not.toHaveBeenCalled();
+
+    w.emitDone();
+    await flush();
+    expect(w.posted.length).toBe(3);
+    expect(w.posted[2].fileName).toBe('c.inp');
+
+    w.emitDone();
+    await flush();
+    expect(w.posted.map((p) => p.fileName)).toEqual(['a.inp', 'b.inp', 'c.inp']);
+    expect(cb.onResult).toHaveBeenCalledTimes(3);
+    expect(cb.onResult.mock.calls.map((c) => c[0].fileName)).toEqual(['a.inp', 'b.inp', 'c.inp']);
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+    expect(w.terminated).toBe(true);
+  });
+
+  it('parallel=false cancel terminates the worker and dispatches no further files', async () => {
+    const files = [makeFile('a.inp'), makeFile('b.inp'), makeFile('c.inp')];
+    const cancelRef = { current: false };
+    const cb = makeCallbacks();
+    const cancel = runWasmBatch(files, cb, cancelRef, 'swmm5', undefined, false);
+    await flush();
+
+    const w = MockWorker.instances[0];
+    expect(w.posted.length).toBe(1);
+
+    // First file finishes, second is dispatched, then the user cancels.
+    w.emitDone();
+    await flush();
+    expect(w.posted.length).toBe(2);
+
+    cancelRef.current = true;
+    cancel();
+    await flush();
+
+    expect(w.terminated).toBe(true);
+    expect(w.posted.length).toBe(2);
+    expect(cb.onComplete).not.toHaveBeenCalled();
+  });
+
   it('caps pool size at 4 and reuses workers for remaining files', async () => {
     const files = Array.from({ length: 6 }, (_, i) => makeFile(`f${i}.inp`));
     const cb = makeCallbacks();

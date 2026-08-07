@@ -13,7 +13,7 @@ import KeyResultsCharts from "./KeyResultsCharts";
 import BatchComparison from "./BatchComparison";
 import { generateHTMLReport } from "@/lib/reportGenerator";
 import ReportChatbot from "./ReportChatbot";
-import JSZip from "jszip";
+import { buildResultsZip, needsContentFetch } from "@/lib/zipExport";
 import { setDashboardResults } from "@/lib/resultsStore";
 import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
 
@@ -592,9 +592,6 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
   const [loadingContent, setLoadingContent] = useState<Set<string>>(new Set());
   const [loadingAll, setLoadingAll] = useState(false);
 
-  const needsContentFetch = (r: ProcessResult) =>
-    !r.reportContent && !r.inpContent && !!(r.hasReport || r.hasInp);
-
   const fetchContentFor = async (result: ProcessResult) => {
     if (!onLoadContent || !needsContentFetch(result) || loadingContent.has(result.id)) return;
     setLoadingContent(prev => new Set(prev).add(result.id));
@@ -762,31 +759,7 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
 
   const exportToZip = async () => {
     const full = await withFullContent();
-    const zip = new JSZip();
-    const usedNames = new Set<string>();
-    const uniqueName = (name: string) => {
-      let candidate = name;
-      let n = 2;
-      while (usedNames.has(candidate)) {
-        const dot = name.lastIndexOf('.');
-        candidate = dot > 0 ? `${name.slice(0, dot)}-${n}${name.slice(dot)}` : `${name}-${n}`;
-        n++;
-      }
-      usedNames.add(candidate);
-      return candidate;
-    };
-    let fileCount = 0;
-    for (const r of full) {
-      const base = r.fileName.replace(/\.inp$/i, '');
-      if (r.reportContent) {
-        zip.file(uniqueName(`${base}.rpt`), r.reportContent);
-        fileCount++;
-      }
-      if (r.inpContent) {
-        zip.file(uniqueName(`${base}.inp`), r.inpContent);
-        fileCount++;
-      }
-    }
+    const { zip, fileCount } = await buildResultsZip(full);
     if (fileCount === 0) return;
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
     const url = URL.createObjectURL(blob);
