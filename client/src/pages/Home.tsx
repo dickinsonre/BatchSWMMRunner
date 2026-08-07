@@ -22,6 +22,8 @@ import SampleModels from "@/components/SampleModels";
 import GitHubModels from "@/components/GitHubModels";
 import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from "@/components/LiveApiDashboard";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
+import EngineComparisonView from "@/components/EngineComparisonView";
+import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import type { SwmmStatus } from "@shared/schema";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
@@ -35,6 +37,7 @@ interface PersistedSettings {
   stopOnError?: boolean;
   timeoutMinutes?: number;
   engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6';
+  selectedEngines?: EngineId[];
   startDate?: string;
   endDate?: string;
   routingStepSeconds?: number | null;
@@ -79,7 +82,34 @@ export default function Home() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
   const [statusError, setStatusError] = useState(false);
-  const [engineMode, setEngineMode] = useState<'executable' | 'api' | 'wasm' | 'wasm6'>(savedSettingsRef.current.engineMode ?? 'executable');
+  const [selectedEngines, setSelectedEngines] = useState<EngineId[]>(() => {
+    const saved = savedSettingsRef.current.selectedEngines;
+    if (Array.isArray(saved) && saved.length > 0) {
+      const valid = saved.filter((e): e is EngineId => ['executable', 'api', 'wasm', 'wasm6'].includes(e));
+      if (valid.length > 0) return valid;
+    }
+    return [savedSettingsRef.current.engineMode ?? 'executable'];
+  });
+  const engineMode = selectedEngines[0];
+  const setEngineMode = (mode: EngineId | ((prev: EngineId) => EngineId)) => {
+    setSelectedEngines(prev => {
+      const next = typeof mode === 'function' ? mode(prev[0]) : mode;
+      return [next];
+    });
+  };
+  const toggleEngine = (engine: EngineId) => {
+    setSelectedEngines(prev => {
+      if (prev.includes(engine)) {
+        const next = prev.filter(e => e !== engine);
+        return next.length > 0 ? next : prev; // always keep at least one
+      }
+      return [...prev, engine];
+    });
+  };
+  const compareMode = selectedEngines.length > 1;
+  const [comparisonRuns, setComparisonRuns] = useState<EngineRun[] | null>(null);
+  const [activeComparisonEngine, setActiveComparisonEngine] = useState<string | null>(null);
+  const comparisonCancelRef = useRef<{ cancelled: boolean; jobId: string | null }>({ cancelled: false, jobId: null });
   const wasmCancelRef = useRef<{ current: boolean }>({ current: false });
   const wasmTerminateRef = useRef<(() => void) | null>(null);
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
@@ -94,7 +124,7 @@ export default function Home() {
   useEffect(() => {
     const settings: PersistedSettings = {
       reportStep, routingMethod, parallelProcessing, stopOnError,
-      timeoutMinutes, engineMode,
+      timeoutMinutes, engineMode, selectedEngines,
       startDate, endDate, routingStepSeconds,
     };
     try {
@@ -102,12 +132,12 @@ export default function Home() {
     } catch {
       // localStorage unavailable (private mode, quota) — settings simply won't persist
     }
-  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, engineMode, startDate, endDate, routingStepSeconds]);
+  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, engineMode, selectedEngines, startDate, endDate, routingStepSeconds]);
 
   // Warn before tab close while an in-browser WASM batch is running,
   // since Web Worker simulations die with the tab.
   useEffect(() => {
-    const isWasmRunning = processingState === 'processing' && (engineMode === 'wasm' || engineMode === 'wasm6');
+    const isWasmRunning = processingState === 'processing' && selectedEngines.some(e => e === 'wasm' || e === 'wasm6');
     if (!isWasmRunning) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -115,7 +145,7 @@ export default function Home() {
     };
     window.addEventListener('beforeunload', handler);
     return () => window.removeEventListener('beforeunload', handler);
-  }, [processingState, engineMode]);
+  }, [processingState, selectedEngines]);
 
   const buildOverrides = () => ({
     reportStepMinutes: reportStep > 0 ? reportStep : undefined,
@@ -130,10 +160,15 @@ export default function Home() {
       .then(res => res.json())
       .then((data: SwmmStatus) => {
         setSwmmStatus(data);
-        setEngineMode(prev => {
-          if (prev === 'executable' && !data.found) return 'wasm';
-          if (prev === 'api' && !data.apiAvailable) return data.found ? 'executable' : 'wasm';
-          return prev;
+        // Drop engines the server can't actually run; fall back to WASM.
+        setSelectedEngines(prev => {
+          const mapped = prev.map((e): EngineId => {
+            if (e === 'executable' && !data.found) return 'wasm';
+            if (e === 'api' && !data.apiAvailable) return data.found ? 'executable' : 'wasm';
+            return e;
+          });
+          const deduped = Array.from(new Set(mapped));
+          return deduped.length > 0 ? deduped : ['wasm'];
         });
       })
       .catch(err => {
@@ -146,9 +181,14 @@ export default function Home() {
         wsRef.current.close();
       }
       wasmCancelRef.current.current = true;
+      comparisonCancelRef.current.cancelled = true;
       if (wasmTerminateRef.current) {
         wasmTerminateRef.current();
         wasmTerminateRef.current = null;
+      }
+      if (browserRunFinishRef.current) {
+        browserRunFinishRef.current();
+        browserRunFinishRef.current = null;
       }
     };
   }, []);
@@ -441,6 +481,7 @@ export default function Home() {
     setLogs([]);
     setFileProgressMap(new Map());
     setApiSnapshots([]);
+    setComparisonRuns(null);
     startTimeRef.current = null;
   };
 
@@ -559,7 +600,287 @@ export default function Home() {
     });
   };
 
+  // --- Multi-engine comparison mode -------------------------------------
+  // Runs the same file set once per selected engine (sequentially), collects
+  // each engine's results, then shows an engine-vs-engine comparison.
+
+  const browserRunFinishRef = useRef<(() => void) | null>(null);
+
+  const runBrowserEngineOnce = (
+    engine: 'wasm' | 'wasm6',
+    runnableFiles: { id: string; name: string; file: File }[],
+  ): Promise<ProcessResult[]> => {
+    return new Promise((resolve) => {
+      const collected: ProcessResult[] = [];
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        browserRunFinishRef.current = null;
+        wasmTerminateRef.current = null;
+        resolve([...collected]);
+      };
+      browserRunFinishRef.current = finish;
+      wasmCancelRef.current = { current: false };
+      const terminate = runWasmBatch(
+        runnableFiles,
+        {
+          onFileStart: (fileIndex) => setCurrentFile(fileIndex),
+          onProgress: (p) => {
+            setFileProgressMap(prev => {
+              const next = new Map(prev);
+              next.set(p.fileId, { fileId: p.fileId, fileName: p.fileName, percentage: p.percentage, message: p.message, status: 'running' });
+              return next;
+            });
+          },
+          onResult: (result) => {
+            collected.push(result);
+            setFileProgressMap(prev => {
+              const next = new Map(prev);
+              next.set(result.id, {
+                fileId: result.id, fileName: result.fileName, percentage: 100,
+                message: result.status === 'success' ? 'Complete' : 'Failed',
+                status: result.status === 'success' ? 'success' : 'failed',
+              });
+              return next;
+            });
+          },
+          onLog: (message, type) => setLogs(prev => [...prev, { timestamp: getTimestamp(), message, type }]),
+          onComplete: finish,
+        },
+        wasmCancelRef.current,
+        engine === 'wasm6' ? 'swmm6' : 'swmm5',
+        buildOverrides(),
+        parallelProcessing,
+      );
+      wasmTerminateRef.current = terminate;
+    });
+  };
+
+  const runServerEngineOnce = async (
+    engine: 'executable' | 'api',
+  ): Promise<{ jobId: string; results: ProcessResult[] }> => {
+    const formData = new FormData();
+    files.forEach((file: any) => { if (file.file) formData.append('files', file.file); });
+    if (comparisonCancelRef.current.cancelled) throw new Error('Comparison cancelled');
+    const uploadResponse = await fetch('/api/upload', { method: 'POST', body: formData });
+    if (!uploadResponse.ok) throw new Error('Failed to upload files');
+    const batchJob = await uploadResponse.json();
+    comparisonCancelRef.current.jobId = batchJob.id;
+    if (comparisonCancelRef.current.cancelled) {
+      // Cancelled while the upload was in flight — don't start the job.
+      fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
+      return { jobId: batchJob.id, results: [] };
+    }
+
+    return new Promise((resolve, reject) => {
+      const collected: ProcessResult[] = [];
+      let settled = false;
+      let sawTerminal = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        if (wsRef.current === ws) wsRef.current = null;
+        try { ws.close(); } catch { /* already closed */ }
+        resolve({ jobId: batchJob.id, results: [...collected] });
+      };
+      const fail = (err: Error) => {
+        if (settled) return;
+        settled = true;
+        if (wsRef.current === ws) wsRef.current = null;
+        try { ws.close(); } catch { /* already closed */ }
+        reject(err);
+      };
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(`${protocol}//${window.location.host}/api/ws?jobId=${batchJob.id}`);
+      wsRef.current = ws;
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'progress') {
+          setCurrentFile(data.currentFile);
+          setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `Processing ${data.fileName}...`, type: 'info' }]);
+          const key = data.fileId || data.fileName;
+          setFileProgressMap(prev => {
+            const next = new Map(prev);
+            next.set(key, { fileId: key, fileName: data.fileName, percentage: 0, message: 'Starting...', status: 'running' });
+            return next;
+          });
+        } else if (data.type === 'file_progress') {
+          setFileProgressMap(prev => {
+            const next = new Map(prev);
+            next.set(data.fileId, { fileId: data.fileId, fileName: data.fileName, percentage: data.percentage, message: data.message, status: 'running' });
+            return next;
+          });
+        } else if (data.type === 'log') {
+          setLogs(prev => [...prev, { timestamp: getTimestamp(), message: data.text, type: data.stream === 'stderr' ? 'stderr' : 'stdout', fileName: data.fileName }]);
+        } else if (data.type === 'result') {
+          const result = data.result as ProcessResult;
+          collected.push(result);
+          setFileProgressMap(prev => {
+            const next = new Map(prev);
+            next.set(result.id, {
+              fileId: result.id, fileName: result.fileName, percentage: 100,
+              message: result.status === 'success' ? 'Complete' : result.status === 'timeout' ? 'Timed out' : result.status === 'cancelled' ? 'Cancelled' : 'Failed',
+              status: result.status === 'success' ? 'success' : 'failed',
+            });
+            return next;
+          });
+          setLogs(prev => [...prev, {
+            timestamp: getTimestamp(),
+            message: result.status === 'success'
+              ? `${result.fileName} -- Success (${result.processingTime?.toFixed(1)}s)`
+              : `${result.fileName} -- ${result.status === 'timeout' ? 'Timed out' : result.status === 'cancelled' ? 'Cancelled' : `Error: ${result.error || 'Unknown error'}`}`,
+            type: result.status === 'success' ? 'success' : 'error',
+          }]);
+        } else if (data.type === 'api_snapshot') {
+          setApiSnapshots(prev => [...prev, {
+            stepCount: data.stepCount, elapsedTime: data.elapsedTime, fileId: data.fileId,
+            fileName: data.fileName, nodeSnapshots: data.nodeSnapshots || [], linkSnapshots: data.linkSnapshots || [],
+          }]);
+        } else if (data.type === 'completed' || data.type === 'cancelled') {
+          sawTerminal = true;
+          finish();
+        }
+      };
+      ws.onclose = () => {
+        // Only a terminal protocol event (completed/cancelled) counts as a
+        // finished run; an abnormal disconnect must not masquerade as one.
+        if (sawTerminal || comparisonCancelRef.current.cancelled) finish();
+        else fail(new Error('Lost connection to the server mid-run'));
+      };
+      ws.onerror = (err) => console.error('WebSocket error:', err);
+
+      ws.onopen = () => {
+        if (comparisonCancelRef.current.cancelled) {
+          // Cancelled before the job started — never start it.
+          fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
+          sawTerminal = true;
+          finish();
+          return;
+        }
+        fetch(`/api/batch/${batchJob.id}/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ engineMode: engine, timeoutMinutes, stopOnError, overrides: buildOverrides() }),
+        }).then(res => {
+          if (!res.ok) fail(new Error('Failed to start processing'));
+        }).catch(err => fail(err instanceof Error ? err : new Error('Failed to start processing')));
+      };
+    });
+  };
+
+  const handleStartComparison = async () => {
+    const runnableFiles = (files as any[])
+      .filter(f => f.file)
+      .map(f => ({ id: f.id, name: f.name, file: f.file as File }));
+    if (runnableFiles.length === 0) {
+      toast({ title: "No Files", description: "No runnable files found.", variant: "destructive" });
+      return;
+    }
+
+    comparisonCancelRef.current = { cancelled: false, jobId: null };
+    setComparisonRuns(null);
+    setProcessingState('processing');
+    setCurrentFile(0);
+    setResults([]);
+    setJobId(null);
+    setApiSnapshots([]);
+    setFileProgressMap(new Map());
+    setStartTime(Date.now());
+    startTimeRef.current = Date.now();
+    setLogs([{
+      timestamp: getTimestamp(),
+      message: `Engine comparison: running ${runnableFiles.length} file(s) on ${selectedEngines.map(e => ENGINE_LABELS[e]).join(', ')}`,
+      type: 'info',
+    }]);
+    toast({
+      title: "Comparison Started",
+      description: `Running ${runnableFiles.length} file${runnableFiles.length !== 1 ? 's' : ''} on ${selectedEngines.length} engines...`,
+    });
+
+    const runs: EngineRun[] = [];
+    try {
+      for (const engine of selectedEngines) {
+        if (comparisonCancelRef.current.cancelled) break;
+        setActiveComparisonEngine(ENGINE_LABELS[engine]);
+        setCurrentFile(0);
+        setFileProgressMap(new Map());
+        setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `--- Engine ${runs.length + 1}/${selectedEngines.length}: ${ENGINE_LABELS[engine]} ---`, type: 'info' }]);
+        if (engine === 'wasm' || engine === 'wasm6') {
+          const engineResults = await runBrowserEngineOnce(engine, runnableFiles);
+          runs.push({ engine, label: ENGINE_LABELS[engine], jobId: null, results: engineResults });
+        } else {
+          const { jobId: runJobId, results: engineResults } = await runServerEngineOnce(engine);
+          runs.push({ engine, label: ENGINE_LABELS[engine], jobId: runJobId, results: engineResults });
+          comparisonCancelRef.current.jobId = null;
+        }
+      }
+      setComparisonRuns(runs);
+      setProcessingState(runs.length > 0 ? 'completed' : 'idle');
+      if (startTimeRef.current) {
+        setElapsedTime(formatTime((Date.now() - startTimeRef.current) / 1000));
+      }
+      if (!comparisonCancelRef.current.cancelled) {
+        toast({ title: "Comparison Complete", description: `All ${runs.length} engine runs finished.` });
+      }
+    } catch (error) {
+      console.error('Comparison error:', error);
+      setComparisonRuns(runs.length > 0 ? runs : null);
+      setProcessingState(runs.length > 0 ? 'completed' : 'idle');
+      if (!comparisonCancelRef.current.cancelled) {
+        toast({
+          title: "Comparison Error",
+          description: error instanceof Error ? error.message : 'An engine run failed to start.',
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setActiveComparisonEngine(null);
+      comparisonCancelRef.current.jobId = null;
+    }
+  };
+
+  const fetchContentFor = async (runJobId: string, resultId: string) => {
+    const res = await fetch(`/api/batch/${runJobId}/results/${resultId}/content`);
+    if (!res.ok) {
+      toast({ title: "Could not load report", description: "The full report text is no longer available on the server.", variant: "destructive" });
+      return null;
+    }
+    return res.json() as Promise<{ reportContent?: string; inpContent?: string }>;
+  };
+
+  const loadComparisonContent = async (runIndex: number, resultId: string) => {
+    const run = comparisonRuns?.[runIndex];
+    if (!run?.jobId) return;
+    const content = await fetchContentFor(run.jobId, resultId);
+    if (!content) return;
+    setComparisonRuns(prev => prev?.map((r, i) => i === runIndex
+      ? { ...r, results: r.results.map(res => res.id === resultId ? { ...res, ...content } : res) }
+      : r) ?? null);
+  };
+
+  const loadAllComparisonContent = async (runIndex: number): Promise<ProcessResult[]> => {
+    const run = comparisonRuns?.[runIndex];
+    if (!run) return [];
+    if (!run.jobId) return run.results as ProcessResult[];
+    const missing = run.results.filter(r => !r.reportContent && !r.inpContent && (r.hasReport || r.hasInp));
+    if (missing.length === 0) return run.results as ProcessResult[];
+    const loaded = new Map<string, { reportContent?: string; inpContent?: string }>();
+    for (const r of missing) {
+      const content = await fetchContentFor(run.jobId, r.id);
+      if (content) loaded.set(r.id, content);
+    }
+    const full = run.results.map(r => loaded.has(r.id) ? { ...r, ...loaded.get(r.id)! } : r);
+    setComparisonRuns(prev => prev?.map((r, i) => i === runIndex ? { ...r, results: full } : r) ?? null);
+    return full as ProcessResult[];
+  };
+
   const handleStartProcessing = async () => {
+    if (compareMode) {
+      handleStartComparison();
+      return;
+    }
     if (engineMode === 'wasm' || engineMode === 'wasm6') {
       handleStartWasmProcessing();
       return;
@@ -620,6 +941,31 @@ export default function Home() {
   };
 
   const handleCancelProcessing = async () => {
+    if (activeComparisonEngine !== null) {
+      comparisonCancelRef.current.cancelled = true;
+      // Stop whichever engine is mid-run.
+      wasmCancelRef.current.current = true;
+      if (wasmTerminateRef.current) {
+        wasmTerminateRef.current();
+        wasmTerminateRef.current = null;
+      }
+      if (browserRunFinishRef.current) {
+        browserRunFinishRef.current();
+      }
+      const runJobId = comparisonCancelRef.current.jobId;
+      if (runJobId) {
+        try {
+          await fetch(`/api/batch/${runJobId}/cancel`, { method: 'POST' });
+        } catch (error) {
+          console.error('Cancel error:', error);
+        }
+      }
+      toast({
+        title: "Comparison Cancelled",
+        description: "Engine comparison was stopped.",
+      });
+      return;
+    }
     if (engineMode === 'wasm' || engineMode === 'wasm6') {
       wasmCancelRef.current.current = true;
       if (wasmTerminateRef.current) {
@@ -777,8 +1123,8 @@ export default function Home() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <Button
                           size="sm"
-                          variant={engineMode === 'executable' ? 'default' : 'outline'}
-                          onClick={() => setEngineMode('executable')}
+                          variant={selectedEngines.includes('executable') ? 'default' : 'outline'}
+                          onClick={() => toggleEngine('executable')}
                           disabled={processingState === 'processing' || !swmmStatus?.found}
                           data-testid="button-mode-executable"
                           className="toggle-elevate"
@@ -788,8 +1134,8 @@ export default function Home() {
                         </Button>
                         <Button
                           size="sm"
-                          variant={engineMode === 'api' ? 'default' : 'outline'}
-                          onClick={() => setEngineMode('api')}
+                          variant={selectedEngines.includes('api') ? 'default' : 'outline'}
+                          onClick={() => toggleEngine('api')}
                           disabled={processingState === 'processing' || !swmmStatus?.apiAvailable}
                           data-testid="button-mode-api"
                           className="toggle-elevate"
@@ -799,8 +1145,8 @@ export default function Home() {
                         </Button>
                         <Button
                           size="sm"
-                          variant={engineMode === 'wasm' ? 'default' : 'outline'}
-                          onClick={() => setEngineMode('wasm')}
+                          variant={selectedEngines.includes('wasm') ? 'default' : 'outline'}
+                          onClick={() => toggleEngine('wasm')}
                           disabled={processingState === 'processing'}
                           data-testid="button-mode-wasm"
                           className="toggle-elevate"
@@ -810,8 +1156,8 @@ export default function Home() {
                         </Button>
                         <Button
                           size="sm"
-                          variant={engineMode === 'wasm6' ? 'default' : 'outline'}
-                          onClick={() => setEngineMode('wasm6')}
+                          variant={selectedEngines.includes('wasm6') ? 'default' : 'outline'}
+                          onClick={() => toggleEngine('wasm6')}
                           disabled={processingState === 'processing'}
                           data-testid="button-mode-wasm6"
                           className="toggle-elevate"
@@ -829,14 +1175,16 @@ export default function Home() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1.5">
-                        {engineMode === 'executable'
-                          ? 'Spawns runswmm as a child process (standard mode).'
+                      <p className="text-xs text-muted-foreground mt-1.5" data-testid="text-engine-mode-description">
+                        {compareMode
+                          ? `Comparison mode: each model runs once per engine (${selectedEngines.map(e => ENGINE_LABELS[e]).join(', ')}), then results are compared side by side. Click a selected engine to deselect it.`
+                          : engineMode === 'executable'
+                          ? 'Spawns runswmm as a child process (standard mode). Click another engine to add it and compare outputs.'
                           : engineMode === 'api'
-                          ? 'Uses SWMM5 shared library for step-by-step control with live data streaming.'
+                          ? 'Uses SWMM5 shared library for step-by-step control with live data streaming. Click another engine to add it and compare outputs.'
                           : engineMode === 'wasm'
-                          ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device.'
-                          : 'Runs the OpenSWMM SWMM6 engine (swmm6_rel release, legacy engine v5.3.0 with extra link-depth validation warnings) as WebAssembly in your browser.'}
+                          ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device. Click another engine to add it and compare outputs.'
+                          : 'Runs the OpenSWMM SWMM6 engine (swmm6_rel release, legacy engine v5.3.0 with extra link-depth validation warnings) as WebAssembly in your browser. Click another engine to add it and compare outputs.'}
                       </p>
                     </div>
                 </div>
@@ -892,7 +1240,7 @@ export default function Home() {
                 data-testid="button-start-processing"
               >
                 <PlayCircle className="h-5 w-5 mr-2" />
-                Start Batch Processing
+                {compareMode ? `Run & Compare ${selectedEngines.length} Engines` : 'Start Batch Processing'}
               </Button>
             )}
             
@@ -941,6 +1289,11 @@ export default function Home() {
           {processingState === 'processing' && (
             <>
               <Separator />
+              {activeComparisonEngine && (
+                <p className="text-sm font-medium" data-testid="text-active-comparison-engine">
+                  Engine comparison — currently running: <span className="text-primary">{activeComparisonEngine}</span>
+                </p>
+              )}
               <section data-testid="section-progress">
                 <ProgressSection
                   current={currentFile}
@@ -989,6 +1342,31 @@ export default function Home() {
                   onLoadAllContent={handleLoadAllContent}
                 />
               </section>
+            </>
+          )}
+
+          {processingState === 'completed' && comparisonRuns && comparisonRuns.length > 0 && (
+            <>
+              <Separator />
+              <section data-testid="section-processing-log-comparison">
+                <ProcessingLog logs={logs} defaultCollapsed={true} />
+              </section>
+              <section data-testid="section-engine-comparison">
+                <EngineComparisonView runs={comparisonRuns} />
+              </section>
+              {comparisonRuns.map((run, i) => (
+                <section key={run.engine} data-testid={`section-results-${run.engine}`}>
+                  <h3 className="text-sm font-semibold mb-2" data-testid={`heading-results-${run.engine}`}>
+                    {run.label} results
+                  </h3>
+                  <ResultsDisplay
+                    results={run.results as ProcessResult[]}
+                    elapsedTime={i === 0 ? elapsedTime : undefined}
+                    onLoadContent={(resultId) => loadComparisonContent(i, resultId)}
+                    onLoadAllContent={() => loadAllComparisonContent(i)}
+                  />
+                </section>
+              ))}
             </>
           )}
         </div>
