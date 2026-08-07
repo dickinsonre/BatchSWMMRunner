@@ -20,24 +20,25 @@ function resolveParserPath(): string {
 }
 
 const loaded = require(resolveParserPath());
-const { parseSwmmOutBinary, reportHasTimeSeries } = (loaded && loaded.parseSwmmOutBinary
+const { parseSwmmOutBinary, reportHasTimeSeries, reportHasSystemTimeSeries } = (loaded && loaded.parseSwmmOutBinary
   ? loaded
   : (globalThis as any).SwmmOutParser) as {
-  parseSwmmOutBinary: (bytes: Uint8Array) => string;
+  parseSwmmOutBinary: (bytes: Uint8Array, opts?: { systemOnly?: boolean }) => string;
   reportHasTimeSeries: (rptText: string) => boolean;
+  reportHasSystemTimeSeries: (rptText: string) => boolean;
 };
 
-export { reportHasTimeSeries };
+export { reportHasTimeSeries, reportHasSystemTimeSeries };
 
 /**
  * Parse a SWMM binary .out file into rpt-style time-series text sections.
  * Returns '' when the file is missing, invalid, or contains no results.
  */
-export function parseSwmmOutputBinary(outPath: string): string {
+export function parseSwmmOutputBinary(outPath: string, opts?: { systemOnly?: boolean }): string {
   try {
     if (!fs.existsSync(outPath)) return "";
     const buf = fs.readFileSync(outPath);
-    return parseSwmmOutBinary(new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength));
+    return parseSwmmOutBinary(new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength), opts);
   } catch (e) {
     console.warn(`Could not parse SWMM output binary: ${outPath}`, e);
     return "";

@@ -18,7 +18,11 @@
   var MAGIC = 516114522;
   var MAX_PERIODS = 2000;
 
-  function parseSwmmOutBinary(bytes) {
+  // opts.systemOnly: emit only the system-wide section — used to add System
+  // graphs to reports that already contain element time series (SWMM never
+  // writes system time series into the .rpt itself).
+  function parseSwmmOutBinary(bytes, opts) {
+    opts = opts || {};
     try {
       if (!bytes || bytes.length < 40) return '';
       var view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
@@ -163,15 +167,17 @@
         }
       }
 
-      emitSection('Subcatchment Results Time Series', subNames, subL.labels, subL.units, nSubVars, function (periodStart, e) {
-        return periodStart + 8 + e * nSubVars * 4;
-      });
-      emitSection('Node Results Time Series', nodeNames, nodeL.labels, nodeL.units, nNodeVars, function (periodStart, e) {
-        return periodStart + 8 + nSub * nSubVars * 4 + e * nNodeVars * 4;
-      });
-      emitSection('Link Results Time Series', linkNames, linkL.labels, linkL.units, nLinkVars, function (periodStart, e) {
-        return periodStart + 8 + nSub * nSubVars * 4 + nNode * nNodeVars * 4 + e * nLinkVars * 4;
-      });
+      if (!opts.systemOnly) {
+        emitSection('Subcatchment Results Time Series', subNames, subL.labels, subL.units, nSubVars, function (periodStart, e) {
+          return periodStart + 8 + e * nSubVars * 4;
+        });
+        emitSection('Node Results Time Series', nodeNames, nodeL.labels, nodeL.units, nNodeVars, function (periodStart, e) {
+          return periodStart + 8 + e * nNodeVars * 4 + nSub * nSubVars * 4;
+        });
+        emitSection('Link Results Time Series', linkNames, linkL.labels, linkL.units, nLinkVars, function (periodStart, e) {
+          return periodStart + 8 + nSub * nSubVars * 4 + nNode * nNodeVars * 4 + e * nLinkVars * 4;
+        });
+      }
       if (nSysVars > 0) {
         emitSection('System Results Time Series', ['System'], sysL.labels, sysL.units, nSysVars, function (periodStart) {
           return periodStart + 8 + nSub * nSubVars * 4 + nNode * nNodeVars * 4 + nLink * nLinkVars * 4;
@@ -189,5 +195,10 @@
     return typeof rptText === 'string' && rptText.indexOf('<<<') !== -1;
   }
 
-  return { parseSwmmOutBinary: parseSwmmOutBinary, reportHasTimeSeries: reportHasTimeSeries };
+  // Whether the report already includes the system-wide time-series section.
+  function reportHasSystemTimeSeries(rptText) {
+    return typeof rptText === 'string' && rptText.indexOf('System Results Time Series') !== -1;
+  }
+
+  return { parseSwmmOutBinary: parseSwmmOutBinary, reportHasTimeSeries: reportHasTimeSeries, reportHasSystemTimeSeries: reportHasSystemTimeSeries };
 });

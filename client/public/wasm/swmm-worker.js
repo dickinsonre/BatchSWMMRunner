@@ -120,6 +120,14 @@ self.onmessage = async (e) => {
         const tsText = self.SwmmOutParser.parseSwmmOutBinary(outBytes);
         if (tsText) rptText = rptText + '\n' + tsText;
       } catch (_) {}
+    } else if (err === 0 && rptText && !self.SwmmOutParser.reportHasSystemTimeSeries(rptText)) {
+      // The rpt has element time series but SWMM never writes the system-wide
+      // series to the rpt — pull just that section from the binary output.
+      try {
+        const outBytes = FS.readFile(outPath);
+        const sysText = self.SwmmOutParser.parseSwmmOutBinary(outBytes, { systemOnly: true });
+        if (sysText) rptText = rptText + '\n' + sysText;
+      } catch (_) {}
     }
 
     self.postMessage({

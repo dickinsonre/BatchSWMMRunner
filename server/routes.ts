@@ -17,7 +17,7 @@ import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
 import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
-import { parseSwmmOutputBinary, reportHasTimeSeries } from "./swmmOutParser";
+import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
 const MAX_UPLOAD_FILES = 500;
@@ -1189,6 +1189,13 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
         if (timeSeriesData) {
           reportContent = reportContent + '\n' + timeSeriesData;
         }
+      } else if (!reportHasSystemTimeSeries(reportContent)) {
+        // SWMM never writes the system-wide time series to the rpt — pull just
+        // that section from the binary output so System graphs are available.
+        const systemSeries = parseSwmmOutputBinary(outputPath, { systemOnly: true });
+        if (systemSeries) {
+          reportContent = reportContent + '\n' + systemSeries;
+        }
       }
 
       const parsedMetrics = parseReportMetrics(reportContent);
@@ -1386,6 +1393,11 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
             const timeSeriesData = parseSwmmOutputBinary(outputPath);
             if (timeSeriesData) {
               reportContent = reportContent + '\n' + timeSeriesData;
+            }
+          } else if (!reportHasSystemTimeSeries(reportContent)) {
+            const systemSeries = parseSwmmOutputBinary(outputPath, { systemOnly: true });
+            if (systemSeries) {
+              reportContent = reportContent + '\n' + systemSeries;
             }
           }
 
