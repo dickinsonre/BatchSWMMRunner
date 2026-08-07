@@ -77,6 +77,63 @@ export interface UploadProgress {
   totalBytes: number;
 }
 
+/**
+ * POST a FormData body via XMLHttpRequest so byte-level upload progress can be
+ * reported (fetch() cannot observe request-body upload progress). Polls
+ * `isCancelled` so an in-flight chunk aborts promptly on cancellation.
+ */
+function postFormDataWithProgress(
+  url: string,
+  formData: FormData,
+  onUploadedBytes?: (loaded: number, total: number) => void,
+  isCancelled?: () => boolean,
+): Promise<{ ok: boolean; status: number; json: () => Promise<any> }> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.responseType = 'text';
+
+    let cancelPoll: ReturnType<typeof setInterval> | null = null;
+    const clearPoll = () => {
+      if (cancelPoll !== null) {
+        clearInterval(cancelPoll);
+        cancelPoll = null;
+      }
+    };
+    if (isCancelled) {
+      cancelPoll = setInterval(() => {
+        if (isCancelled()) {
+          clearPoll();
+          xhr.abort();
+        }
+      }, 250);
+    }
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onUploadedBytes?.(e.loaded, e.total);
+    };
+    xhr.onload = () => {
+      clearPoll();
+      const status = xhr.status;
+      const text = xhr.responseText;
+      resolve({
+        ok: status >= 200 && status < 300,
+        status,
+        json: async () => JSON.parse(text),
+      });
+    };
+    xhr.onerror = () => {
+      clearPoll();
+      reject(new Error('Network error during upload'));
+    };
+    xhr.onabort = () => {
+      clearPoll();
+      reject(new Error('Comparison cancelled'));
+    };
+    xhr.send(formData);
+  });
+}
+
 async function uploadFilesChunked(
   fileItems: any[],
   isCancelled?: () => boolean,
@@ -109,12 +166,34 @@ async function uploadFilesChunked(
     const formData = new FormData();
     chunks[i].forEach(file => formData.append('files', file));
     const url = i === 0 ? '/api/upload' : `/api/batch/${batchJob.id}/files`;
-    const res = await fetch(url, { method: 'POST', body: formData });
+    const chunkBytes = chunks[i].reduce((acc, f) => acc + f.size, 0);
+    let res;
+    try {
+      res = await postFormDataWithProgress(
+        url,
+        formData,
+        (loaded, total) => {
+          // Scale by the chunk's file bytes: the XHR total includes multipart
+          // boundary overhead, so map proportionally onto the real byte count.
+          const inChunk = total > 0 ? Math.min(chunkBytes, (loaded / total) * chunkBytes) : 0;
+          onProgress?.({ current: i + 1, total: chunks.length, sentBytes: sentBytes + inChunk, totalBytes });
+        },
+        isCancelled,
+      );
+    } catch (err) {
+      if (batchJob) fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
+      throw err;
+    }
     if (!res.ok) {
       if (batchJob) fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
-      throw new Error(await readErrorMessage(res, 'Failed to upload files'));
+      let message = 'Failed to upload files';
+      try {
+        const body = await res.json();
+        if (body && typeof body.error === 'string' && body.error.trim()) message = body.error;
+      } catch { /* not JSON */ }
+      throw new Error(message);
     }
-    sentBytes += chunks[i].reduce((acc, f) => acc + f.size, 0);
+    sentBytes += chunkBytes;
     onProgress?.({ current: i + 1, total: chunks.length, sentBytes, totalBytes });
     batchJob = await res.json();
   }
