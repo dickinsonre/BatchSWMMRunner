@@ -25,6 +25,7 @@ import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from 
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import EngineComparisonView from "@/components/EngineComparisonView";
 import SystemComparisonChart from "@/components/SystemComparisonChart";
+import GifMakerTool from "@/components/GifMakerTool";
 import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import type { SwmmStatus } from "@shared/schema";
 
@@ -1050,7 +1051,7 @@ export default function Home() {
       const run = comparisonRuns[i];
       if (!run.jobId) continue;
       const res = run.results.find(r => r.fileName === fileName) as any;
-      if (res && !res.reportContent && res.hasReport) {
+      if (res && ((!res.reportContent && res.hasReport) || (!res.inpContent && res.hasInp))) {
         await loadComparisonContent(i, res.id);
       }
     }
@@ -1543,6 +1544,9 @@ export default function Home() {
                   <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
                 </section>
               )}
+              <section data-testid="section-gif-maker">
+                <GifMakerTool runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+              </section>
               {comparisonRuns.map((run, i) => (
                 <section key={run.engine} data-testid={`section-results-${run.engine}`}>
                   <h3 className="text-sm font-semibold mb-2" data-testid={`heading-results-${run.engine}`}>
