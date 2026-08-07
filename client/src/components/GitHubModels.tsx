@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Github, ChevronDown, ChevronRight, Loader2, FolderOpen, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,37 @@ function topFolder(path: string): string {
 
 const DEFAULT_REPO = "SWMMBobSWMM6/1729-SWMM5-Models-2030";
 
+// --- Recently browsed repos (persisted in localStorage) ---
+const RECENT_REPOS_KEY = "github-models-recent-repos";
+const MAX_RECENT_REPOS = 5;
+
+interface RecentRepo {
+  repo: string;   // "owner/repo"
+  branch: string; // resolved branch actually browsed
+}
+
+function loadRecentRepos(): RecentRepo[] {
+  try {
+    const raw = localStorage.getItem(RECENT_REPOS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((r): r is RecentRepo => !!r && typeof r.repo === "string" && typeof r.branch === "string")
+      .slice(0, MAX_RECENT_REPOS);
+  } catch {
+    return [];
+  }
+}
+
+function saveRecentRepos(repos: RecentRepo[]) {
+  try {
+    localStorage.setItem(RECENT_REPOS_KEY, JSON.stringify(repos.slice(0, MAX_RECENT_REPOS)));
+  } catch {
+    // localStorage unavailable (private mode, etc.) — quick picks just won't persist
+  }
+}
+
 /** Parse "owner/repo" (also tolerates a full github.com URL). Returns null when invalid. */
 function parseRepoInput(input: string): { owner: string; repo: string } | null {
   let s = input.trim();
@@ -76,6 +107,7 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
   const [downloadTotal, setDownloadTotal] = useState(0);
   const cancelRef = useRef(false);
   const { toast } = useToast();
+  const [recentRepos, setRecentRepos] = useState<RecentRepo[]>(() => loadRecentRepos());
 
   const repoQueryString = useMemo(() => {
     if (!activeRepo) return "";
@@ -92,6 +124,31 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
   });
 
   const repoInputValid = parseRepoInput(repoInput) !== null;
+
+  // Remember successfully browsed repos (skip the built-in library, which is
+  // always available as the default first quick pick).
+  useEffect(() => {
+    if (!tree || tree.repo === DEFAULT_REPO) return;
+    setRecentRepos(prev => {
+      const next = [
+        { repo: tree.repo, branch: tree.branch },
+        ...prev.filter(r => !(r.repo === tree.repo && r.branch === tree.branch)),
+      ].slice(0, MAX_RECENT_REPOS);
+      saveRecentRepos(next);
+      return next;
+    });
+  }, [tree]);
+
+  const pickRepo = (repo: string, branch: string) => {
+    const parsed = parseRepoInput(repo);
+    if (!parsed) return;
+    setRepoInput(repo);
+    setBranchInput(repo === DEFAULT_REPO ? "" : branch);
+    setActiveRepo({ ...parsed, branch: repo === DEFAULT_REPO ? "" : branch });
+    setFolder("");
+    setFilter("");
+    setSelected(new Set());
+  };
 
   const applyRepo = () => {
     const parsed = parseRepoInput(repoInput);
@@ -240,6 +297,34 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
               (up to {MAX_GITHUB_FILES} files / {formatFileSize(MAX_GITHUB_TOTAL_BYTES)} per pull).
               Defaults to the public SWMM5 model library.
             </p>
+
+            <div className="flex items-center gap-1.5 flex-wrap" data-testid="list-github-recent-repos">
+              <span className="text-xs text-muted-foreground mr-0.5">Quick picks:</span>
+              <Button
+                variant={tree?.repo === DEFAULT_REPO ? "secondary" : "outline"}
+                size="sm"
+                className="h-6 px-2 text-xs font-mono"
+                onClick={() => pickRepo(DEFAULT_REPO, "")}
+                disabled={disabled || downloading}
+                data-testid="button-github-recent-default"
+              >
+                Built-in library
+              </Button>
+              {recentRepos.map(r => (
+                <Button
+                  key={`${r.repo}@${r.branch}`}
+                  variant={tree && tree.repo === r.repo && tree.branch === r.branch ? "secondary" : "outline"}
+                  size="sm"
+                  className="h-6 px-2 text-xs font-mono"
+                  onClick={() => pickRepo(r.repo, r.branch)}
+                  disabled={disabled || downloading}
+                  data-testid={`button-github-recent-${r.repo}`}
+                  title={`${r.repo}@${r.branch}`}
+                >
+                  {r.repo}
+                </Button>
+              ))}
+            </div>
 
             <div className="flex items-end gap-2 flex-wrap">
               <div className="flex-1 min-w-[220px] space-y-1">
