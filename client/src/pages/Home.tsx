@@ -19,6 +19,7 @@ import ExpectedOutputs from "@/components/ExpectedOutputs";
 import SimulationSettings from "@/components/SimulationSettings";
 import ProcessingLog, { type LogEntry } from "@/components/ProcessingLog";
 import SampleModels from "@/components/SampleModels";
+import GitHubModels from "@/components/GitHubModels";
 import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from "@/components/LiveApiDashboard";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import type { SwmmStatus } from "@shared/schema";
@@ -857,6 +858,13 @@ export default function Home() {
           <section data-testid="section-sample-models">
             <SampleModels
               onSamplesLoaded={handleSamplesLoaded}
+              disabled={processingState === 'processing'}
+            />
+          </section>
+
+          <section data-testid="section-github-models">
+            <GitHubModels
+              onModelsLoaded={handleSamplesLoaded}
               disabled={processingState === 'processing'}
             />
           </section>

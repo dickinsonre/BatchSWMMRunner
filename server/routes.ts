@@ -18,6 +18,7 @@ import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
 import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
 import { parseSwmmOutputBinary, reportHasTimeSeries } from "./swmmOutParser";
+import { getGithubModelTree, GithubRateLimitError, GITHUB_MODELS_REPO } from "./githubModels";
 
 const MAX_UPLOAD_FILES = 100;
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
@@ -429,6 +430,27 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
       console.error('Error serving sample:', error);
       res.status(500).json({ error: 'Failed to serve sample file' });
     }
+  });
+
+  // GitHub model library: one cached tree call serves everyone; the browser
+  // downloads file contents directly from raw.githubusercontent.com.
+  app.get('/api/github-models/tree', makeLimiter(60, 'Too many model library requests — try again in a few minutes'), async (_req, res) => {
+    try {
+      const tree = await getGithubModelTree();
+      res.json(tree);
+    } catch (error) {
+      if (error instanceof GithubRateLimitError) {
+        return res.status(503).json({
+          error: `GitHub's API rate limit was reached — the model library is temporarily unavailable.${error.resetAt ? ` Try again after ${error.resetAt}.` : ' Try again in a few minutes.'}`,
+        });
+      }
+      console.error('GitHub model tree error:', error);
+      res.status(502).json({ error: 'Could not reach the GitHub model library. Check your connection and try again.' });
+    }
+  });
+
+  app.get('/api/github-models/info', (_req, res) => {
+    res.json(GITHUB_MODELS_REPO);
   });
 
   const uploadLimiter = makeLimiter(30, 'Too many uploads — try again in a few minutes');
