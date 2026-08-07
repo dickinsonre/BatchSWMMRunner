@@ -1,4 +1,5 @@
 import type { ProcessResult, ParsedMetrics } from "@shared/schema";
+import type { ParsedTimeSeries } from "./parseTimeSeries";
 
 /** Engine ids the UI can select. */
 export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6';
@@ -173,4 +174,36 @@ export function buildComparison(runs: EngineRun[]): ComparisonSummary {
     statusMismatchCount: files.filter(f => f.verdict === 'status-mismatch').length,
     inconclusiveCount: files.filter(f => f.verdict === 'inconclusive').length,
   };
+}
+
+/** Parse a "MM/DD/YYYY HH:MM[:SS]" report timestamp into epoch millis (NaN if malformed). */
+export function parseReportTimestamp(time: string): number {
+  const m = time.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+  if (!m) return NaN;
+  return Date.UTC(Number(m[3]), Number(m[1]) - 1, Number(m[2]), Number(m[4]), Number(m[5]), Number(m[6] || 0));
+}
+
+/**
+ * Merge one metric from several engines' system time series onto a single,
+ * chronologically sorted time axis. Engines with different report steps keep
+ * their own sample points; rows where an engine has no sample simply omit
+ * that engine's key (rendered as a gap, not interpolated).
+ */
+export function mergeSystemSeries(
+  entries: Array<{ label: string; series: ParsedTimeSeries | null }>,
+  metric: string,
+): Array<Record<string, number | string>> {
+  const byTime = new Map<string, Record<string, number | string>>();
+  for (const e of entries) {
+    if (!e.series) continue;
+    const ci = e.series.columns.indexOf(metric);
+    if (ci === -1) continue;
+    for (const d of e.series.data) {
+      if (!byTime.has(d.time)) byTime.set(d.time, { time: d.time });
+      byTime.get(d.time)![e.label] = d.values[ci];
+    }
+  }
+  return Array.from(byTime.values()).sort(
+    (a, b) => parseReportTimestamp(a.time as string) - parseReportTimestamp(b.time as string),
+  );
 }

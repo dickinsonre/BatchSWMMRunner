@@ -24,6 +24,7 @@ import GitHubModels from "@/components/GitHubModels";
 import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from "@/components/LiveApiDashboard";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import EngineComparisonView from "@/components/EngineComparisonView";
+import SystemComparisonChart from "@/components/SystemComparisonChart";
 import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import type { SwmmStatus } from "@shared/schema";
 
@@ -1041,6 +1042,20 @@ export default function Home() {
     return full as ProcessResult[];
   };
 
+  // Load report content for one file across every comparison run (browser
+  // runs already carry their reports; server runs fetch lazily).
+  const loadComparisonFileContent = async (fileName: string) => {
+    if (!comparisonRuns) return;
+    for (let i = 0; i < comparisonRuns.length; i++) {
+      const run = comparisonRuns[i];
+      if (!run.jobId) continue;
+      const res = run.results.find(r => r.fileName === fileName) as any;
+      if (res && !res.reportContent && res.hasReport) {
+        await loadComparisonContent(i, res.id);
+      }
+    }
+  };
+
   const handleStartProcessing = async () => {
     if (compareMode) {
       handleStartComparison();
@@ -1523,6 +1538,11 @@ export default function Home() {
               <section data-testid="section-engine-comparison">
                 <EngineComparisonView runs={comparisonRuns} />
               </section>
+              {comparisonRuns.length >= 2 && (
+                <section data-testid="section-system-comparison">
+                  <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                </section>
+              )}
               {comparisonRuns.map((run, i) => (
                 <section key={run.engine} data-testid={`section-results-${run.engine}`}>
                   <h3 className="text-sm font-semibold mb-2" data-testid={`heading-results-${run.engine}`}>

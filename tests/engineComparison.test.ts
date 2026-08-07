@@ -105,3 +105,43 @@ describe("buildComparison", () => {
     expect(summary.engines).toHaveLength(3);
   });
 });
+
+describe("mergeSystemSeries", () => {
+  const mk = (times: string[], vals: number[]) => ({
+    title: "System Results Time Series",
+    element: "System",
+    columns: ["Outflow"],
+    units: ["CFS"],
+    data: times.map((t, i) => ({ time: t, values: [vals[i]] })),
+  });
+
+  it("merges different report steps onto one chronological axis with gaps", async () => {
+    const { mergeSystemSeries } = await import("../client/src/lib/engineComparison");
+    const hourly = mk(["01/01/2020 00:00", "01/01/2020 01:00"], [1, 2]);
+    const quarter = mk(
+      ["01/01/2020 00:00", "01/01/2020 00:15", "01/01/2020 00:30", "01/01/2020 00:45", "01/01/2020 01:00"],
+      [10, 11, 12, 13, 14],
+    );
+    const rows = mergeSystemSeries(
+      [{ label: "A", series: hourly }, { label: "B", series: quarter }],
+      "Outflow",
+    );
+    expect(rows.map(r => r.time)).toEqual([
+      "01/01/2020 00:00", "01/01/2020 00:15", "01/01/2020 00:30", "01/01/2020 00:45", "01/01/2020 01:00",
+    ]);
+    // Engine A has no samples at the quarter-hour rows — key omitted (gap).
+    expect(rows[1].A).toBeUndefined();
+    expect(rows[1].B).toBe(11);
+    expect(rows[0]).toMatchObject({ A: 1, B: 10 });
+    expect(rows[4]).toMatchObject({ A: 2, B: 14 });
+  });
+
+  it("ignores engines missing the metric or series", async () => {
+    const { mergeSystemSeries } = await import("../client/src/lib/engineComparison");
+    const rows = mergeSystemSeries(
+      [{ label: "A", series: mk(["01/01/2020 00:00"], [5]) }, { label: "B", series: null }],
+      "Outflow",
+    );
+    expect(rows).toEqual([{ time: "01/01/2020 00:00", A: 5 }]);
+  });
+});
