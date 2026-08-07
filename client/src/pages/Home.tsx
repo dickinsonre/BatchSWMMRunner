@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import AppHeader from "@/components/AppHeader";
@@ -68,9 +69,18 @@ async function readErrorMessage(res: Response, fallback: string): Promise<string
 // job, the rest are appended to it before the batch starts.
 const UPLOAD_CHUNK_BYTES = 20 * 1024 * 1024;
 
+export interface UploadProgress {
+  /** 1-based index of the chunk currently uploading. */
+  current: number;
+  total: number;
+  sentBytes: number;
+  totalBytes: number;
+}
+
 async function uploadFilesChunked(
   fileItems: any[],
   isCancelled?: () => boolean,
+  onProgress?: (progress: UploadProgress) => void,
 ): Promise<any> {
   const toSend: File[] = fileItems.map(f => f.file).filter((f: any): f is File => !!f);
   const chunks: File[][] = [];
@@ -87,12 +97,15 @@ async function uploadFilesChunked(
   }
   if (current.length > 0) chunks.push(current);
 
+  const totalBytes = toSend.reduce((acc, f) => acc + f.size, 0);
+  let sentBytes = 0;
   let batchJob: any = null;
   for (let i = 0; i < chunks.length; i++) {
     if (isCancelled?.()) {
       if (batchJob) fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
       throw new Error('Comparison cancelled');
     }
+    onProgress?.({ current: i + 1, total: chunks.length, sentBytes, totalBytes });
     const formData = new FormData();
     chunks[i].forEach(file => formData.append('files', file));
     const url = i === 0 ? '/api/upload' : `/api/batch/${batchJob.id}/files`;
@@ -101,6 +114,8 @@ async function uploadFilesChunked(
       if (batchJob) fetch(`/api/batch/${batchJob.id}`, { method: 'DELETE' }).catch(() => { /* best effort */ });
       throw new Error(await readErrorMessage(res, 'Failed to upload files'));
     }
+    sentBytes += chunks[i].reduce((acc, f) => acc + f.size, 0);
+    onProgress?.({ current: i + 1, total: chunks.length, sentBytes, totalBytes });
     batchJob = await res.json();
   }
   return batchJob;
@@ -165,6 +180,7 @@ export default function Home() {
   const wasmCancelRef = useRef<{ current: boolean }>({ current: false });
   const wasmTerminateRef = useRef<(() => void) | null>(null);
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [apiSnapshots, setApiSnapshots] = useState<ApiSnapshotEntry[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -713,7 +729,12 @@ export default function Home() {
     engine: 'executable' | 'api',
   ): Promise<{ jobId: string; results: ProcessResult[] }> => {
     if (comparisonCancelRef.current.cancelled) throw new Error('Comparison cancelled');
-    const batchJob = await uploadFilesChunked(files, () => comparisonCancelRef.current.cancelled);
+    let batchJob: any;
+    try {
+      batchJob = await uploadFilesChunked(files, () => comparisonCancelRef.current.cancelled, setUploadProgress);
+    } finally {
+      setUploadProgress(null);
+    }
     comparisonCancelRef.current.jobId = batchJob.id;
     if (comparisonCancelRef.current.cancelled) {
       // Cancelled while the upload was in flight — don't start the job.
@@ -951,7 +972,12 @@ export default function Home() {
       return;
     }
     try {
-      const batchJob = await uploadFilesChunked(files);
+      let batchJob: any;
+      try {
+        batchJob = await uploadFilesChunked(files, undefined, setUploadProgress);
+      } finally {
+        setUploadProgress(null);
+      }
       setJobId(batchJob.id);
       setProcessingState('processing');
       setCurrentFile(0);
@@ -1336,6 +1362,19 @@ export default function Home() {
               </p>
             )}
           </div>
+
+          {uploadProgress && (
+            <section data-testid="section-upload-progress" className="space-y-2">
+              <p className="text-sm font-medium" data-testid="text-upload-progress">
+                Uploading chunk {uploadProgress.current}/{uploadProgress.total}
+                {' '}({(uploadProgress.sentBytes / (1024 * 1024)).toFixed(1)} of {(uploadProgress.totalBytes / (1024 * 1024)).toFixed(1)} MB sent)…
+              </p>
+              <Progress
+                value={uploadProgress.totalBytes > 0 ? (uploadProgress.sentBytes / uploadProgress.totalBytes) * 100 : 0}
+                data-testid="progress-upload"
+              />
+            </section>
+          )}
 
           {processingState === 'processing' && (
             <>
