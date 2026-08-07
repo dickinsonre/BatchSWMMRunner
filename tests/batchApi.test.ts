@@ -41,11 +41,11 @@ describe("upload validation", () => {
     expect(res.body.error).toMatch(/do not look like SWMM input/i);
   });
 
-  it("rejects batches with more than 100 files", async () => {
+  it("rejects batches with more than 500 files", async () => {
     ensureUploadTmpDir();
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "many-inp-"));
     let req = request(app).post("/api/upload");
-    for (let i = 0; i < 101; i++) {
+    for (let i = 0; i < 501; i++) {
       const p = path.join(tmpDir, `f${i}.inp`);
       fs.writeFileSync(p, "[TITLE]\ntiny\n[JUNCTIONS]\nJ1 1 1\n");
       req = req.attach("files", p);
@@ -56,7 +56,7 @@ describe("upload validation", () => {
     try {
       const res = await req;
       expect(res.status).toBe(400);
-      expect(res.body.error).toMatch(/at most 100 files/i);
+      expect(res.body.error).toMatch(/at most 500 files/i);
     } catch (e: any) {
       expect(String(e?.code || e?.message)).toMatch(/EPIPE|ECONNRESET/);
     } finally {

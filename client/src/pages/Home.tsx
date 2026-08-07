@@ -54,6 +54,15 @@ function loadSettings(): PersistedSettings {
   }
 }
 
+/** Pull the server's JSON error message out of a failed response, if any. */
+async function readErrorMessage(res: Response, fallback: string): Promise<string> {
+  try {
+    const body = await res.json();
+    if (body && typeof body.error === 'string' && body.error.trim()) return body.error;
+  } catch { /* not JSON */ }
+  return fallback;
+}
+
 function formatTime(seconds: number): string {
   if (seconds < 60) return `${Math.round(seconds)}s`;
   const mins = Math.floor(seconds / 60);
@@ -664,7 +673,7 @@ export default function Home() {
     files.forEach((file: any) => { if (file.file) formData.append('files', file.file); });
     if (comparisonCancelRef.current.cancelled) throw new Error('Comparison cancelled');
     const uploadResponse = await fetch('/api/upload', { method: 'POST', body: formData });
-    if (!uploadResponse.ok) throw new Error('Failed to upload files');
+    if (!uploadResponse.ok) throw new Error(await readErrorMessage(uploadResponse, 'Failed to upload files'));
     const batchJob = await uploadResponse.json();
     comparisonCancelRef.current.jobId = batchJob.id;
     if (comparisonCancelRef.current.cancelled) {
@@ -763,8 +772,8 @@ export default function Home() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ engineMode: engine, timeoutMinutes, stopOnError, overrides: buildOverrides() }),
-        }).then(res => {
-          if (!res.ok) fail(new Error('Failed to start processing'));
+        }).then(async res => {
+          if (!res.ok) fail(new Error(await readErrorMessage(res, 'Failed to start processing')));
         }).catch(err => fail(err instanceof Error ? err : new Error('Failed to start processing')));
       };
     });
@@ -899,7 +908,7 @@ export default function Home() {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error('Failed to upload files');
+        throw new Error(await readErrorMessage(uploadResponse, 'Failed to upload files'));
       }
 
       const batchJob = await uploadResponse.json();
@@ -922,7 +931,7 @@ export default function Home() {
       });
 
       if (!startResponse.ok) {
-        throw new Error('Failed to start processing');
+        throw new Error(await readErrorMessage(startResponse, 'Failed to start processing'));
       }
 
       toast({
@@ -933,7 +942,9 @@ export default function Home() {
       console.error('Processing error:', error);
       toast({
         title: "Error",
-        description: "Failed to start batch processing. Please try again.",
+        description: error instanceof Error && error.message
+          ? error.message
+          : "Failed to start batch processing. Please try again.",
         variant: "destructive",
       });
       setProcessingState('idle');

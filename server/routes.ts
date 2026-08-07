@@ -20,7 +20,7 @@ import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
 import { parseSwmmOutputBinary, reportHasTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
-const MAX_UPLOAD_FILES = 100;
+const MAX_UPLOAD_FILES = 500;
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
 const MAX_TOTAL_SIZE = 250 * 1024 * 1024;
 const DEFAULT_TIMEOUT_MINUTES = 10;
