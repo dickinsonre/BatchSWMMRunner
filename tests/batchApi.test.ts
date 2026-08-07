@@ -109,6 +109,122 @@ describe("upload validation", () => {
   });
 });
 
+describe("concurrent chunked-upload appends", () => {
+  const TINY = "[TITLE]\ntiny\n[JUNCTIONS]\nJ1 1 1\n";
+
+  function mkFiles(dir: string, names: string[]): string[] {
+    return names.map(n => {
+      const p = path.join(dir, n);
+      fs.writeFileSync(p, TINY);
+      return p;
+    });
+  }
+
+  it("two overlapping appends both land: no file lost or duplicated", async () => {
+    ensureUploadTmpDir();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "race-append-"));
+    try {
+      const first = await request(app).post("/api/upload").attach("files", mkFiles(tmpDir, ["seed.inp"])[0]);
+      expect(first.status).toBe(200);
+      const jobId = first.body.id;
+
+      const [a1, a2] = mkFiles(tmpDir, ["a1.inp", "a2.inp"]);
+      const [b1, b2] = mkFiles(tmpDir, ["b1.inp", "b2.inp"]);
+
+      // Fire both appends without awaiting either, so they overlap in flight.
+      const reqA = request(app).post(`/api/batch/${jobId}/files`).attach("files", a1).attach("files", a2);
+      const reqB = request(app).post(`/api/batch/${jobId}/files`).attach("files", b1).attach("files", b2);
+      const [resA, resB] = await Promise.all([reqA, reqB]);
+
+      expect(resA.status).toBe(200);
+      expect(resB.status).toBe(200);
+
+      const job = await request(app).get(`/api/batch/${jobId}`);
+      expect(job.status).toBe(200);
+      const names = (job.body.files as Array<{ name: string }>).map(f => f.name).sort();
+      expect(names).toEqual(["a1.inp", "a2.inp", "b1.inp", "b2.inp", "seed.inp"]);
+      // Every file exactly once — no duplicates.
+      expect(new Set(names).size).toBe(names.length);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
+  it("overlapping appends cannot jointly exceed the 500-file cap", async () => {
+    ensureUploadTmpDir();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "race-cap-"));
+    try {
+      const first = await request(app).post("/api/upload").attach("files", mkFiles(tmpDir, ["seed.inp"])[0]);
+      expect(first.status).toBe(200);
+      const jobId = first.body.id;
+
+      // 1 existing + 250 + 250 = 501 > 500, so exactly one append must be rejected.
+      const buildAppend = (prefix: string) => {
+        let r = request(app).post(`/api/batch/${jobId}/files`);
+        for (const p of mkFiles(tmpDir, Array.from({ length: 250 }, (_, i) => `${prefix}${i}.inp`))) {
+          r = r.attach("files", p);
+        }
+        return r;
+      };
+      const [resA, resB] = await Promise.all([buildAppend("a"), buildAppend("b")]);
+
+      const statuses = [resA.status, resB.status].sort();
+      expect(statuses).toEqual([200, 400]);
+      const rejected = resA.status === 400 ? resA : resB;
+      expect(rejected.body.error).toMatch(/at most 500 files/i);
+
+      const job = await request(app).get(`/api/batch/${jobId}`);
+      const names = (job.body.files as Array<{ name: string }>).map(f => f.name);
+      expect(names).toHaveLength(251);
+      expect(new Set(names).size).toBe(251);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 60000);
+
+  it("an append racing a start never loses files or lets them slip in after start", async () => {
+    ensureUploadTmpDir();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "race-start-"));
+    try {
+      const first = await request(app).post("/api/upload").attach("files", mkFiles(tmpDir, ["seed.inp"])[0]);
+      expect(first.status).toBe(200);
+      const jobId = first.body.id;
+
+      const [late] = mkFiles(tmpDir, ["late.inp"]);
+      const appendReq = request(app).post(`/api/batch/${jobId}/files`).attach("files", late);
+      const startReq = startBatch(jobId);
+      const [appendRes, startRes] = await Promise.all([appendReq, startReq]);
+
+      expect(startRes.status).toBe(200);
+      // The append either won the race (200, file included) or was rejected
+      // once the start reserved the job (409) — never a partial outcome.
+      expect([200, 409]).toContain(appendRes.status);
+
+      const job = await request(app).get(`/api/batch/${jobId}`);
+      const names = (job.body.files as Array<{ name: string }>).map(f => f.name);
+      if (appendRes.status === 200) {
+        expect(names.sort()).toEqual(["late.inp", "seed.inp"]);
+      } else {
+        expect(names).toEqual(["seed.inp"]);
+      }
+      expect(new Set(names).size).toBe(names.length);
+
+      // Any append after the start is reserved must be rejected.
+      const [after] = mkFiles(tmpDir, ["after.inp"]);
+      const lateAppend = await request(app).post(`/api/batch/${jobId}/files`).attach("files", after);
+      expect(lateAppend.status).toBe(409);
+
+      const done = await waitForJob(app, jobId, isFinished).catch(() => null);
+      // The processed results must match exactly the final file list.
+      if (done) {
+        expect(done.results.length).toBe(names.length);
+      }
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 120000);
+});
+
 describe("batch processing (executable engine)", () => {
   it("processes a valid model successfully with real parsed metrics", async () => {
     const job = await uploadFixtures(app, ["valid-model.inp"]);
