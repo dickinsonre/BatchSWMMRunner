@@ -848,40 +848,57 @@ export default function Home() {
     });
 
     const runs: EngineRun[] = [];
+    const failedEngines: Array<{ label: string; message: string }> = [];
     try {
-      for (const engine of selectedEngines) {
+      // One engine failing (upload hiccup, dropped connection, server blip)
+      // must not throw away the results of the engines that already finished —
+      // record the failure and move on to the next engine.
+      for (let i = 0; i < selectedEngines.length; i++) {
+        const engine = selectedEngines[i];
         if (comparisonCancelRef.current.cancelled) break;
         setActiveComparisonEngine(ENGINE_LABELS[engine]);
         setCurrentFile(0);
         setFileProgressMap(new Map());
-        setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `--- Engine ${runs.length + 1}/${selectedEngines.length}: ${ENGINE_LABELS[engine]} ---`, type: 'info' }]);
-        if (engine === 'wasm' || engine === 'wasm6') {
-          const engineResults = await runBrowserEngineOnce(engine, runnableFiles);
-          runs.push({ engine, label: ENGINE_LABELS[engine], jobId: null, results: engineResults });
-        } else {
-          const { jobId: runJobId, results: engineResults } = await runServerEngineOnce(engine);
-          runs.push({ engine, label: ENGINE_LABELS[engine], jobId: runJobId, results: engineResults });
+        setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `--- Engine ${i + 1}/${selectedEngines.length}: ${ENGINE_LABELS[engine]} ---`, type: 'info' }]);
+        try {
+          if (engine === 'wasm' || engine === 'wasm6') {
+            const engineResults = await runBrowserEngineOnce(engine, runnableFiles);
+            runs.push({ engine, label: ENGINE_LABELS[engine], jobId: null, results: engineResults });
+          } else {
+            const { jobId: runJobId, results: engineResults } = await runServerEngineOnce(engine);
+            runs.push({ engine, label: ENGINE_LABELS[engine], jobId: runJobId, results: engineResults });
+            comparisonCancelRef.current.jobId = null;
+          }
+        } catch (engineError) {
+          if (comparisonCancelRef.current.cancelled) break;
+          console.error(`Engine ${engine} failed:`, engineError);
+          const message = engineError instanceof Error ? engineError.message : 'Engine run failed';
+          failedEngines.push({ label: ENGINE_LABELS[engine], message });
+          setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `${ENGINE_LABELS[engine]} failed: ${message} — continuing with remaining engines`, type: 'error' }]);
           comparisonCancelRef.current.jobId = null;
         }
       }
-      setComparisonRuns(runs);
+      setComparisonRuns(runs.length > 0 ? runs : null);
       setProcessingState(runs.length > 0 ? 'completed' : 'idle');
       if (startTimeRef.current) {
         setElapsedTime(formatTime((Date.now() - startTimeRef.current) / 1000));
       }
       if (!comparisonCancelRef.current.cancelled) {
-        toast({ title: "Comparison Complete", description: `All ${runs.length} engine runs finished.` });
-      }
-    } catch (error) {
-      console.error('Comparison error:', error);
-      setComparisonRuns(runs.length > 0 ? runs : null);
-      setProcessingState(runs.length > 0 ? 'completed' : 'idle');
-      if (!comparisonCancelRef.current.cancelled) {
-        toast({
-          title: "Comparison Error",
-          description: error instanceof Error ? error.message : 'An engine run failed to start.',
-          variant: "destructive",
-        });
+        if (failedEngines.length === 0) {
+          toast({ title: "Comparison Complete", description: `All ${runs.length} engine runs finished.` });
+        } else if (runs.length > 0) {
+          toast({
+            title: "Comparison Finished with Errors",
+            description: `${runs.length} engine${runs.length !== 1 ? 's' : ''} finished; ${failedEngines.map(f => f.label).join(', ')} failed (${failedEngines[0].message}). Showing the results that completed.`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Comparison Error",
+            description: `${failedEngines.map(f => f.label).join(', ')} failed: ${failedEngines[0].message}`,
+            variant: "destructive",
+          });
+        }
       }
     } finally {
       setActiveComparisonEngine(null);
