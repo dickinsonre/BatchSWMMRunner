@@ -50,8 +50,24 @@ function topFolder(path: string): string {
   return i === -1 ? '(repo root)' : path.slice(0, i);
 }
 
+const DEFAULT_REPO = "SWMMBobSWMM6/1729-SWMM5-Models-2030";
+
+/** Parse "owner/repo" (also tolerates a full github.com URL). Returns null when invalid. */
+function parseRepoInput(input: string): { owner: string; repo: string } | null {
+  let s = input.trim();
+  if (!s) return null;
+  s = s.replace(/^https?:\/\/(www\.)?github\.com\//i, "").replace(/\.git$/i, "").replace(/\/+$/, "");
+  const parts = s.split("/");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
+  return { owner: parts[0], repo: parts[1] };
+}
+
 export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsProps) {
   const [expanded, setExpanded] = useState(false);
+  const [repoInput, setRepoInput] = useState(DEFAULT_REPO);
+  const [branchInput, setBranchInput] = useState("");
+  // The repo actually being browsed (applied on "Browse")
+  const [activeRepo, setActiveRepo] = useState<{ owner: string; repo: string; branch: string } | null>(null);
   const [folder, setFolder] = useState<string>("");
   const [filter, setFilter] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -61,12 +77,37 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
   const cancelRef = useRef(false);
   const { toast } = useToast();
 
+  const repoQueryString = useMemo(() => {
+    if (!activeRepo) return "";
+    const params = new URLSearchParams({ owner: activeRepo.owner, repo: activeRepo.repo });
+    if (activeRepo.branch) params.set("branch", activeRepo.branch);
+    return `?${params.toString()}`;
+  }, [activeRepo]);
+
   const { data: tree, isLoading, error } = useQuery<GithubModelTree>({
-    queryKey: ['/api/github-models/tree'],
+    queryKey: [`/api/github-models/tree${repoQueryString}`],
     enabled: expanded,
     staleTime: 30 * 60 * 1000,
     retry: 1,
   });
+
+  const repoInputValid = parseRepoInput(repoInput) !== null;
+
+  const applyRepo = () => {
+    const parsed = parseRepoInput(repoInput);
+    if (!parsed) {
+      toast({
+        title: "Invalid repository",
+        description: 'Enter the repository as "owner/repo", e.g. "USEPA/Stormwater-Management-Model".',
+        variant: "destructive",
+      });
+      return;
+    }
+    setActiveRepo({ ...parsed, branch: branchInput.trim() });
+    setFolder("");
+    setFilter("");
+    setSelected(new Set());
+  };
 
   const folders = useMemo(() => {
     if (!tree) return [];
@@ -147,7 +188,7 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
       for (const f of selectedFiles) {
         if (cancelRef.current) break;
         try {
-          const url = `https://raw.githubusercontent.com/${owner}/${repo}/${tree.branch}/${f.path.split('/').map(encodeURIComponent).join('/')}`;
+          const url = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(tree.branch)}/${f.path.split('/').map(encodeURIComponent).join('/')}`;
           const res = await fetch(url);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const blob = await res.blob();
@@ -188,37 +229,80 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
         >
           {expanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
           <Github className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium" data-testid="text-github-models-title">Load from GitHub Model Library</span>
+          <span className="text-sm font-medium" data-testid="text-github-models-title">Load from GitHub</span>
           {tree && <Badge variant="secondary">{tree.files.length.toLocaleString()} models</Badge>}
         </button>
 
         {expanded && (
           <>
             <p className="text-xs text-muted-foreground">
-              Browse the public{' '}
-              <a
-                href="https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary inline-flex items-center gap-0.5"
-                data-testid="link-github-repo"
-              >
-                SWMM5 model library
-                <ExternalLink className="h-3 w-3" />
-              </a>{' '}
-              and pull models straight into a batch (up to {MAX_GITHUB_FILES} files / {formatFileSize(MAX_GITHUB_TOTAL_BYTES)} per pull).
+              Browse any public GitHub repository with SWMM models and pull them straight into a batch
+              (up to {MAX_GITHUB_FILES} files / {formatFileSize(MAX_GITHUB_TOTAL_BYTES)} per pull).
+              Defaults to the public SWMM5 model library.
             </p>
+
+            <div className="flex items-end gap-2 flex-wrap">
+              <div className="flex-1 min-w-[220px] space-y-1">
+                <label className="text-xs text-muted-foreground" htmlFor="github-repo-input">Repository (owner/repo)</label>
+                <Input
+                  id="github-repo-input"
+                  value={repoInput}
+                  onChange={e => setRepoInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') applyRepo(); }}
+                  placeholder={DEFAULT_REPO}
+                  disabled={disabled || downloading}
+                  data-testid="input-github-repo"
+                />
+              </div>
+              <div className="w-40 space-y-1">
+                <label className="text-xs text-muted-foreground" htmlFor="github-branch-input">Branch (optional)</label>
+                <Input
+                  id="github-branch-input"
+                  value={branchInput}
+                  onChange={e => setBranchInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') applyRepo(); }}
+                  placeholder="default branch"
+                  disabled={disabled || downloading}
+                  data-testid="input-github-branch"
+                />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={applyRepo}
+                disabled={disabled || downloading || !repoInputValid}
+                data-testid="button-github-browse-repo"
+              >
+                Browse
+              </Button>
+            </div>
+
+            {tree && (
+              <p className="text-xs text-muted-foreground">
+                Browsing{' '}
+                <a
+                  href={`https://github.com/${tree.repo}/tree/${encodeURIComponent(tree.branch)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary inline-flex items-center gap-0.5"
+                  data-testid="link-github-repo"
+                >
+                  {tree.repo}@{tree.branch}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </p>
+            )}
 
             {isLoading && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground" data-testid="text-github-loading">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Loading model library index…
+                Loading repository index…
               </div>
             )}
 
             {error != null && (
               <p className="text-sm text-destructive" data-testid="text-github-error">
-                Could not load the model library: {error instanceof Error ? error.message : 'unknown error'}
+                Could not load the repository: {error instanceof Error ? error.message : 'unknown error'}
               </p>
             )}
 

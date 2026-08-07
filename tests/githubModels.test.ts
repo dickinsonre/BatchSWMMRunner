@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getGithubModelTree, clearGithubModelTreeCache, GithubRateLimitError } from '../server/githubModels';
+import {
+  getGithubModelTree,
+  clearGithubModelTreeCache,
+  GithubRateLimitError,
+  GithubNotFoundError,
+  GithubRepoValidationError,
+  validateRepoRef,
+} from '../server/githubModels';
 
 function mockFetchResponse(body: any, status = 200, headers: Record<string, string> = {}) {
   return {
@@ -84,5 +91,78 @@ describe('getGithubModelTree', () => {
     const fetchImpl = vi.fn().mockResolvedValue(mockFetchResponse({ ...sampleTree, truncated: true }));
     const tree = await getGithubModelTree(fetchImpl as any);
     expect(tree.truncated).toBe(true);
+  });
+
+  it('caches per repo — different repos each hit GitHub once', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(mockFetchResponse(sampleTree));
+    const a = { owner: 'alice', repo: 'models', branch: 'main' };
+    const b = { owner: 'bob', repo: 'models', branch: 'main' };
+    await getGithubModelTree(fetchImpl as any, a);
+    await getGithubModelTree(fetchImpl as any, a);
+    await getGithubModelTree(fetchImpl as any, b);
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(fetchImpl.mock.calls[0][0]).toContain('/repos/alice/models/git/trees/main');
+    expect(fetchImpl.mock.calls[1][0]).toContain('/repos/bob/models/git/trees/main');
+  });
+
+  it('resolves the default branch when branch is empty', async () => {
+    const fetchImpl = vi.fn()
+      .mockResolvedValueOnce(mockFetchResponse({ default_branch: 'develop' }))
+      .mockResolvedValueOnce(mockFetchResponse(sampleTree));
+    const tree = await getGithubModelTree(fetchImpl as any, { owner: 'alice', repo: 'models', branch: '' });
+    expect(fetchImpl.mock.calls[0][0]).toBe('https://api.github.com/repos/alice/models');
+    expect(fetchImpl.mock.calls[1][0]).toContain('/git/trees/develop?recursive=1');
+    expect(tree.branch).toBe('develop');
+  });
+
+  it('URL-encodes branch names with reserved characters like #', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(mockFetchResponse(sampleTree));
+    const tree = await getGithubModelTree(fetchImpl as any, { owner: 'alice', repo: 'models', branch: 'feature#123' });
+    expect(fetchImpl.mock.calls[0][0]).toContain('/git/trees/feature%23123?recursive=1');
+    // The branch is reported raw so clients can encode it themselves.
+    expect(tree.branch).toBe('feature#123');
+  });
+
+  it('keeps a newly added repo cached even when the cache is at capacity', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(mockFetchResponse(sampleTree));
+    // Fill past the 50-repo cap
+    for (let i = 0; i < 55; i++) {
+      await getGithubModelTree(fetchImpl as any, { owner: 'o' + i, repo: 'r', branch: 'main' });
+    }
+    const callsAfterFill = fetchImpl.mock.calls.length;
+    expect(callsAfterFill).toBe(55);
+    // The most recently added repo must still be cached (no extra fetch)
+    await getGithubModelTree(fetchImpl as any, { owner: 'o54', repo: 'r', branch: 'main' });
+    expect(fetchImpl.mock.calls.length).toBe(callsAfterFill);
+  });
+
+  it('throws GithubNotFoundError for a missing repo or branch', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(mockFetchResponse({}, 404));
+    await expect(
+      getGithubModelTree(fetchImpl as any, { owner: 'alice', repo: 'nope', branch: 'main' }),
+    ).rejects.toBeInstanceOf(GithubNotFoundError);
+  });
+});
+
+describe('validateRepoRef', () => {
+  it('accepts valid owner/repo/branch and trims input', () => {
+    expect(validateRepoRef(' USEPA ', 'Stormwater-Management-Model.git', ' main ')).toEqual({
+      owner: 'USEPA',
+      repo: 'Stormwater-Management-Model',
+      branch: 'main',
+    });
+  });
+
+  it('treats missing branch as default branch', () => {
+    expect(validateRepoRef('a', 'b', undefined).branch).toBe('');
+  });
+
+  it('rejects invalid owners, repos, and branches', () => {
+    expect(() => validateRepoRef('bad owner!', 'repo', '')).toThrow(GithubRepoValidationError);
+    expect(() => validateRepoRef('', 'repo', '')).toThrow(GithubRepoValidationError);
+    expect(() => validateRepoRef('owner', 'repo/../evil', '')).toThrow(GithubRepoValidationError);
+    expect(() => validateRepoRef('owner', '..', '')).toThrow(GithubRepoValidationError);
+    expect(() => validateRepoRef('owner', 'repo', 'bad..branch')).toThrow(GithubRepoValidationError);
+    expect(() => validateRepoRef('owner', 'repo', 'has space')).toThrow(GithubRepoValidationError);
   });
 });
