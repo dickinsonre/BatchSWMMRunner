@@ -1,8 +1,10 @@
 importScripts('/wasm/swmm-out-parser.js');
 
 const ENGINES = {
-  swmm5: { script: '/wasm/swmm5.js', dir: '/wasm/', factory: 'createSwmmModule' },
-  swmm6: { script: '/wasm6/swmm6.js', dir: '/wasm6/', factory: 'createSwmm6Module' },
+  swmm5: { script: '/wasm/swmm5.js', dir: '/wasm/', factory: 'createSwmmModule', api: 'legacy' },
+  // The real SWMM6 engine (OpenSWMM 6.0.0-alpha.x, C++), handle-based API.
+  // Supports the new solver keywords (DYNAMIC_SLOT, NODE_CONTINUITY, ANDERSON_ACCEL).
+  swmm6: { script: '/wasm6/openswmm6.js', dir: '/wasm6/', factory: 'createOswmm6Module', api: 'engine6' },
 };
 
 const modulePromises = {};
@@ -66,9 +68,61 @@ self.onmessage = async (e) => {
     FS.writeFile(inpPath, inpText);
 
     const totalDays = parseDurationDays(inpText);
+    const cfg = ENGINES[engine] || ENGINES.swmm5;
 
-    let err = Module.ccall('swmm_open', 'number', ['string', 'string', 'string'], [inpPath, rptPath, outPath]);
+    let err = 0;
     let errMsg = '';
+    let warnings = 0;
+
+    if (cfg.api === 'engine6') {
+      // New OpenSWMM 6.x engine: handle-based C API, fresh instance per run.
+      const eng = Module.ccall('swmm_engine_create', 'number', [], []);
+      if (!eng) throw new Error('Failed to create SWMM6 engine instance');
+      const lastError = () =>
+        Module.ccall('swmm_get_last_error_msg', 'string', ['number'], [eng]) || '';
+      try {
+        err = Module.ccall('swmm_engine_open', 'number',
+          ['number', 'string', 'string', 'string', 'number'],
+          [eng, inpPath, rptPath, outPath, 0]);
+        if (err === 0) {
+          err = Module.ccall('swmm_engine_initialize', 'number', ['number'], [eng]);
+          if (err !== 0) errMsg = lastError();
+        } else {
+          errMsg = lastError();
+        }
+        if (err === 0) {
+          err = Module.ccall('swmm_engine_start', 'number', ['number', 'number'], [eng, 1]);
+          if (err !== 0) errMsg = lastError();
+        }
+        if (err === 0) {
+          const elapsedPtr = Module._malloc(8);
+          let step = 0;
+          let lastPost = 0;
+          while (true) {
+            const code = Module.ccall('swmm_engine_step', 'number', ['number', 'number'], [eng, elapsedPtr]);
+            const elapsed = Module.getValue(elapsedPtr, 'double');
+            step++;
+            if (code !== 0) { err = code; errMsg = lastError(); break; }
+            if (elapsed <= 0) break;
+            const now = Date.now();
+            if (now - lastPost > 200) {
+              lastPost = now;
+              const pct = totalDays ? Math.min(99, Math.round((elapsed / totalDays) * 100)) : Math.min(99, step % 100);
+              self.postMessage({ type: 'progress', id, fileName, percentage: pct, message: `Simulating... ${pct}%` });
+            }
+          }
+          Module._free(elapsedPtr);
+          Module.ccall('swmm_engine_end', 'number', ['number'], [eng]);
+          const rptErr = Module.ccall('swmm_engine_report', 'number', ['number'], [eng]);
+          if (err === 0 && rptErr !== 0) { err = rptErr; errMsg = lastError(); }
+        }
+        if (err !== 0 && !errMsg) errMsg = lastError() || `SWMM6 error code ${err}`;
+      } finally {
+        try { Module.ccall('swmm_engine_close', 'number', ['number'], [eng]); } catch (_) {}
+        try { Module.ccall('swmm_engine_destroy', null, ['number'], [eng]); } catch (_) {}
+      }
+    } else {
+    err = Module.ccall('swmm_open', 'number', ['string', 'string', 'string'], [inpPath, rptPath, outPath]);
 
     if (err === 0) {
       err = Module.ccall('swmm_start', 'number', ['number'], [1]);
@@ -105,11 +159,17 @@ self.onmessage = async (e) => {
       Module._free(buf);
     }
 
-    const warnings = Module.ccall('swmm_getWarnings', 'number', [], []);
+    warnings = Module.ccall('swmm_getWarnings', 'number', [], []);
     Module.ccall('swmm_close', 'number', [], []);
+    }
 
     let rptText = '';
     try { rptText = FS.readFile(rptPath, { encoding: 'utf8' }); } catch (_) {}
+
+    // The new engine has no warning-count API — count WARNING lines in the rpt.
+    if (cfg.api === 'engine6' && rptText) {
+      warnings = (rptText.match(/^\s*WARNING/gim) || []).length;
+    }
 
     // SWMM writes detailed time series to the binary .out (not the .rpt) when
     // an output file is used. Append rpt-style time-series sections parsed

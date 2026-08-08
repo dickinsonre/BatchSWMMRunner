@@ -11,6 +11,7 @@ const require = createRequire(import.meta.url);
 const EXECUTABLE = path.join(process.cwd(), "swmm-engine", "runswmm");
 const WASM_JS = path.join(process.cwd(), "client", "public", "wasm", "swmm5.js");
 const WASM6_JS = path.join(process.cwd(), "client", "public", "wasm6", "swmm6.js");
+const OSWMM6_JS = path.join(process.cwd(), "client", "public", "wasm6", "openswmm6.js");
 
 const inpText = fs.readFileSync(path.join(FIXTURES, "valid-model.inp"), "utf-8");
 
@@ -73,6 +74,49 @@ async function runWasm(jsPath = WASM_JS, factoryName = "createSwmmModule", wasmF
 
 const bothEnginesPresent = fs.existsSync(EXECUTABLE) && fs.existsSync(WASM_JS);
 const swmm6Present = fs.existsSync(EXECUTABLE) && fs.existsSync(WASM6_JS);
+const oswmm6Present = fs.existsSync(EXECUTABLE) && fs.existsSync(OSWMM6_JS);
+
+/** Drive the new OpenSWMM 6.x handle-based C API (what the worker now uses for swmm6). */
+async function runEngine6(inputText = inpText): Promise<string> {
+  const src = fs.readFileSync(OSWMM6_JS, "utf-8");
+  const factory = new Function(
+    "module", "exports", "require", "__dirname", "__filename",
+    `${src}\nreturn createOswmm6Module;`,
+  );
+  const mod = { exports: {} };
+  const createModule = factory(mod, mod.exports, require, path.dirname(OSWMM6_JS), OSWMM6_JS);
+  const Module = await createModule({
+    wasmBinary: fs.readFileSync(path.join(path.dirname(OSWMM6_JS), "openswmm6.wasm")),
+    print: () => {},
+    printErr: () => {},
+  });
+  const FS = Module.FS;
+  FS.writeFile("/input.inp", inputText);
+  const eng = Module.ccall("swmm_engine_create", "number", [], []);
+  if (!eng) throw new Error("failed to create engine");
+  let err = Module.ccall("swmm_engine_open", "number",
+    ["number", "string", "string", "string", "number"],
+    [eng, "/input.inp", "/report.rpt", "/output.out", 0]);
+  if (err === 0) err = Module.ccall("swmm_engine_initialize", "number", ["number"], [eng]);
+  if (err === 0) err = Module.ccall("swmm_engine_start", "number", ["number", "number"], [eng, 1]);
+  if (err === 0) {
+    const elapsedPtr = Module._malloc(8);
+    while (true) {
+      const code = Module.ccall("swmm_engine_step", "number", ["number", "number"], [eng, elapsedPtr]);
+      const elapsed = Module.getValue(elapsedPtr, "double");
+      if (code !== 0) { err = code; break; }
+      if (elapsed <= 0) break;
+    }
+    Module._free(elapsedPtr);
+    Module.ccall("swmm_engine_end", "number", ["number"], [eng]);
+    Module.ccall("swmm_engine_report", "number", ["number"], [eng]);
+  }
+  const msg = Module.ccall("swmm_get_last_error_msg", "string", ["number"], [eng]);
+  Module.ccall("swmm_engine_close", "number", ["number"], [eng]);
+  Module.ccall("swmm_engine_destroy", null, ["number"], [eng]);
+  if (err !== 0) throw new Error(`SWMM6 run failed with code ${err}: ${msg}`);
+  return FS.readFile("/report.rpt", { encoding: "utf8" }) as string;
+}
 
 function expectMetricsAgree(refReport: string, otherReport: string) {
   const a = parseReportMetrics(refReport);
@@ -139,11 +183,48 @@ describe.runIf(swmm6Present)("engine parity: executable vs SWMM6 WASM", () => {
     expect(wasm6Report).not.toMatch(/WARNING 13/);
   });
 
-  it("emits WARNING 13 when a link opening exceeds a storage node's max depth", async () => {
+  it("emits WARNING 13 when a link opening exceeds a storage node's max depth (legacy engine)", async () => {
     // Fixture: storage node ST1 (max depth 2 ft, zero surcharge depth) whose
     // outgoing conduit C2 has a 3 ft circular opening — crown exceeds max depth.
     const warnInp = fs.readFileSync(path.join(FIXTURES, "warn13-model.inp"), "utf-8");
     const report = await runWasm(WASM6_JS, "createSwmm6Module", "swmm6.wasm", warnInp);
     expect(report).toMatch(/WARNING 13: link opening exceeds maximum depth for Node ST1/);
   }, 60000);
+});
+
+describe.runIf(oswmm6Present)("engine parity: executable vs OpenSWMM 6.x WASM (new engine)", () => {
+  let exeReport: string;
+  let eng6Report: string;
+
+  beforeAll(async () => {
+    exeReport = runExecutable();
+    eng6Report = await runEngine6();
+  }, 120000);
+
+  it("new engine produces a valid SWMM report", () => {
+    expect(eng6Report).toMatch(/OPENSWMM ENGINE - VERSION 6/);
+  });
+
+  it("key metrics agree within tolerance", () => {
+    expectMetricsAgree(exeReport, eng6Report);
+  });
+
+  it("accepts and echoes the SWMM6-only solver keywords", async () => {
+    // Surcharge method is only used (and echoed) under dynamic-wave routing.
+    const upgraded = inpText.replace(/^(\s*FLOW_ROUTING\s+)\S+/im, "$1DYNWAVE").replace(
+      /^\[OPTIONS\][^\n]*\n/im,
+      (h) => h +
+        "SURCHARGE_METHOD     DYNAMIC_SLOT\n" +
+        "DPS_CELERITY         20\n" +
+        "DPS_ALPHA            3\n" +
+        "DPS_DECAY_TIME       0.5\n" +
+        "NODE_CONTINUITY      SEMI_IMPLICIT\n" +
+        "ANDERSON_ACCEL       YES\n",
+    );
+    const report = await runEngine6(upgraded);
+    expect(report).toMatch(/Surcharge Method\s*\.+\s*DYNAMIC_SLOT/);
+    expect(report).toMatch(/Anderson Acceleration\s*\.+\s*YES/);
+    expect(report).not.toMatch(/ERROR 205/);
+    expect(report).not.toMatch(/Unknown option keyword/i);
+  }, 120000);
 });

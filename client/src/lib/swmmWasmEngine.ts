@@ -85,7 +85,7 @@ function validateSwmmReportClient(reportContent: string | undefined): { valid: b
 }
 
 function extractEngineVersionClient(reportContent: string): string | undefined {
-  const m = reportContent.match(/(?:EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE) - VERSION\s+([\d.]+)(?:\s*\(Build\s+([\d.]+)\))?/i);
+  const m = reportContent.match(/(?:EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE) - VERSION\s+([\d.]+(?:-[\w.]+)?)(?:\s*\(Build\s+([\d.]+)\))?/i);
   if (m) return m[2] || m[1];
   return undefined;
 }
