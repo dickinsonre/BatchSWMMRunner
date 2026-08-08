@@ -10,6 +10,9 @@ export interface ReswmmConfig {
   mnsa: number;
   lengtheningEnabled: boolean;
   lengtheningStep: number;
+  /** SWMM6 only: emit generated split junctions as [VIRTUAL_JUNCTIONS]. */
+  virtualJunctions: boolean;
+  vjMomentum: 'FULL' | 'BASIC';
 }
 
 export const DEFAULT_RESWMM_CONFIG: ReswmmConfig = {
@@ -20,6 +23,8 @@ export const DEFAULT_RESWMM_CONFIG: ReswmmConfig = {
   mnsa: 12.566,
   lengtheningEnabled: false,
   lengtheningStep: 0,
+  virtualJunctions: false,
+  vjMomentum: 'FULL',
 };
 
 export interface DiscretizationStats {
@@ -30,6 +35,7 @@ export interface DiscretizationStats {
   method: string;
   lengtheningCount: number;
   lengtheningTotalAdded: number;
+  virtualJunctionCount: number;
 }
 
 export interface DiscretizedResult {
@@ -38,6 +44,8 @@ export interface DiscretizedResult {
   newXSections: XSectionData[];
   newCoordinates: CoordinateData[];
   newLosses: LossData[];
+  /** Names of generated split junctions to emit as [VIRTUAL_JUNCTIONS] (SWMM6 only). */
+  virtualJunctionNames: string[];
   stats: DiscretizationStats;
 }
 
@@ -199,6 +207,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
   const newLosses: LossData[] = [];
   let splitCount = 0;
   let newJunctionCount = 0;
+  const virtualJunctionNames: string[] = [];
   const unsplittableShapes = new Set(['DUMMY', 'IRREGULAR']);
 
   for (const conduit of workingConduits) {
@@ -265,6 +274,9 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
         };
         newJunctions.push(newJunction);
         junctionMap.set(nextNodeName, newJunction);
+        // Generated split nodes always connect exactly two conduits and carry
+        // no inflows/DWF — the SWMM6 virtual-junction eligibility criteria.
+        if (config.virtualJunctions) virtualJunctionNames.push(nextNodeName);
 
         if (fromCoord && toCoord) {
           const interpX = +(fromCoord.x + (toCoord.x - fromCoord.x) * frac).toFixed(2);
@@ -320,6 +332,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
     newXSections,
     newCoordinates,
     newLosses,
+    virtualJunctionNames,
     stats: {
       originalConduitCount: parsed.conduits.length,
       newConduitCount: newConduits.length,
@@ -328,6 +341,7 @@ export function discretizeConduits(parsed: ParsedInpFile, config: ReswmmConfig):
       method: config.method,
       lengtheningCount,
       lengtheningTotalAdded: +lengtheningTotalAdded.toFixed(2),
+      virtualJunctionCount: virtualJunctionNames.length,
     },
   };
 }
@@ -360,6 +374,8 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
     ? `Fixed Interval (${config.fixedMinLength}-${config.fixedMaxLength})`
     : `dx/D Ratio (${config.dxDRatio})`;
 
+  const vjNames = new Set(config.virtualJunctions ? result.virtualJunctionNames : []);
+
   function buildJunctionLines(): string[] {
     const out: string[] = [];
     out.push('[JUNCTIONS]');
@@ -369,9 +385,23 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
       out.push(`${padField(j.name, 17)}${padField(j.elevation, 17)}${padField(j.maxDepth, 11)}${padField(j.initDepth || 0, 11)}${padField(j.surDepth || 0, 11)}${j.aponded || 0}`);
     }
     for (const j of result.newJunctions) {
+      if (vjNames.has(j.name)) continue;
       out.push(`${padField(j.name, 17)}${padField(j.elevation, 17)}${padField(j.maxDepth, 11)}${padField(j.initDepth || 0, 11)}${padField(j.surDepth || 0, 11)}${j.aponded || 0}`);
     }
     out.push('');
+    // SWMM6 virtual junctions must be declared before the conduits that
+    // reference them, so the section goes directly after [JUNCTIONS].
+    // Format is name + invert ONLY — extra tokens are a parse error.
+    if (vjNames.size > 0) {
+      out.push('[VIRTUAL_JUNCTIONS]');
+      out.push(';;Name           Elevation ');
+      out.push(';;-------------- ----------');
+      for (const j of result.newJunctions) {
+        if (!vjNames.has(j.name)) continue;
+        out.push(`${padField(j.name, 17)}${j.elevation}`);
+      }
+      out.push('');
+    }
     return out;
   }
 
@@ -483,6 +513,13 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
           const insertIdx = optionLines.length;
           optionLines.splice(insertIdx, 0, `LENGTHENING_STEP  ${config.lengtheningStep}`);
         }
+        if (vjNames.size > 0) {
+          const vjRe = /^\s*VIRTUAL_JUNCTION_MOMENTUM\b/i;
+          const vjLine = `VIRTUAL_JUNCTION_MOMENTUM ${config.vjMomentum}`;
+          const existing = optionLines.findIndex(l => vjRe.test(l.split(';')[0]));
+          if (existing >= 0) optionLines[existing] = vjLine;
+          else optionLines.push(vjLine);
+        }
         outputLines.push(...optionLines);
         i = sInfo.endLine;
         continue;
@@ -495,6 +532,12 @@ export function rebuildInpFile(originalContent: string, parsed: ParsedInpFile, r
       }
 
       if (sName === 'CONDUITS' && sInfo) {
+        // Models without a [JUNCTIONS] section (e.g. all storage/outfall
+        // endpoints) still get generated split junctions — declare them
+        // before the conduits that reference them.
+        if (!sectionMap.has('JUNCTIONS') && result.newJunctions.length > 0) {
+          outputLines.push(...buildJunctionLines());
+        }
         outputLines.push(...buildConduitLines());
         i = sInfo.endLine;
         continue;

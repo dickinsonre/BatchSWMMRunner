@@ -3,6 +3,7 @@ import {
   hydraulicDiameter,
   computeCflAnalysis,
   discretizeConduits,
+  rebuildInpFile,
   DEFAULT_RESWMM_CONFIG,
   type ReswmmConfig,
 } from "../client/src/lib/reswmmEngine";
@@ -198,5 +199,120 @@ describe("discretizeConduits", () => {
     expect(result.stats.splitCount).toBe(1);
     expect(result.newConduits).toHaveLength(1);
     expect(result.newJunctions).toHaveLength(0);
+  });
+});
+
+describe("virtual junctions (SWMM6)", () => {
+  const vjConfig: ReswmmConfig = {
+    ...DEFAULT_RESWMM_CONFIG,
+    method: "fixed_interval",
+    fixedMinLength: 50,
+    fixedMaxLength: 200,
+    virtualJunctions: true,
+    vjMomentum: "FULL",
+  };
+
+  const originalInp = [
+    "[TITLE]",
+    "t",
+    "",
+    "[OPTIONS]",
+    "FLOW_UNITS  CFS",
+    "FLOW_ROUTING  DYNWAVE",
+    "",
+    "[JUNCTIONS]",
+    ";;Name Elev MaxD InitD SurD Apond",
+    "J1  100  6  0  0  0",
+    "J2  90   6  0  0  0",
+    "",
+    "[CONDUITS]",
+    ";;Name From To Len Rough InOff OutOff InitF MaxF",
+    "C1  J1  J2  1000  0.013  0.5  0.25  0  0",
+    "",
+    "[XSECTIONS]",
+    "C1  CIRCULAR  2.0  0  0  0  1",
+    "",
+  ].join("\n");
+
+  it("marks all generated split junctions as virtual", () => {
+    const result = discretizeConduits(baseModel(), vjConfig);
+    expect(result.virtualJunctionNames.length).toBe(result.newJunctions.length);
+    expect(result.stats.virtualJunctionCount).toBe(result.newJunctions.length);
+    expect(result.virtualJunctionNames.length).toBeGreaterThan(0);
+  });
+
+  it("emits [VIRTUAL_JUNCTIONS] after [JUNCTIONS] with name + invert only", () => {
+    const parsed = baseModel();
+    const result = discretizeConduits(parsed, vjConfig);
+    const rebuilt = rebuildInpFile(originalInp, parsed, result, vjConfig);
+
+    const jIdx = rebuilt.indexOf("[JUNCTIONS]");
+    const vjIdx = rebuilt.indexOf("[VIRTUAL_JUNCTIONS]");
+    const cIdx = rebuilt.indexOf("[CONDUITS]");
+    expect(vjIdx).toBeGreaterThan(jIdx);
+    expect(vjIdx).toBeLessThan(cIdx);
+
+    const vjSection = rebuilt.slice(vjIdx, cIdx);
+    for (const name of result.virtualJunctionNames) {
+      const row = vjSection.split("\n").find((l) => l.trim().startsWith(name));
+      expect(row).toBeDefined();
+      // name + invert only — extra tokens are a SWMM6 parse error
+      expect(row!.trim().split(/\s+/)).toHaveLength(2);
+      // and it must NOT appear in [JUNCTIONS]
+      const junSection = rebuilt.slice(jIdx, vjIdx);
+      expect(junSection).not.toContain(name);
+    }
+    expect(rebuilt).toMatch(/^VIRTUAL_JUNCTION_MOMENTUM FULL$/m);
+  });
+
+  it("keeps split junctions in [JUNCTIONS] and skips the momentum option when disabled", () => {
+    const parsed = baseModel();
+    const config = { ...vjConfig, virtualJunctions: false };
+    const result = discretizeConduits(parsed, config);
+    const rebuilt = rebuildInpFile(originalInp, parsed, result, config);
+    expect(rebuilt).not.toContain("[VIRTUAL_JUNCTIONS]");
+    expect(rebuilt).not.toContain("VIRTUAL_JUNCTION_MOMENTUM");
+    for (const j of result.newJunctions) {
+      expect(rebuilt).toContain(j.name);
+    }
+  });
+});
+
+describe("virtual junctions without a [JUNCTIONS] section", () => {
+  it("declares generated junctions before [CONDUITS] when the model has no [JUNCTIONS]", () => {
+    const parsed = baseModel({
+      junctions: [],
+      outfalls: [
+        { name: "O1", elevation: 100 },
+        { name: "O2", elevation: 90 },
+      ] as any,
+      conduits: [
+        { name: "C1", from: "O1", to: "O2", length: 1000, roughness: 0.013, inOffset: 0, outOffset: 0, initFlow: 0, maxFlow: 0 },
+      ],
+    });
+    const config: ReswmmConfig = { ...DEFAULT_RESWMM_CONFIG, virtualJunctions: true, vjMomentum: "FULL" };
+    const original = [
+      "[OPTIONS]",
+      "FLOW_UNITS  CFS",
+      "",
+      "[OUTFALLS]",
+      "O1  100  FREE",
+      "O2  90   FREE",
+      "",
+      "[CONDUITS]",
+      "C1  O1  O2  1000  0.013  0  0  0  0",
+      "",
+      "[XSECTIONS]",
+      "C1  CIRCULAR  2.0  0  0  0  1",
+      "",
+    ].join("\n");
+    const result = discretizeConduits(parsed, config);
+    expect(result.virtualJunctionNames.length).toBeGreaterThan(0);
+    const rebuilt = rebuildInpFile(original, parsed, result, config);
+    const vjIdx = rebuilt.indexOf("[VIRTUAL_JUNCTIONS]");
+    const cIdx = rebuilt.indexOf("[CONDUITS]");
+    expect(vjIdx).toBeGreaterThan(-1);
+    expect(vjIdx).toBeLessThan(cIdx);
+    expect(rebuilt).toMatch(/^VIRTUAL_JUNCTION_MOMENTUM FULL$/m);
   });
 });

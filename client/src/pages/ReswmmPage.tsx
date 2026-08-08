@@ -27,6 +27,7 @@ import {
   ResponsiveContainer, Legend, ReferenceLine,
 } from "recharts";
 import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
+import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import { useToast } from "@/hooks/use-toast";
 
 interface MiniMapProps {
@@ -455,6 +456,9 @@ export default function ReswmmPage() {
   const [afterRunElapsed, setAfterRunElapsed] = useState('');
   const [afterRunProgress, setAfterRunProgress] = useState('');
   const wsAfterRef = useRef<WebSocket | null>(null);
+  // Cancel handles for in-browser SWMM6 runs (virtual-junction files).
+  const wasmBeforeCancelRef = useRef<{ cancel: () => void; cancelRef: { current: boolean } } | null>(null);
+  const wasmAfterCancelRef = useRef<{ cancel: () => void; cancelRef: { current: boolean } } | null>(null);
   const afterStartRef = useRef<number | null>(null);
 
   const [showingResults, setShowingResults] = useState<'before' | 'after' | null>(null);
@@ -489,8 +493,78 @@ export default function ReswmmPage() {
     return () => {
       if (wsBeforeRef.current) { wsBeforeRef.current.close(); wsBeforeRef.current = null; }
       if (wsAfterRef.current) { wsAfterRef.current.close(); wsAfterRef.current = null; }
+      for (const ref of [wasmBeforeCancelRef, wasmAfterCancelRef]) {
+        if (ref.current) {
+          ref.current.cancelRef.current = true;
+          ref.current.cancel();
+          ref.current = null;
+        }
+      }
     };
   }, []);
+
+  // Virtual-junction files only run on the in-browser SWMM6 engine —
+  // the server engines are SWMM 5.x and reject the new keywords (ERROR 205).
+  const runInpContentWasm6 = (
+    content: string,
+    runFileName: string,
+    which: 'before' | 'after',
+  ) => {
+    const setRunState = which === 'before' ? setBeforeRunState : setAfterRunState;
+    const setRunResults = which === 'before' ? setBeforeRunResults : setAfterRunResults;
+    const setRunElapsed = which === 'before' ? setBeforeRunElapsed : setAfterRunElapsed;
+    const setRunProgress = which === 'before' ? setBeforeRunProgress : setAfterRunProgress;
+    const startRef = which === 'before' ? beforeStartRef : afterStartRef;
+
+    const wasmCancelRef = which === 'before' ? wasmBeforeCancelRef : wasmAfterCancelRef;
+    // Stop any previous WASM run in this slot before starting a new one.
+    if (wasmCancelRef.current) {
+      wasmCancelRef.current.cancelRef.current = true;
+      wasmCancelRef.current.cancel();
+      wasmCancelRef.current = null;
+    }
+
+    setRunState('processing');
+    setRunResults([]);
+    setRunElapsed('');
+    setRunProgress('Running SWMM6 in your browser...');
+    startRef.current = Date.now();
+
+    const file = new File([content], runFileName, { type: 'text/plain' });
+    const cancelRef = { current: false };
+    const cancel = runWasmBatch(
+      [{ id: `reswmm-${which}`, name: runFileName, file }],
+      {
+        onFileStart: () => {},
+        onProgress: (p) => {
+          if (cancelRef.current) return;
+          setRunProgress(p.message || `${p.percentage}%`);
+        },
+        onResult: (r) => {
+          if (cancelRef.current) return;
+          wasmCancelRef.current = null;
+          setRunResults([r]);
+          setRunState('completed');
+          if (startRef.current) {
+            setRunElapsed(formatRunTime((Date.now() - startRef.current) / 1000));
+          }
+          setShowingResults(which);
+          toast({
+            title: r.status === 'success' ? 'Simulation Complete' : 'Simulation Failed',
+            description: r.status === 'success'
+              ? `${runFileName} has been processed with the SWMM6 engine.`
+              : (r.error || `${runFileName} failed.`),
+            variant: r.status === 'success' ? undefined : 'destructive',
+          });
+        },
+        onLog: () => {},
+        onComplete: () => {},
+      },
+      cancelRef,
+      'swmm6',
+    );
+    wasmCancelRef.current = { cancel, cancelRef };
+  };
 
   const runInpContent = async (
     content: string,
@@ -587,7 +661,11 @@ export default function ReswmmPage() {
     setResult(freshResult);
     const rebuilt = rebuildInpFile(originalContent, parsed, freshResult, config);
     const baseName = fileName.replace(/\.inp$/i, '');
-    runInpContent(rebuilt, `ReSWMM_${baseName}.inp`, 'after');
+    if (config.virtualJunctions && freshResult.virtualJunctionNames.length > 0) {
+      runInpContentWasm6(rebuilt, `ReSWMM_${baseName}.inp`, 'after');
+    } else {
+      runInpContent(rebuilt, `ReSWMM_${baseName}.inp`, 'after');
+    }
   };
 
   const handleBackFromRunResults = () => {
@@ -606,6 +684,13 @@ export default function ReswmmPage() {
     setShowingResults(null);
     if (wsBeforeRef.current) { wsBeforeRef.current.close(); wsBeforeRef.current = null; }
     if (wsAfterRef.current) { wsAfterRef.current.close(); wsAfterRef.current = null; }
+    for (const ref of [wasmBeforeCancelRef, wasmAfterCancelRef]) {
+      if (ref.current) {
+        ref.current.cancelRef.current = true;
+        ref.current.cancel();
+        ref.current = null;
+      }
+    }
   };
 
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1067,6 +1152,54 @@ export default function ReswmmPage() {
                     )}
                   </div>
 
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-xs text-muted-foreground mb-2 block">Virtual Junctions (SWMM6 only)</Label>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        Writes the junctions ReSWMM creates at each split point into a [VIRTUAL_JUNCTIONS]
+                        section instead of [JUNCTIONS]. These pass-through nodes qualify automatically
+                        (exactly 2 conduits, no inflows). The output file will only run on the in-browser
+                        SWMM6 engine — SWMM 5.x rejects it with ERROR 205.
+                      </p>
+                      <ToggleGroup
+                        type="single"
+                        value={config.virtualJunctions ? 'on' : 'off'}
+                        onValueChange={(v) => v && setConfig(prev => ({ ...prev, virtualJunctions: v === 'on' }))}
+                        data-testid="reswmm-vj-toggle"
+                      >
+                        <ToggleGroupItem value="off" data-testid="toggle-vj-off">
+                          Off
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="on" data-testid="toggle-vj-on">
+                          On
+                        </ToggleGroupItem>
+                      </ToggleGroup>
+                    </div>
+
+                    {config.virtualJunctions && (
+                      <div>
+                        <Label className="text-xs mb-2 block">Momentum Treatment</Label>
+                        <Select
+                          value={config.vjMomentum}
+                          onValueChange={(v) => setConfig(prev => ({ ...prev, vjMomentum: v as ReswmmConfig['vjMomentum'] }))}
+                        >
+                          <SelectTrigger data-testid="select-vj-momentum">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="FULL">FULL (recommended)</SelectItem>
+                            <SelectItem value="BASIC">BASIC (engine default)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Written as VIRTUAL_JUNCTION_MOMENTUM in [OPTIONS].
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   <Button onClick={handleDiscretize} data-testid="button-discretize">
                     <Scissors className="h-4 w-4 mr-2" />
                     Discretize
@@ -1115,7 +1248,7 @@ export default function ReswmmPage() {
                           </p>
                         )}
                         <p className="text-sm" data-testid="text-summary">
-                          {result.stats.splitCount} conduit{result.stats.splitCount !== 1 ? 's' : ''} split into {result.stats.newConduitCount} segments, {result.stats.newJunctionCount} new junction{result.stats.newJunctionCount !== 1 ? 's' : ''} added.
+                          {result.stats.splitCount} conduit{result.stats.splitCount !== 1 ? 's' : ''} split into {result.stats.newConduitCount} segments, {result.stats.newJunctionCount} new junction{result.stats.newJunctionCount !== 1 ? 's' : ''} added{result.stats.virtualJunctionCount > 0 ? ` (${result.stats.virtualJunctionCount} as virtual junctions)` : ''}.
                         </p>
                       </CardContent>
                     </Card>
