@@ -1,13 +1,13 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Film, Download } from "lucide-react";
+import { Loader2, Film, Download, X } from "lucide-react";
 import { parseTimeSeries, type ParsedTimeSeries } from "@/lib/parseTimeSeries";
 import { parseInpFile } from "@/lib/inpParser";
 import type { EngineRun } from "@/lib/engineComparison";
 import {
-  makeMapGif, makeChartGif, extractMapGeometry, buildValueLookup,
+  makeMapGif, makeChartGif, extractMapGeometry, buildValueLookup, GifCancelledError,
 } from "@/lib/gifMaker";
 import { useToast } from "@/hooks/use-toast";
 
@@ -101,9 +101,19 @@ export default function GifMakerTool({ runs, onLoadFile }: GifMakerToolProps) {
   }, [runs, fileName]);
 
   const [busy, setBusy] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Abort any in-flight GIF job when the tool unmounts.
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
+
+  const handleCancel = () => {
+    abortRef.current?.abort();
+  };
 
   const handleMake = async () => {
     if (!fileName || !metric) return;
+    const controller = new AbortController();
+    abortRef.current = controller;
     setBusy(true);
     setGifUrl(null);
     setProgress(null);
@@ -124,6 +134,7 @@ export default function GifMakerTool({ runs, onLoadFile }: GifMakerToolProps) {
         blob = await makeMapGif({
           fileName, geometry, metric, unit, engines,
           onProgress: (done, total) => setProgress({ done, total }),
+          signal: controller.signal,
         });
       } else {
         const engines = perRunSections.map(e => ({
@@ -133,16 +144,19 @@ export default function GifMakerTool({ runs, onLoadFile }: GifMakerToolProps) {
         blob = await makeChartGif({
           fileName, metric, unit, engines,
           onProgress: (done, total) => setProgress({ done, total }),
+          signal: controller.signal,
         });
       }
       setGifUrl(URL.createObjectURL(blob));
     } catch (e) {
+      if (e instanceof GifCancelledError) return; // user cancelled — reset quietly
       toast({
         title: "Couldn't make the GIF",
         description: e instanceof Error ? e.message : "Something went wrong while drawing frames.",
         variant: "destructive",
       });
     } finally {
+      abortRef.current = null;
       setBusy(false);
       setProgress(null);
     }
@@ -199,6 +213,12 @@ export default function GifMakerTool({ runs, onLoadFile }: GifMakerToolProps) {
               ? progress ? `Drawing frame ${progress.done}/${progress.total}…` : "Preparing…"
               : "Make GIF"}
           </Button>
+          {busy && (
+            <Button variant="outline" onClick={handleCancel} data-testid="button-cancel-gif">
+              <X className="h-4 w-4 mr-2" />
+              Cancel
+            </Button>
+          )}
         </div>
 
         {loading && (
