@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "wouter";
 import { PITCH_SEEN_KEY } from "@/pages/ElevatorPitch";
 import { CheckCircle2, AlertTriangle, ExternalLink, PlayCircle, StopCircle, Cpu, Terminal, Globe, Info } from "lucide-react";
@@ -613,6 +613,24 @@ export default function Home() {
     const full = results.map(r => loaded.has(r.id) ? { ...r, ...loaded.get(r.id)! } : r);
     setResults(full);
     return full;
+  };
+
+  // A single-engine batch presented as one EngineRun so the GIF tool can be
+  // reused outside of comparison mode.
+  const singleEngineRuns: EngineRun[] = useMemo(() => [{
+    engine: engineMode,
+    label: ENGINE_LABELS[engineMode],
+    jobId: (engineMode === 'wasm' || engineMode === 'wasm6') ? null : jobId,
+    results,
+  }], [engineMode, jobId, results]);
+
+  const loadSingleRunFileContent = async (fileName: string) => {
+    const r = results.find(res => res.fileName === fileName);
+    if (!r || r.reportContent || r.inpContent) return;
+    // Browser engines already carry their content; server results load lazily.
+    if (!jobId || !(r.hasReport || r.hasInp)) return;
+    const content = await fetchResultContent(r.id);
+    if (content) mergeContent(r.id, content);
   };
 
   const handleRemoveFile = (id: string) => {
@@ -1526,6 +1544,9 @@ export default function Home() {
                   onLoadContent={handleLoadContent}
                   onLoadAllContent={handleLoadAllContent}
                 />
+              </section>
+              <section data-testid="section-gif-maker-single">
+                <GifMakerTool runs={singleEngineRuns} onLoadFile={loadSingleRunFileContent} />
               </section>
             </>
           )}

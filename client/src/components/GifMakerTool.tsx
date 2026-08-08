@@ -159,7 +159,7 @@ export default function GifMakerTool({ runs, onLoadFile }: GifMakerToolProps) {
           Make a GIF
         </CardTitle>
         <p className="text-xs text-muted-foreground">
-          Turn the results into a shareable animation — the network map lighting up over time, or a chart drawing itself. Engines are shown side by side.
+          Turn the results into a shareable animation — the network map lighting up over time, or a chart drawing itself.{runs.length > 1 ? " Engines are shown side by side." : ""}
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
