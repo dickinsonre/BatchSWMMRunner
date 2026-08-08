@@ -16,7 +16,7 @@ import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
-import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, normalizeSwmm6Options, type InpOverrides } from "@shared/inpOptions";
 import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
@@ -695,6 +695,14 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
         }
         const rts = Number(overrides.routingStepSeconds);
         if (Number.isFinite(rts) && rts > 0 && rts <= 3600) inpOverrides.routingStepSeconds = rts;
+        // SWMM6-only solver keywords: the server engines (executable/api) are
+        // SWMM 5.x, which rejects every one of these with ERROR 205. Fail loudly
+        // instead of running a batch that is guaranteed to error on each file.
+        if (normalizeSwmm6Options(overrides.swmm6)) {
+          return res.status(400).json({
+            error: 'SWMM6 options are only supported by the in-browser SWMM6 engine; the server engines run SWMM 5.x, which rejects those keywords (ERROR 205).',
+          });
+        }
       }
       // Wait for any in-flight chunked-upload append to finish before reading
       // the file list; new appends are rejected once this job is reserved in

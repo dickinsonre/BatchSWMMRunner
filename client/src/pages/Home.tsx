@@ -28,6 +28,7 @@ import SystemComparisonChart from "@/components/SystemComparisonChart";
 import GifMakerTool from "@/components/GifMakerTool";
 import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import type { SwmmStatus } from "@shared/schema";
+import type { Swmm6Options } from "@shared/inpOptions";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -44,6 +45,7 @@ interface PersistedSettings {
   startDate?: string;
   endDate?: string;
   routingStepSeconds?: number | null;
+  swmm6Options?: Swmm6Options;
 }
 
 function loadSettings(): PersistedSettings {
@@ -227,6 +229,7 @@ export default function Home() {
   const [startDate, setStartDate] = useState(savedSettingsRef.current.startDate ?? '');
   const [endDate, setEndDate] = useState(savedSettingsRef.current.endDate ?? '');
   const [routingStepSeconds, setRoutingStepSeconds] = useState<number | null>(savedSettingsRef.current.routingStepSeconds ?? null);
+  const [swmm6Options, setSwmm6Options] = useState<Swmm6Options>(savedSettingsRef.current.swmm6Options ?? {});
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
   const [statusError, setStatusError] = useState(false);
@@ -274,14 +277,14 @@ export default function Home() {
     const settings: PersistedSettings = {
       reportStep, routingMethod, parallelProcessing, stopOnError,
       timeoutMinutes, engineMode, selectedEngines,
-      startDate, endDate, routingStepSeconds,
+      startDate, endDate, routingStepSeconds, swmm6Options,
     };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch {
       // localStorage unavailable (private mode, quota) — settings simply won't persist
     }
-  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, engineMode, selectedEngines, startDate, endDate, routingStepSeconds]);
+  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, engineMode, selectedEngines, startDate, endDate, routingStepSeconds, swmm6Options]);
 
   // Warn before tab close while an in-browser WASM batch is running,
   // since Web Worker simulations die with the tab.
@@ -296,12 +299,15 @@ export default function Home() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [processingState, selectedEngines]);
 
-  const buildOverrides = () => ({
+  // SWMM6-only keywords are dropped for every engine except the in-browser
+  // SWMM6 engine — SWMM 5.x rejects each of them with ERROR 205.
+  const buildOverrides = (engine: EngineId = engineMode) => ({
     reportStepMinutes: reportStep > 0 ? reportStep : undefined,
     flowRouting: routingMethod || undefined,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
     routingStepSeconds: routingStepSeconds && routingStepSeconds > 0 ? routingStepSeconds : undefined,
+    swmm6: engine === 'wasm6' && swmm6Options.enabled ? swmm6Options : undefined,
   });
 
   useEffect(() => {
@@ -817,7 +823,7 @@ export default function Home() {
         },
         wasmCancelRef.current,
         engine === 'wasm6' ? 'swmm6' : 'swmm5',
-        buildOverrides(),
+        buildOverrides(engine),
         parallelProcessing,
       );
       wasmTerminateRef.current = terminate;
@@ -930,7 +936,7 @@ export default function Home() {
         fetch(`/api/batch/${batchJob.id}/start`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ engineMode: engine, timeoutMinutes, stopOnError, overrides: buildOverrides() }),
+          body: JSON.stringify({ engineMode: engine, timeoutMinutes, stopOnError, overrides: buildOverrides(engine) }),
         }).then(async res => {
           if (!res.ok) fail(new Error(await readErrorMessage(res, 'Failed to start processing')));
         }).catch(err => fail(err instanceof Error ? err : new Error('Failed to start processing')));
@@ -1106,7 +1112,7 @@ export default function Home() {
       const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engineMode, timeoutMinutes, stopOnError, overrides: buildOverrides() }),
+        body: JSON.stringify({ engineMode, timeoutMinutes, stopOnError, overrides: buildOverrides(engineMode) }),
       });
 
       if (!startResponse.ok) {
@@ -1228,6 +1234,8 @@ export default function Home() {
               onRoutingMethodChange={setRoutingMethod}
               onParallelProcessingChange={setParallelProcessing}
               onStopOnErrorChange={setStopOnError}
+              swmm6Options={swmm6Options}
+              onSwmm6OptionsChange={setSwmm6Options}
               disabled={processingState === 'processing'}
             />
           </section>
