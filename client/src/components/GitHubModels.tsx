@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Github, ChevronDown, ChevronRight, Loader2, FolderOpen, ExternalLink } from "lucide-react";
+import { Github, ChevronDown, ChevronRight, Loader2, FolderOpen, ExternalLink, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -148,6 +148,14 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
     setFolder("");
     setFilter("");
     setSelected(new Set());
+  };
+
+  const removeRecentRepo = (repo: string, branch: string) => {
+    setRecentRepos(prev => {
+      const next = prev.filter(r => !(r.repo === repo && r.branch === branch));
+      saveRecentRepos(next);
+      return next;
+    });
   };
 
   const applyRepo = () => {
@@ -311,18 +319,30 @@ export default function GitHubModels({ onModelsLoaded, disabled }: GitHubModelsP
                 Built-in library
               </Button>
               {recentRepos.map(r => (
-                <Button
-                  key={`${r.repo}@${r.branch}`}
-                  variant={tree && tree.repo === r.repo && tree.branch === r.branch ? "secondary" : "outline"}
-                  size="sm"
-                  className="h-6 px-2 text-xs font-mono"
-                  onClick={() => pickRepo(r.repo, r.branch)}
-                  disabled={disabled || downloading}
-                  data-testid={`button-github-recent-${r.repo}`}
-                  title={`${r.repo}@${r.branch}`}
-                >
-                  {r.repo}
-                </Button>
+                <div key={`${r.repo}@${r.branch}`} className="group relative inline-flex items-center">
+                  <Button
+                    variant={tree && tree.repo === r.repo && tree.branch === r.branch ? "secondary" : "outline"}
+                    size="sm"
+                    className="h-6 pl-2 pr-6 text-xs font-mono"
+                    onClick={() => pickRepo(r.repo, r.branch)}
+                    disabled={disabled || downloading}
+                    data-testid={`button-github-recent-${r.repo}`}
+                    title={`${r.repo}@${r.branch}`}
+                  >
+                    {r.repo}
+                  </Button>
+                  <button
+                    type="button"
+                    className="absolute right-1 inline-flex items-center justify-center rounded-sm p-0.5 text-muted-foreground opacity-60 hover:opacity-100 hover:text-foreground disabled:opacity-30"
+                    onClick={() => removeRecentRepo(r.repo, r.branch)}
+                    disabled={disabled || downloading}
+                    aria-label={`Remove ${r.repo} from quick picks`}
+                    title={`Remove ${r.repo} from quick picks`}
+                    data-testid={`button-github-recent-remove-${r.repo}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
               ))}
             </div>
 
