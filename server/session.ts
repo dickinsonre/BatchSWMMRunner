@@ -39,7 +39,11 @@ export function buildSessionMiddleware(options?: { memoryStore?: boolean }): Req
     name: "bswmm.sid",
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
+      // "none" (not "lax") so the cookie is also sent when the app runs inside
+      // an embedded frame (e.g. the Replit workspace preview). With "lax" the
+      // browser drops the cookie there, every request gets a fresh anonymous
+      // session, and starting a just-uploaded batch fails with "not found".
+      sameSite: "none",
       secure: "auto",
       maxAge: THIRTY_DAYS_MS,
     },

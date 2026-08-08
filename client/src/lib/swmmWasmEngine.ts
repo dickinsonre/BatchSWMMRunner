@@ -168,6 +168,8 @@ export function runWasmBatch(
     callbacks.onComplete();
   };
 
+  const inpTextById = new Map<string, string>();
+
   const runNext = async (worker: Worker) => {
     if (cancelRef.current || terminated) {
       cancel();
@@ -192,6 +194,8 @@ export function runWasmBatch(
     if (overrides) {
       inpText = applyInpOverrides(inpText, overrides);
     }
+    // Keep the input text so the result can show an INP tab like server runs.
+    inpTextById.set(f.id, inpText);
     worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine });
   };
 
@@ -217,6 +221,7 @@ export function runWasmBatch(
       error,
       processingTime: d.elapsedMs / 1000,
       reportContent: d.rptText || undefined,
+      inpContent: inpTextById.get(d.id),
       parsedMetrics: metrics,
       provenance: {
         requestedEngine: engineName,
