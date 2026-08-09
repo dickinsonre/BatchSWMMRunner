@@ -9,6 +9,7 @@ import Dashboard from "@/pages/Dashboard";
 import Documentation from "@/pages/Documentation";
 import FolderView from "@/pages/FolderView";
 import ReswmmPage from "@/pages/ReswmmPage";
+import QaqcReportPage from "@/pages/QaqcReportPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/docs" component={Documentation} />
       <Route path="/reswmm" component={ReswmmPage} />
+      <Route path="/qaqc" component={QaqcReportPage} />
       <Route component={NotFound} />
     </Switch>
   );

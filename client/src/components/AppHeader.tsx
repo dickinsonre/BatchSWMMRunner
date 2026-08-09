@@ -12,6 +12,7 @@ const navItems = [
   { label: "Batch Processing", href: "/" },
   { label: "Folder View", href: "/folder" },
   { label: "ReSWMM", href: "/reswmm" },
+  { label: "QA/QC", href: "/qaqc" },
   { label: "Docs", href: "/docs" },
 ];
 
