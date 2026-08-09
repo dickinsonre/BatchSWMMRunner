@@ -11,6 +11,7 @@ import { parseInpFile, type ParsedInpFile } from "@/lib/inpParser";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from "recharts";
 import ResultsDisplay, { type ProcessResult } from "@/components/ResultsDisplay";
 import { useToast } from "@/hooks/use-toast";
+import { APP_VERSION } from "@/lib/version";
 
 interface LoadedFile {
   id: string;
@@ -928,7 +929,7 @@ export default function FolderView() {
       <footer className="border-t mt-auto">
         <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
-            <p>BatchSWMM56 v1.0.0</p>
+            <p>BatchSWMM56 v{APP_VERSION}</p>
             <p>Folder View</p>
           </div>
         </div>

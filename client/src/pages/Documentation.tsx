@@ -10,6 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import swmm5ApiDiagramPath from "@assets/image_1773083934176.png";
 import swmm5ApiRoadmapPath from "@assets/image_1773085062886.png";
+import { APP_VERSION } from "@/lib/version";
 
 const SWMM_INTEGRATION_CODE = `import { spawn } from "child_process";
 import fs from "fs";
@@ -1926,7 +1927,7 @@ log            — [API Mode] prefix messages with version/step/error info`}</pr
       <footer className="border-t mt-auto">
         <div className="container max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
-            <p>BatchSWMM56 v1.0.0</p>
+            <p>BatchSWMM56 v{APP_VERSION}</p>
             <a
               href="https://github.com/USEPA/Stormwater-Management-Model"
               target="_blank"
