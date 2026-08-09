@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, FileDown, BarChart2, Sparkles } from "lucide-react";
+import { CheckCircle, XCircle, ChevronDown, ChevronRight, Download, Clock, FileText, Globe, BarChart3, AlertTriangle, Droplets, LayoutDashboard, FileDown, BarChart2, Sparkles, Cpu } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -122,6 +122,23 @@ function getContinuityErrorColor(error: number | undefined): string {
   if (abs <= 1) return 'text-green-600';
   if (abs <= 5) return 'text-yellow-600';
   return 'text-destructive';
+}
+
+/** Friendly display info for the engine that actually produced a result's files. */
+function getEngineBadge(actualEngine: string, engineVersion?: string): { label: string; className: string } {
+  const v = engineVersion ? ` v${engineVersion}` : '';
+  switch (actualEngine) {
+    case 'executable':
+      return { label: `Engine: EPA SWMM (Native)${v}`, className: 'border-sky-500/50 text-sky-600 dark:text-sky-400' };
+    case 'api':
+      return { label: `Engine: SWMM5 API (Server)${v}`, className: 'border-violet-500/50 text-violet-600 dark:text-violet-400' };
+    case 'wasm':
+      return { label: `Engine: SWMM5 (Browser)${v}`, className: 'border-emerald-500/50 text-emerald-600 dark:text-emerald-400' };
+    case 'wasm6':
+      return { label: `Engine: SWMM6 (Browser)${v}`, className: 'border-amber-500/50 text-amber-600 dark:text-amber-400' };
+    default:
+      return { label: `Engine: ${actualEngine}${v}`, className: '' };
+  }
 }
 
 function getContinuityErrorBadge(error: number | undefined): { variant: 'default' | 'secondary' | 'destructive' | 'outline'; label: string } {
@@ -1115,12 +1132,15 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
                             {result.parsedMetrics.reportWarnings.length} warning{result.parsedMetrics.reportWarnings.length !== 1 ? 's' : ''}
                           </Badge>
                         )}
-                        {result.provenance?.actualEngine && (
-                          <Badge variant="outline" data-testid={`badge-engine-${result.id}`}>
-                            {result.provenance.actualEngine}
-                            {result.provenance.engineVersion ? ` v${result.provenance.engineVersion}` : ''}
-                          </Badge>
-                        )}
+                        {result.provenance?.actualEngine && (() => {
+                          const eb = getEngineBadge(result.provenance.actualEngine, result.provenance.engineVersion);
+                          return (
+                            <Badge variant="outline" className={eb.className} data-testid={`badge-engine-${result.id}`}>
+                              <Cpu className="h-3 w-3 mr-1" />
+                              {eb.label}
+                            </Badge>
+                          );
+                        })()}
                       </div>
                       <p className="text-xs text-muted-foreground font-mono mt-1" data-testid={`text-result-filepath-${result.id}`}>
                         {result.filePath}
