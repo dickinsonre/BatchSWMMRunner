@@ -28,6 +28,18 @@ describe('extractScatterValues', () => {
     expect(vals.runoff.size).toBeGreaterThan(3);
   });
 
+  it('reads maximum node depth for each node', () => {
+    // From the fixture: node 9 -> 0.57 ft, node 10 -> 3.00 ft
+    expect(vals.nodeDepths.get('9')).toBeCloseTo(0.57, 2);
+    expect(vals.nodeDepths.get('10')).toBeCloseTo(3.0, 2);
+  });
+
+  it('reads max/full depth ratio for conduits only', () => {
+    // From the fixture: link 1 -> 0.38, link 6 -> 1.00
+    expect(vals.linkDepths.get('1')).toBeCloseTo(0.38, 2);
+    expect(vals.linkDepths.get('6')).toBeCloseTo(1.0, 2);
+  });
+
   it('returns empty maps when sections are absent', () => {
     const empty = extractScatterValues('no tables here');
     expect(empty.flows.size).toBe(0);

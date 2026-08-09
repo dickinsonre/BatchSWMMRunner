@@ -68,12 +68,15 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
     const valsY = extractScatterValues(pair[1].content!);
     const specs: { id: string; title: string; x: Map<string, number>; y: Map<string, number> }[] = [
       { id: "flows", title: "Peak Link Flows", x: valsX.flows, y: valsY.flows },
-      {
-        id: "heads",
-        title: valsX.headsLabel === "Maximum HGL" && valsY.headsLabel === "Maximum HGL"
-          ? "Maximum Node HGL (Heads)" : "Maximum Node Depths",
-        x: valsX.heads, y: valsY.heads,
-      },
+      // When both reports have an HGL column, show HGL and depths separately;
+      // otherwise "heads" already equals max depths, so skip the duplicate.
+      ...(valsX.headsLabel === "Maximum HGL" && valsY.headsLabel === "Maximum HGL"
+        ? [
+            { id: "heads", title: "Maximum Node HGL (Heads)", x: valsX.heads, y: valsY.heads },
+            { id: "node-depths", title: "Maximum Node Depths", x: valsX.nodeDepths, y: valsY.nodeDepths },
+          ]
+        : [{ id: "node-depths", title: "Maximum Node Depths", x: valsX.nodeDepths, y: valsY.nodeDepths }]),
+      { id: "link-depths", title: "Max Link Depth (fraction of full)", x: valsX.linkDepths, y: valsY.linkDepths },
       { id: "runoff", title: "Total Subcatchment Runoff (depth)", x: valsX.runoff, y: valsY.runoff },
     ];
     return specs.map(spec => {

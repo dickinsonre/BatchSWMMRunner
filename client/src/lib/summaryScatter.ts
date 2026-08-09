@@ -16,6 +16,10 @@ export interface ScatterValues {
   heads: Map<string, number>;
   /** Subcatchment name -> total runoff depth (in/mm). */
   runoff: Map<string, number>;
+  /** Node name -> maximum depth (always the Maximum Depth column). */
+  nodeDepths: Map<string, number>;
+  /** Conduit name -> max/full depth ratio (fraction of the pipe filled). */
+  linkDepths: Map<string, number>;
   /** Axis captions. */
   headsLabel: "Maximum HGL" | "Maximum Depth";
 }
@@ -52,13 +56,21 @@ export function extractScatterValues(report: string): ScatterValues {
   const flows = new Map<string, number>();
   const heads = new Map<string, number>();
   const runoff = new Map<string, number>();
+  const nodeDepths = new Map<string, number>();
+  const linkDepths = new Map<string, number>();
   let headsLabel: ScatterValues["headsLabel"] = "Maximum HGL";
 
   // Link Flow Summary — col 2 is Maximum |Flow| (name, type, flow, ...).
+  // Conduit rows end with Max/Full Flow and Max/Full Depth (8 columns);
+  // pumps/weirs/etc. have fewer columns and no depth ratio.
   for (const row of sectionRows(lines, /^\s*Link Flow Summary\s*$/)) {
     if (row.length < 3) continue;
     const v = num(row[2]);
     if (v !== undefined) flows.set(row[0], Math.abs(v));
+    if (row[1]?.toUpperCase() === "CONDUIT" && row.length >= 8) {
+      const d = num(row[7]);
+      if (d !== undefined) linkDepths.set(row[0], d);
+    }
   }
 
   // Node Depth Summary — cols: name type avgDepth maxDepth maxHGL days hr:min.
@@ -71,6 +83,8 @@ export function extractScatterValues(report: string): ScatterValues {
     if (row.length < 4) continue;
     const v = num(hasHgl ? row[4] : row[3]);
     if (v !== undefined) heads.set(row[0], v);
+    const d = num(row[3]);
+    if (d !== undefined) nodeDepths.set(row[0], d);
   }
 
   // Subcatchment Runoff Summary — total runoff depth is the 3rd column from
@@ -82,5 +96,5 @@ export function extractScatterValues(report: string): ScatterValues {
     if (v !== undefined) runoff.set(row[0], v);
   }
 
-  return { flows, heads, runoff, headsLabel };
+  return { flows, heads, runoff, nodeDepths, linkDepths, headsLabel };
 }
