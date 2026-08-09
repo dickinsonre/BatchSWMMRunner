@@ -262,7 +262,7 @@ export default function Home() {
   const [activeComparisonEngine, setActiveComparisonEngine] = useState<string | null>(null);
   const comparisonCancelRef = useRef<{ cancelled: boolean; jobId: string | null }>({ cancelled: false, jobId: null });
   const wasmCancelRef = useRef<{ current: boolean }>({ current: false });
-  const wasmTerminateRef = useRef<(() => void) | null>(null);
+  const wasmTerminateRef = useRef<((() => void) & { skip: (fileId: string) => void }) | null>(null);
   const [fileProgressMap, setFileProgressMap] = useState<Map<string, FileProgressInfo>>(new Map());
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [apiSnapshots, setApiSnapshots] = useState<ApiSnapshotEntry[]>([]);
@@ -1514,7 +1514,8 @@ export default function Home() {
                   successCount={results.filter(r => r.status === 'success').length}
                   failedCount={results.filter(r => r.status === 'failed').length}
                   fileProgressMap={fileProgressMap}
-                  fileNames={files.map(f => f.name)}
+                  fileItems={files.map(f => ({ id: f.id, name: f.name }))}
+                  onSkipFile={wasmTerminateRef.current ? (fileId) => wasmTerminateRef.current?.skip(fileId) : undefined}
                 />
               </section>
               {engineMode === 'api' && (

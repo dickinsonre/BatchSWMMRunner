@@ -1,7 +1,8 @@
-import { Loader2, Clock, CheckCircle, XCircle, FileText, CircleDot } from "lucide-react";
+import { Loader2, Clock, CheckCircle, XCircle, FileText, CircleDot, Ban } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export interface FileProgressInfo {
   fileId: string;
@@ -20,6 +21,10 @@ interface ProgressSectionProps {
   failedCount?: number;
   fileProgressMap?: Map<string, FileProgressInfo>;
   fileNames?: string[];
+  /** Stable id+name pairs for the batch; enables exact per-file matching even with duplicate names. */
+  fileItems?: { id: string; name: string }[];
+  /** When provided, running files get a Skip button that terminates just that run. */
+  onSkipFile?: (fileId: string, fileName: string) => void;
 }
 
 function formatTime(seconds: number): string {
@@ -38,6 +43,8 @@ export default function ProgressSection({
   failedCount = 0,
   fileProgressMap,
   fileNames = [],
+  fileItems,
+  onSkipFile,
 }: ProgressSectionProps) {
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
   const completedCount = successCount + failedCount;
@@ -57,13 +64,19 @@ export default function ProgressSection({
     }
   }
 
-  const fileEntries = fileNames.map((name, index) => {
+  const items = fileItems ?? fileNames.map((name) => ({ id: undefined as string | undefined, name }));
+  const fileEntries = items.map(({ id, name }, index) => {
     let matchedProgress: FileProgressInfo | undefined;
     if (fileProgressMap) {
-      for (const entry of fileProgressMap.values()) {
-        if (entry.fileName === name) {
-          matchedProgress = entry;
-          break;
+      if (id !== undefined) {
+        // Exact match by stable file id — safe with duplicate file names.
+        matchedProgress = fileProgressMap.get(id);
+      } else {
+        for (const entry of fileProgressMap.values()) {
+          if (entry.fileName === name) {
+            matchedProgress = entry;
+            break;
+          }
         }
       }
     }
@@ -84,7 +97,7 @@ export default function ProgressSection({
       status = 'running';
     }
 
-    return { name, status, pct, message };
+    return { name, status, pct, message, fileId: matchedProgress?.fileId };
   });
 
   return (
@@ -191,6 +204,19 @@ export default function ProgressSection({
                     <span className="flex-shrink-0 text-muted-foreground truncate" style={{ maxWidth: '140px' }}>
                       {entry.message}
                     </span>
+                    {onSkipFile && entry.status === 'running' && entry.fileId && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-destructive hover:text-destructive flex-shrink-0"
+                        onClick={() => onSkipFile(entry.fileId!, entry.name)}
+                        title="Terminate this run and move on to the next file"
+                        data-testid={`button-skip-file-${idx}`}
+                      >
+                        <Ban className="h-3 w-3 mr-1" />
+                        Skip
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>

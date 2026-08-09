@@ -95,6 +95,149 @@ describe('runWasmBatch worker pool', () => {
     expect(MockWorker.instances.every((w) => w.terminated)).toBe(true);
   });
 
+  it('skip terminates only the stuck file, records it as failed, and continues the batch', async () => {
+    const files = [makeFile('a.inp'), makeFile('b.inp'), makeFile('c.inp')];
+    const cb = makeCallbacks();
+    const controls = runWasmBatch(files, cb, { current: false }, 'swmm5', undefined, false);
+    await flush();
+
+    // Sequential: one worker, running a.inp.
+    expect(MockWorker.instances.length).toBe(1);
+    const stuck = MockWorker.instances[0];
+    expect(stuck.posted[0].id).toBe('a.inp');
+
+    controls.skip('a.inp');
+    await flush();
+
+    // Stuck worker terminated, a.inp reported failed as terminated by user.
+    expect(stuck.terminated).toBe(true);
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    const r = cb.onResult.mock.calls[0][0];
+    expect(r.id).toBe('a.inp');
+    expect(r.status).toBe('failed');
+    expect(r.error).toMatch(/Terminated by user/);
+    expect(cb.onComplete).not.toHaveBeenCalled();
+
+    // A replacement worker picks up the remaining files.
+    expect(MockWorker.instances.length).toBe(2);
+    const replacement = MockWorker.instances[1];
+    expect(replacement.posted[0].id).toBe('b.inp');
+    replacement.emitDone();
+    await flush();
+    replacement.emitDone();
+    await flush();
+
+    expect(cb.onResult).toHaveBeenCalledTimes(3);
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('skip during the file-read await does not post to the terminated worker', async () => {
+    // File whose .text() resolves only when we say so.
+    let release!: (v: string) => void;
+    const slowText = new Promise<string>((r) => { release = r; });
+    const slowFile = {
+      id: 'slow.inp',
+      name: 'slow.inp',
+      file: { size: 10, text: () => slowText } as unknown as File,
+    };
+    const cb = makeCallbacks();
+    const controls = runWasmBatch([slowFile, makeFile('b.inp')], cb, { current: false }, 'swmm5', undefined, false);
+    await flush();
+
+    const first = MockWorker.instances[0];
+    expect(first.posted.length).toBe(0); // still awaiting text()
+
+    controls.skip('slow.inp');
+    await flush();
+    release('[TITLE]\nslow\n');
+    await flush();
+
+    // The original runNext must NOT post to the terminated worker.
+    expect(first.posted.length).toBe(0);
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onResult.mock.calls[0][0].status).toBe('failed');
+
+    // Replacement finishes the rest.
+    const replacement = MockWorker.instances[1];
+    expect(replacement.posted[0].id).toBe('b.inp');
+    replacement.emitDone();
+    await flush();
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('a stale done message from a skipped file is ignored', async () => {
+    const files = [makeFile('a.inp'), makeFile('b.inp')];
+    const cb = makeCallbacks();
+    const controls = runWasmBatch(files, cb, { current: false }, 'swmm5', undefined, false);
+    await flush();
+
+    const first = MockWorker.instances[0];
+    controls.skip('a.inp');
+    await flush();
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+
+    // Simulate a done event that was already queued before the terminate by
+    // invoking the handler directly (real Workers can deliver this).
+    first.terminated = false;
+    first.emitDone();
+    await flush();
+
+    // No duplicate result for a.inp, batch not completed early.
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onComplete).not.toHaveBeenCalled();
+
+    const replacement = MockWorker.instances[1];
+    replacement.emitDone();
+    await flush();
+    expect(cb.onResult).toHaveBeenCalledTimes(2);
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('skipping one worker in a parallel pool leaves the others untouched', async () => {
+    const files = [makeFile('a.inp'), makeFile('b.inp'), makeFile('c.inp')];
+    const cb = makeCallbacks();
+    const controls = runWasmBatch(files, cb, { current: false });
+    await flush();
+
+    expect(MockWorker.instances.length).toBe(3);
+    const [wa, wb, wc] = MockWorker.instances;
+
+    controls.skip('b.inp');
+    await flush();
+
+    expect(wb.terminated).toBe(true);
+    expect(wa.terminated).toBe(false);
+    expect(wc.terminated).toBe(false);
+    // No files remain unstarted, so no replacement worker is spawned.
+    expect(MockWorker.instances.length).toBe(3);
+
+    wa.emitDone();
+    wc.emitDone();
+    await flush();
+
+    expect(cb.onResult).toHaveBeenCalledTimes(3);
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('skip of an unknown or already-finished file is a no-op', async () => {
+    const files = [makeFile('a.inp')];
+    const cb = makeCallbacks();
+    const controls = runWasmBatch(files, cb, { current: false });
+    await flush();
+
+    controls.skip('nope.inp');
+    await flush();
+    expect(cb.onResult).not.toHaveBeenCalled();
+
+    MockWorker.instances[0].emitDone();
+    await flush();
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+
+    controls.skip('a.inp');
+    await flush();
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+  });
+
   it('cancel terminates all workers without signaling completion and starts no further work', async () => {
     const files = [makeFile('a.inp'), makeFile('b.inp'), makeFile('c.inp'), makeFile('d.inp')];
     const cancelRef = { current: false };

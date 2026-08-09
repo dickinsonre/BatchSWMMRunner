@@ -128,7 +128,7 @@ export function runWasmBatch(
   engine: 'swmm5' | 'swmm6' = 'swmm5',
   overrides?: InpOverrides,
   parallel: boolean = true,
-): () => void {
+): (() => void) & { skip: (fileId: string) => void } {
   const maxFileSize = files.reduce((m, f) => Math.max(m, f.file.size || 0), 0);
   const poolSize = parallel ? computeWasmConcurrency(files.length, maxFileSize) : 1;
   if (!parallel && files.length > 1) {
@@ -169,6 +169,9 @@ export function runWasmBatch(
   };
 
   const inpTextById = new Map<string, string>();
+  // Which file each worker is currently simulating, so a single stuck run can
+  // be skipped (its worker terminated and replaced) without killing the batch.
+  const currentByWorker = new Map<Worker, { id: string; name: string; startedAt: number }>();
 
   const runNext = async (worker: Worker) => {
     if (cancelRef.current || terminated) {
@@ -183,6 +186,7 @@ export function runWasmBatch(
     const f = files[index];
     index++;
     startedCount++;
+    currentByWorker.set(worker, { id: f.id, name: f.name, startedAt: Date.now() });
     callbacks.onFileStart(startedCount, f.name);
     callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM in-browser engine)...`, 'info');
     callbacks.onProgress({ fileId: f.id, fileName: f.name, percentage: 0, message: 'Loading model...' });
@@ -191,6 +195,9 @@ export function runWasmBatch(
       cancel();
       return;
     }
+    // The file may have been skipped (worker terminated and replaced) while we
+    // were reading it — in that case this worker no longer owns the file.
+    if (currentByWorker.get(worker)?.id !== f.id) return;
     if (overrides) {
       inpText = applyInpOverrides(inpText, overrides);
     }
@@ -210,6 +217,11 @@ export function runWasmBatch(
   };
 
   const handleDone = (worker: Worker, d: WorkerDoneMsg) => {
+    // Ignore stale done messages: only accept a result from the worker that is
+    // still assigned to that exact file (protects against a done event queued
+    // just before the file was skipped or the batch cancelled).
+    if (terminated || completed || currentByWorker.get(worker)?.id !== d.id) return;
+    currentByWorker.delete(worker);
     const metrics = d.rptText ? parseReportMetricsClient(d.rptText) : undefined;
     const engineName = engine === 'swmm6' ? 'wasm6' : 'wasm';
 
@@ -265,7 +277,7 @@ export function runWasmBatch(
     callbacks.onComplete();
   };
 
-  for (let i = 0; i < poolSize; i++) {
+  const spawnWorker = (): Worker => {
     const worker = new Worker('/wasm/swmm-worker.js');
     workers.push(worker);
 
@@ -287,12 +299,61 @@ export function runWasmBatch(
       callbacks.onLog(`WASM worker error: ${err.message}`, 'error');
       failBatch();
     };
-  }
+    return worker;
+  };
+
+  // Skip a single stuck run: terminate just that file's worker, record the
+  // file as failed, and continue the rest of the batch on a fresh worker.
+  const skip = (fileId: string) => {
+    if (terminated || completed) return;
+    let target: Worker | undefined;
+    let info: { id: string; name: string; startedAt: number } | undefined;
+    for (const [w, cur] of currentByWorker) {
+      if (cur.id === fileId) {
+        target = w;
+        info = cur;
+        break;
+      }
+    }
+    if (!target || !info) return;
+
+    currentByWorker.delete(target);
+    target.terminate();
+    const idx = workers.indexOf(target);
+    if (idx !== -1) workers.splice(idx, 1);
+
+    const elapsedMs = Date.now() - info.startedAt;
+    const engineName = engine === 'swmm6' ? 'wasm6' : 'wasm';
+    callbacks.onResult({
+      id: info.id,
+      fileName: info.name,
+      filePath: info.name,
+      status: 'failed',
+      error: `Terminated by user after ${(elapsedMs / 1000).toFixed(1)}s`,
+      processingTime: elapsedMs / 1000,
+      inpContent: inpTextById.get(info.id),
+      provenance: {
+        requestedEngine: engineName,
+        actualEngine: engineName,
+        startedAt: new Date(info.startedAt).toISOString(),
+        completedAt: new Date().toISOString(),
+      },
+    });
+    callbacks.onLog(`${info.name} -- Terminated by user (skipped after ${(elapsedMs / 1000).toFixed(1)}s)`, 'error');
+    doneCount++;
+    if (doneCount >= files.length) {
+      finish();
+    } else if (index < files.length) {
+      runNext(spawnWorker());
+    }
+  };
+
+  for (let i = 0; i < poolSize; i++) spawnWorker();
 
   if (files.length === 0) {
     finish();
   } else {
-    for (const w of workers) runNext(w);
+    for (const w of [...workers]) runNext(w);
   }
-  return cancel;
+  return Object.assign(cancel, { skip });
 }
