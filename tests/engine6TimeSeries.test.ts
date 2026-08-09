@@ -103,6 +103,11 @@ async function runEngine6LikeWorker(input = inpText): Promise<Engine6RunResult> 
   return { err, rptText, outBytes, rawRptHadTimeSeries, appended };
 }
 
+// Same model but with [REPORT] NODES/LINKS ALL so the engine writes element
+// time series straight into the .rpt — the systemOnly append branch.
+const inpTextWithReporting =
+  inpText + "\n[REPORT]\nSUBCATCHMENTS ALL\nNODES ALL\nLINKS ALL\n";
+
 describe.runIf(prerequisites)("OpenSWMM 6.x plugin I/O output → RPT Graphs & comparisons", () => {
   let result: Engine6RunResult;
 
@@ -188,6 +193,63 @@ describe.runIf(prerequisites)("OpenSWMM 6.x plugin I/O output → RPT Graphs & c
     expect(m.totalOutflow).toBeTypeOf("number");
     expect(m.runoffContinuityError).toBeTypeOf("number");
     expect(m.routingContinuityError).toBeTypeOf("number");
+  });
+
+  describe("[REPORT] NODES/LINKS ALL model", () => {
+    let result: Engine6RunResult;
+
+    beforeAll(async () => {
+      result = await runEngine6LikeWorker(inpTextWithReporting);
+    }, 120000);
+
+    it("runs cleanly; engine6 rpt has no native element series (unlike SWMM5), so the full .out append runs", () => {
+      // The OpenSWMM 6.x plugin-I/O report writer never emits element time
+      // series into the .rpt, even with NODES/LINKS ALL. The worker's
+      // reportHasTimeSeries check is therefore false and the full-append
+      // branch (not systemOnly) fills in the sections from the binary .out.
+      expect(result.err).toBe(0);
+      expect(result.rawRptHadTimeSeries).toBe(false);
+      expect(result.appended).toBe(true);
+      expect(result.rptText).toContain("<<<");
+      expect(result.rptText).toContain("System Results Time Series");
+    });
+
+    it("systemOnly parse (worker's other branch) still works on the engine6 .out", () => {
+      // If a future engine6 build starts writing element series into the rpt,
+      // the worker would take the systemOnly branch — verify it yields a
+      // chartable System section from this .out.
+      const sysText = SwmmOutParser.parseSwmmOutBinary(result.outBytes!, { systemOnly: true });
+      expect(sysText).toContain("System Results Time Series");
+      expect(sysText).not.toMatch(/<<< (Node|Link|Subcatchment) /);
+      const sysSeries = parseTimeSeries(result.rptText.split("System Results")[0] + "\n" + sysText);
+      const sys = sysSeries.find((s) => /System Results Time Series/i.test(s.title));
+      expect(sys).toBeTruthy();
+      expect(sys!.data.length).toBeGreaterThan(1);
+    });
+
+    it("parseTimeSeries charts node/link sections plus the System section", () => {
+      const series = parseTimeSeries(result.rptText);
+      const nodeSeries = series.filter((s) => /Node/i.test(s.title));
+      const linkSeries = series.filter((s) => /Link/i.test(s.title));
+      const sysSeries = series.filter((s) => /System Results Time Series/i.test(s.title));
+      expect(nodeSeries.length).toBeGreaterThan(0);
+      expect(linkSeries.length).toBeGreaterThan(0);
+      expect(sysSeries.length).toBeGreaterThan(0);
+      for (const s of series) {
+        expect(s.element).toBeTruthy();
+        expect(s.columns.length).toBeGreaterThan(0);
+        expect(s.units.length).toBe(s.columns.length);
+        expect(s.data.length).toBeGreaterThan(1);
+        for (const row of s.data) {
+          expect(row.values.length).toBe(s.columns.length);
+          for (const v of row.values) expect(Number.isFinite(v)).toBe(true);
+        }
+      }
+      const anyNonZero = series.some((s) =>
+        s.data.some((row) => row.values.some((v) => Math.abs(v) > 1e-6)),
+      );
+      expect(anyNonZero).toBe(true);
+    });
   });
 
   it("falls back gracefully when the .out format differs (parser returns '')", () => {
