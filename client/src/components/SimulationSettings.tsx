@@ -255,6 +255,45 @@ export default function SimulationSettings({
                     Anderson acceleration (ANDERSON_ACCEL YES)
                   </Label>
                 </div>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="swmm6-virtual-junctions"
+                      checked={!!s6.virtualJunctions}
+                      onCheckedChange={(checked) => setS6({ virtualJunctions: checked === true })}
+                      disabled={disabled}
+                      data-testid="checkbox-swmm6-virtual-junctions"
+                    />
+                    <Label htmlFor="swmm6-virtual-junctions" className="text-sm font-normal cursor-pointer">
+                      Virtual junctions (move eligible pipe-break junctions to [VIRTUAL_JUNCTIONS])
+                    </Label>
+                  </div>
+                  {s6.virtualJunctions && (
+                    <div className="pl-6 space-y-1">
+                      <p className="text-xs text-muted-foreground">
+                        Junctions with exactly 2 attached conduits and no inflows/DWF become zero-storage
+                        virtual junctions that transmit momentum. Files run on SWMM 5.x engines are
+                        automatically converted back to plain [JUNCTIONS].
+                      </p>
+                      <div className="max-w-xs space-y-1">
+                        <Label htmlFor="swmm6-vj-momentum" className="text-xs">VIRTUAL_JUNCTION_MOMENTUM</Label>
+                        <Select
+                          value={s6.vjMomentum ?? 'FULL'}
+                          onValueChange={(v) => setS6({ vjMomentum: v as 'BASIC' | 'FULL' })}
+                          disabled={disabled}
+                        >
+                          <SelectTrigger id="swmm6-vj-momentum" data-testid="select-swmm6-vj-momentum">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="FULL">FULL — adds cross-junction convective flux</SelectItem>
+                            <SelectItem value="BASIC">BASIC — engine default momentum handling</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

@@ -1,5 +1,5 @@
 import type { ParsedMetrics, ProcessResult } from "@shared/schema";
-import { applyInpOverrides, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, hasVirtualJunctions, stripVirtualJunctions, type InpOverrides } from "@shared/inpOptions";
 
 export interface WasmProgress {
   fileId: string;
@@ -193,6 +193,16 @@ export function runWasmBatch(
     }
     if (overrides) {
       inpText = applyInpOverrides(inpText, overrides);
+    }
+    // SWMM 5.x rejects the SWMM6 [VIRTUAL_JUNCTIONS] section outright. Round-
+    // trip such models back to plain [JUNCTIONS] so they still run, and say so.
+    if (engine !== 'swmm6' && hasVirtualJunctions(inpText)) {
+      const stripped = stripVirtualJunctions(inpText);
+      inpText = stripped.content;
+      callbacks.onLog(
+        `${f.name}: [VIRTUAL_JUNCTIONS] is SWMM6-only — converted back to [JUNCTIONS] for this SWMM5 run. ${stripped.warnings.join(' ')}`,
+        'info',
+      );
     }
     // Keep the input text so the result can show an INP tab like server runs.
     inpTextById.set(f.id, inpText);

@@ -16,7 +16,7 @@ import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
-import { applyInpOverrides, normalizeSwmm6Options, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, type InpOverrides } from "@shared/inpOptions";
 import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
@@ -1038,6 +1038,13 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
       let content = fs.readFileSync(filePath, 'utf-8');
       if (overrides) {
         content = applyInpOverrides(content, overrides);
+      }
+      // The server engines are SWMM 5.x and reject the SWMM6-only
+      // [VIRTUAL_JUNCTIONS] section. Round-trip such models back to plain
+      // [JUNCTIONS] so they still run (MaxDepth 0; SWMM5 raises it to the
+      // highest connecting conduit crown).
+      if (hasVirtualJunctions(content)) {
+        content = stripVirtualJunctions(content).content;
       }
       const hasReportSection = /^\[REPORT\]/im.test(content);
 

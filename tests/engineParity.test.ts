@@ -5,6 +5,7 @@ import path from "path";
 import { spawnSync } from "child_process";
 import { createRequire } from "module";
 import { parseReportMetrics } from "../server/reportParser";
+import { applyInpOverrides, stripVirtualJunctions } from "../shared/inpOptions";
 import { FIXTURES } from "./helpers";
 
 const require = createRequire(import.meta.url);
@@ -191,5 +192,42 @@ describe.runIf(oswmm6Present)("engine parity: executable vs OpenSWMM 6.x WASM (n
     expect(report).toMatch(/Anderson Acceleration\s*\.+\s*YES/);
     expect(report).not.toMatch(/ERROR 205/);
     expect(report).not.toMatch(/Unknown option keyword/i);
+  }, 120000);
+
+  it("runs a virtual-junction model (the alpha.2 build crashed on these)", async () => {
+    // Pipe-break model: J2 sits between two conduits with no inflows/DWF, so
+    // the upgrader moves it to [VIRTUAL_JUNCTIONS] and writes the momentum key.
+    const vjBase = inpText
+      .replace(/^(\s*FLOW_ROUTING\s+)\S+/im, "$1DYNWAVE")
+      .replace(
+        /^J1 .*$/m,
+        (j1) => `${j1}\nJ2               97.5       4          0          0          0`,
+      )
+      .replace(/^C1\s+J1\s+O1.*$/m,
+        "C1               J1               J2               200        0.013      0          0          0          0\n" +
+        "C2               J2               O1               200        0.013      0          0          0          0",
+      )
+      .replace(/^C1\s+CIRCULAR.*$/m,
+        "C1               CIRCULAR     1.5              0          0          0          1\n" +
+        "C2               CIRCULAR     1.5              0          0          0          1",
+      );
+    const upgraded = applyInpOverrides(vjBase, {
+      swmm6: { enabled: true, virtualJunctions: true, vjMomentum: "FULL" },
+    });
+    expect(upgraded).toMatch(/\[VIRTUAL_JUNCTIONS\]/);
+    const report = await runEngine6(upgraded);
+    expect(report).toMatch(/Virtual Junction Summary/i);
+    expect(report).not.toMatch(/ERROR/);
+
+    // Round-trip: the stripped model must run on the SWMM 5.x executable.
+    const stripped = stripVirtualJunctions(upgraded).content;
+    expect(stripped).not.toMatch(/VIRTUAL_JUNCTION/);
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "swmm-vj-"));
+    fs.writeFileSync(path.join(dir, "m.inp"), stripped);
+    const res = spawnSync(EXECUTABLE, [path.join(dir, "m.inp"), path.join(dir, "m.rpt"), path.join(dir, "m.out")], { timeout: 60000 });
+    const rpt5 = fs.readFileSync(path.join(dir, "m.rpt"), "utf-8");
+    fs.rmSync(dir, { recursive: true, force: true });
+    expect(res.status).toBe(0);
+    expect(rpt5).not.toMatch(/ERROR/);
   }, 120000);
 });

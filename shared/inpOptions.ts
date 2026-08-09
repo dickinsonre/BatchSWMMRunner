@@ -13,6 +13,14 @@ export interface Swmm6Options {
   semiImplicit?: boolean;
   /** ANDERSON_ACCEL YES (faster Picard convergence). */
   andersonAccel?: boolean;
+  /**
+   * Move eligible pipe-break junctions (exactly 2 attached conduits, no
+   * inflows/DWF/RDII/treatment) into a [VIRTUAL_JUNCTIONS] section and write
+   * VIRTUAL_JUNCTION_MOMENTUM into [OPTIONS]. Structural SWMM6-only edit.
+   */
+  virtualJunctions?: boolean;
+  /** VIRTUAL_JUNCTION_MOMENTUM — BASIC (engine default) or FULL (adds cross-junction convective flux). */
+  vjMomentum?: 'BASIC' | 'FULL';
 }
 
 export interface InpOverrides {
@@ -75,7 +83,200 @@ export function normalizeSwmm6Options(raw: unknown): Swmm6Options | undefined {
   }
   if (s6.semiImplicit === true) out.semiImplicit = true;
   if (s6.andersonAccel === true) out.andersonAccel = true;
-  return out.dynamicSlot || out.semiImplicit || out.andersonAccel ? out : undefined;
+  if (s6.virtualJunctions === true) {
+    out.virtualJunctions = true;
+    const mom = String(s6.vjMomentum ?? '').toUpperCase();
+    if (mom === 'BASIC' || mom === 'FULL') out.vjMomentum = mom;
+  }
+  return out.dynamicSlot || out.semiImplicit || out.andersonAccel || out.virtualJunctions ? out : undefined;
+}
+
+// --- Virtual Junctions (SWMM6 structural edit) ------------------------------
+
+interface InpSection {
+  name: string;       // upper-cased section name; '' for preamble
+  header: string | null;
+  lines: string[];
+}
+
+function parseInpSections(text: string): InpSection[] {
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const secs: InpSection[] = [];
+  let cur: InpSection = { name: '', header: null, lines: [] };
+  for (const l of lines) {
+    const m = l.match(/^\s*\[([^\]\s]+)\]/);
+    if (m) {
+      secs.push(cur);
+      cur = { name: m[1].toUpperCase(), header: l, lines: [] };
+    } else {
+      cur.lines.push(l);
+    }
+  }
+  secs.push(cur);
+  return secs;
+}
+
+function buildInpSections(secs: InpSection[]): string {
+  const out: string[] = [];
+  for (const s of secs) {
+    if (s.header !== null) out.push(s.header);
+    out.push(...s.lines);
+  }
+  return out.join('\n');
+}
+
+function findSection(secs: InpSection[], name: string): InpSection | null {
+  return secs.find((s) => s.name === name.toUpperCase()) ?? null;
+}
+
+function tokenizeInpLine(l: string): string[] {
+  const c = l.split(';')[0];
+  return c.trim().length ? c.trim().split(/\s+/) : [];
+}
+
+export interface VirtualJunctionUpgradeResult {
+  content: string;
+  /** Junction names moved into [VIRTUAL_JUNCTIONS]. */
+  moved: string[];
+  /** Human-readable notes about the transform (nothing eligible, etc). */
+  warnings: string[];
+}
+
+/**
+ * Move every eligible junction into a [VIRTUAL_JUNCTIONS] section.
+ * Eligible = exactly 2 attached conduits and no entry in [INFLOWS], [DWF],
+ * [RDII] or [TREATMENT]. A virtual junction row stores name + invert ONLY —
+ * extra tokens are a parse error in the SWMM6 engine.
+ * Does NOT write VIRTUAL_JUNCTION_MOMENTUM; applyInpOverrides handles that.
+ */
+export function upgradeVirtualJunctions(content: string): VirtualJunctionUpgradeResult {
+  const secs = parseInpSections(content);
+  const warnings: string[] = [];
+  const moved: string[] = [];
+
+  const jsec = findSection(secs, 'JUNCTIONS');
+  if (!jsec) {
+    return { content, moved, warnings: ['No [JUNCTIONS] section — nothing to convert to virtual junctions.'] };
+  }
+
+  // Count conduit attachments per node.
+  const attach: Record<string, number> = {};
+  const csec = findSection(secs, 'CONDUITS');
+  if (csec) {
+    for (const l of csec.lines) {
+      const t = tokenizeInpLine(l);
+      if (t.length >= 3) {
+        attach[t[1]] = (attach[t[1]] || 0) + 1;
+        attach[t[2]] = (attach[t[2]] || 0) + 1;
+      }
+    }
+  }
+
+  // Nodes that carry local loads are not eligible.
+  const loaded = new Set<string>();
+  for (const sn of ['INFLOWS', 'DWF', 'RDII', 'TREATMENT']) {
+    const s = findSection(secs, sn);
+    if (s) for (const l of s.lines) {
+      const t = tokenizeInpLine(l);
+      if (t.length) loaded.add(t[0]);
+    }
+  }
+
+  // Collect eligible junction rows (in order), remove them from [JUNCTIONS].
+  const vjRows: string[] = [];
+  const keep: string[] = [];
+  for (const l of jsec.lines) {
+    const t = tokenizeInpLine(l);
+    if (t.length >= 2) {
+      const name = t[0];
+      if ((attach[name] || 0) === 2 && !loaded.has(name)) {
+        moved.push(name);
+        // name + invert ONLY — a third token is a parse error.
+        vjRows.push(`${name.padEnd(16)} ${t[1]}`);
+        continue;
+      }
+    }
+    keep.push(l);
+  }
+
+  if (moved.length === 0) {
+    return { content, moved, warnings: ['No junctions are eligible for virtual-junction conversion (need exactly 2 attached conduits and no inflows/DWF).'] };
+  }
+  jsec.lines = keep;
+
+  let vjSec = findSection(secs, 'VIRTUAL_JUNCTIONS');
+  if (!vjSec) {
+    vjSec = { name: 'VIRTUAL_JUNCTIONS', header: '[VIRTUAL_JUNCTIONS]', lines: [';;Name           InvertElev', ''] };
+    secs.splice(secs.indexOf(jsec) + 1, 0, vjSec);
+  }
+  let ins = vjSec.lines.length;
+  while (ins > 0 && vjSec.lines[ins - 1].trim() === '') ins--;
+  vjSec.lines.splice(ins, 0, ...vjRows);
+
+  return { content: buildInpSections(secs), moved, warnings };
+}
+
+export interface VirtualJunctionStripResult {
+  content: string;
+  /** Junction names restored to [JUNCTIONS]. */
+  restored: string[];
+  warnings: string[];
+}
+
+/**
+ * Round-trip a virtual-junction model back to plain SWMM5: restore every
+ * [VIRTUAL_JUNCTIONS] row to [JUNCTIONS] (MaxDepth 0 — the original MaxDepth
+ * is not recoverable; SWMM5 raises 0 to the highest connecting conduit crown),
+ * drop the [VIRTUAL_JUNCTIONS] section, and remove VIRTUAL_JUNCTION_MOMENTUM
+ * from [OPTIONS].
+ */
+export function stripVirtualJunctions(content: string): VirtualJunctionStripResult {
+  const secs = parseInpSections(content);
+  const restored: string[] = [];
+  const warnings: string[] = [];
+
+  // Remove the SWMM6-only [OPTIONS] key.
+  const osec = findSection(secs, 'OPTIONS');
+  if (osec) {
+    osec.lines = osec.lines.filter((l) => {
+      const t = tokenizeInpLine(l);
+      return !(t.length && t[0].toUpperCase() === 'VIRTUAL_JUNCTION_MOMENTUM');
+    });
+  }
+
+  const vjSec = findSection(secs, 'VIRTUAL_JUNCTIONS');
+  if (!vjSec) return { content: osec ? buildInpSections(secs) : content, restored, warnings };
+
+  let jsec = findSection(secs, 'JUNCTIONS');
+  if (!jsec) {
+    jsec = { name: 'JUNCTIONS', header: '[JUNCTIONS]', lines: [''] };
+    secs.splice(secs.indexOf(vjSec), 0, jsec);
+  }
+
+  const rows: string[] = [];
+  for (const l of vjSec.lines) {
+    const t = tokenizeInpLine(l);
+    if (t.length >= 2) {
+      restored.push(t[0]);
+      rows.push(`${t[0].padEnd(16)} ${t[1].padEnd(10)} 0          0          0          0`);
+    }
+  }
+  if (restored.length) {
+    let ins = jsec.lines.length;
+    while (ins > 0 && jsec.lines[ins - 1].trim() === '') ins--;
+    jsec.lines.splice(ins, 0, ...rows);
+    warnings.push(
+      `Restored ${restored.length} virtual junction(s) to [JUNCTIONS] with MaxDepth 0 — the original MaxDepth is not recoverable from [VIRTUAL_JUNCTIONS] (it stores name + invert only). SWMM5 raises 0 to the highest connecting conduit crown.`,
+    );
+  }
+  secs.splice(secs.indexOf(vjSec), 1);
+
+  return { content: buildInpSections(secs), restored, warnings };
+}
+
+/** True when the .inp already contains a [VIRTUAL_JUNCTIONS] section. */
+export function hasVirtualJunctions(content: string): boolean {
+  return /^\s*\[VIRTUAL_JUNCTIONS\]/im.test(content);
 }
 
 function setOption(optionsSection: string, key: string, value: string): string {
@@ -116,6 +317,16 @@ export function applyInpOverrides(content: string, overrides: InpOverrides): str
   // normalizeSwmm6Options enforces finite values and sane bounds for every
   // caller (browser WASM path and server alike).
   const s6 = normalizeSwmm6Options(overrides.swmm6);
+  if (s6?.virtualJunctions) {
+    // Structural edit first: move eligible junctions into [VIRTUAL_JUNCTIONS].
+    // The momentum keyword is written whenever the file ends up with a
+    // [VIRTUAL_JUNCTIONS] section (either just created or pre-existing).
+    const vj = upgradeVirtualJunctions(content);
+    content = vj.content;
+    if (vj.moved.length > 0 || hasVirtualJunctions(content)) {
+      entries.push(['VIRTUAL_JUNCTION_MOMENTUM', s6.vjMomentum ?? 'FULL']);
+    }
+  }
   if (s6) {
     if (s6.dynamicSlot) {
       entries.push(['SURCHARGE_METHOD', 'DYNAMIC_SLOT']);
