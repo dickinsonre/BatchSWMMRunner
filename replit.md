@@ -6,7 +6,8 @@ BatchSWMM56 (formerly BatchSWMM) is a web application for batch processing EPA S
 
 ## Recent Changes
 
-- **Jul 2026 (latest)**: Added SWMM6 (Browser) engine mode — OpenSWMM SWMM6 fork (github.com/SWMMBobSWMM6/openswmm.engine, swmm6_rel branch legacy engine v5.3.0; WARN13 link-depth validation re-applied as local patch (dropped upstream)) compiled to WASM at `client/public/wasm6/`, source in `swmm6-source/`; shared worker loads either engine on demand
+- **Aug 2026 (latest)**: SWMM6 (Browser) mode now runs only the real OpenSWMM 6.0.0-alpha engine (`client/public/wasm6/openswmm6.js/.wasm`); the legacy 5.3.0 `swmm6.js/.wasm` build and its WARN13 tests/fixture were removed (dead at runtime; legacy source remains in `swmm6-source/` if the WARN13 link-depth check is ever wanted back)
+- **Jul 2026**: Added SWMM6 (Browser) engine mode — OpenSWMM SWMM6 fork (github.com/SWMMBobSWMM6/openswmm.engine) compiled to WASM at `client/public/wasm6/`; shared worker loads either engine on demand
 - **Jul 2026**: Added WASM (Browser) engine mode — EPA SWMM 5.2.4 compiled to WebAssembly with Emscripten (`client/public/wasm/swmm5.js` + `swmm5.wasm`), run in a web worker (`swmm-worker.js`) via `client/src/lib/swmmWasmEngine.ts`; batches process entirely in the browser (no upload), with progress, cancel, report parsing, and results identical to server modes; engine mode selector now always visible (Executable/API disabled when unavailable)
 - **Mar 2026 (latest)**: Added Live API Dashboard — real-time line charts (Node Depths, Link Flows, Link Velocity) and data tables that update during API mode simulations via WebSocket `api_snapshot` messages; persists after completion showing final simulation data
 - **Mar 2026**: Added Full SWMM5 API Guide (5,408-line markdown) as searchable documentation tab — fetched at runtime from `/api/swmm5-api-guide`, rendered with react-markdown + remark-gfm + @tailwindcss/typography prose styling, includes search/filter functionality

@@ -10,7 +10,6 @@ import { FIXTURES } from "./helpers";
 const require = createRequire(import.meta.url);
 const EXECUTABLE = path.join(process.cwd(), "swmm-engine", "runswmm");
 const WASM_JS = path.join(process.cwd(), "client", "public", "wasm", "swmm5.js");
-const WASM6_JS = path.join(process.cwd(), "client", "public", "wasm6", "swmm6.js");
 const OSWMM6_JS = path.join(process.cwd(), "client", "public", "wasm6", "openswmm6.js");
 
 const inpText = fs.readFileSync(path.join(FIXTURES, "valid-model.inp"), "utf-8");
@@ -30,13 +29,13 @@ function runExecutable(): string {
   return report;
 }
 
-async function runWasm(jsPath = WASM_JS, factoryName = "createSwmmModule", wasmFile = "swmm5.wasm", inputText = inpText): Promise<string> {
+async function runWasm(jsPath = WASM_JS, wasmFile = "swmm5.wasm", inputText = inpText): Promise<string> {
   // The emscripten bundle doesn't reliably expose its factory through
   // require() here, so evaluate the script and grab the factory directly.
   const src = fs.readFileSync(jsPath, "utf-8");
   const factory = new Function(
     "module", "exports", "require", "__dirname", "__filename",
-    `${src}\nreturn ${factoryName};`,
+    `${src}\nreturn createSwmmModule;`,
   );
   const mod = { exports: {} };
   const createModule = factory(mod, mod.exports, require, path.dirname(jsPath), jsPath);
@@ -73,7 +72,6 @@ async function runWasm(jsPath = WASM_JS, factoryName = "createSwmmModule", wasmF
 }
 
 const bothEnginesPresent = fs.existsSync(EXECUTABLE) && fs.existsSync(WASM_JS);
-const swmm6Present = fs.existsSync(EXECUTABLE) && fs.existsSync(WASM6_JS);
 const oswmm6Present = fs.existsSync(EXECUTABLE) && fs.existsSync(OSWMM6_JS);
 
 /** Drive the new OpenSWMM 6.x handle-based C API (what the worker now uses for swmm6). */
@@ -157,39 +155,6 @@ describe.runIf(bothEnginesPresent)("engine parity: executable vs WASM", () => {
   it("key metrics agree within tolerance", () => {
     expectMetricsAgree(exeReport, wasmReport);
   });
-});
-
-describe.runIf(swmm6Present)("engine parity: executable vs SWMM6 WASM", () => {
-  let exeReport: string;
-  let wasm6Report: string;
-
-  beforeAll(async () => {
-    exeReport = runExecutable();
-    wasm6Report = await runWasm(WASM6_JS, "createSwmm6Module", "swmm6.wasm");
-  }, 120000);
-
-  it("SWMM6 engine produces a valid SWMM report", () => {
-    // swmm6_rel legacy engine brands its report header as OPENSWMM ENGINE
-    expect(wasm6Report).toMatch(/OPENSWMM ENGINE|EPA STORM WATER MANAGEMENT MODEL/);
-  });
-
-  it("key metrics agree within tolerance", () => {
-    expectMetricsAgree(exeReport, wasm6Report);
-  });
-
-  it("does not emit WARNING 13 for the valid fixture model", () => {
-    // The SWMM6 fork adds WARN13 (link opening exceeds max depth for a
-    // storage node). The fixture model should not trigger it.
-    expect(wasm6Report).not.toMatch(/WARNING 13/);
-  });
-
-  it("emits WARNING 13 when a link opening exceeds a storage node's max depth (legacy engine)", async () => {
-    // Fixture: storage node ST1 (max depth 2 ft, zero surcharge depth) whose
-    // outgoing conduit C2 has a 3 ft circular opening — crown exceeds max depth.
-    const warnInp = fs.readFileSync(path.join(FIXTURES, "warn13-model.inp"), "utf-8");
-    const report = await runWasm(WASM6_JS, "createSwmm6Module", "swmm6.wasm", warnInp);
-    expect(report).toMatch(/WARNING 13: link opening exceeds maximum depth for Node ST1/);
-  }, 60000);
 });
 
 describe.runIf(oswmm6Present)("engine parity: executable vs OpenSWMM 6.x WASM (new engine)", () => {

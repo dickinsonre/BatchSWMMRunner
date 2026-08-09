@@ -1314,7 +1314,7 @@ export default function Home() {
                           <p><span className="font-semibold">Executable</span> — runs the native EPA SWMM 5.2 program on the server. Fastest; the standard choice.</p>
                           <p><span className="font-semibold">SWMM5 API</span> — runs on the server via the SWMM5 shared library, with live step-by-step data (see the API dashboard).</p>
                           <p><span className="font-semibold">WASM (Browser)</span> — runs EPA SWMM 5.2 entirely in your browser via WebAssembly. Works even if the server engine is unavailable.</p>
-                          <p><span className="font-semibold">SWMM6 (Browser)</span> — runs the OpenSWMM engine (swmm6_rel, legacy engine v5.3.0 with extra link-depth validation warnings) in your browser.</p>
+                          <p><span className="font-semibold">SWMM6 (Browser)</span> — runs the OpenSWMM 6.0.0-alpha engine in your browser, with SWMM6-only solver options like dynamic-slot surcharge.</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
@@ -1382,7 +1382,7 @@ export default function Home() {
                           ? 'Uses SWMM5 shared library for step-by-step control with live data streaming. Click another engine to add it and compare outputs.'
                           : engineMode === 'wasm'
                           ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device. Click another engine to add it and compare outputs.'
-                          : 'Runs the OpenSWMM SWMM6 engine (swmm6_rel release, legacy engine v5.3.0 with extra link-depth validation warnings) as WebAssembly in your browser. Click another engine to add it and compare outputs.'}
+                          : 'Runs the OpenSWMM 6.0.0-alpha engine as WebAssembly in your browser, including SWMM6-only solver options. Click another engine to add it and compare outputs.'}
                       </p>
                     </div>
                 </div>

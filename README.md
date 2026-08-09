@@ -11,7 +11,7 @@ Built with a React/TypeScript frontend, an Express backend, and PostgreSQL for j
 | Executable | EPA SWMM 5.2 (`runswmm`, bundled in `swmm-engine/`) | Server |
 | API | SWMM 5.2 shared library, called via the SWMM5 C API (koffi FFI) | Server, with live node/link snapshots streamed during the run |
 | WASM | EPA SWMM 5.2 compiled to WebAssembly | Entirely in your browser — files never leave your device |
-| WASM6 | OpenSWMM `swmm6_rel` (SWMM 5.3) compiled to WebAssembly | Entirely in your browser |
+| WASM6 | OpenSWMM 6.0.0-alpha compiled to WebAssembly | Entirely in your browser |
 
 The two WASM modes are always available. The server modes depend on the bundled engine being runnable on the host (see `GET /api/swmm-status`).
 
