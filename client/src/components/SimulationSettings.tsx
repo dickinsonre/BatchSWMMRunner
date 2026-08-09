@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -111,22 +112,22 @@ export default function SimulationSettings({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
               <div className="space-y-2">
                 <Label htmlFor="start-date">Start Date</Label>
-                <Input
+                <DatePicker
                   id="start-date"
-                  type="date"
                   value={startDate}
-                  onChange={(e) => onStartDateChange(e.target.value)}
+                  onChange={onStartDateChange}
+                  placeholder="From file"
                   disabled={disabled}
                   data-testid="input-start-date"
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="end-date">End Date</Label>
-                <Input
+                <DatePicker
                   id="end-date"
-                  type="date"
                   value={endDate}
-                  onChange={(e) => onEndDateChange(e.target.value)}
+                  onChange={onEndDateChange}
+                  placeholder="From file"
                   disabled={disabled}
                   data-testid="input-end-date"
                 />
