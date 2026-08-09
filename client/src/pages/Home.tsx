@@ -25,6 +25,7 @@ import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from 
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import EngineComparisonView from "@/components/EngineComparisonView";
 import SystemComparisonChart from "@/components/SystemComparisonChart";
+import EngineScatterCompare from "@/components/EngineScatterCompare";
 import GifMakerTool from "@/components/GifMakerTool";
 import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import type { SwmmStatus } from "@shared/schema";
@@ -1572,6 +1573,11 @@ export default function Home() {
               {comparisonRuns.length >= 2 && (
                 <section data-testid="section-system-comparison">
                   <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                </section>
+              )}
+              {comparisonRuns.length >= 2 && (
+                <section data-testid="section-scatter-comparison">
+                  <EngineScatterCompare runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
                 </section>
               )}
               <section data-testid="section-gif-maker">
