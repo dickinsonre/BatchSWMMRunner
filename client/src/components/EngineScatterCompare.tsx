@@ -96,81 +96,121 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
     }).filter(c => c.points.length > 0);
   }, [pair, vals]);
 
-  // Time-series overlay for the link whose peak flow disagrees the most
-  // between the two engines (the "worst" peak-flow point on the scatter).
-  const worstSeries = useMemo(() => {
-    if (!pair || !vals) return null;
+  // Time-series overlays for the elements where the two engines disagree the
+  // most: worst peak link flow, worst max node depth, worst link depth ratio.
+  const overlays = useMemo(() => {
+    if (!pair || !vals) return [];
     const [valsX, valsY] = vals;
-    // Rank links by how much the two engines disagree on peak flow.
-    const ranked: { name: string; diff: number }[] = [];
-    valsX.flows.forEach((x, name) => {
-      const y = valsY.flows.get(name);
-      if (y !== undefined) ranked.push({ name, diff: Math.abs(x - y) });
-    });
-    if (ranked.length === 0) return null;
-    ranked.sort((r1, r2) => r2.diff - r1.diff);
 
-    // Parse each report's link time series once, indexed by element name.
-    const seriesMap = (content: string) => {
-      const map = new Map<string, { time: string; v: number }[]>();
+    // Parse each report's time series ONCE, indexed by element type + name.
+    const buildMaps = (content: string) => {
+      const links = new Map<string, ReturnType<typeof parseTimeSeries>[number]>();
+      const nodes = new Map<string, ReturnType<typeof parseTimeSeries>[number]>();
       for (const ts of parseTimeSeries(content)) {
         // Series headers name the element as e.g. "Link 23916015-23916007";
         // strip the type prefix so it matches the bare name in summary tables.
-        const isLink = /link/i.test(ts.title) || /^link\s+/i.test(ts.element);
-        if (!isLink) continue;
-        let flowIdx = ts.columns.findIndex(c => /flow/i.test(c));
-        if (flowIdx < 0) flowIdx = 0;
-        const rows = ts.data
-          .map(d => ({ time: d.time, v: d.values[flowIdx] }))
-          .filter(d => Number.isFinite(d.v));
-        const bareName = ts.element.replace(/^link\s+/i, "").trim();
-        if (rows.length > 0) map.set(bareName, rows);
+        if (/link/i.test(ts.title) || /^link\s+/i.test(ts.element)) {
+          links.set(ts.element.replace(/^link\s+/i, "").trim(), ts);
+        } else if (/node/i.test(ts.title) || /^node\s+/i.test(ts.element)) {
+          nodes.set(ts.element.replace(/^node\s+/i, "").trim(), ts);
+        }
       }
-      return map;
+      return { links, nodes };
     };
-    const mapA = seriesMap(pair[0].content!);
-    const mapB = seriesMap(pair[1].content!);
+    const mapsA = buildMaps(pair[0].content!);
+    const mapsB = buildMaps(pair[1].content!);
 
-    // Pick the worst-disagreeing link that BOTH reports have series for.
-    const pick = ranked.find(r => mapA.has(r.name) && mapB.has(r.name));
-    if (!pick) {
-      const reason = mapA.size === 0 && mapB.size === 0
-        ? ("none" as const)
-        : ("missing-link" as const);
-      return { linkName: ranked[0].name, rows: null, reason };
-    }
-    const linkName = pick.name;
-    const a = mapA.get(linkName)!;
-    const b = mapB.get(linkName)!;
-    // Anchor each engine to its own first timestamp; join on whole seconds.
-    const t0 = (rows: { time: string }[]) => {
-      const m = rows[0].time.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-      return m ? Date.UTC(+m[3], +m[1] - 1, +m[2], +m[4], +m[5], +(m[6] || 0)) : NaN;
+    const rowsFor = (ts: ReturnType<typeof parseTimeSeries>[number], colRegex: RegExp) => {
+      let ci = ts.columns.findIndex(c => colRegex.test(c));
+      if (ci < 0) ci = 0;
+      return ts.data
+        .map(d => ({ time: d.time, v: d.values[ci] }))
+        .filter(d => Number.isFinite(d.v));
     };
-    const t0a = t0(a), t0b = t0(b);
-    const merged = new Map<number, { h: number; a?: number; b?: number }>();
-    for (const d of a) {
-      const h = toHours(d.time, t0a);
-      if (!Number.isFinite(h)) continue;
-      const key = Math.round(h * 3600);
-      const row = merged.get(key) || { h };
-      row.a = d.v;
-      merged.set(key, row);
-    }
-    for (const d of b) {
-      const h = toHours(d.time, t0b);
-      if (!Number.isFinite(h)) continue;
-      const key = Math.round(h * 3600);
-      const row = merged.get(key) || { h };
-      row.b = d.v;
-      merged.set(key, row);
-    }
-    // Keep only timestamps where BOTH engines have a value, so the overlay
-    // never draws a line through intervals only one engine reported.
-    const rows = Array.from(merged.values())
-      .filter(r => r.a !== undefined && r.b !== undefined)
-      .sort((r1, r2) => r1.h - r2.h);
-    return { linkName, rows, reason: undefined };
+
+    const mergeRows = (a: { time: string; v: number }[], b: { time: string; v: number }[]) => {
+      // Anchor each engine to its own first timestamp; join on whole seconds.
+      const t0 = (rows: { time: string }[]) => {
+        const m = rows[0].time.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+        return m ? Date.UTC(+m[3], +m[1] - 1, +m[2], +m[4], +m[5], +(m[6] || 0)) : NaN;
+      };
+      const t0a = t0(a), t0b = t0(b);
+      const merged = new Map<number, { h: number; a?: number; b?: number }>();
+      for (const d of a) {
+        const h = toHours(d.time, t0a);
+        if (!Number.isFinite(h)) continue;
+        const key = Math.round(h * 3600);
+        const row = merged.get(key) || { h };
+        row.a = d.v;
+        merged.set(key, row);
+      }
+      for (const d of b) {
+        const h = toHours(d.time, t0b);
+        if (!Number.isFinite(h)) continue;
+        const key = Math.round(h * 3600);
+        const row = merged.get(key) || { h };
+        row.b = d.v;
+        merged.set(key, row);
+      }
+      // Keep only timestamps where BOTH engines have a value.
+      return Array.from(merged.values())
+        .filter(r => r.a !== undefined && r.b !== undefined)
+        .sort((r1, r2) => r1.h - r2.h);
+    };
+
+    const buildOverlay = (
+      id: string,
+      title: (name: string) => string,
+      yAxis: string,
+      xMap: Map<string, number>,
+      yMap: Map<string, number>,
+      seriesA: Map<string, ReturnType<typeof parseTimeSeries>[number]>,
+      seriesB: Map<string, ReturnType<typeof parseTimeSeries>[number]>,
+      colRegex: RegExp,
+      kind: "link" | "node",
+    ) => {
+      const ranked: { name: string; diff: number }[] = [];
+      xMap.forEach((x, name) => {
+        const y = yMap.get(name);
+        if (y !== undefined) ranked.push({ name, diff: Math.abs(x - y) });
+      });
+      if (ranked.length === 0) return null;
+      ranked.sort((r1, r2) => r2.diff - r1.diff);
+      const pick = ranked.find(r => seriesA.has(r.name) && seriesB.has(r.name));
+      if (!pick) {
+        const reason = seriesA.size === 0 && seriesB.size === 0
+          ? ("none" as const) : ("missing-link" as const);
+        return { id, title: title(ranked[0].name), yAxis, name: ranked[0].name, kind, rows: null, reason };
+      }
+      const a = rowsFor(seriesA.get(pick.name)!, colRegex);
+      const b = rowsFor(seriesB.get(pick.name)!, colRegex);
+      if (a.length === 0 || b.length === 0) {
+        return { id, title: title(pick.name), yAxis, name: pick.name, kind, rows: null, reason: "missing-link" as const };
+      }
+      const rows = mergeRows(a, b);
+      return { id, title: title(pick.name), yAxis, name: pick.name, kind, rows, reason: undefined };
+    };
+
+    return [
+      buildOverlay(
+        "worst-flow",
+        n => `Flow Time Series — Link ${n} (largest peak-flow difference between engines)`,
+        "Flow",
+        valsX.flows, valsY.flows, mapsA.links, mapsB.links, /flow/i, "link",
+      ),
+      buildOverlay(
+        "worst-node-depth",
+        n => `Depth Time Series — Node ${n} (largest max-depth difference between engines)`,
+        "Depth",
+        valsX.nodeDepths, valsY.nodeDepths, mapsA.nodes, mapsB.nodes, /depth/i, "node",
+      ),
+      buildOverlay(
+        "worst-link-depth",
+        n => `Depth Time Series — Link ${n} (largest max/full depth difference between engines)`,
+        "Depth",
+        valsX.linkDepths, valsY.linkDepths, mapsA.links, mapsB.links, /depth/i, "link",
+      ),
+    ].filter((o): o is NonNullable<typeof o> => o !== null);
   }, [pair, vals]);
 
   if (runs.length < 2 || fileNames.length === 0) return null;
@@ -255,21 +295,19 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
             );
           })}
         </div>
-        {worstSeries && (
-          <div className="mt-6" data-testid="chart-worst-peak-flow">
-            <p className="text-xs font-medium mb-1">
-              Flow Time Series — Link {worstSeries.linkName} (largest peak-flow difference between engines)
-            </p>
-            {worstSeries.rows && worstSeries.rows.length > 0 ? (
+        {overlays.map(ov => (
+          <div key={ov.id} className="mt-6" data-testid={`chart-${ov.id}`}>
+            <p className="text-xs font-medium mb-1">{ov.title}</p>
+            {ov.rows && ov.rows.length > 0 ? (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={worstSeries.rows} margin={{ top: 8, right: 12, left: 4, bottom: 22 }}>
+                  <LineChart data={ov.rows} margin={{ top: 8, right: 12, left: 4, bottom: 22 }}>
                     <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.4} />
                     <XAxis dataKey="h" type="number" domain={["dataMin", "dataMax"]}
                       label={{ value: "Elapsed Time (hours)", position: "insideBottom", offset: -12, fontSize: 11 }}
                       fontSize={10} tickFormatter={(v: number) => v.toFixed(1)} />
                     <YAxis fontSize={10}
-                      label={{ value: "Flow", angle: -90, position: "insideLeft", fontSize: 11 }}
+                      label={{ value: ov.yAxis, angle: -90, position: "insideLeft", fontSize: 11 }}
                       tickFormatter={(v: number) => v.toPrecision(3)} />
                     <ChartTooltip
                       formatter={(value: number) => value.toFixed(3)}
@@ -284,17 +322,17 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
                 </ResponsiveContainer>
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground" data-testid="text-worst-no-series">
-                {worstSeries.reason === "missing-link"
-                  ? <>The reports include link time series, but not for Link {worstSeries.linkName} in
-                    both engines — check that the [REPORT] section lists the same links for each run.</>
-                  : <>These reports don&apos;t include link time series, so the time-series comparison for
-                    Link {worstSeries.linkName} can&apos;t be drawn. (Reports only contain time series when
-                    the model&apos;s [REPORT] section lists the links.)</>}
+              <p className="text-xs text-muted-foreground" data-testid={`text-${ov.id}-no-series`}>
+                {ov.reason === "missing-link"
+                  ? <>The reports include time series, but not for {ov.kind === "link" ? "Link" : "Node"} {ov.name} in
+                    both engines — check that the [REPORT] section lists the same elements for each run.</>
+                  : <>These reports don&apos;t include {ov.kind} time series, so the comparison for
+                    {" "}{ov.kind === "link" ? "Link" : "Node"} {ov.name} can&apos;t be drawn. (Reports only contain
+                    time series when the model&apos;s [REPORT] section lists the elements.)</>}
               </p>
             )}
           </div>
-        )}
+        ))}
       </CardContent>
     </Card>
   );
