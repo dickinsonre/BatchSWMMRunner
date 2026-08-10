@@ -7,8 +7,8 @@ export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6';
 export const ENGINE_LABELS: Record<EngineId, string> = {
   executable: 'Executable',
   api: 'SWMM5 API',
-  wasm: 'WASM (Browser)',
-  wasm6: 'SWMM6 (Browser)',
+  wasm: 'SWMM5 WASM',
+  wasm6: 'SWMM6 WASM',
 };
 
 /** One engine's completed batch. */

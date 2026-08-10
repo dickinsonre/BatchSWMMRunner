@@ -1306,13 +1306,13 @@ export default function Documentation() {
                         </p>
                       </div>
                       <div data-testid="guide-engine-wasm">
-                        <p className="font-medium">WASM (Browser)</p>
+                        <p className="font-medium">SWMM5 WASM</p>
                         <p className="text-muted-foreground">
                           EPA SWMM 5.2.4 compiled to WebAssembly runs entirely inside your browser — files never leave your device. Great for privacy-sensitive models or when the server engine is unavailable. Performance depends on your computer, and very large models may run slower than on the server.
                         </p>
                       </div>
                       <div data-testid="guide-engine-swmm6">
-                        <p className="font-medium">SWMM6 (Browser)</p>
+                        <p className="font-medium">SWMM6 WASM</p>
                         <p className="text-muted-foreground">
                           The OpenSWMM 6.0.0-alpha engine compiled to WebAssembly. Behaves like the WASM mode but supports SWMM6-only solver options (e.g. dynamic-slot surcharge, Anderson acceleration). Useful for cross-checking results against the standard engine.
                         </p>
@@ -1402,7 +1402,7 @@ export default function Documentation() {
                     />
                     <FaqItem
                       question="What happens if the SWMM engine is unavailable?"
-                      answer="If the server-side SWMM engine binary is not detected, files sent for server processing fail with a clear 'engine unavailable' error — BatchSWMM56 never generates synthetic or simulated results. Every report you see comes from a real SWMM engine run. You can always use the WASM (Browser) or SWMM6 (Browser) engine modes, which run the real EPA SWMM engine compiled to WebAssembly directly in your browser."
+                      answer="If the server-side SWMM engine binary is not detected, files sent for server processing fail with a clear 'engine unavailable' error — BatchSWMM56 never generates synthetic or simulated results. Every report you see comes from a real SWMM engine run. You can always use the SWMM5 WASM or SWMM6 WASM engine modes, which run the real EPA SWMM engine compiled to WebAssembly directly in your browser."
                       testId="faq-simulation-mode"
                     />
                     <FaqItem

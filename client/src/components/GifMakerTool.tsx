@@ -125,7 +125,12 @@ export default function GifMakerTool({ runs, onLoadFile }: GifMakerToolProps) {
         const geometry = extractMapGeometry(parseInpFile(inpContent));
         const engines = perRunSections
           .map(e => {
-            const nodeSections = e.sections.filter(s => /node/i.test(s.title));
+            // Series headers may name the element "Node 9" (with a type
+            // prefix) while map coordinates use the bare name "9" — accept
+            // either and strip the prefix so map nodes find their values.
+            const nodeSections = e.sections
+              .filter(s => /node/i.test(s.title) || /^node\s+/i.test(s.element))
+              .map(s => ({ ...s, element: s.element.replace(/^node\s+/i, "").trim() }));
             const { lookup } = buildValueLookup(nodeSections, metric);
             return { label: e.label, lookup };
           })

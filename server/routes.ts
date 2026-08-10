@@ -16,7 +16,7 @@ import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
-import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, type InpOverrides } from "@shared/inpOptions";
 import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
@@ -435,7 +435,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
   app.get('/api/samples/:filename', async (req, res) => {
     try {
       const { filename } = req.params;
-      if (!filename.toLowerCase().endsWith('.inp')) {
+      if (!filename.toLowerCase().endsWith('.inp') && !filename.toLowerCase().endsWith('.hsf')) {
         return res.status(400).json({ error: 'Invalid file type' });
       }
       const filePath = path.join(process.cwd(), 'public', 'samples', path.basename(filename));
@@ -1045,6 +1045,19 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
       // highest connecting conduit crown).
       if (hasVirtualJunctions(content)) {
         content = stripVirtualJunctions(content).content;
+      }
+      // extran8* models reference a hot start file; provide the bundled one
+      // next to the input and point the directive at its absolute path.
+      if (needsExtran8Hotstart(filePath, content)) {
+        const hsfSrc = path.join(process.cwd(), 'public', 'samples', 'extran8.hsf');
+        if (fs.existsSync(hsfSrc)) {
+          const hsfDest = path.join(path.dirname(filePath), 'extran8.hsf');
+          fs.copyFileSync(hsfSrc, hsfDest);
+          content = rewriteHotstartPath(content, hsfDest);
+          console.log(`Provided hot start file for ${filePath}`);
+        } else {
+          console.warn(`Hot start file missing at ${hsfSrc}; ${filePath} may fail`);
+        }
       }
       const hasReportSection = /^\[REPORT\]/im.test(content);
 

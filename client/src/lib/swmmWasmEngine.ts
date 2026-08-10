@@ -1,5 +1,5 @@
 import type { ParsedMetrics, ProcessResult } from "@shared/schema";
-import { applyInpOverrides, hasVirtualJunctions, stripVirtualJunctions, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, type InpOverrides } from "@shared/inpOptions";
 
 export interface WasmProgress {
   fileId: string;
@@ -169,6 +169,17 @@ export function runWasmBatch(
   };
 
   const inpTextById = new Map<string, string>();
+  // Bundled hot start file bytes, fetched at most once per batch. The
+  // in-flight promise is cached so parallel workers share one request.
+  let hotstartPromise: Promise<ArrayBuffer | null> | undefined;
+  const fetchHotstartBytes = (): Promise<ArrayBuffer | null> => {
+    if (!hotstartPromise) {
+      hotstartPromise = fetch('/api/samples/extran8.hsf')
+        .then(res => (res.ok ? res.arrayBuffer() : null))
+        .catch(() => null);
+    }
+    return hotstartPromise;
+  };
   // Which file each worker is currently simulating, so a single stuck run can
   // be skipped (its worker terminated and replaced) without killing the batch.
   const currentByWorker = new Map<Worker, { id: string; name: string; startedAt: number }>();
@@ -211,9 +222,21 @@ export function runWasmBatch(
         'info',
       );
     }
+    // extran8* models reference a hot start file; fetch the bundled one and
+    // hand it to the worker so the in-browser engine can find it.
+    let auxFiles: { name: string; data: ArrayBuffer }[] | undefined;
+    if (needsExtran8Hotstart(f.name, inpText)) {
+      const hsf = await fetchHotstartBytes();
+      if (hsf) {
+        inpText = rewriteHotstartPath(inpText, '/extran8.hsf');
+        auxFiles = [{ name: '/extran8.hsf', data: hsf }];
+      } else {
+        callbacks.onLog(`${f.name}: could not load bundled hot start file — run may fail.`, 'error');
+      }
+    }
     // Keep the input text so the result can show an INP tab like server runs.
     inpTextById.set(f.id, inpText);
-    worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine });
+    worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine, auxFiles });
   };
 
   const handleDone = (worker: Worker, d: WorkerDoneMsg) => {

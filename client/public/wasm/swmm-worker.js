@@ -50,7 +50,7 @@ function parseDurationDays(inpText) {
 }
 
 self.onmessage = async (e) => {
-  const { type, id, fileName, inpText, engine } = e.data;
+  const { type, id, fileName, inpText, engine, auxFiles } = e.data;
   if (type !== 'run') return;
 
   const t0 = Date.now();
@@ -66,6 +66,14 @@ self.onmessage = async (e) => {
     try { FS.unlink(rptPath); } catch (_) {}
     try { FS.unlink(outPath); } catch (_) {}
     FS.writeFile(inpPath, inpText);
+
+    // Auxiliary files (e.g. hot start .hsf) supplied by the main thread.
+    if (auxFiles) {
+      for (const a of auxFiles) {
+        try { FS.unlink(a.name); } catch (_) {}
+        FS.writeFile(a.name, new Uint8Array(a.data));
+      }
+    }
 
     const totalDays = parseDurationDays(inpText);
     const cfg = ENGINES[engine] || ENGINES.swmm5;

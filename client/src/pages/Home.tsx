@@ -1265,7 +1265,7 @@ export default function Home() {
                     <>
                       <p className="font-medium" data-testid="text-swmm-status-error">Could not check server engine status</p>
                       <p className="text-muted-foreground text-xs">
-                        The server didn't respond to the engine status check. You can still use the WASM (Browser) engine modes below — they run entirely in your browser.
+                        The server didn't respond to the engine status check. You can still use the SWMM5 WASM engine modes below — they run entirely in your browser.
                       </p>
                     </>
                   ) : swmmStatus?.found ? (
@@ -1288,7 +1288,7 @@ export default function Home() {
                         set RUNSWMM_PATH=C:\Program Files (x86)\EPA SWMM 5.2\runswmm.exe
                       </pre>
                       <p className="text-muted-foreground text-xs">
-                        Without an engine, server-side runs will fail — <span className="font-medium text-foreground">no results are fabricated</span>. You can still use the WASM (Browser) engine modes below.
+                        Without an engine, server-side runs will fail — <span className="font-medium text-foreground">no results are fabricated</span>. You can still use the SWMM5 WASM engine modes below.
                         <a
                           href="https://www.epa.gov/water-research/storm-water-management-model-swmm"
                           target="_blank"
@@ -1315,8 +1315,8 @@ export default function Home() {
                         <TooltipContent side="right" className="max-w-sm space-y-1.5" data-testid="tooltip-engine-modes">
                           <p><span className="font-semibold">Executable</span> — runs the native EPA SWMM 5.2 program on the server. Fastest; the standard choice.</p>
                           <p><span className="font-semibold">SWMM5 API</span> — runs on the server via the SWMM5 shared library, with live step-by-step data (see the API dashboard).</p>
-                          <p><span className="font-semibold">WASM (Browser)</span> — runs EPA SWMM 5.2 entirely in your browser via WebAssembly. Works even if the server engine is unavailable.</p>
-                          <p><span className="font-semibold">SWMM6 (Browser)</span> — runs the OpenSWMM 6.0.0-alpha engine in your browser, with SWMM6-only solver options like dynamic-slot surcharge.</p>
+                          <p><span className="font-semibold">SWMM5 WASM</span> — runs EPA SWMM 5.2 entirely in your browser via WebAssembly. Works even if the server engine is unavailable.</p>
+                          <p><span className="font-semibold">SWMM6 WASM</span> — runs the OpenSWMM 6.0.0-alpha engine in your browser, with SWMM6-only solver options like dynamic-slot surcharge.</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
@@ -1352,7 +1352,7 @@ export default function Home() {
                           className="toggle-elevate"
                         >
                           <Globe className="h-3.5 w-3.5 mr-1.5" />
-                          WASM (Browser)
+                          SWMM5 WASM
                         </Button>
                         <Button
                           size="sm"
@@ -1363,7 +1363,7 @@ export default function Home() {
                           className="toggle-elevate"
                         >
                           <Globe className="h-3.5 w-3.5 mr-1.5" />
-                          SWMM6 (Browser)
+                          SWMM6 WASM
                         </Button>
                         {swmmStatus?.apiAvailable ? (
                           <Badge variant="outline" className="text-green-600 border-green-500/30" data-testid="badge-api-available">

@@ -356,3 +356,21 @@ export function applyInpOverrides(content: string, overrides: InpOverrides): str
   const block = entries.map(([k, v]) => `${k.padEnd(20)} ${v}`).join('\n');
   return `[OPTIONS]\n${block}\n\n${content}`;
 }
+
+/**
+ * Models named extran8* reference a hot start file ("USE HOTSTART") that the
+ * app ships at public/samples/extran8.hsf. These helpers detect such models
+ * and rewrite the directive to point at wherever the run provides the file.
+ */
+export function needsExtran8Hotstart(fileName: string, inpText: string): boolean {
+  const base = fileName
+    .replace(/^.*[\\/]/, '')      // strip any directory
+    .replace(/^\d+-/, '')          // strip upload index prefix ("0-name.inp")
+    .replace(/^demo_/i, '')        // strip sample prefix
+    .toLowerCase();
+  return base.startsWith('extran8') && /^\s*USE\s+HOTSTART\b/im.test(inpText);
+}
+
+export function rewriteHotstartPath(inpText: string, newPath: string): string {
+  return inpText.replace(/^([ \t]*USE[ \t]+HOTSTART[ \t]+).*$/im, `$1"${newPath}"`);
+}
