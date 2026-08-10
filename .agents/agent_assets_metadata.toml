@@ -1,0 +1,9 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Yg_03-Dk3J6xJlgWgraNo"
+uri = "file://exports/BatchSWMMRunner-code.zip"
+type = "unspecified"
+title = "BatchSWMMRunner code (zip)"
+description = "Full project source — client, server, shared, tests, samples, and the SWMM engine files — excluding node_modules, git history, caches, uploads, and attached assets. 576 files, ~10 MB."
