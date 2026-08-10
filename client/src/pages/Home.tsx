@@ -24,6 +24,7 @@ import GitHubModels from "@/components/GitHubModels";
 import LiveApiDashboard, { type ApiSnapshotEntry, MAX_SNAPSHOTS_PER_FILE } from "@/components/LiveApiDashboard";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import EngineComparisonView from "@/components/EngineComparisonView";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SystemComparisonChart from "@/components/SystemComparisonChart";
 import EngineScatterCompare from "@/components/EngineScatterCompare";
 import GifMakerTool from "@/components/GifMakerTool";
@@ -1567,35 +1568,55 @@ export default function Home() {
               <section data-testid="section-processing-log-comparison">
                 <ProcessingLog logs={logs} defaultCollapsed={true} />
               </section>
-              <section data-testid="section-engine-comparison">
-                <EngineComparisonView runs={comparisonRuns} />
-              </section>
-              {comparisonRuns.length >= 2 && (
-                <section data-testid="section-system-comparison">
-                  <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
-                </section>
-              )}
-              {comparisonRuns.length >= 2 && (
-                <section data-testid="section-scatter-comparison">
-                  <EngineScatterCompare runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
-                </section>
-              )}
-              <section data-testid="section-gif-maker">
-                <GifMakerTool runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
-              </section>
-              {comparisonRuns.map((run, i) => (
-                <section key={run.engine} data-testid={`section-results-${run.engine}`}>
-                  <h3 className="text-sm font-semibold mb-2" data-testid={`heading-results-${run.engine}`}>
-                    {run.label} results
-                  </h3>
-                  <ResultsDisplay
-                    results={run.results as ProcessResult[]}
-                    elapsedTime={i === 0 ? elapsedTime : undefined}
-                    onLoadContent={(resultId) => loadComparisonContent(i, resultId)}
-                    onLoadAllContent={() => loadAllComparisonContent(i)}
-                  />
-                </section>
-              ))}
+              <Tabs defaultValue="comparison" data-testid="tabs-comparison-sections">
+                <TabsList className="flex-wrap h-auto">
+                  <TabsTrigger value="comparison" data-testid="tab-comparison">Comparison</TabsTrigger>
+                  {comparisonRuns.length >= 2 && <TabsTrigger value="charts" data-testid="tab-charts">Charts</TabsTrigger>}
+                  {comparisonRuns.length >= 2 && <TabsTrigger value="scatter" data-testid="tab-scatter">Scatter Plots</TabsTrigger>}
+                  <TabsTrigger value="map" data-testid="tab-map">Map Animation</TabsTrigger>
+                  {comparisonRuns.map(run => (
+                    <TabsTrigger key={run.engine} value={`results-${run.engine}`} data-testid={`tab-results-${run.engine}`}>
+                      {run.label} results
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                <TabsContent value="comparison" className="mt-4">
+                  <section data-testid="section-engine-comparison">
+                    <EngineComparisonView runs={comparisonRuns} />
+                  </section>
+                </TabsContent>
+                {comparisonRuns.length >= 2 && (
+                  <TabsContent value="charts" className="mt-4">
+                    <section data-testid="section-system-comparison">
+                      <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                    </section>
+                  </TabsContent>
+                )}
+                {comparisonRuns.length >= 2 && (
+                  <TabsContent value="scatter" className="mt-4">
+                    <section data-testid="section-scatter-comparison">
+                      <EngineScatterCompare runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                    </section>
+                  </TabsContent>
+                )}
+                <TabsContent value="map" className="mt-4">
+                  <section data-testid="section-gif-maker">
+                    <GifMakerTool runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                  </section>
+                </TabsContent>
+                {comparisonRuns.map((run, i) => (
+                  <TabsContent key={run.engine} value={`results-${run.engine}`} className="mt-4">
+                    <section data-testid={`section-results-${run.engine}`}>
+                      <ResultsDisplay
+                        results={run.results as ProcessResult[]}
+                        elapsedTime={i === 0 ? elapsedTime : undefined}
+                        onLoadContent={(resultId) => loadComparisonContent(i, resultId)}
+                        onLoadAllContent={() => loadAllComparisonContent(i)}
+                      />
+                    </section>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </>
           )}
         </div>
