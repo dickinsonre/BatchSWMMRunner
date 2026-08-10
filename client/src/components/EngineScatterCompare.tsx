@@ -114,13 +114,17 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
     const seriesMap = (content: string) => {
       const map = new Map<string, { time: string; v: number }[]>();
       for (const ts of parseTimeSeries(content)) {
-        if (!/link/i.test(ts.title)) continue;
+        // Series headers name the element as e.g. "Link 23916015-23916007";
+        // strip the type prefix so it matches the bare name in summary tables.
+        const isLink = /link/i.test(ts.title) || /^link\s+/i.test(ts.element);
+        if (!isLink) continue;
         let flowIdx = ts.columns.findIndex(c => /flow/i.test(c));
         if (flowIdx < 0) flowIdx = 0;
         const rows = ts.data
           .map(d => ({ time: d.time, v: d.values[flowIdx] }))
           .filter(d => Number.isFinite(d.v));
-        if (rows.length > 0) map.set(ts.element, rows);
+        const bareName = ts.element.replace(/^link\s+/i, "").trim();
+        if (rows.length > 0) map.set(bareName, rows);
       }
       return map;
     };
