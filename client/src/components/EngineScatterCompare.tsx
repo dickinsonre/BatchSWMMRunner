@@ -84,7 +84,7 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
           ]
         : [{ id: "node-depths", title: "Maximum Node Depths", x: valsX.nodeDepths, y: valsY.nodeDepths }]),
       { id: "link-depths", title: "Max Link Depth (fraction of full)", x: valsX.linkDepths, y: valsY.linkDepths },
-      { id: "runoff", title: "Total Subcatchment Runoff (depth)", x: valsX.runoff, y: valsY.runoff },
+      { id: "runoff", title: "Peak Subcatchment Runoff (flow)", x: valsX.runoff, y: valsY.runoff },
     ];
     return specs.map(spec => {
       const points: { x: number; y: number; name: string }[] = [];
@@ -101,38 +101,43 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
   const worstSeries = useMemo(() => {
     if (!pair || !vals) return null;
     const [valsX, valsY] = vals;
-    let worst: { name: string; diff: number } | null = null;
+    // Rank links by how much the two engines disagree on peak flow.
+    const ranked: { name: string; diff: number }[] = [];
     valsX.flows.forEach((x, name) => {
       const y = valsY.flows.get(name);
-      if (y === undefined) return;
-      const diff = Math.abs(x - y);
-      if (!worst || diff > worst.diff) worst = { name, diff };
+      if (y !== undefined) ranked.push({ name, diff: Math.abs(x - y) });
     });
-    if (!worst) return null;
-    const linkName = (worst as { name: string }).name;
-    const seriesFor = (content: string) => {
-      const all = parseTimeSeries(content);
-      const anyLinks = all.some(ts => /link/i.test(ts.title));
-      const s = all.find(ts => /link/i.test(ts.title) && ts.element === linkName);
-      if (!s) return { anyLinks, rows: null };
-      let flowIdx = s.columns.findIndex(c => /flow/i.test(c));
-      if (flowIdx < 0) flowIdx = 0;
-      const rows = s.data
-        .map(d => ({ time: d.time, v: d.values[flowIdx] }))
-        .filter(d => Number.isFinite(d.v));
-      return { anyLinks, rows: rows.length > 0 ? rows : null };
+    if (ranked.length === 0) return null;
+    ranked.sort((r1, r2) => r2.diff - r1.diff);
+
+    // Parse each report's link time series once, indexed by element name.
+    const seriesMap = (content: string) => {
+      const map = new Map<string, { time: string; v: number }[]>();
+      for (const ts of parseTimeSeries(content)) {
+        if (!/link/i.test(ts.title)) continue;
+        let flowIdx = ts.columns.findIndex(c => /flow/i.test(c));
+        if (flowIdx < 0) flowIdx = 0;
+        const rows = ts.data
+          .map(d => ({ time: d.time, v: d.values[flowIdx] }))
+          .filter(d => Number.isFinite(d.v));
+        if (rows.length > 0) map.set(ts.element, rows);
+      }
+      return map;
     };
-    const resA = seriesFor(pair[0].content!);
-    const resB = seriesFor(pair[1].content!);
-    if (!resA.rows || !resB.rows) {
-      // Distinguish "no link time series at all" from "this link missing in one report".
-      const reason = !resA.anyLinks && !resB.anyLinks
+    const mapA = seriesMap(pair[0].content!);
+    const mapB = seriesMap(pair[1].content!);
+
+    // Pick the worst-disagreeing link that BOTH reports have series for.
+    const pick = ranked.find(r => mapA.has(r.name) && mapB.has(r.name));
+    if (!pick) {
+      const reason = mapA.size === 0 && mapB.size === 0
         ? ("none" as const)
         : ("missing-link" as const);
-      return { linkName, rows: null, reason };
+      return { linkName: ranked[0].name, rows: null, reason };
     }
-    const a = resA.rows;
-    const b = resB.rows;
+    const linkName = pick.name;
+    const a = mapA.get(linkName)!;
+    const b = mapB.get(linkName)!;
     // Anchor each engine to its own first timestamp; join on whole seconds.
     const t0 = (rows: { time: string }[]) => {
       const m = rows[0].time.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
