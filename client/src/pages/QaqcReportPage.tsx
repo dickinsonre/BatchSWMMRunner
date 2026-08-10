@@ -12,7 +12,7 @@ import {
 import AppHeader from "@/components/AppHeader";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import { parseTimeSeries, type ParsedTimeSeries } from "@/lib/parseTimeSeries";
-import { ensureReportAll, toHours, rSquared, rankPeakDifferences, type PeakDiffRow } from "@/lib/qaqcReport";
+import { ensureReportAll, toHours, rSquared, rankPeakDifferences, bareElementName, seriesKind, type PeakDiffRow } from "@/lib/qaqcReport";
 import type { ProcessResult, ParsedMetrics } from "@shared/schema";
 
 // ---------------------------------------------------------------------------
@@ -45,7 +45,9 @@ interface EngineData {
 function indexSeries(result: ProcessResult): EngineData {
   const series = parseTimeSeries(result.reportContent || "");
   const byElement = new Map<string, ParsedTimeSeries>();
-  for (const s of series) byElement.set(s.element.trim(), s);
+  // SWMM5 labels series "Node 9" / "Link 1" while SWMM6 uses the bare name —
+  // index by the bare name so the two engines' elements actually match up.
+  for (const s of series) byElement.set(bareElementName(s.element), s);
   return { result, series, byElement };
 }
 
@@ -203,11 +205,12 @@ export default function QaqcReportPage() {
     if (!swmm5 || !swmm6) return [];
     const opts: SeriesOption[] = [];
     for (const s of swmm5.series) {
-      const other = swmm6.byElement.get(s.element.trim());
+      const el = bareElementName(s.element);
+      const other = swmm6.byElement.get(el);
       if (!other) continue;
       s.columns.forEach((col, i) => {
         if (other.columns.some(c => c.trim().toLowerCase() === col.trim().toLowerCase())) {
-          opts.push({ key: `${s.element.trim()}||${col.trim()}`, element: s.element.trim(), column: col.trim(), unit: s.units[i] || "" });
+          opts.push({ key: `${el}||${col.trim()}`, element: el, column: col.trim(), unit: s.units[i] || "" });
         }
       });
     }
@@ -221,8 +224,10 @@ export default function QaqcReportPage() {
   );
 
   // Default the time-series figure to the output that disagrees the most —
-  // that's the one worth looking at first. The user can still pick another.
-  const worstKey = ranked.length > 0 ? `${ranked[0].element}||${ranked[0].column}` : "";
+  // that's the one worth looking at first. Prefer real node/link outputs over
+  // system-wide series (which can be irrelevant, e.g. temperature).
+  const worstRow = ranked.find(r => r.kind === "link" || r.kind === "node") || ranked[0];
+  const worstKey = worstRow ? `${worstRow.element}||${worstRow.column}` : "";
   const selected =
     options.find(o => o.key === selectedKey) ||
     options.find(o => o.key === worstKey) ||
@@ -265,13 +270,13 @@ export default function QaqcReportPage() {
     const flows: { x: number; y: number; name: string }[] = [];
     const depths: { x: number; y: number; name: string }[] = [];
     for (const s of swmm5.series) {
-      const el = s.element.trim();
+      const el = bareElementName(s.element);
       const o = swmm6.byElement.get(el);
       if (!o) continue;
-      // Classify by report section title ("Link Results Time Series" /
-      // "Node Results Time Series"), not by element name.
-      const isLink = /^link/i.test(s.title.trim());
-      const isNode = /^node/i.test(s.title.trim());
+      // Classify by section title or element prefix — the two engines differ.
+      const kind = seriesKind(s.title, s.element);
+      const isLink = kind === "link";
+      const isNode = kind === "node";
       if (isLink) {
         const fc5 = colIndexFor(s, /Flow/i), fc6 = colIndexFor(o, /Flow/i);
         if (fc5 < 0 || fc6 < 0) continue;
@@ -452,13 +457,22 @@ export default function QaqcReportPage() {
                     const a = swmm5.result.parsedMetrics?.[key] as number | undefined;
                     const b = swmm6.result.parsedMetrics?.[key] as number | undefined;
                     if (a === undefined && b === undefined) return null;
+                    // One engine missing the metric while the other reports ~0
+                    // means "not applicable" (e.g. runoff rows in a model with
+                    // no subcatchments) — say so consistently instead of
+                    // mixing dashes and zeros.
+                    const notApplicable =
+                      (a === undefined && b !== undefined && Math.abs(b) < 1e-9) ||
+                      (b === undefined && a !== undefined && Math.abs(a) < 1e-9);
                     const d = a !== undefined && b !== undefined ? b - a : undefined;
+                    const cell = (v: number | undefined) =>
+                      notApplicable ? "N/A" : v === undefined ? "N/A" : fmt(v);
                     return (
                       <tr key={key} className="border-b border-border/60">
                         <td className="py-1 pr-4">{label}</td>
-                        <td className="py-1 text-right font-mono text-xs">{fmt(a)}</td>
-                        <td className="py-1 text-right font-mono text-xs">{fmt(b)}</td>
-                        <td className="py-1 text-right font-mono text-xs">{fmt(d)}</td>
+                        <td className="py-1 text-right font-mono text-xs">{cell(a)}</td>
+                        <td className="py-1 text-right font-mono text-xs">{cell(b)}</td>
+                        <td className="py-1 text-right font-mono text-xs">{notApplicable ? "N/A" : fmt(d)}</td>
                       </tr>
                     );
                   })}

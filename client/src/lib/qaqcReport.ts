@@ -88,14 +88,14 @@ function peakAbs(s: SeriesLike, ci: number): number | undefined {
  */
 export function rankPeakDifferences(series5: SeriesLike[], series6: SeriesLike[]): PeakDiffRow[] {
   const by6 = new Map<string, SeriesLike>();
-  for (const s of series6) by6.set(s.element.trim(), s);
+  for (const s of series6) by6.set(bareElementName(s.element), s);
   const rows: PeakDiffRow[] = [];
   for (const s5 of series5) {
-    const el = s5.element.trim();
+    const el = bareElementName(s5.element);
     const s6 = by6.get(el);
     if (!s6) continue;
-    const kind: PeakDiffRow['kind'] = /^link/i.test(s5.title.trim()) ? 'link'
-      : /^node/i.test(s5.title.trim()) ? 'node' : 'other';
+    const k = seriesKind(s5.title, s5.element);
+    const kind: PeakDiffRow['kind'] = k === 'link' || k === 'node' ? k : 'other';
     s5.columns.forEach((col, c5) => {
       const c6 = s6.columns.findIndex(c => c.trim().toLowerCase() === col.trim().toLowerCase());
       if (c6 < 0) return;
@@ -109,4 +109,17 @@ export function rankPeakDifferences(series5: SeriesLike[], series6: SeriesLike[]
   }
   rows.sort((a, b) => (b.diffPct ?? -1) - (a.diffPct ?? -1) || b.absDiff - a.absDiff);
   return rows;
+}
+
+/** Strip a "Node " / "Link " / "Subcatch " type prefix from a series element name. */
+export function bareElementName(el: string): string {
+  return el.trim().replace(/^(node|link|subcatch\w*)\s+/i, '').trim();
+}
+
+/** Classify a series as link/node/system/other using its section title or element prefix. */
+export function seriesKind(title: string, element: string): 'link' | 'node' | 'system' | 'other' {
+  if (/^link/i.test(title.trim()) || /^link\s+/i.test(element.trim())) return 'link';
+  if (/^node/i.test(title.trim()) || /^node\s+/i.test(element.trim())) return 'node';
+  if (/system/i.test(title) || /^system$/i.test(element.trim())) return 'system';
+  return 'other';
 }
