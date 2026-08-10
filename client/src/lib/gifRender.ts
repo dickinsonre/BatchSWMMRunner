@@ -210,9 +210,40 @@ async function encodeFrames(
 }
 
 export async function renderMapGif(input: MapGifData, opts: RenderOptions = {}): Promise<Uint8Array> {
-  const { geometry, engines, metric, unit, fileName } = input;
+  const { geometry, metric, unit, fileName } = input;
   if (geometry.nodes.length === 0) throw new Error("This model has no coordinate data to draw a map from.");
-  const times = sampleFrameTimes(unionTimes(engines.map(e => e.lookup)));
+
+  // Engines write timestamps in slightly different formats (SWMM5 vs SWMM6),
+  // so exact time-string matching leaves one panel blank. Normalize each
+  // engine to whole seconds elapsed from its OWN first timestamp and join
+  // frames on that key instead.
+  const engines = input.engines.map(e => {
+    let t0 = Infinity;
+    for (const m of Array.from(e.lookup.values())) {
+      for (const t of Array.from(m.keys())) {
+        const p = parseReportTimestamp(t);
+        if (!isNaN(p) && p < t0) t0 = p;
+      }
+    }
+    const lookup = new Map<string, Map<string, number>>();
+    const keyToRaw = new Map<string, string>();
+    for (const [node, m] of Array.from(e.lookup.entries())) {
+      const nm = new Map<string, number>();
+      for (const [t, v] of Array.from(m.entries())) {
+        const p = parseReportTimestamp(t);
+        if (isNaN(p)) continue;
+        const key = String(Math.round((p - t0) / 1000));
+        nm.set(key, v);
+        if (!keyToRaw.has(key)) keyToRaw.set(key, t);
+      }
+      lookup.set(node, nm);
+    }
+    return { label: e.label, lookup, keyToRaw };
+  });
+
+  const times = sampleFrameTimes(
+    unionTimes(engines.map(e => e.lookup)).sort((a, b) => Number(a) - Number(b)),
+  );
   if (times.length === 0) throw new Error("No node time-series data found for this model.");
   let maxValue = 0;
   for (const e of engines) {
@@ -222,9 +253,11 @@ export async function renderMapGif(input: MapGifData, opts: RenderOptions = {}):
   }
   const n = engines.length;
   const panelW = Math.floor((GIF_WIDTH - 8 * (n - 1)) / n);
+  const labelFor = (key: string) =>
+    engines.map(e => e.keyToRaw.get(key)).find(Boolean) || `${(Number(key) / 3600).toFixed(2)} h`;
 
   return encodeFrames((ctx, i) => {
-    frameChrome(ctx, fileName, times[i], metric, unit);
+    frameChrome(ctx, fileName, labelFor(times[i]), metric, unit);
     engines.forEach((eng, k) => {
       drawMapPanel(ctx, geometry, eng, times[i], maxValue, k * (panelW + 8), 30, panelW, GIF_HEIGHT - 60);
     });
