@@ -49,3 +49,64 @@ export function rSquared(pairs: { x: number; y: number }[]): number | undefined 
   if (sxx === 0 || syy === 0) return undefined;
   return (sxy * sxy) / (sxx * syy);
 }
+
+export interface PeakDiffRow {
+  element: string;
+  column: string;
+  unit: string;
+  kind: 'link' | 'node' | 'other';
+  peak5: number;
+  peak6: number;
+  /** Percent difference relative to SWMM5 (undefined when SWMM5 peak ~ 0). */
+  diffPct: number | undefined;
+  /** Absolute difference — used for ranking when % is unavailable. */
+  absDiff: number;
+}
+
+interface SeriesLike {
+  title: string;
+  element: string;
+  columns: string[];
+  units: string[];
+  data: { time: string; values: number[] }[];
+}
+
+function peakAbs(s: SeriesLike, ci: number): number | undefined {
+  let best: number | undefined;
+  for (const d of s.data) {
+    const v = d.values[ci];
+    if (v === undefined || !Number.isFinite(v)) continue;
+    if (best === undefined || Math.abs(v) > Math.abs(best)) best = v;
+  }
+  return best;
+}
+
+/**
+ * Rank every output present in both engines' time series by how much its
+ * peak value disagrees. Sorted worst-first so ranked[0] is the output an
+ * engineer should look at first.
+ */
+export function rankPeakDifferences(series5: SeriesLike[], series6: SeriesLike[]): PeakDiffRow[] {
+  const by6 = new Map<string, SeriesLike>();
+  for (const s of series6) by6.set(s.element.trim(), s);
+  const rows: PeakDiffRow[] = [];
+  for (const s5 of series5) {
+    const el = s5.element.trim();
+    const s6 = by6.get(el);
+    if (!s6) continue;
+    const kind: PeakDiffRow['kind'] = /^link/i.test(s5.title.trim()) ? 'link'
+      : /^node/i.test(s5.title.trim()) ? 'node' : 'other';
+    s5.columns.forEach((col, c5) => {
+      const c6 = s6.columns.findIndex(c => c.trim().toLowerCase() === col.trim().toLowerCase());
+      if (c6 < 0) return;
+      const p5 = peakAbs(s5, c5);
+      const p6 = peakAbs(s6, c6);
+      if (p5 === undefined || p6 === undefined) return;
+      const absDiff = Math.abs(Math.abs(p6) - Math.abs(p5));
+      const diffPct = Math.abs(p5) > 1e-6 ? (absDiff / Math.abs(p5)) * 100 : undefined;
+      rows.push({ element: el, column: col.trim(), unit: s5.units[c5] || '', kind, peak5: p5, peak6: p6, diffPct, absDiff });
+    });
+  }
+  rows.sort((a, b) => (b.diffPct ?? -1) - (a.diffPct ?? -1) || b.absDiff - a.absDiff);
+  return rows;
+}

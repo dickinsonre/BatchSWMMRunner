@@ -12,7 +12,7 @@ import {
 import AppHeader from "@/components/AppHeader";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import { parseTimeSeries, type ParsedTimeSeries } from "@/lib/parseTimeSeries";
-import { ensureReportAll, toHours, rSquared } from "@/lib/qaqcReport";
+import { ensureReportAll, toHours, rSquared, rankPeakDifferences, type PeakDiffRow } from "@/lib/qaqcReport";
 import type { ProcessResult, ParsedMetrics } from "@shared/schema";
 
 // ---------------------------------------------------------------------------
@@ -214,7 +214,19 @@ export default function QaqcReportPage() {
     return opts;
   }, [swmm5, swmm6]);
 
-  const selected = options.find(o => o.key === selectedKey) || options[0];
+  // Every shared output ranked by peak disagreement, worst first.
+  const ranked: PeakDiffRow[] = useMemo(
+    () => (swmm5 && swmm6 ? rankPeakDifferences(swmm5.series, swmm6.series) : []),
+    [swmm5, swmm6],
+  );
+
+  // Default the time-series figure to the output that disagrees the most —
+  // that's the one worth looking at first. The user can still pick another.
+  const worstKey = ranked.length > 0 ? `${ranked[0].element}||${ranked[0].column}` : "";
+  const selected =
+    options.find(o => o.key === selectedKey) ||
+    options.find(o => o.key === worstKey) ||
+    options[0];
 
   // Overlaid time-series data for the chosen output.
   const tsData = useMemo(() => {
@@ -394,6 +406,10 @@ export default function QaqcReportPage() {
                 report, results are compared through system-wide continuity totals, a time series
                 overlay at a selected location, and scatter plots of peak values for all conduits
                 and nodes against a 45-degree line of equality.
+                {swmm5.result.processingTime !== undefined && swmm6.result.processingTime !== undefined && (
+                  <> Run times: SWMM&nbsp;5 completed in <b>{swmm5.result.processingTime.toFixed(1)}s</b>,
+                  SWMM&nbsp;6 in <b>{swmm6.result.processingTime.toFixed(1)}s</b>.</>
+                )}
               </p>
             </section>
 
@@ -451,10 +467,45 @@ export default function QaqcReportPage() {
               <p className="text-xs text-muted-foreground mt-1">Table 3.1. System-wide mass balance comparison (after Table 6.1 of the EPA report).</p>
             </section>
 
-            {/* 4. Time series comparison */}
+            {/* 4. Largest differences */}
+            {ranked.length > 0 && (
+              <section>
+                <h2 className="font-semibold text-lg mb-2">4. Largest Peak Differences</h2>
+                <table className="w-full text-sm border-collapse" data-testid="table-largest-diffs">
+                  <thead>
+                    <tr className="border-b-2 border-foreground/60 text-left">
+                      <th className="py-1 pr-4">Element</th>
+                      <th className="py-1 pr-4">Output</th>
+                      <th className="py-1 text-right">SWMM 5 Peak</th>
+                      <th className="py-1 text-right">SWMM 6 Peak</th>
+                      <th className="py-1 text-right">Diff (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ranked.slice(0, 10).map(r => (
+                      <tr key={`${r.element}-${r.column}`} className="border-b border-border/60">
+                        <td className="py-1 pr-4">{r.element}</td>
+                        <td className="py-1 pr-4">{r.column}{r.unit ? ` (${r.unit})` : ""}</td>
+                        <td className="py-1 text-right font-mono text-xs">{fmt(r.peak5)}</td>
+                        <td className="py-1 text-right font-mono text-xs">{fmt(r.peak6)}</td>
+                        <td className="py-1 text-right font-mono text-xs">
+                          {r.diffPct === undefined ? "—" : `${r.diffPct.toFixed(2)}%`}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Table 4.1. The ten outputs with the largest peak-value disagreement between engines,
+                  worst first. The time-series figure below defaults to the top entry.
+                </p>
+              </section>
+            )}
+
+            {/* 5. Time series comparison */}
             {selected && tsData.length > 0 && (
               <section>
-                <h2 className="font-semibold text-lg mb-2">4. Time Series Comparison</h2>
+                <h2 className="font-semibold text-lg mb-2">5. Time Series Comparison</h2>
                 <div className="h-72" data-testid="chart-timeseries">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={tsData} margin={{ top: 8, right: 24, left: 8, bottom: 20 }}>
@@ -471,14 +522,15 @@ export default function QaqcReportPage() {
                   </ResponsiveContainer>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Figure 4.1. Comparison of {selected.column} for {selected.element}.
+                  Figure 5.1. Comparison of {selected.column} for {selected.element}
+                  {selected.key === worstKey ? " (largest peak difference between engines)" : ""}.
                 </p>
               </section>
             )}
 
             {/* 5. Scatter plots */}
             <section>
-              <h2 className="font-semibold text-lg mb-2">5. Peak Value Comparisons</h2>
+              <h2 className="font-semibold text-lg mb-2">6. Peak Value Comparisons</h2>
               <div className="grid md:grid-cols-2 gap-6 print:grid-cols-2">
                 {[
                   { data: scatter.flows, label: "Peak Flows (all links)", r2: flowR2, fig: "5.1", testid: "chart-scatter-flows" },
@@ -532,7 +584,7 @@ export default function QaqcReportPage() {
 
             {/* 6. Summary */}
             <section>
-              <h2 className="font-semibold text-lg mb-2">6. Summary and Conclusions</h2>
+              <h2 className="font-semibold text-lg mb-2">7. Summary and Conclusions</h2>
               <p className="text-sm leading-relaxed" data-testid="text-summary">
                 {peakDiffPct ? (
                   <>
