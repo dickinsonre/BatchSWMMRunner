@@ -22,9 +22,9 @@ describe('extractScatterValues', () => {
     expect(vals.heads.get('10')).toBeCloseTo(998.0, 2);
   });
 
-  it('reads total runoff depth for each subcatchment', () => {
-    // From the fixture: subcatchment 1 -> 1.48 in (Total Runoff depth column)
-    expect(vals.runoff.get('1')).toBeCloseTo(1.48, 2);
+  it('reads peak runoff flow for each subcatchment', () => {
+    // From the fixture: subcatchment 1 -> 4.66 CFS (Peak Runoff column)
+    expect(vals.runoff.get('1')).toBeCloseTo(4.66, 2);
     expect(vals.runoff.size).toBeGreaterThan(3);
   });
 

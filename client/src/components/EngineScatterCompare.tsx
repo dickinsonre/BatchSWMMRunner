@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid,
   Tooltip as ChartTooltip, ResponsiveContainer, ReferenceLine,
+  LineChart, Line, Legend,
 } from "recharts";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +10,8 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { extractScatterValues } from "@/lib/summaryScatter";
-import { rSquared } from "@/lib/qaqcReport";
+import { rSquared, toHours } from "@/lib/qaqcReport";
+import { parseTimeSeries } from "@/lib/parseTimeSeries";
 import type { EngineRun } from "@/lib/engineComparison";
 
 // Rossman QA-report style scatter plots (EPA/600/R-06/097): peak link flows,
@@ -62,10 +64,15 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
     return withContent.length >= 2 ? [withContent[0], withContent[1]] : null;
   }, [runs, fileName]);
 
+  // Parse each report's summary tables once and reuse everywhere below.
+  const vals = useMemo(() => {
+    if (!pair) return null;
+    return [extractScatterValues(pair[0].content!), extractScatterValues(pair[1].content!)] as const;
+  }, [pair]);
+
   const charts = useMemo(() => {
-    if (!pair) return [];
-    const valsX = extractScatterValues(pair[0].content!);
-    const valsY = extractScatterValues(pair[1].content!);
+    if (!pair || !vals) return [];
+    const [valsX, valsY] = vals;
     const specs: { id: string; title: string; x: Map<string, number>; y: Map<string, number> }[] = [
       { id: "flows", title: "Peak Link Flows", x: valsX.flows, y: valsY.flows },
       // When both reports have an HGL column, show HGL and depths separately;
@@ -87,7 +94,75 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
       });
       return { spec, points, r2: rSquared(points) };
     }).filter(c => c.points.length > 0);
-  }, [pair]);
+  }, [pair, vals]);
+
+  // Time-series overlay for the link whose peak flow disagrees the most
+  // between the two engines (the "worst" peak-flow point on the scatter).
+  const worstSeries = useMemo(() => {
+    if (!pair || !vals) return null;
+    const [valsX, valsY] = vals;
+    let worst: { name: string; diff: number } | null = null;
+    valsX.flows.forEach((x, name) => {
+      const y = valsY.flows.get(name);
+      if (y === undefined) return;
+      const diff = Math.abs(x - y);
+      if (!worst || diff > worst.diff) worst = { name, diff };
+    });
+    if (!worst) return null;
+    const linkName = (worst as { name: string }).name;
+    const seriesFor = (content: string) => {
+      const all = parseTimeSeries(content);
+      const anyLinks = all.some(ts => /link/i.test(ts.title));
+      const s = all.find(ts => /link/i.test(ts.title) && ts.element === linkName);
+      if (!s) return { anyLinks, rows: null };
+      let flowIdx = s.columns.findIndex(c => /flow/i.test(c));
+      if (flowIdx < 0) flowIdx = 0;
+      const rows = s.data
+        .map(d => ({ time: d.time, v: d.values[flowIdx] }))
+        .filter(d => Number.isFinite(d.v));
+      return { anyLinks, rows: rows.length > 0 ? rows : null };
+    };
+    const resA = seriesFor(pair[0].content!);
+    const resB = seriesFor(pair[1].content!);
+    if (!resA.rows || !resB.rows) {
+      // Distinguish "no link time series at all" from "this link missing in one report".
+      const reason = !resA.anyLinks && !resB.anyLinks
+        ? ("none" as const)
+        : ("missing-link" as const);
+      return { linkName, rows: null, reason };
+    }
+    const a = resA.rows;
+    const b = resB.rows;
+    // Anchor each engine to its own first timestamp; join on whole seconds.
+    const t0 = (rows: { time: string }[]) => {
+      const m = rows[0].time.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+      return m ? Date.UTC(+m[3], +m[1] - 1, +m[2], +m[4], +m[5], +(m[6] || 0)) : NaN;
+    };
+    const t0a = t0(a), t0b = t0(b);
+    const merged = new Map<number, { h: number; a?: number; b?: number }>();
+    for (const d of a) {
+      const h = toHours(d.time, t0a);
+      if (!Number.isFinite(h)) continue;
+      const key = Math.round(h * 3600);
+      const row = merged.get(key) || { h };
+      row.a = d.v;
+      merged.set(key, row);
+    }
+    for (const d of b) {
+      const h = toHours(d.time, t0b);
+      if (!Number.isFinite(h)) continue;
+      const key = Math.round(h * 3600);
+      const row = merged.get(key) || { h };
+      row.b = d.v;
+      merged.set(key, row);
+    }
+    // Keep only timestamps where BOTH engines have a value, so the overlay
+    // never draws a line through intervals only one engine reported.
+    const rows = Array.from(merged.values())
+      .filter(r => r.a !== undefined && r.b !== undefined)
+      .sort((r1, r2) => r1.h - r2.h);
+    return { linkName, rows, reason: undefined };
+  }, [pair, vals]);
 
   if (runs.length < 2 || fileNames.length === 0) return null;
 
@@ -171,6 +246,46 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
             );
           })}
         </div>
+        {worstSeries && (
+          <div className="mt-6" data-testid="chart-worst-peak-flow">
+            <p className="text-xs font-medium mb-1">
+              Flow Time Series — Link {worstSeries.linkName} (largest peak-flow difference between engines)
+            </p>
+            {worstSeries.rows && worstSeries.rows.length > 0 ? (
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={worstSeries.rows} margin={{ top: 8, right: 12, left: 4, bottom: 22 }}>
+                    <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.4} />
+                    <XAxis dataKey="h" type="number" domain={["dataMin", "dataMax"]}
+                      label={{ value: "Elapsed Time (hours)", position: "insideBottom", offset: -12, fontSize: 11 }}
+                      fontSize={10} tickFormatter={(v: number) => v.toFixed(1)} />
+                    <YAxis fontSize={10}
+                      label={{ value: "Flow", angle: -90, position: "insideLeft", fontSize: 11 }}
+                      tickFormatter={(v: number) => v.toPrecision(3)} />
+                    <ChartTooltip
+                      formatter={(value: number) => value.toFixed(3)}
+                      labelFormatter={(h: number) => `${h.toFixed(2)} h`}
+                    />
+                    <Legend verticalAlign="top" height={24} wrapperStyle={{ fontSize: 11 }} />
+                    <Line type="monotone" dataKey="a" name={xLabel} stroke="#1d4ed8"
+                      dot={false} strokeWidth={2} isAnimationActive={false} />
+                    <Line type="monotone" dataKey="b" name={yLabel} stroke="#d97706"
+                      dot={false} strokeWidth={2} strokeDasharray="6 4" isAnimationActive={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground" data-testid="text-worst-no-series">
+                {worstSeries.reason === "missing-link"
+                  ? <>The reports include link time series, but not for Link {worstSeries.linkName} in
+                    both engines — check that the [REPORT] section lists the same links for each run.</>
+                  : <>These reports don&apos;t include link time series, so the time-series comparison for
+                    Link {worstSeries.linkName} can&apos;t be drawn. (Reports only contain time series when
+                    the model&apos;s [REPORT] section lists the links.)</>}
+              </p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

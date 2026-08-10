@@ -14,7 +14,7 @@ export interface ScatterValues {
   flows: Map<string, number>;
   /** Node name -> maximum HGL (falls back to maximum depth when HGL column missing). */
   heads: Map<string, number>;
-  /** Subcatchment name -> total runoff depth (in/mm). */
+  /** Subcatchment name -> peak runoff flow (CFS/CMS). */
   runoff: Map<string, number>;
   /** Node name -> maximum depth (always the Maximum Depth column). */
   nodeDepths: Map<string, number>;
@@ -87,12 +87,12 @@ export function extractScatterValues(report: string): ScatterValues {
     if (d !== undefined) nodeDepths.set(row[0], d);
   }
 
-  // Subcatchment Runoff Summary — total runoff depth is the 3rd column from
-  // the end of the numeric block minus peak+coeff... safer: fixed position 7
-  // (name + 6 depth columns before it), validated as numeric.
+  // Subcatchment Runoff Summary — columns: name, precip, runon, evap, infil,
+  // imperv RO, perv RO, total RO depth, total RO volume, PEAK runoff, coeff.
+  // Peak runoff flow is col 9.
   for (const row of sectionRows(lines, /^\s*Subcatchment Runoff Summary\s*$/)) {
-    if (row.length < 9) continue;
-    const v = num(row[7]);
+    if (row.length < 11) continue;
+    const v = num(row[9]);
     if (v !== undefined) runoff.set(row[0], v);
   }
 
