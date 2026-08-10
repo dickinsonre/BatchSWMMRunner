@@ -48,6 +48,8 @@ export interface FileComparison {
 
 export interface ComparisonSummary {
   engines: { engine: EngineId; label: string }[];
+  /** Per engine (aligned with engines order): how many files succeeded, failed, or had no result. */
+  engineStatusCounts: { success: number; failed: number; missing: number }[];
   files: FileComparison[];
   matchCount: number;
   differCount: number;
@@ -166,8 +168,20 @@ export function buildComparison(runs: EngineRun[]): ComparisonSummary {
     return { fileName, results, statuses, statusMismatch, metrics, verdict };
   });
 
+  const engineStatusCounts = engines.map((_, i) => {
+    const counts = { success: 0, failed: 0, missing: 0 };
+    for (const f of files) {
+      const s = f.statuses[i];
+      if (s === 'success') counts.success++;
+      else if (s === 'missing') counts.missing++;
+      else counts.failed++;
+    }
+    return counts;
+  });
+
   return {
     engines,
+    engineStatusCounts,
     files,
     matchCount: files.filter(f => f.verdict === 'match').length,
     differCount: files.filter(f => f.verdict === 'differs').length,

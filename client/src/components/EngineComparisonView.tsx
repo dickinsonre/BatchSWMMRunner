@@ -53,6 +53,19 @@ export default function EngineComparisonView({ runs }: { runs: EngineRun[] }) {
           {summary.statusMismatchCount > 0 && <Badge variant="destructive">{summary.statusMismatchCount} status mismatch</Badge>}
           {summary.inconclusiveCount > 0 && <Badge variant="outline" className="text-muted-foreground">{summary.inconclusiveCount} not comparable</Badge>}
         </div>
+        <div className="flex gap-2 flex-wrap text-xs" data-testid="text-engine-status-counts">
+          {summary.engines.map((e, i) => {
+            const c = summary.engineStatusCounts[i];
+            return (
+              <Badge key={e.engine} variant="outline" className="font-normal" data-testid={`badge-engine-status-${e.engine}`}>
+                <span className="font-medium mr-1">{e.label}:</span>
+                <span className="text-green-600">{c.success} success</span>
+                {c.failed > 0 && <span className="text-red-600 ml-1">· {c.failed} failed</span>}
+                {c.missing > 0 && <span className="text-muted-foreground ml-1">· {c.missing} no result</span>}
+              </Badge>
+            );
+          })}
+        </div>
         <p className="text-xs text-muted-foreground">
           Values are compared with small tolerances (continuity errors within 0.05 points, volumes within 0.5%).
           Warning counts and run times are shown for reference but don't count as differences.
