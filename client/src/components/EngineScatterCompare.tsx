@@ -10,8 +10,8 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { extractScatterValues } from "@/lib/summaryScatter";
-import { rSquared, toHours } from "@/lib/qaqcReport";
-import { parseTimeSeries } from "@/lib/parseTimeSeries";
+import { rSquared } from "@/lib/qaqcReport";
+import { buildWorstOverlays } from "@/lib/seriesOverlays";
 import type { EngineRun } from "@/lib/engineComparison";
 
 // Rossman QA-report style scatter plots (EPA/600/R-06/097): peak link flows,
@@ -100,117 +100,7 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
   // most: worst peak link flow, worst max node depth, worst link depth ratio.
   const overlays = useMemo(() => {
     if (!pair || !vals) return [];
-    const [valsX, valsY] = vals;
-
-    // Parse each report's time series ONCE, indexed by element type + name.
-    const buildMaps = (content: string) => {
-      const links = new Map<string, ReturnType<typeof parseTimeSeries>[number]>();
-      const nodes = new Map<string, ReturnType<typeof parseTimeSeries>[number]>();
-      for (const ts of parseTimeSeries(content)) {
-        // Series headers name the element as e.g. "Link 23916015-23916007";
-        // strip the type prefix so it matches the bare name in summary tables.
-        if (/link/i.test(ts.title) || /^link\s+/i.test(ts.element)) {
-          links.set(ts.element.replace(/^link\s+/i, "").trim(), ts);
-        } else if (/node/i.test(ts.title) || /^node\s+/i.test(ts.element)) {
-          nodes.set(ts.element.replace(/^node\s+/i, "").trim(), ts);
-        }
-      }
-      return { links, nodes };
-    };
-    const mapsA = buildMaps(pair[0].content!);
-    const mapsB = buildMaps(pair[1].content!);
-
-    const rowsFor = (ts: ReturnType<typeof parseTimeSeries>[number], colRegex: RegExp) => {
-      let ci = ts.columns.findIndex(c => colRegex.test(c));
-      if (ci < 0) ci = 0;
-      return ts.data
-        .map(d => ({ time: d.time, v: d.values[ci] }))
-        .filter(d => Number.isFinite(d.v));
-    };
-
-    const mergeRows = (a: { time: string; v: number }[], b: { time: string; v: number }[]) => {
-      // Anchor each engine to its own first timestamp; join on whole seconds.
-      const t0 = (rows: { time: string }[]) => {
-        const m = rows[0].time.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-        return m ? Date.UTC(+m[3], +m[1] - 1, +m[2], +m[4], +m[5], +(m[6] || 0)) : NaN;
-      };
-      const t0a = t0(a), t0b = t0(b);
-      const merged = new Map<number, { h: number; a?: number; b?: number }>();
-      for (const d of a) {
-        const h = toHours(d.time, t0a);
-        if (!Number.isFinite(h)) continue;
-        const key = Math.round(h * 3600);
-        const row = merged.get(key) || { h };
-        row.a = d.v;
-        merged.set(key, row);
-      }
-      for (const d of b) {
-        const h = toHours(d.time, t0b);
-        if (!Number.isFinite(h)) continue;
-        const key = Math.round(h * 3600);
-        const row = merged.get(key) || { h };
-        row.b = d.v;
-        merged.set(key, row);
-      }
-      // Keep only timestamps where BOTH engines have a value.
-      return Array.from(merged.values())
-        .filter(r => r.a !== undefined && r.b !== undefined)
-        .sort((r1, r2) => r1.h - r2.h);
-    };
-
-    const buildOverlay = (
-      id: string,
-      title: (name: string) => string,
-      yAxis: string,
-      xMap: Map<string, number>,
-      yMap: Map<string, number>,
-      seriesA: Map<string, ReturnType<typeof parseTimeSeries>[number]>,
-      seriesB: Map<string, ReturnType<typeof parseTimeSeries>[number]>,
-      colRegex: RegExp,
-      kind: "link" | "node",
-    ) => {
-      const ranked: { name: string; diff: number }[] = [];
-      xMap.forEach((x, name) => {
-        const y = yMap.get(name);
-        if (y !== undefined) ranked.push({ name, diff: Math.abs(x - y) });
-      });
-      if (ranked.length === 0) return null;
-      ranked.sort((r1, r2) => r2.diff - r1.diff);
-      const pick = ranked.find(r => seriesA.has(r.name) && seriesB.has(r.name));
-      if (!pick) {
-        const reason = seriesA.size === 0 && seriesB.size === 0
-          ? ("none" as const) : ("missing-link" as const);
-        return { id, title: title(ranked[0].name), yAxis, name: ranked[0].name, kind, rows: null, reason };
-      }
-      const a = rowsFor(seriesA.get(pick.name)!, colRegex);
-      const b = rowsFor(seriesB.get(pick.name)!, colRegex);
-      if (a.length === 0 || b.length === 0) {
-        return { id, title: title(pick.name), yAxis, name: pick.name, kind, rows: null, reason: "missing-link" as const };
-      }
-      const rows = mergeRows(a, b);
-      return { id, title: title(pick.name), yAxis, name: pick.name, kind, rows, reason: undefined };
-    };
-
-    return [
-      buildOverlay(
-        "worst-flow",
-        n => `Flow Time Series — Link ${n} (largest peak-flow difference between engines)`,
-        "Flow",
-        valsX.flows, valsY.flows, mapsA.links, mapsB.links, /flow/i, "link",
-      ),
-      buildOverlay(
-        "worst-node-depth",
-        n => `Depth Time Series — Node ${n} (largest max-depth difference between engines)`,
-        "Depth",
-        valsX.nodeDepths, valsY.nodeDepths, mapsA.nodes, mapsB.nodes, /depth/i, "node",
-      ),
-      buildOverlay(
-        "worst-link-depth",
-        n => `Depth Time Series — Link ${n} (largest max/full depth difference between engines)`,
-        "Depth",
-        valsX.linkDepths, valsY.linkDepths, mapsA.links, mapsB.links, /depth/i, "link",
-      ),
-    ].filter((o): o is NonNullable<typeof o> => o !== null);
+    return buildWorstOverlays(pair[0].content!, pair[1].content!, vals[0], vals[1]);
   }, [pair, vals]);
 
   if (runs.length < 2 || fileNames.length === 0) return null;
