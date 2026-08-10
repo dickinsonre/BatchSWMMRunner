@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BarChart3, Layers, Table2 } from "lucide-react";
+import { BarChart3, Layers, Table2, Maximize2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { parseTimeSeries, type ParsedTimeSeries } from "@/lib/parseTimeSeries";
 
@@ -57,6 +58,7 @@ function ChartView({ allSeries }: ChartViewProps) {
   });
   const [chartType, setChartType] = useState<'line' | 'area'>('area');
   const [showTable, setShowTable] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const sectionSeries = useMemo(() => sectionMap.get(activeSection) || [], [sectionMap, activeSection]);
   const allElements = useMemo(() => sectionSeries.map(s => s.element), [sectionSeries]);
@@ -188,6 +190,77 @@ function ChartView({ allSeries }: ChartViewProps) {
 
   const ChartComponent = chartType === 'area' ? AreaChart : LineChart;
 
+  // The chart itself, reused at normal size and in the expanded dialog.
+  const renderChart = (height: number | string) => (
+    <ResponsiveContainer width="100%" height={height} data-testid="chart-container">
+      <ChartComponent data={chartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+        <XAxis
+          dataKey="time"
+          tick={{ fontSize: 10 }}
+          interval={tickInterval}
+          tickFormatter={(val: string) => {
+            const parts = val.split(' ');
+            return parts.length > 1 ? parts[parts.length - 1] : val;
+          }}
+          angle={-30}
+          textAnchor="end"
+          height={50}
+        />
+        <YAxis tick={{ fontSize: 10 }} width={60} />
+        <Tooltip
+          contentStyle={{
+            fontSize: '12px',
+            backgroundColor: 'hsl(var(--background))',
+            border: '1px solid hsl(var(--border))',
+            borderRadius: '6px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          }}
+          labelStyle={{ fontWeight: 600, marginBottom: 4 }}
+        />
+        <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+        {lineKeys.map((key) => {
+          const color = seriesColorMap.get(key) || CHART_COLORS[0];
+          if (chartType === 'area') {
+            return (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stroke={color}
+                fill={color}
+                fillOpacity={0.15}
+                strokeWidth={1.5}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 1 }}
+              />
+            );
+          }
+          return (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={color}
+              strokeWidth={1.5}
+              dot={false}
+              activeDot={{ r: 4, strokeWidth: 1 }}
+            />
+          );
+        })}
+        {chartData.length > 10 && (
+          <Brush
+            dataKey="time"
+            height={22}
+            stroke="hsl(210, 60%, 60%)"
+            fill="hsl(var(--muted))"
+            tickFormatter={(val) => val}
+          />
+        )}
+      </ChartComponent>
+    </ResponsiveContainer>
+  );
+
   return (
     <div className="space-y-4" data-testid="interactive-charts">
       <div className="flex items-center gap-3 flex-wrap">
@@ -234,7 +307,34 @@ function ChartView({ allSeries }: ChartViewProps) {
           <Table2 className="h-3.5 w-3.5 mr-1" />
           Data Table
         </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setExpanded(true)}
+          disabled={lineKeys.length === 0}
+          data-testid="button-expand-chart"
+        >
+          <Maximize2 className="h-3.5 w-3.5 mr-1" />
+          Expand
+        </Button>
       </div>
+
+      <Dialog open={expanded} onOpenChange={setExpanded}>
+        <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] flex flex-col" data-testid="dialog-expanded-chart">
+          <DialogHeader>
+            <DialogTitle className="text-base">
+              {activeSection} — {Array.from(selectedElements).join(", ")}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 min-h-0">
+            {expanded && lineKeys.length > 0 && renderChart("100%")}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Drag the slider handles below the chart to zoom into a time range.
+          </p>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <div className="lg:col-span-1 space-y-4">
@@ -309,75 +409,7 @@ function ChartView({ allSeries }: ChartViewProps) {
                     <Badge key={el} variant="outline" className="text-xs font-mono">{el}</Badge>
                   ))}
                 </div>
-                <ResponsiveContainer width="100%" height={400} data-testid="chart-container">
-                  <ChartComponent data={chartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                    <XAxis
-                      dataKey="time"
-                      tick={{ fontSize: 10 }}
-                      interval={tickInterval}
-                      tickFormatter={(val: string) => {
-                        const parts = val.split(' ');
-                        return parts.length > 1 ? parts[parts.length - 1] : val;
-                      }}
-                      angle={-30}
-                      textAnchor="end"
-                      height={50}
-                    />
-                    <YAxis tick={{ fontSize: 10 }} width={60} />
-                    <Tooltip
-                      contentStyle={{
-                        fontSize: '12px',
-                        backgroundColor: 'hsl(var(--background))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '6px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                      }}
-                      labelStyle={{ fontWeight: 600, marginBottom: 4 }}
-                    />
-                    <Legend
-                      wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
-                    />
-                    {lineKeys.map((key) => {
-                      const color = seriesColorMap.get(key) || CHART_COLORS[0];
-                      if (chartType === 'area') {
-                        return (
-                          <Area
-                            key={key}
-                            type="monotone"
-                            dataKey={key}
-                            stroke={color}
-                            fill={color}
-                            fillOpacity={0.15}
-                            strokeWidth={1.5}
-                            dot={false}
-                            activeDot={{ r: 4, strokeWidth: 1 }}
-                          />
-                        );
-                      }
-                      return (
-                        <Line
-                          key={key}
-                          type="monotone"
-                          dataKey={key}
-                          stroke={color}
-                          strokeWidth={1.5}
-                          dot={false}
-                          activeDot={{ r: 4, strokeWidth: 1 }}
-                        />
-                      );
-                    })}
-                    {chartData.length > 30 && (
-                      <Brush
-                        dataKey="time"
-                        height={20}
-                        stroke="hsl(210, 60%, 60%)"
-                        fill="hsl(var(--muted))"
-                        tickFormatter={(val) => val}
-                      />
-                    )}
-                  </ChartComponent>
-                </ResponsiveContainer>
+                {renderChart(400)}
               </CardContent>
             </Card>
           )}

@@ -12,7 +12,7 @@ import {
 import AppHeader from "@/components/AppHeader";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import { parseTimeSeries, type ParsedTimeSeries } from "@/lib/parseTimeSeries";
-import { ensureReportAll, toHours, rSquared, rankPeakDifferences, bareElementName, seriesKind, type PeakDiffRow } from "@/lib/qaqcReport";
+import { ensureReportAll, toHours, rSquared, rankPeakDifferences, bareElementName, seriesKind, nashSutcliffe, rmse, type PeakDiffRow } from "@/lib/qaqcReport";
 import type { ProcessResult, ParsedMetrics } from "@shared/schema";
 
 // ---------------------------------------------------------------------------
@@ -292,6 +292,15 @@ export default function QaqcReportPage() {
     return { flows, depths };
   }, [swmm5, swmm6]);
 
+  // Goodness-of-fit stats for the selected time series (rows where BOTH
+  // engines have a value).
+  const tsStats = useMemo(() => {
+    const pairs = tsData
+      .filter(r => r.s5 !== undefined && r.s6 !== undefined && Number.isFinite(r.s5) && Number.isFinite(r.s6))
+      .map(r => ({ x: r.s5 as number, y: r.s6 as number }));
+    return { nse: nashSutcliffe(pairs), r2: rSquared(pairs), rmse: rmse(pairs), n: pairs.length };
+  }, [tsData]);
+
   const flowR2 = rSquared(scatter.flows);
   const depthR2 = rSquared(scatter.depths);
 
@@ -539,6 +548,16 @@ export default function QaqcReportPage() {
                   Figure 5.1. Comparison of {selected.column} for {selected.element}
                   {selected.key === worstKey ? " (largest peak difference between engines)" : ""}.
                 </p>
+                {tsStats.n >= 2 && (
+                  <p className="text-xs mt-1" data-testid="text-ts-stats">
+                    Goodness of fit ({tsStats.n} shared time steps):{" "}
+                    NSE = <b>{tsStats.nse === undefined ? "—" : tsStats.nse.toFixed(4)}</b>,{" "}
+                    R² = <b>{tsStats.r2 === undefined ? "—" : tsStats.r2.toFixed(4)}</b>,{" "}
+                    RMSE = <b>{tsStats.rmse === undefined ? "—" : tsStats.rmse.toFixed(4)}</b>
+                    {selected.unit ? ` ${selected.unit}` : ""}.
+                    <span className="text-muted-foreground"> NSE of 1 means the engines match exactly; below 0 means SWMM 6 differs from SWMM 5 more than the mean flow does.</span>
+                  </p>
+                )}
               </section>
             )}
 

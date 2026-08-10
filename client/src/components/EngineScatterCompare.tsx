@@ -10,7 +10,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { extractScatterValues } from "@/lib/summaryScatter";
-import { rSquared } from "@/lib/qaqcReport";
+import { rSquared, nashSutcliffe } from "@/lib/qaqcReport";
 import { buildWorstOverlays } from "@/lib/seriesOverlays";
 import type { EngineRun } from "@/lib/engineComparison";
 
@@ -185,7 +185,12 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
             );
           })}
         </div>
-        {overlays.map(ov => (
+        {overlays.map(ov => {
+          const pairs = (ov.rows || [])
+            .filter(r => r.a !== undefined && r.b !== undefined)
+            .map(r => ({ x: r.a as number, y: r.b as number }));
+          const nse = nashSutcliffe(pairs);
+          return (
           <div key={ov.id} className="mt-6" data-testid={`chart-${ov.id}`}>
             <p className="text-xs font-medium mb-1">{ov.title}</p>
             {ov.rows && ov.rows.length > 0 ? (
@@ -210,6 +215,11 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
                       dot={false} strokeWidth={2} strokeDasharray="6 4" isAnimationActive={false} />
                   </LineChart>
                 </ResponsiveContainer>
+                {nse !== undefined && (
+                  <p className="text-xs text-muted-foreground mt-1" data-testid={`text-${ov.id}-nse`}>
+                    NSE = <b>{nse.toFixed(4)}</b> (1 = engines match exactly)
+                  </p>
+                )}
               </div>
             ) : (
               <p className="text-xs text-muted-foreground" data-testid={`text-${ov.id}-no-series`}>
@@ -222,7 +232,8 @@ export default function EngineScatterCompare({ runs, onLoadFile }: EngineScatter
               </p>
             )}
           </div>
-        ))}
+          );
+        })}
       </CardContent>
     </Card>
   );

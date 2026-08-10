@@ -63,3 +63,28 @@ describe('element name helpers', () => {
     expect(seriesKind('System Time Series Results', 'System')).toBe('system');
   });
 });
+
+import { nashSutcliffe, rmse } from '../client/src/lib/qaqcReport';
+
+describe('goodness-of-fit stats', () => {
+  it('NSE is 1 for identical series', () => {
+    const pairs = [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }];
+    expect(nashSutcliffe(pairs)).toBeCloseTo(1);
+    expect(rmse(pairs)).toBeCloseTo(0);
+  });
+
+  it('NSE is 0 when predictions equal the reference mean', () => {
+    const pairs = [{ x: 1, y: 2 }, { x: 2, y: 2 }, { x: 3, y: 2 }];
+    expect(nashSutcliffe(pairs)).toBeCloseTo(0);
+  });
+
+  it('NSE is negative for a bad match and undefined for constant reference', () => {
+    expect(nashSutcliffe([{ x: 1, y: 10 }, { x: 2, y: -10 }, { x: 3, y: 10 }])!).toBeLessThan(0);
+    expect(nashSutcliffe([{ x: 2, y: 1 }, { x: 2, y: 3 }])).toBeUndefined();
+    expect(nashSutcliffe([{ x: 1, y: 1 }])).toBeUndefined();
+  });
+
+  it('rmse computes root-mean-square error', () => {
+    expect(rmse([{ x: 0, y: 3 }, { x: 0, y: 4 }])).toBeCloseTo(Math.sqrt(12.5));
+  });
+});

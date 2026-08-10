@@ -123,3 +123,27 @@ export function seriesKind(title: string, element: string): 'link' | 'node' | 's
   if (/system/i.test(title) || /^system$/i.test(element.trim())) return 'system';
   return 'other';
 }
+
+/**
+ * Nash–Sutcliffe efficiency of paired series (x = reference/SWMM5, y = SWMM6).
+ * 1 = perfect match, 0 = no better than the mean, negative = worse than mean.
+ */
+export function nashSutcliffe(pairs: { x: number; y: number }[]): number | undefined {
+  const n = pairs.length;
+  if (n < 2) return undefined;
+  const mx = pairs.reduce((a, p) => a + p.x, 0) / n;
+  let num = 0, den = 0;
+  for (const p of pairs) {
+    num += (p.y - p.x) ** 2;
+    den += (p.x - mx) ** 2;
+  }
+  if (den === 0) return undefined; // constant reference series
+  return 1 - num / den;
+}
+
+/** Root-mean-square error of paired series. */
+export function rmse(pairs: { x: number; y: number }[]): number | undefined {
+  if (pairs.length === 0) return undefined;
+  const s = pairs.reduce((a, p) => a + (p.y - p.x) ** 2, 0);
+  return Math.sqrt(s / pairs.length);
+}
