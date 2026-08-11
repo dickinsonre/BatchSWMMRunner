@@ -27,7 +27,7 @@ describe('buildResultsZip', () => {
       result({ fileName: 'other.inp', reportContent: 'RPT-B' }),
     ]);
     expect(fileCount).toBe(3);
-    expect(Object.keys(zip.files).sort()).toEqual(['model.inp', 'model.rpt', 'other.rpt']);
+    expect(Object.keys(zip.files).sort()).toEqual(['batch_manifest.csv', 'model.inp', 'model.rpt', 'other.rpt']);
     expect(await zip.file('model.rpt')!.async('string')).toBe('RPT-A');
     expect(await zip.file('model.inp')!.async('string')).toBe('INP-A');
     expect(await zip.file('other.rpt')!.async('string')).toBe('RPT-B');
@@ -41,7 +41,7 @@ describe('buildResultsZip', () => {
     ]);
     expect(fileCount).toBe(5);
     expect(Object.keys(zip.files).sort()).toEqual([
-      'dup-2.inp', 'dup-2.rpt', 'dup-3.rpt', 'dup.inp', 'dup.rpt',
+      'batch_manifest.csv', 'dup-2.inp', 'dup-2.rpt', 'dup-3.rpt', 'dup.inp', 'dup.rpt',
     ]);
     expect(await zip.file('dup.rpt')!.async('string')).toBe('first');
     expect(await zip.file('dup-2.rpt')!.async('string')).toBe('second');

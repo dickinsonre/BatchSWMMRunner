@@ -1,5 +1,6 @@
 import JSZip from "jszip";
 import type { ProcessResult } from "@/components/ResultsDisplay";
+import { buildManifestCsv, classifyRun, healthScore, type ManifestRow } from "@/lib/rptQa";
 
 /** True when a result's full text lives server-side and must be fetched. */
 export const needsContentFetch = (r: ProcessResult) =>
@@ -33,16 +34,52 @@ export async function buildResultsZip(
   };
 
   let fileCount = 0;
+  const manifestRows: ManifestRow[] = [];
   for (const r of full) {
     const base = r.fileName.replace(/\.inp$/i, '');
+    const outputs: string[] = [];
     if (r.reportContent) {
-      zip.file(uniqueName(`${base}.rpt`), r.reportContent);
+      const name = uniqueName(`${base}.rpt`);
+      zip.file(name, r.reportContent);
+      outputs.push(name);
       fileCount++;
     }
     if (r.inpContent) {
-      zip.file(uniqueName(`${base}.inp`), r.inpContent);
+      const name = uniqueName(`${base}.inp`);
+      zip.file(name, r.inpContent);
+      outputs.push(name);
       fileCount++;
     }
+    const input = {
+      status: r.status,
+      runoffCE: r.parsedMetrics?.runoffContinuityError,
+      routingCE: r.parsedMetrics?.routingContinuityError,
+      nodesFlooded: r.parsedMetrics?.nodesFlooded,
+      warningCount: r.parsedMetrics?.reportWarnings?.length ?? 0,
+      errorCount: r.parsedMetrics?.reportErrors?.length ?? 0,
+    };
+    manifestRows.push({
+      fileName: r.fileName,
+      status: r.status,
+      engine: r.provenance?.actualEngine || r.provenance?.requestedEngine,
+      engineVersion: r.provenance?.engineVersion,
+      startedAt: r.provenance?.startedAt,
+      completedAt: r.provenance?.completedAt,
+      processingTime: r.processingTime,
+      runoffCE: input.runoffCE,
+      routingCE: input.routingCE,
+      nodesFlooded: input.nodesFlooded,
+      warningCount: input.warningCount,
+      errorCount: input.errorCount,
+      qaClass: classifyRun(input),
+      health: healthScore(input).score,
+      outputs,
+    });
+  }
+  // Reproducibility manifest: which engine ran what, when, with what outcome.
+  // Not counted in fileCount, which tracks result documents only.
+  if (full.length > 0) {
+    zip.file('batch_manifest.csv', buildManifestCsv(manifestRows, new Date().toISOString()));
   }
   return { zip, fileCount };
 }

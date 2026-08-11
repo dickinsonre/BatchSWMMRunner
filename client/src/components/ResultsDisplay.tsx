@@ -11,6 +11,7 @@ import type { ParsedMetrics } from "@shared/schema";
 import InteractiveCharts from "./InteractiveCharts";
 import KeyResultsCharts from "./KeyResultsCharts";
 import BatchComparison from "./BatchComparison";
+import BatchQaDashboard from "./BatchQaDashboard";
 import { generateHTMLReport } from "@/lib/reportGenerator";
 import ReportChatbot from "./ReportChatbot";
 import { buildResultsZip, needsContentFetch } from "@/lib/zipExport";
@@ -777,7 +778,9 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
   const exportToZip = async () => {
     const full = await withFullContent();
     const { zip, fileCount } = await buildResultsZip(full);
-    if (fileCount === 0) return;
+    // A batch with no downloadable outputs still ships its manifest —
+    // that's the useful record for a batch of failed runs.
+    if (fileCount === 0 && full.length === 0) return;
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -1083,6 +1086,8 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
           </div>
         </CardContent>
       </Card>
+
+      <BatchQaDashboard results={results} />
 
       <BatchComparison results={results} />
 
