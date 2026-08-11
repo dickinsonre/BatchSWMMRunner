@@ -1,5 +1,6 @@
 import type { ParsedMetrics, ProcessResult } from "@shared/schema";
 import { applyInpOverrides, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, type InpOverrides } from "@shared/inpOptions";
+import { normalizeInpNameCase } from "@shared/inpCaseNormalize";
 
 export interface WasmProgress {
   fileId: string;
@@ -211,6 +212,19 @@ export function runWasmBatch(
     if (currentByWorker.get(worker)?.id !== f.id) return;
     if (overrides) {
       inpText = applyInpOverrides(inpText, overrides);
+    }
+    // Classic SWMM5 matches object names ignoring capitalization; the SWMM6
+    // engine is case-strict (ERROR 209 on e.g. BOUNDARY@1020 vs Boundary@1020).
+    // Normalize case-variant references to the defined spelling for SWMM6 runs.
+    if (engine === 'swmm6') {
+      const normalized = normalizeInpNameCase(inpText);
+      if (normalized.fixes.length > 0) {
+        inpText = normalized.content;
+        callbacks.onLog(
+          `${f.name}: fixed name capitalization for the SWMM6 engine (SWMM5 ignores case, SWMM6 does not): ${normalized.fixes.join(', ')}`,
+          'info',
+        );
+      }
     }
     // SWMM 5.x rejects the SWMM6 [VIRTUAL_JUNCTIONS] section outright. Round-
     // trip such models back to plain [JUNCTIONS] so they still run, and say so.
