@@ -258,6 +258,83 @@ export default function SimulationSettings({
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <Checkbox
+                      id="swmm6-fv-routing"
+                      checked={!!s6.fvRouting}
+                      onCheckedChange={(checked) => setS6({ fvRouting: checked === true })}
+                      disabled={disabled}
+                      data-testid="checkbox-swmm6-fv-routing"
+                    />
+                    <Label htmlFor="swmm6-fv-routing" className="text-sm font-normal cursor-pointer">
+                      Finite-volume routing (FLOW_ROUTING FV)
+                    </Label>
+                  </div>
+                  {s6.fvRouting && (
+                    <div className="pl-6 space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Writes FLOW_ROUTING FV (replacing the routing method above) plus any scheme
+                        settings you fill in — leave them blank to use the engine defaults. Note: the
+                        SWMM6 engines currently bundled with the app accept these keywords but predate
+                        the FV solver, so they still route with DYNWAVE until the engines are rebuilt
+                        from an FV-capable OpenSWMM revision.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-order" className="text-xs">FV_ORDER</Label>
+                          <Select
+                            value={s6.fvOrder !== undefined ? String(s6.fvOrder) : 'default'}
+                            onValueChange={(v) => setS6({ fvOrder: v === 'default' ? undefined : Number(v) })}
+                            disabled={disabled}
+                          >
+                            <SelectTrigger id="swmm6-fv-order" data-testid="select-swmm6-fv-order">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="default">Engine default (1)</SelectItem>
+                              <SelectItem value="1">1 — first order</SelectItem>
+                              <SelectItem value="2">2 — second order (η, v reconstruction)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-limiter" className="text-xs">FV_LIMITER</Label>
+                          <Input
+                            id="swmm6-fv-limiter"
+                            placeholder="MINMOD (default)"
+                            value={s6.fvLimiter ?? ''}
+                            onChange={(e) => setS6({ fvLimiter: e.target.value === '' ? undefined : e.target.value })}
+                            disabled={disabled}
+                            data-testid="input-swmm6-fv-limiter"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-time" className="text-xs">FV_TIME_INTEGRATION</Label>
+                          <Input
+                            id="swmm6-fv-time"
+                            placeholder="EULER (default)"
+                            value={s6.fvTimeIntegration ?? ''}
+                            onChange={(e) => setS6({ fvTimeIntegration: e.target.value === '' ? undefined : e.target.value })}
+                            disabled={disabled}
+                            data-testid="input-swmm6-fv-time"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-riemann" className="text-xs">FV_RIEMANN</Label>
+                          <Input
+                            id="swmm6-fv-riemann"
+                            placeholder="HLLC (default)"
+                            value={s6.fvRiemann ?? ''}
+                            onChange={(e) => setS6({ fvRiemann: e.target.value === '' ? undefined : e.target.value })}
+                            disabled={disabled}
+                            data-testid="input-swmm6-fv-riemann"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
                       id="swmm6-virtual-junctions"
                       checked={!!s6.virtualJunctions}
                       onCheckedChange={(checked) => setS6({ virtualJunctions: checked === true })}

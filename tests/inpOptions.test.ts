@@ -82,6 +82,37 @@ describe('applyInpOverrides — SWMM6 options', () => {
     expect(normalizeSwmm6Options(null)).toBeUndefined();
   });
 
+  it('writes FLOW_ROUTING FV and scheme keywords, overriding the routing dropdown', () => {
+    const out = applyInpOverrides(BASE_INP, {
+      flowRouting: 'dynamic',
+      swmm6: {
+        enabled: true, fvRouting: true, fvOrder: 2,
+        fvLimiter: 'minmod', fvTimeIntegration: 'EULER', fvRiemann: 'HLLC',
+      },
+    });
+    expect(out.match(/FLOW_ROUTING/g)?.length).toBe(1);
+    expect(out).toMatch(/^FLOW_ROUTING\s+FV$/m);
+    expect(out).toMatch(/^FV_ORDER\s+2$/m);
+    expect(out).toMatch(/^FV_LIMITER\s+MINMOD$/m);
+    expect(out).toMatch(/^FV_TIME_INTEGRATION\s+EULER$/m);
+    expect(out).toMatch(/^FV_RIEMANN\s+HLLC$/m);
+  });
+
+  it('omits FV scheme lines when values are not provided (engine defaults apply)', () => {
+    const out = applyInpOverrides(BASE_INP, { swmm6: { enabled: true, fvRouting: true } });
+    expect(out).toMatch(/^FLOW_ROUTING\s+FV$/m);
+    expect(out).not.toMatch(/FV_ORDER|FV_LIMITER|FV_TIME_INTEGRATION|FV_RIEMANN/);
+  });
+
+  it('normalizeSwmm6Options rejects bad FV values but keeps the routing flag', () => {
+    const norm = normalizeSwmm6Options({
+      enabled: true, fvRouting: true,
+      fvOrder: 3, fvLimiter: 'not a token!', fvTimeIntegration: '', fvRiemann: 42,
+    });
+    expect(norm).toEqual({ enabled: true, fvRouting: true });
+    expect(normalizeSwmm6Options({ enabled: true, fvRouting: false, fvOrder: 2 })).toBeUndefined();
+  });
+
   it('composes with regular overrides', () => {
     const out = applyInpOverrides(BASE_INP, {
       reportStepMinutes: 5,

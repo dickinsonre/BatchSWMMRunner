@@ -21,6 +21,16 @@ export interface Swmm6Options {
   virtualJunctions?: boolean;
   /** VIRTUAL_JUNCTION_MOMENTUM — BASIC (engine default) or FULL (adds cross-junction convective flux). */
   vjMomentum?: 'BASIC' | 'FULL';
+  /** FLOW_ROUTING FV — the OpenSWMM 6 explicit finite-volume routing model. */
+  fvRouting?: boolean;
+  /** FV_ORDER — spatial reconstruction order, 1 or 2 (engine default 1). */
+  fvOrder?: number;
+  /** FV_LIMITER — slope limiter keyword (engine default MINMOD). */
+  fvLimiter?: string;
+  /** FV_TIME_INTEGRATION — time-integration keyword (engine default EULER). */
+  fvTimeIntegration?: string;
+  /** FV_RIEMANN — Riemann solver keyword, transport only (engine default HLLC). */
+  fvRiemann?: string;
 }
 
 export interface InpOverrides {
@@ -81,6 +91,23 @@ export function normalizeSwmm6Options(raw: unknown): Swmm6Options | undefined {
     const decay = Number(s6.dpsDecayTime);
     if (Number.isFinite(decay) && decay > 0 && decay <= 3600) out.dpsDecayTime = decay;
   }
+  if (s6.fvRouting === true) {
+    out.fvRouting = true;
+    const order = Number(s6.fvOrder);
+    if (order === 1 || order === 2) out.fvOrder = order;
+    // Keyword-valued sub-options: accept a plain uppercase token so newer
+    // engine keywords keep working without a client update.
+    const token = (v: unknown): string | undefined => {
+      const t = String(v ?? '').trim().toUpperCase();
+      return /^[A-Z][A-Z0-9_]{0,30}$/.test(t) ? t : undefined;
+    };
+    const lim = token(s6.fvLimiter);
+    if (lim) out.fvLimiter = lim;
+    const ti = token(s6.fvTimeIntegration);
+    if (ti) out.fvTimeIntegration = ti;
+    const rs = token(s6.fvRiemann);
+    if (rs) out.fvRiemann = rs;
+  }
   if (s6.semiImplicit === true) out.semiImplicit = true;
   if (s6.andersonAccel === true) out.andersonAccel = true;
   if (s6.virtualJunctions === true) {
@@ -88,7 +115,7 @@ export function normalizeSwmm6Options(raw: unknown): Swmm6Options | undefined {
     const mom = String(s6.vjMomentum ?? '').toUpperCase();
     if (mom === 'BASIC' || mom === 'FULL') out.vjMomentum = mom;
   }
-  return out.dynamicSlot || out.semiImplicit || out.andersonAccel || out.virtualJunctions ? out : undefined;
+  return out.dynamicSlot || out.semiImplicit || out.andersonAccel || out.virtualJunctions || out.fvRouting ? out : undefined;
 }
 
 // --- Virtual Junctions (SWMM6 structural edit) ------------------------------
@@ -336,6 +363,15 @@ export function applyInpOverrides(content: string, overrides: InpOverrides): str
     }
     if (s6.semiImplicit) entries.push(['NODE_CONTINUITY', 'SEMI_IMPLICIT']);
     if (s6.andersonAccel) entries.push(['ANDERSON_ACCEL', 'YES']);
+    if (s6.fvRouting) {
+      // Written last so it wins over any FLOW_ROUTING value from the standard
+      // routing-method dropdown.
+      entries.push(['FLOW_ROUTING', 'FV']);
+      if (s6.fvOrder !== undefined) entries.push(['FV_ORDER', String(s6.fvOrder)]);
+      if (s6.fvLimiter) entries.push(['FV_LIMITER', s6.fvLimiter]);
+      if (s6.fvTimeIntegration) entries.push(['FV_TIME_INTEGRATION', s6.fvTimeIntegration]);
+      if (s6.fvRiemann) entries.push(['FV_RIEMANN', s6.fvRiemann]);
+    }
   }
 
   if (entries.length === 0) return content;
