@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { splitHtmlFences } from "@/lib/chatMarkdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -282,10 +285,10 @@ export default function ReportChatbot({ reportContent, inpContent, fileName }: R
                   </div>
                 )}
                 <div
-                  className={`rounded-lg px-3 py-2 max-w-[80%] text-sm whitespace-pre-wrap ${
+                  className={`rounded-lg px-3 py-2 max-w-[80%] text-sm ${
                     msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card border"
+                      ? "bg-primary text-primary-foreground whitespace-pre-wrap"
+                      : "bg-card border overflow-x-auto"
                   }`}
                   data-testid={`text-chat-message-${i}`}
                 >
@@ -374,27 +377,29 @@ export default function ReportChatbot({ reportContent, inpContent, fileName }: R
   );
 }
 
+/** Renders assistant chat text as formatted Markdown (tables, headings, lists).
+ * ```html blocks (complete or still streaming in) are replaced with a short
+ * status box — the actual HTML shows up in the preview pane instead. */
 function renderMarkdown(text: string): React.ReactNode {
-  const htmlBlock = text.match(/```html\s*([\s\S]*?)```/);
-  if (htmlBlock) {
-    const before = text.substring(0, htmlBlock.index);
-    const after = text.substring(htmlBlock.index! + htmlBlock[0].length);
-    return (
-      <>
-        {before && <span>{before}</span>}
-        <div className="my-2 p-2 bg-muted rounded text-xs font-mono overflow-x-auto max-h-[200px] overflow-y-auto">
-          <span className="text-muted-foreground">HTML report generated (see preview)</span>
-        </div>
-        {after && <span>{after}</span>}
-      </>
-    );
-  }
+  const segments = splitHtmlFences(text);
 
-  const parts = text.split(/(\*\*.*?\*\*)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>;
-    }
-    return <span key={i}>{part}</span>;
-  });
+  const markdown = (content: string, key: string) => (
+    <div key={key} className="chat-markdown space-y-2 [&_p]:leading-relaxed [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-medium [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-0.5 [&_code]:font-mono [&_code]:text-xs [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:bg-muted [&_pre]:p-2 [&_pre]:rounded [&_pre]:overflow-x-auto [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_table]:w-full [&_table]:text-xs [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_th]:bg-muted [&_th]:px-2 [&_th]:py-1 [&_th]:text-left [&_th]:font-medium [&_td]:border [&_td]:border-border [&_td]:px-2 [&_td]:py-1 [&_blockquote]:border-l-2 [&_blockquote]:border-border [&_blockquote]:pl-3 [&_blockquote]:text-muted-foreground [&_a]:text-primary [&_a]:underline">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+    </div>
+  );
+
+  return (
+    <>
+      {segments.map((seg, i) =>
+        seg.type === "html" ? (
+          <div key={i} className="my-2 p-2 bg-muted rounded text-xs font-mono overflow-x-auto" data-testid="text-html-report-placeholder">
+            <span className="text-muted-foreground">HTML report generated (see preview)</span>
+          </div>
+        ) : (
+          seg.content.trim() ? markdown(seg.content, String(i)) : null
+        ),
+      )}
+    </>
+  );
 }
