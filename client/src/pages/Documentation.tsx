@@ -1317,6 +1317,26 @@ export default function Documentation() {
                           The OpenSWMM 6.0.0-alpha engine compiled to WebAssembly. Behaves like the WASM mode but supports SWMM6-only solver options (e.g. dynamic-slot surcharge, Anderson acceleration). Useful for cross-checking results against the standard engine.
                         </p>
                       </div>
+                      <div className="rounded-md border p-3" data-testid="guide-engine-comparison">
+                        <p className="font-medium">Engine Comparison mode — where the per-engine result tabs come from</p>
+                        <p className="text-muted-foreground mt-1">
+                          When you run a batch in Engine Comparison mode, the app runs your <b>same input files through
+                          all four engines</b>, one engine after another. Each result tab (SWMM5 API results, SWMM5 WASM
+                          results, SWMM6 WASM results, Executable results) shows one engine's complete run of the whole
+                          batch — so 17 files produce 17 results in <i>each</i> tab.
+                        </p>
+                        <p className="text-muted-foreground mt-2">
+                          The Executable, API, and SWMM5 WASM engines are all built from the <b>same EPA SWMM 5.2.4 source
+                          code</b> — they differ only in how and where they run (command-line program on the server, shared
+                          library on the server, or WebAssembly in your browser). Their results should agree almost exactly;
+                          any difference between them points at an environment or integration issue, not the model.
+                          SWMM6 WASM is the <b>newer OpenSWMM 6 engine</b>, so genuine engineering differences show up
+                          there — the Comparison, Charts, and Scatter Plots tabs exist to make those differences easy to spot.
+                        </p>
+                        <p className="text-muted-foreground mt-2">
+                          If you only need one set of results, pick a single engine mode instead of comparison mode.
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
