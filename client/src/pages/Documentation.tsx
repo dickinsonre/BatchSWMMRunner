@@ -1242,7 +1242,7 @@ export default function Documentation() {
                       <h3 className="font-medium mb-1">Deep links</h3>
                       <p className="text-muted-foreground mb-2">Query parameters on the home page preconfigure the app:</p>
                       <ul className="list-disc pl-5 space-y-1">
-                        <li><code className="font-mono bg-muted px-1 rounded">?engine=executable|api|wasm|wasm6</code> — preselect the engine mode</li>
+                        <li><code className="font-mono bg-muted px-1 rounded">?engine=executable|api|wasm|wasm6|wasm6dev</code> — preselect the engine mode</li>
                         <li><code className="font-mono bg-muted px-1 rounded">?sample=Demo_extran2.inp</code> — auto-load a sample model (comma-separate for several)</li>
                         <li>Example: <code className="font-mono bg-muted px-1 rounded">/?engine=wasm6&amp;sample=Demo_extran2.inp,Demo_exam1.inp</code></li>
                       </ul>
@@ -1253,7 +1253,7 @@ export default function Documentation() {
                         Every workflow control has a <code className="font-mono bg-muted px-1 rounded">data-testid</code>:
                         upload (<code className="font-mono bg-muted px-1 rounded">button-browse-files</code>, <code className="font-mono bg-muted px-1 rounded">input-file</code>),
                         sample picker (<code className="font-mono bg-muted px-1 rounded">select-sample-model</code>, selecting an option loads it immediately),
-                        engine modes (<code className="font-mono bg-muted px-1 rounded">button-mode-executable/api/wasm/wasm6</code>),
+                        engine modes (<code className="font-mono bg-muted px-1 rounded">button-mode-executable/api/wasm/wasm6/wasm6dev</code>),
                         run (<code className="font-mono bg-muted px-1 rounded">button-start-processing</code>),
                         cancel (<code className="font-mono bg-muted px-1 rounded">button-cancel-processing</code>),
                         and per-file result tabs and export buttons.
@@ -1274,7 +1274,7 @@ export default function Documentation() {
                         <li><code className="font-mono bg-muted px-1 rounded">WS /api/ws?jobId=…</code> — live progress stream</li>
                       </ul>
                       <p className="text-muted-foreground mt-2">
-                        The WASM engines (<code className="font-mono bg-muted px-1 rounded">wasm</code>, <code className="font-mono bg-muted px-1 rounded">wasm6</code>) run entirely in the browser page, so they are only reachable through the UI, not this API.
+                        The WASM engines (<code className="font-mono bg-muted px-1 rounded">wasm</code>, <code className="font-mono bg-muted px-1 rounded">wasm6</code>, <code className="font-mono bg-muted px-1 rounded">wasm6dev</code>) run entirely in the browser page, so they are only reachable through the UI, not this API.
                       </p>
                     </div>
                   </CardContent>
@@ -1288,7 +1288,7 @@ export default function Documentation() {
                   <CardHeader>
                     <CardTitle className="text-base" data-testid="text-guide-engines-title">Engine Modes</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      BatchSWMM56 can run simulations with four different engines. All of them run the real EPA SWMM engine — the difference is where the computation happens.
+                      BatchSWMM56 can run simulations with five different engines. All of them run the real EPA SWMM engine — the difference is where the computation happens.
                     </p>
                   </CardHeader>
                   <CardContent>
@@ -1314,15 +1314,21 @@ export default function Documentation() {
                       <div data-testid="guide-engine-swmm6">
                         <p className="font-medium">SWMM6 WASM</p>
                         <p className="text-muted-foreground">
-                          The OpenSWMM 6.0.0-alpha engine compiled to WebAssembly. Behaves like the WASM mode but supports SWMM6-only solver options (e.g. dynamic-slot surcharge, Anderson acceleration). Useful for cross-checking results against the standard engine.
+                          The OpenSWMM 6.0.0-alpha engine (stable <code className="font-mono bg-muted px-1 rounded">swmm6_rel</code> branch) compiled to WebAssembly. Behaves like the WASM mode but supports SWMM6-only solver options (e.g. dynamic-slot surcharge, Anderson acceleration). Useful for cross-checking results against the standard engine.
+                        </p>
+                      </div>
+                      <div data-testid="guide-engine-swmm6dev">
+                        <p className="font-medium">SWMM6 Dev</p>
+                        <p className="text-muted-foreground">
+                          The same OpenSWMM 6 engine built from the bleeding-edge <code className="font-mono bg-muted px-1 rounded">develop</code> branch. Runs in your browser like the other WASM engines. Use it to check whether the latest SWMM6 development changes affect your results compared to the stable SWMM6 build.
                         </p>
                       </div>
                       <div className="rounded-md border p-3" data-testid="guide-engine-comparison">
                         <p className="font-medium">Engine Comparison mode — where the per-engine result tabs come from</p>
                         <p className="text-muted-foreground mt-1">
                           When you run a batch in Engine Comparison mode, the app runs your <b>same input files through
-                          all four engines</b>, one engine after another. Each result tab (SWMM5 API results, SWMM5 WASM
-                          results, SWMM6 WASM results, Executable results) shows one engine's complete run of the whole
+                          each selected engine</b>, one engine after another. Each result tab (SWMM5 API results, SWMM5 WASM
+                          results, SWMM6 WASM results, SWMM6 Dev results, Executable results) shows one engine's complete run of the whole
                           batch — so 17 files produce 17 results in <i>each</i> tab.
                         </p>
                         <p className="text-muted-foreground mt-2">
@@ -1330,7 +1336,7 @@ export default function Documentation() {
                           code</b> — they differ only in how and where they run (command-line program on the server, shared
                           library on the server, or WebAssembly in your browser). Their results should agree almost exactly;
                           any difference between them points at an environment or integration issue, not the model.
-                          SWMM6 WASM is the <b>newer OpenSWMM 6 engine</b>, so genuine engineering differences show up
+                          SWMM6 WASM and SWMM6 Dev are the <b>newer OpenSWMM 6 engine</b> (stable and develop branches), so genuine engineering differences show up
                           there — the Comparison, Charts, and Scatter Plots tabs exist to make those differences easy to spot.
                         </p>
                         <p className="text-muted-foreground mt-2">

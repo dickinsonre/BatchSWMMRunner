@@ -11,18 +11,18 @@ All key controls carry stable `data-testid` attributes:
 
 - Upload: `card-upload-zone`, `button-browse-files`, `input-file` (hidden file input, accepts .inp)
 - Sample models: `select-sample-model` (dropdown; selecting an option loads it immediately), `option-sample-<Name.inp>`, `button-load-samples` (Load All)
-- Engine mode: `button-mode-executable`, `button-mode-api`, `button-mode-wasm`, `button-mode-wasm6`
+- Engine mode: `button-mode-executable`, `button-mode-api`, `button-mode-wasm`, `button-mode-wasm6`, `button-mode-wasm6dev`
 - Run: `button-start-processing`, cancel: `button-cancel-processing`, reset: `button-reset`
 - Result tabs (per file): `tab-report-inp-*`, RPT Text, RPT Graphs, Key Charts, RPT Histograms, RPT HTML, AI Report
 - Exports: `button-export-csv`, `button-export-excel`, `button-export-pdf`, `button-download-report-*`
 
 Deep links (query params on `/`):
 
-- `?engine=executable|api|wasm|wasm6` — preselect the engine mode
+- `?engine=executable|api|wasm|wasm6|wasm6dev` — preselect the engine mode
 - `?sample=Demo_extran2.inp` — auto-load a sample model (comma-separate for several)
 - Example: `/?engine=wasm6&sample=Demo_extran2.inp,Demo_exam1.inp`
 
-Note: the `wasm` and `wasm6` engines run entirely in the browser page; the batch
+Note: the `wasm`, `wasm6`, and `wasm6dev` engines run entirely in the browser page; the batch
 HTTP API below only covers the server-side `executable` and `api` engine modes.
 
 ## HTTP API (server-side runs)

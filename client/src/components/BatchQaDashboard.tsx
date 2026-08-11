@@ -96,7 +96,7 @@ export default function BatchQaDashboard({ results }: { results: ProcessResult[]
     return {
       engineLabel: ENGINE_LABELS[engine as EngineId] ?? engine,
       version: successProv.engineVersion,
-      execution: engine === 'wasm' || engine === 'wasm6' ? 'WASM (in browser)' : 'Native (on server)',
+      execution: engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev' ? 'WASM (in browser)' : 'Native (on server)',
       verified: !!successProv.engineVersion,
       mixed: engines.size > 1,
     };

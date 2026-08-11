@@ -64,7 +64,7 @@ export default function ElevatorPitch() {
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto" data-testid="text-pitch-subtitle">
             BatchSWMM56 is a batch runner for EPA SWMM5, SWMM6 and other SWMM engines — the
-            industry-standard stormwater and sewer simulators — with four engine modes,
+            industry-standard stormwater and sewer simulators — with five engine modes,
             instant graphs, and AI-assisted reports.
           </p>
           <Button size="lg" onClick={getStarted} data-testid="button-get-started">
@@ -81,7 +81,7 @@ export default function ElevatorPitch() {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
               <p>Upload one or a hundred .inp models and run them all in one click — sequentially, with live progress.</p>
-              <p>Choose your engine: the native EPA SWMM 5.2 executable, the SWMM5 API with live step-by-step data, or WebAssembly builds of SWMM5 and OpenSWMM "SWMM6" 5.3 that run entirely in your browser.</p>
+              <p>Choose your engine: the native EPA SWMM 5.2 executable, the SWMM5 API with live step-by-step data, or WebAssembly builds of SWMM5 and OpenSWMM "SWMM6" (both the stable and develop branches) that run entirely in your browser.</p>
             </CardContent>
           </Card>
           <Card data-testid="card-pitch-who">

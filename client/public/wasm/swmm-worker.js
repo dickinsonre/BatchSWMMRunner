@@ -5,6 +5,8 @@ const ENGINES = {
   // The real SWMM6 engine (OpenSWMM 6.0.0-alpha.x, C++), handle-based API.
   // Supports the new solver keywords (DYNAMIC_SLOT, NODE_CONTINUITY, ANDERSON_ACCEL).
   swmm6: { script: '/wasm6/openswmm6.js', dir: '/wasm6/', factory: 'createOswmm6Module', api: 'engine6' },
+  // Same engine built from the OpenSWMM `develop` branch (bleeding edge).
+  swmm6dev: { script: '/wasm6dev/openswmm6dev.js', dir: '/wasm6dev/', factory: 'createOswmm6DevModule', api: 'engine6' },
 };
 
 const modulePromises = {};

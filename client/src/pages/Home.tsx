@@ -42,7 +42,7 @@ interface PersistedSettings {
   parallelProcessing?: boolean;
   stopOnError?: boolean;
   timeoutMinutes?: number;
-  engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6';
+  engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6' | 'wasm6dev';
   selectedEngines?: EngineId[];
   startDate?: string;
   endDate?: string;
@@ -238,7 +238,7 @@ export default function Home() {
   const [selectedEngines, setSelectedEngines] = useState<EngineId[]>(() => {
     const saved = savedSettingsRef.current.selectedEngines;
     if (Array.isArray(saved) && saved.length > 0) {
-      const valid = saved.filter((e): e is EngineId => ['executable', 'api', 'wasm', 'wasm6'].includes(e));
+      const valid = saved.filter((e): e is EngineId => ['executable', 'api', 'wasm', 'wasm6', 'wasm6dev'].includes(e));
       if (valid.length > 0) return valid;
     }
     return [savedSettingsRef.current.engineMode ?? 'executable'];
@@ -291,7 +291,7 @@ export default function Home() {
   // Warn before tab close while an in-browser WASM batch is running,
   // since Web Worker simulations die with the tab.
   useEffect(() => {
-    const isWasmRunning = processingState === 'processing' && selectedEngines.some(e => e === 'wasm' || e === 'wasm6');
+    const isWasmRunning = processingState === 'processing' && selectedEngines.some(e => e === 'wasm' || e === 'wasm6' || e === 'wasm6dev');
     if (!isWasmRunning) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -309,7 +309,7 @@ export default function Home() {
     startDate: startDate || undefined,
     endDate: endDate || undefined,
     routingStepSeconds: routingStepSeconds && routingStepSeconds > 0 ? routingStepSeconds : undefined,
-    swmm6: engine === 'wasm6' && swmm6Options.enabled ? swmm6Options : undefined,
+    swmm6: (engine === 'wasm6' || engine === 'wasm6dev') && swmm6Options.enabled ? swmm6Options : undefined,
   });
 
   useEffect(() => {
@@ -559,7 +559,7 @@ export default function Home() {
       }
     }
     const engine = params.get('engine');
-    if (engine === 'executable' || engine === 'api' || engine === 'wasm' || engine === 'wasm6') {
+    if (engine === 'executable' || engine === 'api' || engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev') {
       setEngineMode(engine);
     }
     const sample = params.get('sample');
@@ -628,7 +628,7 @@ export default function Home() {
   const singleEngineRuns: EngineRun[] = useMemo(() => [{
     engine: engineMode,
     label: ENGINE_LABELS[engineMode],
-    jobId: (engineMode === 'wasm' || engineMode === 'wasm6') ? null : jobId,
+    jobId: (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') ? null : jobId,
     results,
   }], [engineMode, jobId, results]);
 
@@ -682,7 +682,7 @@ export default function Home() {
   };
 
   const handleStartWasmProcessing = () => {
-    const wasmEngine = engineMode === 'wasm6' ? 'swmm6' : 'swmm5';
+    const wasmEngine = engineMode === 'wasm6' ? 'swmm6' : engineMode === 'wasm6dev' ? 'swmm6dev' : 'swmm5';
     const runnableFiles = (files as any[])
       .filter(f => f.file)
       .map(f => ({ id: f.id, name: f.name, file: f.file as File }));
@@ -701,7 +701,7 @@ export default function Home() {
     setResults([]);
     setLogs([{
       timestamp: getTimestamp(),
-      message: `Starting in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM batch: ${runnableFiles.length} file(s)`,
+      message: `Starting in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : wasmEngine === 'swmm6dev' ? 'SWMM6 (develop)' : 'SWMM5'} WASM batch: ${runnableFiles.length} file(s)`,
       type: 'info',
     }]);
     setFileProgressMap(new Map());
@@ -782,7 +782,7 @@ export default function Home() {
   const browserRunFinishRef = useRef<(() => void) | null>(null);
 
   const runBrowserEngineOnce = (
-    engine: 'wasm' | 'wasm6',
+    engine: 'wasm' | 'wasm6' | 'wasm6dev',
     runnableFiles: { id: string; name: string; file: File }[],
   ): Promise<ProcessResult[]> => {
     return new Promise((resolve) => {
@@ -824,7 +824,7 @@ export default function Home() {
           onComplete: finish,
         },
         wasmCancelRef.current,
-        engine === 'wasm6' ? 'swmm6' : 'swmm5',
+        engine === 'wasm6' ? 'swmm6' : engine === 'wasm6dev' ? 'swmm6dev' : 'swmm5',
         buildOverrides(engine),
         parallelProcessing,
       );
@@ -989,7 +989,7 @@ export default function Home() {
         setFileProgressMap(new Map());
         setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `--- Engine ${i + 1}/${selectedEngines.length}: ${ENGINE_LABELS[engine]} ---`, type: 'info' }]);
         try {
-          if (engine === 'wasm' || engine === 'wasm6') {
+          if (engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev') {
             const engineResults = await runBrowserEngineOnce(engine, runnableFiles);
             runs.push({ engine, label: ENGINE_LABELS[engine], jobId: null, results: engineResults });
           } else {
@@ -1088,7 +1088,7 @@ export default function Home() {
       handleStartComparison();
       return;
     }
-    if (engineMode === 'wasm' || engineMode === 'wasm6') {
+    if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
       handleStartWasmProcessing();
       return;
     }
@@ -1164,7 +1164,7 @@ export default function Home() {
       });
       return;
     }
-    if (engineMode === 'wasm' || engineMode === 'wasm6') {
+    if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
       wasmCancelRef.current.current = true;
       if (wasmTerminateRef.current) {
         wasmTerminateRef.current();
@@ -1222,7 +1222,7 @@ export default function Home() {
               reportStep={reportStep}
               routingMethod={routingMethod}
               parallelProcessing={parallelProcessing}
-              parallelSupported={engineMode === 'wasm' || engineMode === 'wasm6'}
+              parallelSupported={engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev'}
               stopOnError={stopOnError}
               timeoutMinutes={timeoutMinutes}
               startDate={startDate}
@@ -1365,6 +1365,17 @@ export default function Home() {
                           <Globe className="h-3.5 w-3.5 mr-1.5" />
                           SWMM6 WASM
                         </Button>
+                        <Button
+                          size="sm"
+                          variant={selectedEngines.includes('wasm6dev') ? 'default' : 'outline'}
+                          onClick={() => toggleEngine('wasm6dev')}
+                          disabled={processingState === 'processing'}
+                          data-testid="button-mode-wasm6dev"
+                          className="toggle-elevate"
+                        >
+                          <Globe className="h-3.5 w-3.5 mr-1.5" />
+                          SWMM6 Dev
+                        </Button>
                         {swmmStatus?.apiAvailable ? (
                           <Badge variant="outline" className="text-green-600 border-green-500/30" data-testid="badge-api-available">
                             API v{swmmStatus.apiVersion ? (swmmStatus.apiVersion / 10000).toFixed(1) : '?'}
@@ -1384,7 +1395,9 @@ export default function Home() {
                           ? 'Uses SWMM5 shared library for step-by-step control with live data streaming. Click another engine to add it and compare outputs.'
                           : engineMode === 'wasm'
                           ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device. Click another engine to add it and compare outputs.'
-                          : 'Runs the OpenSWMM 6.0.0-alpha engine as WebAssembly in your browser, including SWMM6-only solver options. Click another engine to add it and compare outputs.'}
+                          : engineMode === 'wasm6'
+                          ? 'Runs the OpenSWMM 6.0.0-alpha engine (swmm6_rel branch) as WebAssembly in your browser, including SWMM6-only solver options. Click another engine to add it and compare outputs.'
+                          : 'Runs the OpenSWMM 6 engine built from the bleeding-edge develop branch as WebAssembly in your browser — useful for comparing against the stable SWMM6 build. Click another engine to add it and compare outputs.'}
                       </p>
                     </div>
                 </div>

@@ -126,7 +126,7 @@ export function runWasmBatch(
     onComplete: () => void;
   },
   cancelRef: { current: boolean },
-  engine: 'swmm5' | 'swmm6' = 'swmm5',
+  engine: 'swmm5' | 'swmm6' | 'swmm6dev' = 'swmm5',
   overrides?: InpOverrides,
   parallel: boolean = true,
 ): (() => void) & { skip: (fileId: string) => void } {
@@ -200,7 +200,7 @@ export function runWasmBatch(
     startedCount++;
     currentByWorker.set(worker, { id: f.id, name: f.name, startedAt: Date.now() });
     callbacks.onFileStart(startedCount, f.name);
-    callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : 'SWMM5'} WASM in-browser engine)...`, 'info');
+    callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : engine === 'swmm6dev' ? 'SWMM6-dev' : 'SWMM5'} WASM in-browser engine)...`, 'info');
     callbacks.onProgress({ fileId: f.id, fileName: f.name, percentage: 0, message: 'Loading model...' });
     let inpText = await f.file.text();
     if (cancelRef.current || terminated) {
@@ -216,7 +216,7 @@ export function runWasmBatch(
     // Classic SWMM5 matches object names ignoring capitalization; the SWMM6
     // engine is case-strict (ERROR 209 on e.g. BOUNDARY@1020 vs Boundary@1020).
     // Normalize case-variant references to the defined spelling for SWMM6 runs.
-    if (engine === 'swmm6') {
+    if (engine === 'swmm6' || engine === 'swmm6dev') {
       const normalized = normalizeInpNameCase(inpText);
       if (normalized.fixes.length > 0) {
         inpText = normalized.content;
@@ -228,7 +228,7 @@ export function runWasmBatch(
     }
     // SWMM 5.x rejects the SWMM6 [VIRTUAL_JUNCTIONS] section outright. Round-
     // trip such models back to plain [JUNCTIONS] so they still run, and say so.
-    if (engine !== 'swmm6' && hasVirtualJunctions(inpText)) {
+    if (engine === 'swmm5' && hasVirtualJunctions(inpText)) {
       const stripped = stripVirtualJunctions(inpText);
       inpText = stripped.content;
       callbacks.onLog(
@@ -260,7 +260,7 @@ export function runWasmBatch(
     if (terminated || completed || currentByWorker.get(worker)?.id !== d.id) return;
     currentByWorker.delete(worker);
     const metrics = d.rptText ? parseReportMetricsClient(d.rptText) : undefined;
-    const engineName = engine === 'swmm6' ? 'wasm6' : 'wasm';
+    const engineName = engine === 'swmm6' ? 'wasm6' : engine === 'swmm6dev' ? 'wasm6dev' : 'wasm';
 
     let ok = d.ok;
     let error = ok ? undefined : (d.errMsg || 'Simulation failed');
@@ -360,7 +360,7 @@ export function runWasmBatch(
     if (idx !== -1) workers.splice(idx, 1);
 
     const elapsedMs = Date.now() - info.startedAt;
-    const engineName = engine === 'swmm6' ? 'wasm6' : 'wasm';
+    const engineName = engine === 'swmm6' ? 'wasm6' : engine === 'swmm6dev' ? 'wasm6dev' : 'wasm';
     callbacks.onResult({
       id: info.id,
       fileName: info.name,

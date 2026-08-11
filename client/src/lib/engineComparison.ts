@@ -2,13 +2,14 @@ import type { ProcessResult, ParsedMetrics } from "@shared/schema";
 import type { ParsedTimeSeries } from "./parseTimeSeries";
 
 /** Engine ids the UI can select. */
-export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6';
+export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6' | 'wasm6dev';
 
 export const ENGINE_LABELS: Record<EngineId, string> = {
   executable: 'Executable',
   api: 'SWMM5 API',
   wasm: 'SWMM5 WASM',
   wasm6: 'SWMM6 WASM',
+  wasm6dev: 'SWMM6 WASM (develop)',
 };
 
 /** One engine's completed batch. */
