@@ -272,10 +272,7 @@ export default function SimulationSettings({
                     <div className="pl-6 space-y-2">
                       <p className="text-xs text-muted-foreground">
                         Writes FLOW_ROUTING FV (replacing the routing method above) plus any scheme
-                        settings you fill in — leave them blank to use the engine defaults. Note: the
-                        SWMM6 engines currently bundled with the app accept these keywords but predate
-                        the FV solver, so they still route with DYNWAVE until the engines are rebuilt
-                        from an FV-capable OpenSWMM revision.
+                        settings you fill in — leave them blank to use the engine defaults.
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div className="space-y-1">
