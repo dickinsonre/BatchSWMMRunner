@@ -120,6 +120,126 @@ Weekday     HOURLY  1 1 1 1 1 1
     expect(res.content).toContain("1.0     Weekday");
   });
 
+  it("fixes case-variant transect references in [XSECTIONS] IRREGULAR", () => {
+    const inp = `[XSECTIONS]
+C1    IRREGULAR    FLOODWAY1    0  0  0
+C2    CUSTOM       10   ShapeC   0
+
+[TRANSECTS]
+NC 0.015 0.015 0.015
+X1 Floodway1  8  100  200
+GR 10 0  8 50  6 100  8 150  10 200
+
+[CURVES]
+ShapeC   Shape   0.0  1.0
+`;
+    const res = normalizeInpNameCase(inp);
+    expect(res.content).toContain("C1    IRREGULAR    Floodway1");
+    expect(res.fixes).toEqual(["FLOODWAY1 -> Floodway1"]);
+    // The transect definition itself stays untouched.
+    expect(res.content).toContain("X1 Floodway1  8  100  200");
+  });
+
+  it("fixes node and link names in [CONTROLS] rules without touching anything else", () => {
+    const inp = `[JUNCTIONS]
+Node@A     100   4   0   0   0
+
+[PUMPS]
+Pump1      Node@A   OF1   PCURVE1   ON
+
+[CONTROLS]
+RULE R1
+IF NODE NODE@A DEPTH > 3.5
+AND LINK pump1 FLOW > 0
+THEN PUMP PUMP1 STATUS = ON
+PRIORITY 1
+
+[CURVES]
+PCurve1   Pump1   0   5
+`;
+    const res = normalizeInpNameCase(inp);
+    expect(res.content).toContain("IF NODE Node@A DEPTH > 3.5");
+    expect(res.content).toContain("AND LINK Pump1 FLOW > 0");
+    expect(res.content).toContain("THEN PUMP Pump1 STATUS = ON");
+    // Rule name, keywords, values untouched.
+    expect(res.content).toContain("RULE R1");
+    expect(res.content).toContain("PRIORITY 1");
+    // The pump's own curve reference is fixed too (per-type namespaces).
+    expect(res.content).toContain("Node@A   OF1   PCurve1");
+    // Definitions untouched.
+    expect(res.content).toContain("Node@A     100");
+    expect(res.content).toContain("Pump1      Node@A");
+  });
+
+  it("keeps node/link/curve namespaces separate in CONTROLS", () => {
+    const inp = `[JUNCTIONS]
+Shared     100   4   0   0   0
+
+[CONDUITS]
+SHARED     Shared   OF1   400   0.013  0  0  0  0
+
+[CONTROLS]
+RULE R1
+IF NODE shared DEPTH > 1
+AND LINK shared FLOW > 0
+THEN CONDUIT SHARED STATUS = CLOSED
+`;
+    const res = normalizeInpNameCase(inp);
+    // NODE ref takes the junction spelling; LINK/CONDUIT refs take the conduit spelling.
+    expect(res.content).toContain("IF NODE Shared DEPTH > 1");
+    expect(res.content).toContain("AND LINK SHARED FLOW > 0");
+    expect(res.content).toContain("THEN CONDUIT SHARED STATUS = CLOSED");
+  });
+
+  it("fixes hydrograph, snow pack, LID, and aquifer references", () => {
+    const inp = `[SUBCATCHMENTS]
+S1   RG1   J1   5   25   500   0.5   0   SNOWPLOW
+
+[RDII]
+J1   uh1   12500
+
+[GROUNDWATER]
+S1   AQ1   J1   90   0   0   0   0   0   0
+
+[LID_USAGE]
+S1   raingarden   1   500   100   0   0   0
+
+[HYDROGRAPHS]
+UH1   RG1
+UH1   JAN  SHORT  0.033  1.0  2.0
+
+[SNOWPACKS]
+SnowPlow   PLOWABLE   0.005  0.007  32  0.10  0.00  0.0  0.2
+
+[LID_CONTROLS]
+RainGarden   BC
+RainGarden   SURFACE   6  0.25  0.1  1.0  5
+
+[AQUIFERS]
+Aq1   0.5  0.28  0.23  0.05  10  2.0  0.001  0.05  4.0  3.0
+`;
+    const res = normalizeInpNameCase(inp);
+    expect(res.content).toContain("500   0.5   0   SnowPlow");
+    expect(res.content).toContain("J1   UH1   12500");
+    expect(res.content).toContain("S1   Aq1   J1");
+    expect(res.content).toContain("S1   RainGarden   1");
+    // Definitions keep their first-seen spelling.
+    expect(res.content).toContain("SnowPlow   PLOWABLE");
+    expect(res.content).toContain("Aq1   0.5");
+  });
+
+  it("does not corrupt subcatchment lines without a snow pack column", () => {
+    const inp = `[SUBCATCHMENTS]
+S1   RG1   J1   5   25   500   0.5   0
+
+[SNOWPACKS]
+s1   PLOWABLE   0.005  0.007  32  0.10  0.00  0.0  0.2
+`;
+    const res = normalizeInpNameCase(inp);
+    // No 9th column: nothing to rewrite even though a snowpack folds to "S1".
+    expect(res.content).toContain("S1   RG1   J1   5   25   500   0.5   0");
+  });
+
   it("unifies mixed-case definition lines of the same series", () => {
     const mixed = `[TIMESERIES]
 TS1    0:00   1.0

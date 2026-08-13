@@ -18,7 +18,17 @@ export interface CaseNormalizeResult {
   fixes: string[];
 }
 
-type NameKind = 'timeseries' | 'curve' | 'pattern';
+type NameKind =
+  | 'timeseries'
+  | 'curve'
+  | 'pattern'
+  | 'transect'
+  | 'node'
+  | 'link'
+  | 'hydrograph'
+  | 'snowpack'
+  | 'lid'
+  | 'aquifer';
 
 function sectionName(line: string): string | null {
   const m = line.match(/^\s*\[([^\]]+)\]/);
@@ -77,8 +87,22 @@ function referenceColumns(section: string, toks: string[]): { idx: number; kind:
       return type.startsWith('TABULAR') && toks.length > 5 ? [{ idx: 5, kind: 'curve' }] : [];
     }
     case 'XSECTIONS':
-      // Link CUSTOM Geom1 Curve ...  (IRREGULAR references a transect, not handled)
-      return up(1) === 'CUSTOM' && toks.length > 3 ? [{ idx: 3, kind: 'curve' }] : [];
+      // Link CUSTOM Geom1 Curve ... | Link IRREGULAR Tsect ...
+      if (up(1) === 'CUSTOM' && toks.length > 3) return [{ idx: 3, kind: 'curve' }];
+      if (up(1) === 'IRREGULAR' && toks.length > 2) return [{ idx: 2, kind: 'transect' }];
+      return [];
+    case 'RDII':
+      // Node UHgroup SewerArea
+      return toks.length > 1 ? [{ idx: 1, kind: 'hydrograph' }] : [];
+    case 'SUBCATCHMENTS':
+      // Name Rgage Outlet Area %Imperv Width Slope CurbLen (Snowpack)
+      return toks.length > 8 ? [{ idx: 8, kind: 'snowpack' }] : [];
+    case 'GROUNDWATER':
+      // Subcat Aquifer Node ...
+      return toks.length > 1 ? [{ idx: 1, kind: 'aquifer' }] : [];
+    case 'LID_USAGE':
+      // Subcat LIDProcess Number ...
+      return toks.length > 1 ? [{ idx: 1, kind: 'lid' }] : [];
     case 'EVAPORATION':
       // TIMESERIES Tseries
       return up(0) === 'TIMESERIES' && toks.length > 1 ? [{ idx: 1, kind: 'timeseries' }] : [];
@@ -87,10 +111,45 @@ function referenceColumns(section: string, toks: string[]): { idx: number; kind:
   }
 }
 
+// Sections whose data lines *define* a name in their first token. For the
+// multi-line sections (time series, curves, patterns, hydrographs, snow packs,
+// LID controls) the defining ID column is also re-unified in pass 2.
 const DEFINING: Record<string, NameKind> = {
   TIMESERIES: 'timeseries',
   CURVES: 'curve',
   PATTERNS: 'pattern',
+  HYDROGRAPHS: 'hydrograph',
+  SNOWPACKS: 'snowpack',
+  LID_CONTROLS: 'lid',
+  AQUIFERS: 'aquifer',
+};
+
+// Sections that define node / link names in their first token. These are
+// single-line definitions: captured as canonical spellings but never rewritten
+// (their own reference columns are handled by referenceColumns).
+const OBJECT_DEFINING: Record<string, NameKind> = {
+  JUNCTIONS: 'node',
+  OUTFALLS: 'node',
+  STORAGE: 'node',
+  DIVIDERS: 'node',
+  VIRTUAL_JUNCTIONS: 'node',
+  CONDUITS: 'link',
+  PUMPS: 'link',
+  ORIFICES: 'link',
+  WEIRS: 'link',
+  OUTLETS: 'link',
+};
+
+// [CONTROLS] rule clauses reference objects as `<keyword> <name>`; only the
+// token immediately after one of these keywords is a name we may rewrite.
+const CONTROLS_OBJECT_KEYWORDS: Record<string, NameKind> = {
+  NODE: 'node',
+  LINK: 'link',
+  CONDUIT: 'link',
+  PUMP: 'link',
+  ORIFICE: 'link',
+  WEIR: 'link',
+  OUTLET: 'link',
 };
 
 /**
@@ -105,20 +164,36 @@ export function normalizeInpNameCase(content: string): CaseNormalizeResult {
     timeseries: new Map(),
     curve: new Map(),
     pattern: new Map(),
+    transect: new Map(),
+    node: new Map(),
+    link: new Map(),
+    hydrograph: new Map(),
+    snowpack: new Map(),
+    lid: new Map(),
+    aquifer: new Map(),
+  };
+  const define = (kind: NameKind, name: string | undefined) => {
+    if (!name) return;
+    const key = name.toUpperCase();
+    if (!canonical[kind].has(key)) canonical[kind].set(key, name);
   };
   let section: string | null = null;
   for (const raw of lines) {
     const sec = sectionName(raw);
     if (sec) { section = sec; continue; }
-    const kind = section ? DEFINING[section] : undefined;
-    if (!kind) continue;
+    if (!section) continue;
     const code = raw.split(';')[0];
-    const name = code.trim().split(/\s+/)[0];
-    if (!name) continue;
-    const key = name.toUpperCase();
-    if (!canonical[kind].has(key)) canonical[kind].set(key, name);
+    const parts = code.trim().split(/\s+/);
+    if (!parts[0]) continue;
+    if (section === 'TRANSECTS') {
+      // A transect is named on its X1 line: X1 Name Nsta ...
+      if (parts[0].toUpperCase() === 'X1') define('transect', parts[1]);
+      continue;
+    }
+    const kind = DEFINING[section] ?? OBJECT_DEFINING[section];
+    if (kind) define(kind, parts[0]);
   }
-  if (canonical.timeseries.size === 0 && canonical.curve.size === 0 && canonical.pattern.size === 0) {
+  if (Object.values(canonical).every((m) => m.size === 0)) {
     return { content, fixes: [] };
   }
 
@@ -150,6 +225,18 @@ export function normalizeInpNameCase(content: string): CaseNormalizeResult {
       if (t) {
         const to = rewriteTok(t.tok, definingKind);
         if (to !== t.tok) edits.push({ start: t.start, from: t.tok, to });
+      }
+    } else if (section === 'CONTROLS') {
+      // Rule clauses reference objects as `<keyword> <name>`; rewrite only the
+      // token directly after a NODE/LINK/CONDUIT/... keyword. Everything else
+      // (rule names, attributes, operators, values, expressions) is untouched.
+      for (let i = 0; i < toks.length - 1; i++) {
+        const kind = CONTROLS_OBJECT_KEYWORDS[toks[i].tok.toUpperCase()];
+        if (!kind) continue;
+        const t = toks[i + 1];
+        const to = rewriteTok(t.tok, kind);
+        if (to !== t.tok) edits.push({ start: t.start, from: t.tok, to });
+        i++; // The name token itself cannot start another clause.
       }
     } else {
       for (const ref of referenceColumns(section, toks.map((t) => t.tok))) {
