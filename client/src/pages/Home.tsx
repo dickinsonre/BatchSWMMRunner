@@ -31,6 +31,8 @@ import GifMakerTool from "@/components/GifMakerTool";
 import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import type { SwmmStatus } from "@shared/schema";
 import type { Swmm6Options } from "@shared/inpOptions";
+import { scanInpContent, type PreflightResult } from "@shared/inpScanner";
+import PreflightSummary from "@/components/PreflightSummary";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -222,6 +224,7 @@ export default function Home() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<string>('');
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
+  const [preflightResults, setPreflightResults] = useState<Record<string, PreflightResult>>({});
   const savedSettingsRef = useRef<PersistedSettings>(loadSettings());
   const [reportStep, setReportStep] = useState(savedSettingsRef.current.reportStep ?? 15);
   const [routingMethod, setRoutingMethod] = useState(savedSettingsRef.current.routingMethod ?? "dynamic");
@@ -643,10 +646,58 @@ export default function Home() {
 
   const handleRemoveFile = (id: string) => {
     setFiles(prev => prev.filter(f => f.id !== id));
+    setPreflightResults(prev => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
+
+  const handleRemoveInvalid = () => {
+    setFiles(prev => prev.filter(f => preflightResults[f.id]?.status !== 'invalid'));
+    setPreflightResults(prev => {
+      const next: Record<string, PreflightResult> = {};
+      for (const [id, r] of Object.entries(prev)) {
+        if (r.status !== 'invalid') next[id] = r;
+      }
+      return next;
+    });
+  };
+
+  // Preflight: statically scan newly added .inp files so broken models are
+  // flagged before the batch is started.
+  useEffect(() => {
+    let cancelled = false;
+    const unscanned = files.filter(f => !(f.id in preflightResults) && (f as any).file);
+    if (unscanned.length === 0) return;
+    (async () => {
+      for (const item of unscanned) {
+        try {
+          const text = await ((item as any).file as File).text();
+          if (cancelled) return;
+          const result = scanInpContent(text);
+          setPreflightResults(prev => ({ ...prev, [item.id]: result }));
+        } catch {
+          if (cancelled) return;
+          setPreflightResults(prev => ({
+            ...prev,
+            [item.id]: {
+              status: 'invalid',
+              issues: [{ severity: 'error', code: 'READ_FAILED', message: 'Could not read file contents.' }],
+              errorCount: 1,
+              warningCount: 0,
+            },
+          }));
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [files, preflightResults]);
 
   const handleClearAll = () => {
     setFiles([]);
+    setPreflightResults({});
     setResults([]);
     setProcessingState('idle');
     setCurrentFile(0);
@@ -1441,6 +1492,16 @@ export default function Home() {
                   onClearAll={handleClearAll}
                 />
               </section>
+
+              {processingState === 'idle' && (
+                <section data-testid="section-preflight">
+                  <PreflightSummary
+                    results={preflightResults}
+                    files={files}
+                    onRemoveInvalid={handleRemoveInvalid}
+                  />
+                </section>
+              )}
             </>
           )}
 
