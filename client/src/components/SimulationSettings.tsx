@@ -326,6 +326,51 @@ export default function SimulationSettings({
                           />
                         </div>
                       </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-cell-length" className="text-xs">FV_CELL_LENGTH (m)</Label>
+                          <Input
+                            id="swmm6-fv-cell-length"
+                            type="number"
+                            min={0.1}
+                            step="0.1"
+                            placeholder="Engine default"
+                            value={s6.fvCellLength ?? ''}
+                            onChange={(e) => setS6({ fvCellLength: e.target.value === '' ? undefined : Number(e.target.value) })}
+                            disabled={disabled}
+                            data-testid="input-swmm6-fv-cell-length"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-min-cells" className="text-xs">FV_MIN_CELLS</Label>
+                          <Input
+                            id="swmm6-fv-min-cells"
+                            type="number"
+                            min={1}
+                            step="1"
+                            placeholder="Engine default"
+                            value={s6.fvMinCells ?? ''}
+                            onChange={(e) => setS6({ fvMinCells: e.target.value === '' ? undefined : Number(e.target.value) })}
+                            disabled={disabled}
+                            data-testid="input-swmm6-fv-min-cells"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="swmm6-fv-cfl" className="text-xs">FV_CFL (0–1]</Label>
+                          <Input
+                            id="swmm6-fv-cfl"
+                            type="number"
+                            min={0.01}
+                            max={1}
+                            step="0.05"
+                            placeholder="Engine default"
+                            value={s6.fvCfl ?? ''}
+                            onChange={(e) => setS6({ fvCfl: e.target.value === '' ? undefined : Number(e.target.value) })}
+                            disabled={disabled}
+                            data-testid="input-swmm6-fv-cfl"
+                          />
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

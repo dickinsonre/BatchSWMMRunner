@@ -98,10 +98,28 @@ describe('applyInpOverrides — SWMM6 options', () => {
     expect(out).toMatch(/^FV_RIEMANN\s+HLLC$/m);
   });
 
+  it('writes FV_CELL_LENGTH, FV_MIN_CELLS and FV_CFL when set', () => {
+    const out = applyInpOverrides(BASE_INP, {
+      swmm6: { enabled: true, fvRouting: true, fvCellLength: 12.5, fvMinCells: 3, fvCfl: 0.8 },
+    });
+    expect(out).toMatch(/^FLOW_ROUTING\s+FV$/m);
+    expect(out).toMatch(/^FV_CELL_LENGTH\s+12\.5$/m);
+    expect(out).toMatch(/^FV_MIN_CELLS\s+3$/m);
+    expect(out).toMatch(/^FV_CFL\s+0\.8$/m);
+  });
+
+  it('normalizeSwmm6Options rejects out-of-range mesh/CFL values but keeps the routing flag', () => {
+    const norm = normalizeSwmm6Options({
+      enabled: true, fvRouting: true,
+      fvCellLength: -5, fvMinCells: 2.5, fvCfl: 1.5,
+    });
+    expect(norm).toEqual({ enabled: true, fvRouting: true });
+  });
+
   it('omits FV scheme lines when values are not provided (engine defaults apply)', () => {
     const out = applyInpOverrides(BASE_INP, { swmm6: { enabled: true, fvRouting: true } });
     expect(out).toMatch(/^FLOW_ROUTING\s+FV$/m);
-    expect(out).not.toMatch(/FV_ORDER|FV_LIMITER|FV_TIME_INTEGRATION|FV_RIEMANN/);
+    expect(out).not.toMatch(/FV_ORDER|FV_LIMITER|FV_TIME_INTEGRATION|FV_RIEMANN|FV_CELL_LENGTH|FV_MIN_CELLS|FV_CFL/);
   });
 
   it('normalizeSwmm6Options rejects bad FV values but keeps the routing flag', () => {

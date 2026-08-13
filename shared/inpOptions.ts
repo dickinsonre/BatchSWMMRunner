@@ -31,6 +31,12 @@ export interface Swmm6Options {
   fvTimeIntegration?: string;
   /** FV_RIEMANN — Riemann solver keyword, transport only (engine default HLLC). */
   fvRiemann?: string;
+  /** FV_CELL_LENGTH — target cell length for the FV mesh, m > 0 (engine default applies when unset). */
+  fvCellLength?: number;
+  /** FV_MIN_CELLS — minimum cells per conduit, integer >= 1 (engine default applies when unset). */
+  fvMinCells?: number;
+  /** FV_CFL — CFL number, 0 < CFL <= 1 (engine default applies when unset). */
+  fvCfl?: number;
 }
 
 export interface InpOverrides {
@@ -107,6 +113,12 @@ export function normalizeSwmm6Options(raw: unknown): Swmm6Options | undefined {
     if (ti) out.fvTimeIntegration = ti;
     const rs = token(s6.fvRiemann);
     if (rs) out.fvRiemann = rs;
+    const cell = Number(s6.fvCellLength);
+    if (Number.isFinite(cell) && cell > 0 && cell <= 10000) out.fvCellLength = cell;
+    const minCells = Number(s6.fvMinCells);
+    if (Number.isInteger(minCells) && minCells >= 1 && minCells <= 1000) out.fvMinCells = minCells;
+    const cfl = Number(s6.fvCfl);
+    if (Number.isFinite(cfl) && cfl > 0 && cfl <= 1) out.fvCfl = cfl;
   }
   if (s6.semiImplicit === true) out.semiImplicit = true;
   if (s6.andersonAccel === true) out.andersonAccel = true;
@@ -371,6 +383,9 @@ export function applyInpOverrides(content: string, overrides: InpOverrides): str
       if (s6.fvLimiter) entries.push(['FV_LIMITER', s6.fvLimiter]);
       if (s6.fvTimeIntegration) entries.push(['FV_TIME_INTEGRATION', s6.fvTimeIntegration]);
       if (s6.fvRiemann) entries.push(['FV_RIEMANN', s6.fvRiemann]);
+      if (s6.fvCellLength !== undefined) entries.push(['FV_CELL_LENGTH', String(s6.fvCellLength)]);
+      if (s6.fvMinCells !== undefined) entries.push(['FV_MIN_CELLS', String(s6.fvMinCells)]);
+      if (s6.fvCfl !== undefined) entries.push(['FV_CFL', String(s6.fvCfl)]);
     }
   }
 
