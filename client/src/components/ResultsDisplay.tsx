@@ -17,6 +17,7 @@ import ReportChatbot from "./ReportChatbot";
 import { buildResultsZip, needsContentFetch } from "@/lib/zipExport";
 import { setDashboardResults } from "@/lib/resultsStore";
 import { generateAndDownloadReport, type ReportFormat } from "@/lib/reportGenerator";
+import RegressionComparison from "./RegressionComparison";
 
 const MAX_PREVIEW_LINES = 2000;
 
@@ -111,8 +112,9 @@ export interface ProcessResult {
 interface ResultsDisplayProps {
   results: ProcessResult[];
   elapsedTime?: string;
-  /** Fetch the full report/input text for one result (server-run batches). */
-  onLoadContent?: (resultId: string) => Promise<void>;
+  /** Fetch the full report/input text for one result (server-run batches).
+   * May return the fetched content so callers don't have to wait for state. */
+  onLoadContent?: (resultId: string) => Promise<{ reportContent?: string; inpContent?: string } | null | undefined | void>;
   /** Fetch full text for every result; returns the completed array (for exports/dashboard). */
   onLoadAllContent?: () => Promise<ProcessResult[]>;
 }
@@ -1092,6 +1094,8 @@ export default function ResultsDisplay({ results, elapsedTime, onLoadContent, on
       <BatchQaDashboard results={results} />
 
       <BatchComparison results={results} />
+
+      <RegressionComparison results={results} onLoadContent={onLoadContent} />
 
       <Card data-testid="card-results-list">
         <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">

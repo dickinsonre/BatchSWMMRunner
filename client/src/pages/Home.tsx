@@ -611,6 +611,7 @@ export default function Home() {
   const handleLoadContent = async (resultId: string) => {
     const content = await fetchResultContent(resultId);
     if (content) mergeContent(resultId, content);
+    return content;
   };
 
   const handleLoadAllContent = async (): Promise<ProcessResult[]> => {

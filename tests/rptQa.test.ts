@@ -12,6 +12,9 @@ describe('classifyRun', () => {
     expect(classifyRun({ ...base, routingCE: 0.1, warningCount: 2 })).toBe('PASS WITH WARNINGS');
     expect(classifyRun({ ...base, routingCE: 0.1, nodesFlooded: 3 })).toBe('PASS WITH WARNINGS');
   });
+  it('INCOMPLETE when a success has no parsed continuity data', () => {
+    expect(classifyRun({ ...base, warningCount: 2 })).toBe('INCOMPLETE');
+  });
   it('REVIEW for large continuity error', () => {
     expect(classifyRun({ ...base, routingCE: 4.9 })).toBe('REVIEW');
     expect(classifyRun({ ...base, runoffCE: -8 })).toBe('REVIEW');
