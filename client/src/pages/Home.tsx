@@ -29,8 +29,11 @@ import SystemComparisonChart from "@/components/SystemComparisonChart";
 import EngineScatterCompare from "@/components/EngineScatterCompare";
 import GifMakerTool from "@/components/GifMakerTool";
 import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
+import RunMatrixPanel from "@/components/RunMatrixPanel";
+import RunMatrixCharts from "@/components/RunMatrixCharts";
+import { buildMatrixVariants, DEFAULT_MATRIX_CONFIG, type RunMatrixConfig } from "@/lib/runMatrix";
 import type { SwmmStatus } from "@shared/schema";
-import type { Swmm6Options } from "@shared/inpOptions";
+import type { MatrixVariant, Swmm6Options } from "@shared/inpOptions";
 import { scanInpContent, type PreflightResult } from "@shared/inpScanner";
 import PreflightSummary from "@/components/PreflightSummary";
 
@@ -235,6 +238,10 @@ export default function Home() {
   const [endDate, setEndDate] = useState(savedSettingsRef.current.endDate ?? '');
   const [routingStepSeconds, setRoutingStepSeconds] = useState<number | null>(savedSettingsRef.current.routingStepSeconds ?? null);
   const [swmm6Options, setSwmm6Options] = useState<Swmm6Options>(savedSettingsRef.current.swmm6Options ?? {});
+  const [matrixEnabled, setMatrixEnabled] = useState(false);
+  const [matrixConfig, setMatrixConfig] = useState<RunMatrixConfig>(DEFAULT_MATRIX_CONFIG);
+  /** Variants of the batch currently running / last completed (null = normal batch). */
+  const [matrixRunVariants, setMatrixRunVariants] = useState<MatrixVariant[] | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [swmmStatus, setSwmmStatus] = useState<SwmmStatus | null>(null);
   const [statusError, setStatusError] = useState(false);
@@ -314,6 +321,9 @@ export default function Home() {
     routingStepSeconds: routingStepSeconds && routingStepSeconds > 0 ? routingStepSeconds : undefined,
     swmm6: (engine === 'wasm6' || engine === 'wasm6dev') && swmm6Options.enabled ? swmm6Options : undefined,
   });
+
+  const matrixBuild = useMemo(() => buildMatrixVariants(matrixConfig), [matrixConfig]);
+  const matrixActive = matrixEnabled && !compareMode && files.length === 1 && matrixBuild.errors.length === 0;
 
   useEffect(() => {
     fetch('/api/swmm-status')
@@ -709,6 +719,7 @@ export default function Home() {
     setFileProgressMap(new Map());
     setApiSnapshots([]);
     setComparisonRuns(null);
+    setMatrixRunVariants(null);
     startTimeRef.current = null;
   };
 
@@ -824,6 +835,105 @@ export default function Home() {
     toast({
       title: "Processing Started",
       description: `Running ${runnableFiles.length} file${runnableFiles.length !== 1 ? 's' : ''} in-browser (WASM)...`,
+    });
+  };
+
+  // --- Run matrix (in-browser engines) -----------------------------------
+  // Runs the single uploaded model once per solver variant, sequentially,
+  // renaming each run after its variant so results and charts line up.
+  const handleStartWasmMatrix = async (variants: MatrixVariant[]) => {
+    const wasmEngine = engineMode === 'wasm6' ? 'swmm6' : 'swmm5';
+    const runnable = (files as any[]).filter(f => f.file).map(f => ({ id: f.id, name: f.name, file: f.file as File }));
+    if (runnable.length !== 1) {
+      toast({
+        title: "Run Matrix",
+        description: "A run matrix needs exactly one runnable model file.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const baseFile = runnable[0];
+    const baseName = baseFile.name.replace(/\.inp$/i, '');
+
+    setMatrixRunVariants(variants);
+    setProcessingState('processing');
+    setCurrentFile(0);
+    setResults([]);
+    setLogs([{
+      timestamp: getTimestamp(),
+      message: `Run matrix: ${baseFile.name} × ${variants.length} solver variants (in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : 'SWMM5'})`,
+      type: 'info',
+    }]);
+    setFileProgressMap(new Map());
+    setApiSnapshots([]);
+    setStartTime(Date.now());
+    startTimeRef.current = Date.now();
+    wasmCancelRef.current = { current: false };
+    const cancelToken = wasmCancelRef.current;
+
+    for (let i = 0; i < variants.length; i++) {
+      if (cancelToken.current) break;
+      const variant = variants[i];
+      const variantId = `${baseFile.id}-v${i}`;
+      const variantName = `${baseName} [${variant.label}].inp`;
+      setCurrentFile(i + 1);
+      await new Promise<void>((resolve) => {
+        let settled = false;
+        const done = () => { if (!settled) { settled = true; resolve(); } };
+        const terminate = runWasmBatch(
+          [{ id: variantId, name: variantName, file: baseFile.file }],
+          {
+            onFileStart: () => {},
+            onProgress: (p) => {
+              setFileProgressMap(prev => {
+                const next = new Map(prev);
+                next.set(variantId, {
+                  fileId: variantId,
+                  fileName: variantName,
+                  percentage: p.percentage,
+                  message: p.message,
+                  status: 'running',
+                });
+                return next;
+              });
+            },
+            onResult: (result) => {
+              setResults(prev => [...prev, result]);
+              setFileProgressMap(prev => {
+                const next = new Map(prev);
+                next.set(variantId, {
+                  fileId: variantId,
+                  fileName: variantName,
+                  percentage: 100,
+                  message: result.status === 'success' ? 'Complete' : 'Failed',
+                  status: result.status === 'success' ? 'success' : 'failed',
+                });
+                return next;
+              });
+            },
+            onLog: (message, type) => {
+              setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `[${variant.label}] ${message}`, type }]);
+            },
+            onComplete: done,
+          },
+          cancelToken,
+          wasmEngine,
+          { ...buildOverrides(), ...variant.overrides },
+          false,
+        );
+        wasmTerminateRef.current = terminate;
+      });
+    }
+
+    wasmTerminateRef.current = null;
+    if (cancelToken.current) return; // cancel handler already reset state
+    setProcessingState('completed');
+    if (startTimeRef.current) {
+      setElapsedTime(formatTime((Date.now() - startTimeRef.current) / 1000));
+    }
+    toast({
+      title: "Run Matrix Complete",
+      description: `Ran ${variants.length} solver variants of ${baseFile.name} in your browser.`,
     });
   };
 
@@ -1140,6 +1250,15 @@ export default function Home() {
       handleStartComparison();
       return;
     }
+    if (matrixActive) {
+      setMatrixRunVariants(matrixBuild.variants);
+      if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
+        handleStartWasmMatrix(matrixBuild.variants);
+        return;
+      }
+    } else if (matrixRunVariants) {
+      setMatrixRunVariants(null);
+    }
     if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
       handleStartWasmProcessing();
       return;
@@ -1166,7 +1285,13 @@ export default function Home() {
       const startResponse = await fetch(`/api/batch/${batchJob.id}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engineMode, timeoutMinutes, stopOnError, overrides: buildOverrides(engineMode) }),
+        body: JSON.stringify({
+          engineMode,
+          timeoutMinutes,
+          stopOnError,
+          overrides: buildOverrides(engineMode),
+          ...(matrixActive ? { matrix: matrixBuild.variants } : {}),
+        }),
       });
 
       if (!startResponse.ok) {
@@ -1268,6 +1393,19 @@ export default function Home() {
               <ExpectedOutputs />
             </section>
           </div>
+
+          <section data-testid="section-run-matrix">
+            <RunMatrixPanel
+              enabled={matrixEnabled}
+              onEnabledChange={setMatrixEnabled}
+              config={matrixConfig}
+              onConfigChange={setMatrixConfig}
+              build={matrixBuild}
+              fileCount={files.length}
+              compareMode={compareMode}
+              disabled={processingState === 'processing'}
+            />
+          </section>
 
           <section data-testid="section-simulation-settings">
             <SimulationSettings
@@ -1585,8 +1723,8 @@ export default function Home() {
               <section data-testid="section-progress">
                 <ProgressSection
                   current={currentFile}
-                  total={files.length}
-                  currentFileName={files[currentFile - 1]?.name}
+                  total={matrixRunVariants ? matrixRunVariants.length : files.length}
+                  currentFileName={matrixRunVariants ? matrixRunVariants[currentFile - 1]?.label : files[currentFile - 1]?.name}
                   startTime={startTime || undefined}
                   successCount={results.filter(r => r.status === 'success').length}
                   failedCount={results.filter(r => r.status === 'failed').length}
@@ -1623,6 +1761,15 @@ export default function Home() {
               <section data-testid="section-processing-log">
                 <ProcessingLog logs={logs} defaultCollapsed={true} />
               </section>
+              {matrixRunVariants && matrixRunVariants.length > 0 && (
+                <section data-testid="section-run-matrix-charts">
+                  <RunMatrixCharts
+                    results={results}
+                    variants={matrixRunVariants}
+                    onLoadAllContent={handleLoadAllContent}
+                  />
+                </section>
+              )}
               <section data-testid="section-results">
                 <ResultsDisplay
                   results={results}

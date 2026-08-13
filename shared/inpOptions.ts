@@ -45,9 +45,22 @@ export interface InpOverrides {
   startDate?: string;
   endDate?: string;
   routingStepSeconds?: number;
+  /** VARIABLE_STEP — CFL safety factor 0..2; 0 disables variable stepping. */
+  variableStep?: number;
+  /** LENGTHENING_STEP — conduit lengthening time step in seconds; 0 disables. */
+  lengtheningStep?: number;
+  /** INERTIAL_DAMPING — handling of the inertial terms in dynamic wave routing. */
+  inertialDamping?: 'NONE' | 'PARTIAL' | 'FULL';
   swmm6?: Swmm6Options;
 }
 
+/** One solver configuration in a 1-model × N-configurations run matrix. */
+export interface MatrixVariant {
+  /** Short unique name shown in results and charts, e.g. "RS 5s · VS on". */
+  label: string;
+  /** Solver overrides applied on top of the batch-wide overrides. */
+  overrides: InpOverrides;
+}
 const ROUTING_MAP: Record<string, string> = {
   steady: 'STEADY',
   kinematic: 'KINWAVE',
@@ -350,6 +363,16 @@ export function applyInpOverrides(content: string, overrides: InpOverrides): str
   if (overrides.routingStepSeconds !== undefined && overrides.routingStepSeconds > 0) {
     entries.push(['ROUTING_STEP', secondsToHms(overrides.routingStepSeconds)]);
   }
+  if (overrides.variableStep !== undefined && Number.isFinite(overrides.variableStep) && overrides.variableStep >= 0) {
+    // 0 disables variable stepping; SWMM caps the factor at 2.0.
+    entries.push(['VARIABLE_STEP', String(Math.min(overrides.variableStep, 2))]);
+  }
+  if (overrides.lengtheningStep !== undefined && Number.isFinite(overrides.lengtheningStep) && overrides.lengtheningStep >= 0) {
+    entries.push(['LENGTHENING_STEP', String(overrides.lengtheningStep)]);
+  }
+  if (overrides.inertialDamping && ['NONE', 'PARTIAL', 'FULL'].includes(overrides.inertialDamping)) {
+    entries.push(['INERTIAL_DAMPING', overrides.inertialDamping]);
+  }
 
   // SWMM6-only keywords. NOTE: stock EPA SWMM 5.x rejects every one of these
   // with ERROR 205, so they are only written when the master flag is on.
@@ -425,3 +448,6 @@ export function needsExtran8Hotstart(fileName: string, inpText: string): boolean
 export function rewriteHotstartPath(inpText: string, newPath: string): string {
   return inpText.replace(/^([ \t]*USE[ \t]+HOTSTART[ \t]+).*$/im, `$1"${newPath}"`);
 }
+
+/** Hard cap on variants in one run matrix. */
+export const MAX_MATRIX_VARIANTS = 24;

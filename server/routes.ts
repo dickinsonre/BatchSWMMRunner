@@ -16,7 +16,72 @@ import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
-import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, MAX_MATRIX_VARIANTS, type InpOverrides } from "@shared/inpOptions";
+
+/**
+ * Validate a client-supplied overrides object into a safe InpOverrides.
+ * Returns `{ error }` on invalid explicit values; silently drops out-of-range
+ * numeric knobs (matching the previous behaviour of the start endpoint).
+ */
+function parseInpOverrides(raw: unknown): { overrides: InpOverrides } | { error: string } {
+  const out: InpOverrides = {};
+  if (!raw || typeof raw !== 'object') return { overrides: out };
+  const overrides = raw as Record<string, unknown>;
+  const rs = Number(overrides.reportStepMinutes);
+  if (Number.isFinite(rs) && rs > 0 && rs <= 1440) out.reportStepMinutes = rs;
+  if (typeof overrides.flowRouting === 'string' && ['steady', 'kinematic', 'dynamic'].includes(overrides.flowRouting)) {
+    out.flowRouting = overrides.flowRouting;
+  }
+  const isValidIsoDate = (s: string): boolean => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    const d = new Date(`${s}T00:00:00Z`);
+    return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+  };
+  if (overrides.startDate !== undefined && overrides.startDate !== '') {
+    if (typeof overrides.startDate !== 'string' || !isValidIsoDate(overrides.startDate)) {
+      return { error: 'Invalid startDate override: must be a valid YYYY-MM-DD calendar date' };
+    }
+    out.startDate = overrides.startDate;
+  }
+  if (overrides.endDate !== undefined && overrides.endDate !== '') {
+    if (typeof overrides.endDate !== 'string' || !isValidIsoDate(overrides.endDate)) {
+      return { error: 'Invalid endDate override: must be a valid YYYY-MM-DD calendar date' };
+    }
+    out.endDate = overrides.endDate;
+  }
+  if (out.startDate && out.endDate && out.startDate > out.endDate) {
+    return { error: 'Invalid date overrides: startDate must be on or before endDate' };
+  }
+  const rts = Number(overrides.routingStepSeconds);
+  if (Number.isFinite(rts) && rts > 0 && rts <= 3600) out.routingStepSeconds = rts;
+  if (overrides.variableStep !== undefined) {
+    const vs = Number(overrides.variableStep);
+    if (!Number.isFinite(vs) || vs < 0 || vs > 2) {
+      return { error: 'Invalid variableStep override: must be a number between 0 and 2' };
+    }
+    out.variableStep = vs;
+  }
+  if (overrides.lengtheningStep !== undefined) {
+    const ls = Number(overrides.lengtheningStep);
+    if (!Number.isFinite(ls) || ls < 0 || ls > 3600) {
+      return { error: 'Invalid lengtheningStep override: must be a number of seconds between 0 and 3600' };
+    }
+    out.lengtheningStep = ls;
+  }
+  if (overrides.inertialDamping !== undefined) {
+    if (typeof overrides.inertialDamping !== 'string' || !['NONE', 'PARTIAL', 'FULL'].includes(overrides.inertialDamping)) {
+      return { error: 'Invalid inertialDamping override: must be NONE, PARTIAL, or FULL' };
+    }
+    out.inertialDamping = overrides.inertialDamping as InpOverrides['inertialDamping'];
+  }
+  // SWMM6-only solver keywords: the server engines (executable/api) are
+  // SWMM 5.x, which rejects every one of these with ERROR 205. Fail loudly
+  // instead of running a batch that is guaranteed to error on each file.
+  if (normalizeSwmm6Options(overrides.swmm6)) {
+    return { error: 'SWMM6 options are only supported by the in-browser SWMM6 engine; the server engines run SWMM 5.x, which rejects those keywords (ERROR 205).' };
+  }
+  return { overrides: out };
+}
 import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
@@ -664,44 +729,37 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
     let admitted = false;
 
     try {
-      const { engineMode, timeoutMinutes, stopOnError, overrides } = req.body || {};
+      const { engineMode, timeoutMinutes, stopOnError, overrides, matrix } = req.body || {};
 
-      const inpOverrides: InpOverrides = {};
-      if (overrides && typeof overrides === 'object') {
-        const rs = Number(overrides.reportStepMinutes);
-        if (Number.isFinite(rs) && rs > 0 && rs <= 1440) inpOverrides.reportStepMinutes = rs;
-        if (typeof overrides.flowRouting === 'string' && ['steady', 'kinematic', 'dynamic'].includes(overrides.flowRouting)) {
-          inpOverrides.flowRouting = overrides.flowRouting;
+      const parsedBase = parseInpOverrides(overrides);
+      if ('error' in parsedBase) {
+        return res.status(400).json({ error: parsedBase.error });
+      }
+      const inpOverrides = parsedBase.overrides;
+
+      // Run matrix: 1 model × N solver configurations. Each variant carries
+      // its own [OPTIONS] overrides applied on top of the batch-wide ones.
+      let matrixVariants: { label: string; overrides: InpOverrides }[] | null = null;
+      if (matrix !== undefined) {
+        if (!Array.isArray(matrix) || matrix.length < 1 || matrix.length > MAX_MATRIX_VARIANTS) {
+          return res.status(400).json({ error: `Invalid matrix: must be an array of 1–${MAX_MATRIX_VARIANTS} variants` });
         }
-        const isValidIsoDate = (s: string): boolean => {
-          if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
-          const d = new Date(`${s}T00:00:00Z`);
-          return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
-        };
-        if (overrides.startDate !== undefined && overrides.startDate !== '') {
-          if (typeof overrides.startDate !== 'string' || !isValidIsoDate(overrides.startDate)) {
-            return res.status(400).json({ error: 'Invalid startDate override: must be a valid YYYY-MM-DD calendar date' });
+        const seen = new Set<string>();
+        matrixVariants = [];
+        for (const v of matrix) {
+          const label = typeof v?.label === 'string' ? v.label.trim() : '';
+          if (!label || label.length > 80) {
+            return res.status(400).json({ error: 'Invalid matrix variant: each variant needs a label of 1–80 characters' });
           }
-          inpOverrides.startDate = overrides.startDate;
-        }
-        if (overrides.endDate !== undefined && overrides.endDate !== '') {
-          if (typeof overrides.endDate !== 'string' || !isValidIsoDate(overrides.endDate)) {
-            return res.status(400).json({ error: 'Invalid endDate override: must be a valid YYYY-MM-DD calendar date' });
+          if (seen.has(label)) {
+            return res.status(400).json({ error: `Invalid matrix: duplicate variant label "${label}"` });
           }
-          inpOverrides.endDate = overrides.endDate;
-        }
-        if (inpOverrides.startDate && inpOverrides.endDate && inpOverrides.startDate > inpOverrides.endDate) {
-          return res.status(400).json({ error: 'Invalid date overrides: startDate must be on or before endDate' });
-        }
-        const rts = Number(overrides.routingStepSeconds);
-        if (Number.isFinite(rts) && rts > 0 && rts <= 3600) inpOverrides.routingStepSeconds = rts;
-        // SWMM6-only solver keywords: the server engines (executable/api) are
-        // SWMM 5.x, which rejects every one of these with ERROR 205. Fail loudly
-        // instead of running a batch that is guaranteed to error on each file.
-        if (normalizeSwmm6Options(overrides.swmm6)) {
-          return res.status(400).json({
-            error: 'SWMM6 options are only supported by the in-browser SWMM6 engine; the server engines run SWMM 5.x, which rejects those keywords (ERROR 205).',
-          });
+          seen.add(label);
+          const parsed = parseInpOverrides(v?.overrides);
+          if ('error' in parsed) {
+            return res.status(400).json({ error: `Invalid matrix variant "${label}": ${parsed.error}` });
+          }
+          matrixVariants.push({ label, overrides: parsed.overrides });
         }
       }
       // Wait for any in-flight chunked-upload append to finish before reading
@@ -720,6 +778,31 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
         return res.status(409).json({ error: `Batch job already finished (status: ${job.status})` });
       }
 
+      // Expand a run matrix into one virtual "file" per variant: the single
+      // uploaded model is copied on disk once per variant so each run gets
+      // its own [OPTIONS] rewrite and its own .rpt/.out artifacts.
+      let runFiles = job.files;
+      let perFileOverrides: Map<string, InpOverrides> | undefined;
+      if (matrixVariants) {
+        if (job.files.length !== 1) {
+          return res.status(400).json({ error: 'A run matrix requires exactly one uploaded model file' });
+        }
+        const baseFile = job.files[0];
+        const dir = path.dirname(baseFile.path);
+        const baseName = baseFile.name.replace(/\.inp$/i, '');
+        runFiles = [];
+        perFileOverrides = new Map();
+        for (let i = 0; i < matrixVariants.length; i++) {
+          const variant = matrixVariants[i];
+          const variantPath = path.join(dir, `variant-${i}-${path.basename(baseFile.path)}`);
+          fs.copyFileSync(baseFile.path, variantPath);
+          const fileId = `${baseFile.id}-v${i}`;
+          runFiles.push({ id: fileId, name: `${baseName} [${variant.label}].inp`, path: variantPath });
+          // Variant overrides win over batch-wide ones.
+          perFileOverrides.set(fileId, { ...inpOverrides, ...variant.overrides });
+        }
+      }
+
       let timeoutMin = Number(timeoutMinutes);
       if (!Number.isFinite(timeoutMin) || timeoutMin <= 0) timeoutMin = DEFAULT_TIMEOUT_MINUTES;
       timeoutMin = Math.min(timeoutMin, MAX_TIMEOUT_MINUTES);
@@ -734,7 +817,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
       });
 
       setTimeout(() => {
-        processFilesSequentially(jobId, job.files, engineMode || 'executable', timeoutMin * 60 * 1000, stopOnError === true, inpOverrides);
+        processFilesSequentially(jobId, runFiles, engineMode || 'executable', timeoutMin * 60 * 1000, stopOnError === true, inpOverrides, perFileOverrides);
       }, 500);
     } catch (error) {
       console.error('Start processing error:', error);
@@ -857,6 +940,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
     timeoutMs: number = DEFAULT_TIMEOUT_MINUTES * 60 * 1000,
     stopOnError: boolean = false,
     overrides: InpOverrides = {},
+    perFileOverrides?: Map<string, InpOverrides>,
   ) {
     const job = await storage.getBatchJob(jobId);
     if (!job) {
@@ -903,13 +987,14 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
           }
         }, timeoutMs);
 
+        const fileOverrides = perFileOverrides?.get(file.id) ?? overrides;
         let result: ProcessResult;
         try {
           if (engineMode === 'api') {
             if (swmm5api.isApiAvailable()) {
               // The SWMM5 shared library holds process-global model state, so
               // API-mode runs from concurrent jobs must never overlap.
-              result = await apiRunLimit(() => processSingleFileApi(jobId, file, entry, overrides));
+              result = await apiRunLimit(() => processSingleFileApi(jobId, file, entry, fileOverrides));
             } else {
               result = makeEngineUnavailableResult(file, 'api', 'SWMM5 API (shared library) is unavailable — no simulation was performed');
               sendProgressUpdate(jobId, {
@@ -921,7 +1006,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
               });
             }
           } else {
-            result = await processSingleFile(jobId, file, entry, overrides);
+            result = await processSingleFile(jobId, file, entry, fileOverrides);
           }
         } finally {
           clearTimeout(timeoutTimer);

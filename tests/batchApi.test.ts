@@ -315,6 +315,59 @@ describe("batch processing (executable engine)", () => {
     expect(again.status).toBe(409);
   }, 120000);
 
+  it("runs a solver matrix: one model × N variants, one named result each", async () => {
+    const job = await uploadFixtures(app, ["valid-model.inp"]);
+    const start = await startBatch(job.id, {
+      matrix: [
+        { label: "RS 5s", overrides: { routingStepSeconds: 5, variableStep: 0.75, inertialDamping: "PARTIAL" } },
+        { label: "RS 30s", overrides: { routingStepSeconds: 30, variableStep: 0, lengtheningStep: 10 } },
+      ],
+    });
+    expect(start.status).toBe(200);
+
+    const done = await waitForJob(app, job.id, j => isFinished(j) && j.results.length === 2, 120000);
+    expect(done.status).toBe("completed");
+    expect(done.results.map(r => r.fileName)).toEqual([
+      "valid-model [RS 5s].inp",
+      "valid-model [RS 30s].inp",
+    ]);
+    for (const r of done.results) {
+      expect(r.status).toBe("success");
+      expect(r.parsedMetrics?.routingContinuityError).toBeTypeOf("number");
+      expect(r.processingTime).toBeTypeOf("number");
+    }
+    // Each variant's [OPTIONS] rewrite is visible in its stored input text.
+    const c0 = await request(app).get(`/api/batch/${job.id}/results/${done.results[0].id}/content`);
+    expect(c0.body.inpContent).toMatch(/ROUTING_STEP\s+00:00:05/);
+    expect(c0.body.inpContent).toMatch(/INERTIAL_DAMPING\s+PARTIAL/);
+    const c1 = await request(app).get(`/api/batch/${job.id}/results/${done.results[1].id}/content`);
+    expect(c1.body.inpContent).toMatch(/ROUTING_STEP\s+00:00:30/);
+    expect(c1.body.inpContent).toMatch(/LENGTHENING_STEP\s+10/);
+  }, 150000);
+
+  it("rejects invalid matrix payloads", async () => {
+    const twoFiles = await uploadFixtures(app, ["valid-model.inp", "routing-only.inp"]);
+    const notOne = await startBatch(twoFiles.id, { matrix: [{ label: "a", overrides: {} }] });
+    expect(notOne.status).toBe(400);
+    expect(notOne.body.error).toMatch(/exactly one/i);
+
+    const job = await uploadFixtures(app, ["valid-model.inp"]);
+    const dup = await startBatch(job.id, { matrix: [{ label: "a", overrides: {} }, { label: "a", overrides: {} }] });
+    expect(dup.status).toBe(400);
+    expect(dup.body.error).toMatch(/duplicate/i);
+
+    const noLabel = await startBatch(job.id, { matrix: [{ overrides: {} }] });
+    expect(noLabel.status).toBe(400);
+
+    const badVs = await startBatch(job.id, { matrix: [{ label: "x", overrides: { variableStep: 9 } }] });
+    expect(badVs.status).toBe(400);
+    expect(badVs.body.error).toMatch(/variableStep/);
+
+    const badId = await startBatch(job.id, { matrix: [{ label: "x", overrides: { inertialDamping: "SOME" } }] });
+    expect(badId.status).toBe(400);
+    expect(badId.body.error).toMatch(/inertialDamping/);
+  }, 60000);
+
   it("returns 404 for unknown jobs", async () => {
     const res = await request(app).get("/api/batch/nope");
     expect(res.status).toBe(404);
