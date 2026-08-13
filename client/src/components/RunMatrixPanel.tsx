@@ -22,6 +22,8 @@ interface RunMatrixPanelProps {
   /** Exactly one uploaded model is required for a matrix run. */
   fileCount: number;
   compareMode: boolean;
+  /** True when finite-volume routing is enabled in the solver settings (SWMM6 engine). */
+  fvRoutingEnabled?: boolean;
   disabled?: boolean;
 }
 
@@ -33,6 +35,7 @@ export default function RunMatrixPanel({
   build,
   fileCount,
   compareMode,
+  fvRoutingEnabled,
   disabled,
 }: RunMatrixPanelProps) {
   const set = (patch: Partial<RunMatrixConfig>) => onConfigChange({ ...config, ...patch });
@@ -136,6 +139,50 @@ export default function RunMatrixPanel({
                 data-testid="input-matrix-lengthening"
               />
               <p className="text-xs text-muted-foreground">Applied to every variant; 0 disables lengthening.</p>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground">
+              Finite-volume mesh &amp; CFL sweeps
+              {!fvRoutingEnabled && ' — enable FV routing in the solver settings (SWMM6 engine) to use these'}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="matrix-fv-cell-lengths">FV cell lengths (m)</Label>
+                <Input
+                  id="matrix-fv-cell-lengths"
+                  value={config.fvCellLengthsText}
+                  onChange={(e) => set({ fvCellLengthsText: e.target.value })}
+                  placeholder="e.g. 5, 10, 25"
+                  disabled={disabled}
+                  data-testid="input-matrix-fv-cell-lengths"
+                />
+                <p className="text-xs text-muted-foreground">FV_CELL_LENGTH; one run per value.</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="matrix-fv-min-cells">FV min cells</Label>
+                <Input
+                  id="matrix-fv-min-cells"
+                  value={config.fvMinCellsText}
+                  onChange={(e) => set({ fvMinCellsText: e.target.value })}
+                  placeholder="e.g. 2, 4"
+                  disabled={disabled}
+                  data-testid="input-matrix-fv-min-cells"
+                />
+                <p className="text-xs text-muted-foreground">FV_MIN_CELLS; integers ≥ 1.</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="matrix-fv-cfl">FV CFL numbers</Label>
+                <Input
+                  id="matrix-fv-cfl"
+                  value={config.fvCflsText}
+                  onChange={(e) => set({ fvCflsText: e.target.value })}
+                  placeholder="e.g. 0.5, 0.9"
+                  disabled={disabled}
+                  data-testid="input-matrix-fv-cfl"
+                />
+                <p className="text-xs text-muted-foreground">FV_CFL; 0–1.</p>
+              </div>
             </div>
           </div>
           {build.errors.length > 0 && !blocker && (

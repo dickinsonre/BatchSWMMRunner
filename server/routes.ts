@@ -16,7 +16,7 @@ import OpenAI from "openai";
 import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
-import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, MAX_MATRIX_VARIANTS, type InpOverrides } from "@shared/inpOptions";
+import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, MAX_MATRIX_VARIANTS, mergeInpOverrides, type InpOverrides } from "@shared/inpOptions";
 
 /**
  * Validate a client-supplied overrides object into a safe InpOverrides.
@@ -799,7 +799,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
           const fileId = `${baseFile.id}-v${i}`;
           runFiles.push({ id: fileId, name: `${baseName} [${variant.label}].inp`, path: variantPath });
           // Variant overrides win over batch-wide ones.
-          perFileOverrides.set(fileId, { ...inpOverrides, ...variant.overrides });
+          perFileOverrides.set(fileId, mergeInpOverrides(inpOverrides, variant.overrides));
         }
       }
 

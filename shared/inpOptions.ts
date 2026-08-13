@@ -451,3 +451,17 @@ export function rewriteHotstartPath(inpText: string, newPath: string): string {
 
 /** Hard cap on variants in one run matrix. */
 export const MAX_MATRIX_VARIANTS = 24;
+
+/**
+ * Merge per-variant matrix overrides on top of batch-wide overrides.
+ * A plain spread would clobber the whole `swmm6` block (dropping e.g.
+ * fvRouting/dynamicSlot from the solver settings) when a variant only
+ * sweeps one FV knob — so `swmm6` is merged one level deep.
+ */
+export function mergeInpOverrides(base: InpOverrides, variant: InpOverrides): InpOverrides {
+  const merged: InpOverrides = { ...base, ...variant };
+  if (base.swmm6 && variant.swmm6) {
+    merged.swmm6 = { ...base.swmm6, ...variant.swmm6 };
+  }
+  return merged;
+}

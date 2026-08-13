@@ -4,6 +4,11 @@ import type { ParsedTimeSeries } from "./parseTimeSeries";
 /** Engine ids the UI can select. */
 export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6' | 'wasm6dev';
 
+/** WASM engine variant to load for a UI engine mode (browser paths only). */
+export function wasmEngineForMode(mode: EngineId): 'swmm5' | 'swmm6' | 'swmm6dev' {
+  return mode === 'wasm6' ? 'swmm6' : mode === 'wasm6dev' ? 'swmm6dev' : 'swmm5';
+}
+
 export const ENGINE_LABELS: Record<EngineId, string> = {
   executable: 'Executable',
   api: 'SWMM5 API',

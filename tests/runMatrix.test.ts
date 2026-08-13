@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyInpOverrides, MAX_MATRIX_VARIANTS } from '../shared/inpOptions';
+import { applyInpOverrides, mergeInpOverrides, MAX_MATRIX_VARIANTS } from '../shared/inpOptions';
 import {
   buildMatrixVariants,
   parseRoutingSteps,
@@ -9,6 +9,15 @@ import {
   DEFAULT_MATRIX_CONFIG,
 } from '../client/src/lib/runMatrix';
 import type { ProcessResult } from '../shared/schema';
+import { wasmEngineForMode } from '../client/src/lib/engineComparison';
+
+describe('wasmEngineForMode — matrix runs load the selected engine', () => {
+  it('maps wasm6/wasm6dev to their SWMM6 engines, everything else to SWMM5', () => {
+    expect(wasmEngineForMode('wasm6')).toBe('swmm6');
+    expect(wasmEngineForMode('wasm6dev')).toBe('swmm6dev');
+    expect(wasmEngineForMode('wasm')).toBe('swmm5');
+  });
+});
 
 const BASE_INP = `[TITLE]
 Demo
@@ -77,10 +86,10 @@ describe('buildMatrixVariants', () => {
 
   it('rejects oversized matrices and empty step lists', () => {
     const big = buildMatrixVariants({
+      ...DEFAULT_MATRIX_CONFIG,
       routingStepsText: Array.from({ length: 10 }, (_, i) => i + 1).join(','),
       variableStep: 'both',
       inertialDamping: 'all',
-      lengtheningStepText: '',
     });
     expect(big.variants.length).toBeGreaterThan(MAX_MATRIX_VARIANTS);
     expect(big.errors.join(' ')).toMatch(/maximum/);
@@ -97,6 +106,84 @@ describe('buildMatrixVariants', () => {
   it('applies a lengthening step to every variant', () => {
     const { variants } = buildMatrixVariants({ ...DEFAULT_MATRIX_CONFIG, lengtheningStepText: '10' });
     expect(variants.every(v => v.overrides.lengtheningStep === 10)).toBe(true);
+  });
+
+  it('sweeps FV cell length / min cells / CFL when FV routing is enabled', () => {
+    const { variants, errors } = buildMatrixVariants(
+      {
+        ...DEFAULT_MATRIX_CONFIG,
+        routingStepsText: '5',
+        fvCellLengthsText: '5, 25',
+        fvMinCellsText: '2',
+        fvCflsText: '0.5, 0.9',
+      },
+      { fvRoutingEnabled: true },
+    );
+    expect(errors).toEqual([]);
+    expect(variants).toHaveLength(4);
+    expect(variants.map(v => v.label)).toContain('RS 5s · CL 5m · MC 2 · CFL 0.9');
+    const v = variants.find(x => x.label === 'RS 5s · CL 25m · MC 2 · CFL 0.5');
+    expect(v?.overrides.swmm6).toEqual({
+      enabled: true,
+      fvRouting: true,
+      fvCellLength: 25,
+      fvMinCells: 2,
+      fvCfl: 0.5,
+    });
+  });
+
+  it('rejects FV sweeps when FV routing is not enabled', () => {
+    const { errors } = buildMatrixVariants(
+      { ...DEFAULT_MATRIX_CONFIG, fvCellLengthsText: '5' },
+      { fvRoutingEnabled: false },
+    );
+    expect(errors.join(' ')).toMatch(/finite-volume routing/);
+  });
+
+  it('rejects out-of-range FV values', () => {
+    const build = buildMatrixVariants(
+      {
+        ...DEFAULT_MATRIX_CONFIG,
+        routingStepsText: '5, 15',
+        fvMinCellsText: '2.5',
+        fvCflsText: '1.5',
+      },
+      { fvRoutingEnabled: true },
+    );
+    expect(build.errors.join(' ')).toMatch(/minimum cells/);
+    expect(build.errors.join(' ')).toMatch(/CFL/);
+  });
+
+  it('does not attach swmm6 overrides when no FV dimension is swept', () => {
+    const { variants } = buildMatrixVariants(DEFAULT_MATRIX_CONFIG, { fvRoutingEnabled: true });
+    expect(variants.every(v => v.overrides.swmm6 === undefined)).toBe(true);
+  });
+});
+
+describe('mergeInpOverrides', () => {
+  it('deep-merges swmm6 so variant FV knobs keep base solver settings', () => {
+    const merged = mergeInpOverrides(
+      { reportStepMinutes: 5, swmm6: { enabled: true, fvRouting: true, dynamicSlot: true, fvOrder: 2 } },
+      { routingStepSeconds: 5, swmm6: { enabled: true, fvRouting: true, fvCellLength: 25, fvCfl: 0.5 } },
+    );
+    expect(merged.reportStepMinutes).toBe(5);
+    expect(merged.routingStepSeconds).toBe(5);
+    expect(merged.swmm6).toEqual({
+      enabled: true,
+      fvRouting: true,
+      dynamicSlot: true,
+      fvOrder: 2,
+      fvCellLength: 25,
+      fvCfl: 0.5,
+    });
+  });
+
+  it('keeps the base swmm6 block when the variant has none', () => {
+    const merged = mergeInpOverrides(
+      { swmm6: { enabled: true, fvRouting: true } },
+      { routingStepSeconds: 15 },
+    );
+    expect(merged.swmm6).toEqual({ enabled: true, fvRouting: true });
   });
 });
 

@@ -28,12 +28,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SystemComparisonChart from "@/components/SystemComparisonChart";
 import EngineScatterCompare from "@/components/EngineScatterCompare";
 import GifMakerTool from "@/components/GifMakerTool";
-import { ENGINE_LABELS, type EngineId, type EngineRun } from "@/lib/engineComparison";
+import { ENGINE_LABELS, wasmEngineForMode, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import RunMatrixPanel from "@/components/RunMatrixPanel";
 import RunMatrixCharts from "@/components/RunMatrixCharts";
 import { buildMatrixVariants, DEFAULT_MATRIX_CONFIG, type RunMatrixConfig } from "@/lib/runMatrix";
 import type { SwmmStatus } from "@shared/schema";
-import type { MatrixVariant, Swmm6Options } from "@shared/inpOptions";
+import { mergeInpOverrides, type MatrixVariant, type Swmm6Options } from "@shared/inpOptions";
 import { scanInpContent, type PreflightResult } from "@shared/inpScanner";
 import PreflightSummary from "@/components/PreflightSummary";
 
@@ -322,7 +322,13 @@ export default function Home() {
     swmm6: (engine === 'wasm6' || engine === 'wasm6dev') && swmm6Options.enabled ? swmm6Options : undefined,
   });
 
-  const matrixBuild = useMemo(() => buildMatrixVariants(matrixConfig), [matrixConfig]);
+  const matrixFvRoutingEnabled =
+    (engineMode === 'wasm6' || engineMode === 'wasm6dev') &&
+    swmm6Options.enabled === true && swmm6Options.fvRouting === true;
+  const matrixBuild = useMemo(
+    () => buildMatrixVariants(matrixConfig, { fvRoutingEnabled: matrixFvRoutingEnabled }),
+    [matrixConfig, matrixFvRoutingEnabled],
+  );
   const matrixActive = matrixEnabled && !compareMode && files.length === 1 && matrixBuild.errors.length === 0;
 
   useEffect(() => {
@@ -745,7 +751,7 @@ export default function Home() {
   };
 
   const handleStartWasmProcessing = () => {
-    const wasmEngine = engineMode === 'wasm6' ? 'swmm6' : engineMode === 'wasm6dev' ? 'swmm6dev' : 'swmm5';
+    const wasmEngine = wasmEngineForMode(engineMode);
     const runnableFiles = (files as any[])
       .filter(f => f.file)
       .map(f => ({ id: f.id, name: f.name, file: f.file as File }));
@@ -842,7 +848,7 @@ export default function Home() {
   // Runs the single uploaded model once per solver variant, sequentially,
   // renaming each run after its variant so results and charts line up.
   const handleStartWasmMatrix = async (variants: MatrixVariant[]) => {
-    const wasmEngine = engineMode === 'wasm6' ? 'swmm6' : 'swmm5';
+    const wasmEngine = wasmEngineForMode(engineMode);
     const runnable = (files as any[]).filter(f => f.file).map(f => ({ id: f.id, name: f.name, file: f.file as File }));
     if (runnable.length !== 1) {
       toast({
@@ -861,7 +867,7 @@ export default function Home() {
     setResults([]);
     setLogs([{
       timestamp: getTimestamp(),
-      message: `Run matrix: ${baseFile.name} × ${variants.length} solver variants (in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : 'SWMM5'})`,
+      message: `Run matrix: ${baseFile.name} × ${variants.length} solver variants (in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : wasmEngine === 'swmm6dev' ? 'SWMM6 (develop)' : 'SWMM5'})`,
       type: 'info',
     }]);
     setFileProgressMap(new Map());
@@ -918,7 +924,7 @@ export default function Home() {
           },
           cancelToken,
           wasmEngine,
-          { ...buildOverrides(), ...variant.overrides },
+          mergeInpOverrides(buildOverrides(), variant.overrides),
           false,
         );
         wasmTerminateRef.current = terminate;
@@ -1403,6 +1409,7 @@ export default function Home() {
               build={matrixBuild}
               fileCount={files.length}
               compareMode={compareMode}
+              fvRoutingEnabled={matrixFvRoutingEnabled}
               disabled={processingState === 'processing'}
             />
           </section>
