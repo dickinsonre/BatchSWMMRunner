@@ -5,3 +5,6 @@ server/public
 vite.config.ts.*
 *.tar.gz
 uploads/
+exports/
+attached_assets/*
+!attached_assets/extran2_1785798280496.inp
