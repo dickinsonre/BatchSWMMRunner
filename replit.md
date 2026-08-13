@@ -26,6 +26,16 @@ BatchSWMM56 (formerly BatchSWMM) is a web application for batch processing EPA S
 - **Mar 2026**: WebSocket system with 7 message types, message buffering, 500ms delay
 - **Mar 2026**: Report generation: HTML/Markdown/CSV with analysis + recommendations
 
+## WASM Engine Artifacts (rebuild-on-release policy)
+
+The compiled in-browser engines under `client/public/wasm*/` (`wasm`, `wasm6`, `wasm6dev`, `wasm-owa`, ~4.3MB total) ARE tracked in git so dev preview and deployments (which copy `client/public` as-is via `vite build`) always work with zero setup. To keep git sync fast, do NOT commit intermediate engine rebuilds:
+
+- Rebuild engines locally as often as needed, but only commit updated `.wasm`/`.js` artifacts when releasing an engine change (a change users should actually get).
+- Each committed multi-MB binary version stays in git history forever, so batch engine changes into a single artifact commit rather than committing every iteration.
+- Build recipe: see `.agents/memory/swmm-wasm-build.md`.
+
+Also ignored/untracked to keep the repo small: `uploads/`, `exports/`, and `attached_assets/` (except the test fixture `attached_assets/extran2_1785798280496.inp` used by tests). Files remain on disk; they are just no longer synced via git.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
