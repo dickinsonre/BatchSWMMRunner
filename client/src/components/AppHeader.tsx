@@ -13,6 +13,7 @@ const navItems = [
   { label: "Folder View", href: "/folder" },
   { label: "ReSWMM", href: "/reswmm" },
   { label: "QA/QC", href: "/qaqc" },
+  { label: "Coherence", href: "/coherence" },
   { label: "Docs", href: "/docs" },
 ];
 

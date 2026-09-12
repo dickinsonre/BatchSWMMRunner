@@ -52,8 +52,12 @@ function parseDurationDays(inpText) {
 }
 
 self.onmessage = async (e) => {
-  const { type, id, fileName, inpText, engine, auxFiles } = e.data;
+  const {
+    type, id, fileName, inpText, engine, auxFiles,
+    retainArtifacts, retainNativeArtifacts,
+  } = e.data;
   if (type !== 'run') return;
+  const shouldRetainArtifacts = retainArtifacts === true || retainNativeArtifacts === true;
 
   const t0 = Date.now();
   try {
@@ -173,8 +177,48 @@ self.onmessage = async (e) => {
     Module.ccall('swmm_close', 'number', [], []);
     }
 
+    // Read the native report before adding the parsed binary time series below.
+    // The byte buffer is retained only for the explicitly opted-in paired-run
+    // export path; normal browser batches keep the old lightweight behavior.
+    let nativeRptBytes = null;
+    let nativeOutBytes = null;
+    let artifactError = '';
+    const MAX_NATIVE_REPORT_BYTES = 64 * 1024 * 1024;
+    const MAX_NATIVE_OUTPUT_BYTES = 256 * 1024 * 1024;
+    const toExactArrayBuffer = (bytes) => {
+      if (bytes instanceof ArrayBuffer) return bytes.slice(0);
+      return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+    };
+    if (shouldRetainArtifacts) {
+      try {
+        const bytes = FS.readFile(rptPath);
+        if (bytes.byteLength > MAX_NATIVE_REPORT_BYTES) {
+          artifactError = `Native report is ${(bytes.byteLength / (1024 * 1024)).toFixed(1)} MiB; the browser retention limit is ${MAX_NATIVE_REPORT_BYTES / (1024 * 1024)} MiB.`;
+        } else {
+          nativeRptBytes = toExactArrayBuffer(bytes);
+        }
+      } catch (_) {}
+      try {
+        const bytes = FS.readFile(outPath);
+        if (bytes.byteLength > MAX_NATIVE_OUTPUT_BYTES) {
+          artifactError = artifactError ||
+            `Native binary output is ${(bytes.byteLength / (1024 * 1024)).toFixed(1)} MiB; the browser retention limit is ${MAX_NATIVE_OUTPUT_BYTES / (1024 * 1024)} MiB.`;
+        } else {
+          nativeOutBytes = toExactArrayBuffer(bytes);
+        }
+      } catch (_) {}
+    }
+
     let rptText = '';
-    try { rptText = FS.readFile(rptPath, { encoding: 'utf8' }); } catch (_) {}
+    try {
+      // Decode the same native bytes used for the report export when available.
+      // Normal batches retain the previous Emscripten string-read behavior.
+      if (nativeRptBytes && typeof TextDecoder === 'function') {
+        rptText = new TextDecoder().decode(new Uint8Array(nativeRptBytes));
+      } else {
+        rptText = FS.readFile(rptPath, { encoding: 'utf8' });
+      }
+    } catch (_) {}
 
     // The new engine has no warning-count API — count WARNING lines in the rpt.
     if (cfg.api === 'engine6' && rptText) {
@@ -200,7 +244,15 @@ self.onmessage = async (e) => {
       } catch (_) {}
     }
 
-    self.postMessage({
+    // Do not transfer a partial artifact set after a retention guard trips.
+    // The main thread records the explicit error and the exporter refuses the
+    // pair rather than silently emitting a ZIP without one of the native files.
+    if (artifactError) {
+      nativeRptBytes = null;
+      nativeOutBytes = null;
+    }
+
+    const doneMessage = {
       type: 'done',
       id,
       fileName,
@@ -209,7 +261,16 @@ self.onmessage = async (e) => {
       warnings,
       rptText,
       elapsedMs: Date.now() - t0,
-    });
+      ...(shouldRetainArtifacts ? {
+        nativeRptBytes,
+        nativeOutBytes,
+        artifactError: artifactError || undefined,
+      } : {}),
+    };
+    const transfer = [];
+    if (nativeRptBytes) transfer.push(nativeRptBytes);
+    if (nativeOutBytes) transfer.push(nativeOutBytes);
+    self.postMessage(doneMessage, transfer);
   } catch (ex) {
     self.postMessage({
       type: 'done',

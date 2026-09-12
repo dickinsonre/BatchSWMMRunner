@@ -26,16 +26,22 @@ import { runWasmBatch } from "@/lib/swmmWasmEngine";
 import EngineComparisonView from "@/components/EngineComparisonView";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SystemComparisonChart from "@/components/SystemComparisonChart";
+import EntityComparisonChart from "@/components/EntityComparisonChart";
+import BillJamesSimilarityMatrix from "@/components/BillJamesSimilarityMatrix";
+import PhaseSpaceComparison from "@/components/PhaseSpaceComparison";
 import EngineScatterCompare from "@/components/EngineScatterCompare";
 import GifMakerTool from "@/components/GifMakerTool";
-import { ENGINE_LABELS, wasmEngineForMode, type EngineId, type EngineRun } from "@/lib/engineComparison";
+import { ENGINE_LABELS, isBrowserEngine, wasmEngineForMode, type BrowserEngineId, type EngineId, type EngineRun } from "@/lib/engineComparison";
 import RunMatrixPanel from "@/components/RunMatrixPanel";
 import RunMatrixCharts from "@/components/RunMatrixCharts";
 import { buildMatrixVariants, DEFAULT_MATRIX_CONFIG, type RunMatrixConfig } from "@/lib/runMatrix";
 import type { SwmmStatus } from "@shared/schema";
 import { mergeInpOverrides, type MatrixVariant, type Swmm6Options } from "@shared/inpOptions";
+import { swmm6OptionsForEngine } from "@/lib/swmm6EngineOptions";
 import { scanInpContent, type PreflightResult } from "@shared/inpScanner";
 import PreflightSummary from "@/components/PreflightSummary";
+import { runWasmMatrix } from "@/lib/wasmMatrixRunner";
+import { publishRetainedRun, removeRetainedRun } from "@/lib/resultsStore";
 
 type ProcessingState = 'idle' | 'processing' | 'completed';
 
@@ -47,11 +53,16 @@ interface PersistedSettings {
   parallelProcessing?: boolean;
   stopOnError?: boolean;
   timeoutMinutes?: number;
-  engineMode?: 'executable' | 'api' | 'wasm' | 'wasm6' | 'wasm6dev';
+  /** Per-file timeout used when FV routing is active (overrides timeoutMinutes for FV runs). */
+  fvTimeoutMinutes?: number;
+  engineMode?: EngineId;
   selectedEngines?: EngineId[];
   startDate?: string;
   endDate?: string;
   routingStepSeconds?: number | null;
+  timeStepMode?: 'default' | 'fixed' | 'variable';
+  variableStepFactor?: number;
+  lengtheningStepSeconds?: number | null;
   swmm6Options?: Swmm6Options;
 }
 
@@ -223,6 +234,11 @@ export default function Home() {
   const [processingState, setProcessingState] = useState<ProcessingState>('idle');
   const [currentFile, setCurrentFile] = useState(0);
   const [results, setResults] = useState<ProcessResult[]>([]);
+  // Keep the exact result objects across asynchronous worker/WebSocket
+  // callbacks. Browser runs attach native export artifacts in a WeakMap keyed
+  // by those objects; the retained run store must receive these references,
+  // not a serialized copy assembled from stale React state.
+  const resultsRef = useRef<ProcessResult[]>([]);
   const [jobId, setJobId] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<string>('');
@@ -233,10 +249,23 @@ export default function Home() {
   const [routingMethod, setRoutingMethod] = useState(savedSettingsRef.current.routingMethod ?? "dynamic");
   const [parallelProcessing, setParallelProcessing] = useState(savedSettingsRef.current.parallelProcessing ?? false);
   const [stopOnError, setStopOnError] = useState(savedSettingsRef.current.stopOnError ?? false);
-  const [timeoutMinutes, setTimeoutMinutes] = useState(savedSettingsRef.current.timeoutMinutes ?? 10);
+  const [timeoutMinutes, setTimeoutMinutes] = useState(savedSettingsRef.current.timeoutMinutes ?? 15);
+  const [fvTimeoutMinutes, setFvTimeoutMinutes] = useState(savedSettingsRef.current.fvTimeoutMinutes ?? 30);
   const [startDate, setStartDate] = useState(savedSettingsRef.current.startDate ?? '');
   const [endDate, setEndDate] = useState(savedSettingsRef.current.endDate ?? '');
   const [routingStepSeconds, setRoutingStepSeconds] = useState<number | null>(savedSettingsRef.current.routingStepSeconds ?? null);
+  const [timeStepMode, setTimeStepMode] = useState<'default' | 'fixed' | 'variable'>(() => {
+    const saved = savedSettingsRef.current.timeStepMode;
+    return saved === 'fixed' || saved === 'variable' ? saved : 'default';
+  });
+  const [variableStepFactor, setVariableStepFactor] = useState(() => {
+    const saved = savedSettingsRef.current.variableStepFactor;
+    return typeof saved === 'number' && Number.isFinite(saved) && saved > 0 && saved <= 2 ? saved : 0.75;
+  });
+  const [lengtheningStepSeconds, setLengtheningStepSeconds] = useState<number | null>(() => {
+    const saved = savedSettingsRef.current.lengtheningStepSeconds;
+    return typeof saved === 'number' && Number.isFinite(saved) && saved >= 0 && saved <= 3600 ? saved : null;
+  });
   const [swmm6Options, setSwmm6Options] = useState<Swmm6Options>(savedSettingsRef.current.swmm6Options ?? {});
   const [matrixEnabled, setMatrixEnabled] = useState(false);
   const [matrixConfig, setMatrixConfig] = useState<RunMatrixConfig>(DEFAULT_MATRIX_CONFIG);
@@ -248,7 +277,7 @@ export default function Home() {
   const [selectedEngines, setSelectedEngines] = useState<EngineId[]>(() => {
     const saved = savedSettingsRef.current.selectedEngines;
     if (Array.isArray(saved) && saved.length > 0) {
-      const valid = saved.filter((e): e is EngineId => ['executable', 'api', 'wasm', 'wasm6', 'wasm6dev'].includes(e));
+      const valid = saved.filter((e): e is EngineId => ['executable', 'api', 'wasm', 'wasm6', 'wasm6dev', 'hydra'].includes(e));
       if (valid.length > 0) return valid;
     }
     return [savedSettingsRef.current.engineMode ?? 'executable'];
@@ -288,20 +317,21 @@ export default function Home() {
   useEffect(() => {
     const settings: PersistedSettings = {
       reportStep, routingMethod, parallelProcessing, stopOnError,
-      timeoutMinutes, engineMode, selectedEngines,
-      startDate, endDate, routingStepSeconds, swmm6Options,
+      timeoutMinutes, fvTimeoutMinutes, engineMode, selectedEngines,
+      startDate, endDate, routingStepSeconds, timeStepMode, variableStepFactor,
+      lengtheningStepSeconds, swmm6Options,
     };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch {
       // localStorage unavailable (private mode, quota) — settings simply won't persist
     }
-  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, engineMode, selectedEngines, startDate, endDate, routingStepSeconds, swmm6Options]);
+  }, [reportStep, routingMethod, parallelProcessing, stopOnError, timeoutMinutes, fvTimeoutMinutes, engineMode, selectedEngines, startDate, endDate, routingStepSeconds, timeStepMode, variableStepFactor, lengtheningStepSeconds, swmm6Options]);
 
   // Warn before tab close while an in-browser WASM batch is running,
   // since Web Worker simulations die with the tab.
   useEffect(() => {
-    const isWasmRunning = processingState === 'processing' && selectedEngines.some(e => e === 'wasm' || e === 'wasm6' || e === 'wasm6dev');
+    const isWasmRunning = processingState === 'processing' && selectedEngines.some(isBrowserEngine);
     if (!isWasmRunning) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -311,20 +341,30 @@ export default function Home() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [processingState, selectedEngines]);
 
-  // SWMM6-only keywords are dropped for every engine except the in-browser
-  // SWMM6 engine — SWMM 5.x rejects each of them with ERROR 205.
-  const buildOverrides = (engine: EngineId = engineMode) => ({
-    reportStepMinutes: reportStep > 0 ? reportStep : undefined,
-    flowRouting: routingMethod || undefined,
-    startDate: startDate || undefined,
-    endDate: endDate || undefined,
-    routingStepSeconds: routingStepSeconds && routingStepSeconds > 0 ? routingStepSeconds : undefined,
-    swmm6: (engine === 'wasm6' || engine === 'wasm6dev') && swmm6Options.enabled ? swmm6Options : undefined,
-  });
+  // Stable receives only advanced SWMM6 options; Dev receives only FV
+  // options. SWMM 5.x rejects all of these keywords with ERROR 205.
+  const buildOverrides = (engine: EngineId = engineMode) => {
+    const variableStep =
+      timeStepMode === 'fixed' ? 0 :
+      timeStepMode === 'variable' && Number.isFinite(variableStepFactor) && variableStepFactor > 0
+        ? variableStepFactor
+        : undefined;
+    return {
+      reportStepMinutes: reportStep > 0 ? reportStep : undefined,
+      flowRouting: routingMethod || undefined,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+      routingStepSeconds: routingStepSeconds && routingStepSeconds > 0 ? routingStepSeconds : undefined,
+      variableStep,
+      lengtheningStep: lengtheningStepSeconds !== null && Number.isFinite(lengtheningStepSeconds) && lengtheningStepSeconds >= 0
+        ? lengtheningStepSeconds
+        : undefined,
+      swmm6: swmm6OptionsForEngine(engine, swmm6Options),
+    };
+  };
 
   const matrixFvRoutingEnabled =
-    (engineMode === 'wasm6' || engineMode === 'wasm6dev') &&
-    swmm6Options.enabled === true && swmm6Options.fvRouting === true;
+    engineMode === 'wasm6dev' && swmm6Options.fvRouting === true;
   const matrixBuild = useMemo(
     () => buildMatrixVariants(matrixConfig, { fvRoutingEnabled: matrixFvRoutingEnabled }),
     [matrixConfig, matrixFvRoutingEnabled],
@@ -424,6 +464,7 @@ export default function Home() {
           fileName: data.fileName,
         }]);
       } else if (data.type === 'result') {
+        resultsRef.current.push(data.result);
         setResults(prev => [...prev, data.result]);
         const result = data.result;
         setFileProgressMap(prev => {
@@ -457,6 +498,17 @@ export default function Home() {
           const elapsed = (Date.now() - startTimeRef.current) / 1000;
           setElapsedTime(formatTime(elapsed));
         }
+        publishRetainedRun({
+          key: `server:${jobId}`,
+          engine: engineMode,
+          label: ENGINE_LABELS[engineMode],
+          jobId,
+          results: resultsRef.current,
+          elapsedTime: startTimeRef.current
+            ? formatTime((Date.now() - startTimeRef.current) / 1000)
+            : undefined,
+          completedAt: new Date().toISOString(),
+        });
         setLogs(prev => {
           const successCount = prev.filter(l => l.type === 'success').length;
           const totalCount = prev.filter(l => l.type === 'success' || l.type === 'error').length;
@@ -559,7 +611,7 @@ export default function Home() {
     });
   };
 
-  // Agent/deep-link support: ?engine=executable|api|wasm|wasm6 preselects the
+  // Agent/deep-link support: ?engine=executable|api|wasm|wasm6|wasm6dev|hydra preselects the
   // engine mode; ?sample=Name.inp (comma-separated for multiple) auto-loads
   // sample models. Example: /?engine=wasm6&sample=Demo_extran2.inp
   const deepLinkHandledRef = useRef(false);
@@ -578,7 +630,7 @@ export default function Home() {
       }
     }
     const engine = params.get('engine');
-    if (engine === 'executable' || engine === 'api' || engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev') {
+    if (engine === 'executable' || engine === 'api' || engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev' || engine === 'hydra') {
       setEngineMode(engine);
     }
     const sample = params.get('sample');
@@ -648,7 +700,7 @@ export default function Home() {
   const singleEngineRuns: EngineRun[] = useMemo(() => [{
     engine: engineMode,
     label: ENGINE_LABELS[engineMode],
-    jobId: (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') ? null : jobId,
+    jobId: isBrowserEngine(engineMode) ? null : jobId,
     results,
   }], [engineMode, jobId, results]);
 
@@ -724,6 +776,7 @@ export default function Home() {
     setLogs([]);
     setFileProgressMap(new Map());
     setApiSnapshots([]);
+    resultsRef.current = [];
     setComparisonRuns(null);
     setMatrixRunVariants(null);
     startTimeRef.current = null;
@@ -736,6 +789,7 @@ export default function Home() {
       if (!res.ok && res.status !== 404) {
         throw new Error('Failed to delete batch');
       }
+      removeRetainedRun(`server:${jobId}`);
       handleClearAll();
       toast({
         title: "Batch Deleted",
@@ -768,9 +822,10 @@ export default function Home() {
     setProcessingState('processing');
     setCurrentFile(0);
     setResults([]);
+    resultsRef.current = [];
     setLogs([{
       timestamp: getTimestamp(),
-      message: `Starting in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : wasmEngine === 'swmm6dev' ? 'SWMM6 (develop)' : 'SWMM5'} WASM batch: ${runnableFiles.length} file(s)`,
+      message: `Starting in-browser ${ENGINE_LABELS[engineMode]} batch: ${runnableFiles.length} file(s)`,
       type: 'info',
     }]);
     setFileProgressMap(new Map());
@@ -802,6 +857,7 @@ export default function Home() {
         },
         onResult: (result) => {
           completedCount++;
+          resultsRef.current.push(result);
           setResults(prev => [...prev, result]);
           setFileProgressMap(prev => {
             const next = new Map(prev);
@@ -824,6 +880,16 @@ export default function Home() {
             const elapsed = (Date.now() - startTimeRef.current) / 1000;
             setElapsedTime(formatTime(elapsed));
           }
+          publishRetainedRun({
+            engine: engineMode,
+            label: ENGINE_LABELS[engineMode],
+            jobId: null,
+            results: resultsRef.current,
+            elapsedTime: startTimeRef.current
+              ? formatTime((Date.now() - startTimeRef.current) / 1000)
+              : undefined,
+            completedAt: new Date().toISOString(),
+          });
           wasmTerminateRef.current = null;
           toast({
             title: "Batch Processing Complete",
@@ -835,6 +901,8 @@ export default function Home() {
       wasmEngine,
       buildOverrides(),
       parallelProcessing,
+      timeoutMinutes * 60_000,
+      fvTimeoutMinutes * 60_000,
     );
     wasmTerminateRef.current = terminate;
 
@@ -859,15 +927,14 @@ export default function Home() {
       return;
     }
     const baseFile = runnable[0];
-    const baseName = baseFile.name.replace(/\.inp$/i, '');
-
     setMatrixRunVariants(variants);
     setProcessingState('processing');
     setCurrentFile(0);
     setResults([]);
+    resultsRef.current = [];
     setLogs([{
       timestamp: getTimestamp(),
-      message: `Run matrix: ${baseFile.name} × ${variants.length} solver variants (in-browser ${wasmEngine === 'swmm6' ? 'SWMM6' : wasmEngine === 'swmm6dev' ? 'SWMM6 (develop)' : 'SWMM5'})`,
+      message: `Run matrix: ${baseFile.name} × ${variants.length} solver variants (in-browser ${ENGINE_LABELS[engineMode]})`,
       type: 'info',
     }]);
     setFileProgressMap(new Map());
@@ -877,17 +944,15 @@ export default function Home() {
     wasmCancelRef.current = { current: false };
     const cancelToken = wasmCancelRef.current;
 
-    for (let i = 0; i < variants.length; i++) {
-      if (cancelToken.current) break;
-      const variant = variants[i];
-      const variantId = `${baseFile.id}-v${i}`;
-      const variantName = `${baseName} [${variant.label}].inp`;
-      setCurrentFile(i + 1);
-      await new Promise<void>((resolve) => {
-        let settled = false;
-        const done = () => { if (!settled) { settled = true; resolve(); } };
-        const terminate = runWasmBatch(
-          [{ id: variantId, name: variantName, file: baseFile.file }],
+    const completed = await runWasmMatrix({
+      variants,
+      baseFile,
+      cancelRef: cancelToken,
+      setActiveCancel: (cancel) => { wasmTerminateRef.current = cancel; },
+      startVariant: ({ index, variant, id: variantId, name: variantName, file }, done) => {
+        setCurrentFile(index + 1);
+        return runWasmBatch(
+          [{ id: variantId, name: variantName, file }],
           {
             onFileStart: () => {},
             onProgress: (p) => {
@@ -904,6 +969,7 @@ export default function Home() {
               });
             },
             onResult: (result) => {
+              resultsRef.current.push(result);
               setResults(prev => [...prev, result]);
               setFileProgressMap(prev => {
                 const next = new Map(prev);
@@ -926,21 +992,34 @@ export default function Home() {
           wasmEngine,
           mergeInpOverrides(buildOverrides(), variant.overrides),
           false,
+          timeoutMinutes * 60_000,
+          fvTimeoutMinutes * 60_000,
         );
-        wasmTerminateRef.current = terminate;
-      });
-    }
+      },
+      onComplete: () => {
+        setProcessingState('completed');
+        if (startTimeRef.current) {
+          setElapsedTime(formatTime((Date.now() - startTimeRef.current) / 1000));
+        }
+        publishRetainedRun({
+          engine: engineMode,
+          label: ENGINE_LABELS[engineMode],
+          jobId: null,
+          results: resultsRef.current,
+          elapsedTime: startTimeRef.current
+            ? formatTime((Date.now() - startTimeRef.current) / 1000)
+            : undefined,
+          completedAt: new Date().toISOString(),
+        });
+        toast({
+          title: "Run Matrix Complete",
+          description: `Ran ${variants.length} solver variants of ${baseFile.name} in your browser.`,
+        });
+      },
+    });
 
     wasmTerminateRef.current = null;
-    if (cancelToken.current) return; // cancel handler already reset state
-    setProcessingState('completed');
-    if (startTimeRef.current) {
-      setElapsedTime(formatTime((Date.now() - startTimeRef.current) / 1000));
-    }
-    toast({
-      title: "Run Matrix Complete",
-      description: `Ran ${variants.length} solver variants of ${baseFile.name} in your browser.`,
-    });
+    if (!completed) return; // cancel handler already reset state
   };
 
   // --- Multi-engine comparison mode -------------------------------------
@@ -950,7 +1029,7 @@ export default function Home() {
   const browserRunFinishRef = useRef<(() => void) | null>(null);
 
   const runBrowserEngineOnce = (
-    engine: 'wasm' | 'wasm6' | 'wasm6dev',
+    engine: BrowserEngineId,
     runnableFiles: { id: string; name: string; file: File }[],
   ): Promise<ProcessResult[]> => {
     return new Promise((resolve) => {
@@ -992,9 +1071,11 @@ export default function Home() {
           onComplete: finish,
         },
         wasmCancelRef.current,
-        engine === 'wasm6' ? 'swmm6' : engine === 'wasm6dev' ? 'swmm6dev' : 'swmm5',
+        wasmEngineForMode(engine),
         buildOverrides(engine),
         parallelProcessing,
+        timeoutMinutes * 60_000,
+        fvTimeoutMinutes * 60_000,
       );
       wasmTerminateRef.current = terminate;
     });
@@ -1124,10 +1205,12 @@ export default function Home() {
     }
 
     comparisonCancelRef.current = { cancelled: false, jobId: null };
+    const comparisonSessionId = `comparison:${Date.now()}`;
     setComparisonRuns(null);
     setProcessingState('processing');
     setCurrentFile(0);
     setResults([]);
+    resultsRef.current = [];
     setJobId(null);
     setApiSnapshots([]);
     setFileProgressMap(new Map());
@@ -1157,7 +1240,7 @@ export default function Home() {
         setFileProgressMap(new Map());
         setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `--- Engine ${i + 1}/${selectedEngines.length}: ${ENGINE_LABELS[engine]} ---`, type: 'info' }]);
         try {
-          if (engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev') {
+          if (isBrowserEngine(engine)) {
             const engineResults = await runBrowserEngineOnce(engine, runnableFiles);
             runs.push({ engine, label: ENGINE_LABELS[engine], jobId: null, results: engineResults });
           } else {
@@ -1173,6 +1256,22 @@ export default function Home() {
           setLogs(prev => [...prev, { timestamp: getTimestamp(), message: `${ENGINE_LABELS[engine]} failed: ${message} — continuing with remaining engines`, type: 'error' }]);
           comparisonCancelRef.current.jobId = null;
         }
+      }
+      // Keep each engine run addressable in Coherence. Browser engines often
+      // reuse the same file/result IDs, so the comparison session and engine
+      // are part of the retained identity.
+      for (const run of runs) {
+        publishRetainedRun({
+          key: run.jobId ? `server:${run.jobId}` : `${comparisonSessionId}:${run.engine}`,
+          engine: run.engine,
+          label: run.label,
+          jobId: run.jobId,
+          results: run.results as ProcessResult[],
+          elapsedTime: startTimeRef.current
+            ? formatTime((Date.now() - startTimeRef.current) / 1000)
+            : undefined,
+          completedAt: new Date().toISOString(),
+        });
       }
       setComparisonRuns(runs.length > 0 ? runs : null);
       setProcessingState(runs.length > 0 ? 'completed' : 'idle');
@@ -1239,12 +1338,12 @@ export default function Home() {
 
   // Load report content for one file across every comparison run (browser
   // runs already carry their reports; server runs fetch lazily).
-  const loadComparisonFileContent = async (fileName: string) => {
+  const loadComparisonFileContent = async (fileName: string, occurrence = 0) => {
     if (!comparisonRuns) return;
     for (let i = 0; i < comparisonRuns.length; i++) {
       const run = comparisonRuns[i];
       if (!run.jobId) continue;
-      const res = run.results.find(r => r.fileName === fileName) as any;
+      const res = run.results.filter(r => r.fileName === fileName)[occurrence] as any;
       if (res && ((!res.reportContent && res.hasReport) || (!res.inpContent && res.hasInp))) {
         await loadComparisonContent(i, res.id);
       }
@@ -1258,14 +1357,14 @@ export default function Home() {
     }
     if (matrixActive) {
       setMatrixRunVariants(matrixBuild.variants);
-      if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
+      if (isBrowserEngine(engineMode)) {
         handleStartWasmMatrix(matrixBuild.variants);
         return;
       }
     } else if (matrixRunVariants) {
       setMatrixRunVariants(null);
     }
-    if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
+    if (isBrowserEngine(engineMode)) {
       handleStartWasmProcessing();
       return;
     }
@@ -1280,6 +1379,7 @@ export default function Home() {
       setProcessingState('processing');
       setCurrentFile(0);
       setResults([]);
+      resultsRef.current = [];
       setLogs([]);
       setFileProgressMap(new Map());
       setApiSnapshots([]);
@@ -1347,7 +1447,7 @@ export default function Home() {
       });
       return;
     }
-    if (engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev') {
+    if (isBrowserEngine(engineMode)) {
       wasmCancelRef.current.current = true;
       if (wasmTerminateRef.current) {
         wasmTerminateRef.current();
@@ -1414,27 +1514,38 @@ export default function Home() {
             />
           </section>
 
-          <section data-testid="section-simulation-settings">
+          <section id="simulation-settings" data-testid="section-simulation-settings">
             <SimulationSettings
               reportStep={reportStep}
               routingMethod={routingMethod}
               parallelProcessing={parallelProcessing}
-              parallelSupported={engineMode === 'wasm' || engineMode === 'wasm6' || engineMode === 'wasm6dev'}
+              parallelSupported={isBrowserEngine(engineMode)}
               stopOnError={stopOnError}
               timeoutMinutes={timeoutMinutes}
+              fvTimeoutMinutes={fvTimeoutMinutes}
+              fvCapable={engineMode === 'wasm6' || engineMode === 'wasm6dev'}
               startDate={startDate}
               endDate={endDate}
               routingStepSeconds={routingStepSeconds}
+              timeStepMode={timeStepMode}
+              variableStepFactor={variableStepFactor}
+              lengtheningStepSeconds={lengtheningStepSeconds}
               onStartDateChange={setStartDate}
               onEndDateChange={setEndDate}
               onRoutingStepSecondsChange={setRoutingStepSeconds}
+              onTimeStepModeChange={setTimeStepMode}
+              onVariableStepFactorChange={setVariableStepFactor}
+              onLengtheningStepSecondsChange={setLengtheningStepSeconds}
               onTimeoutMinutesChange={setTimeoutMinutes}
+              onFvTimeoutMinutesChange={setFvTimeoutMinutes}
               onReportStepChange={setReportStep}
               onRoutingMethodChange={setRoutingMethod}
               onParallelProcessingChange={setParallelProcessing}
               onStopOnErrorChange={setStopOnError}
               swmm6Options={swmm6Options}
               onSwmm6OptionsChange={setSwmm6Options}
+              swmm6StableSelected={selectedEngines.includes('wasm6')}
+              swmm6DevSelected={selectedEngines.includes('wasm6dev')}
               disabled={processingState === 'processing'}
             />
           </section>
@@ -1514,6 +1625,7 @@ export default function Home() {
                           <p><span className="font-semibold">SWMM5 API</span> — runs on the server via the SWMM5 shared library, with live step-by-step data (see the API dashboard).</p>
                           <p><span className="font-semibold">SWMM5 WASM</span> — runs EPA SWMM 5.2 entirely in your browser via WebAssembly. Works even if the server engine is unavailable.</p>
                           <p><span className="font-semibold">SWMM6 WASM</span> — runs the OpenSWMM 6.0.0-alpha engine in your browser, with SWMM6-only solver options like dynamic-slot surcharge.</p>
+                           <p><span className="font-semibold">Hydra WASM</span> — runs Hydra's independent urban-drainage engine in your browser. It imports SWMM models, but numerical equivalence with EPA SWMM/OpenSWMM is not guaranteed.</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
@@ -1573,6 +1685,17 @@ export default function Home() {
                           <Globe className="h-3.5 w-3.5 mr-1.5" />
                           SWMM6 Dev
                         </Button>
+                         <Button
+                           size="sm"
+                           variant={selectedEngines.includes('hydra') ? 'default' : 'outline'}
+                           onClick={() => toggleEngine('hydra')}
+                           disabled={processingState === 'processing'}
+                           data-testid="button-mode-hydra"
+                           className="toggle-elevate"
+                         >
+                           <Globe className="h-3.5 w-3.5 mr-1.5" />
+                           Hydra
+                         </Button>
                         {swmmStatus?.apiAvailable ? (
                           <Badge variant="outline" className="text-green-600 border-green-500/30" data-testid="badge-api-available">
                             API v{swmmStatus.apiVersion ? (swmmStatus.apiVersion / 10000).toFixed(1) : '?'}
@@ -1594,7 +1717,9 @@ export default function Home() {
                           ? 'Runs EPA SWMM 5.2.4 compiled to WebAssembly entirely in your browser — no server round-trip, files never leave your device. Click another engine to add it and compare outputs.'
                           : engineMode === 'wasm6'
                           ? 'Runs the OpenSWMM 6.0.0-alpha engine (swmm6_rel branch) as WebAssembly in your browser, including SWMM6-only solver options. Click another engine to add it and compare outputs.'
-                          : 'Runs the OpenSWMM 6 engine built from the bleeding-edge develop branch as WebAssembly in your browser — useful for comparing against the stable SWMM6 build. Click another engine to add it and compare outputs.'}
+                           : engineMode === 'wasm6dev'
+                           ? 'Runs the OpenSWMM 6 engine built from the bleeding-edge develop branch as WebAssembly in your browser — useful for comparing against the stable SWMM6 build. Click another engine to add it and compare outputs.'
+                           : 'Runs Hydra 12.1.0’s independent urban-drainage engine as WebAssembly in your browser. It accepts SWMM INP models and emits SWMM-compatible reports/results, but matching EPA SWMM or OpenSWMM numerically is not guaranteed. Click another engine to compare outputs.'}
                       </p>
                     </div>
                 </div>
@@ -1800,7 +1925,9 @@ export default function Home() {
               <Tabs defaultValue="comparison" data-testid="tabs-comparison-sections">
                 <TabsList className="flex-wrap h-auto">
                   <TabsTrigger value="comparison" data-testid="tab-comparison">Comparison</TabsTrigger>
+                  {comparisonRuns.length >= 2 && <TabsTrigger value="similarity" data-testid="tab-similarity">Similarity</TabsTrigger>}
                   {comparisonRuns.length >= 2 && <TabsTrigger value="charts" data-testid="tab-charts">Charts</TabsTrigger>}
+                  {comparisonRuns.length >= 2 && <TabsTrigger value="phase-space" data-testid="tab-phase-space">Phase Space</TabsTrigger>}
                   {comparisonRuns.length >= 2 && <TabsTrigger value="scatter" data-testid="tab-scatter">Scatter Plots</TabsTrigger>}
                   <TabsTrigger value="map" data-testid="tab-map">Map Animation</TabsTrigger>
                   {comparisonRuns.map(run => (
@@ -1815,9 +1942,28 @@ export default function Home() {
                   </section>
                 </TabsContent>
                 {comparisonRuns.length >= 2 && (
+                  <TabsContent value="similarity" className="mt-4">
+                    <section data-testid="section-bill-james-similarity">
+                      <BillJamesSimilarityMatrix runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                    </section>
+                  </TabsContent>
+                )}
+                {comparisonRuns.length >= 2 && (
                   <TabsContent value="charts" className="mt-4">
-                    <section data-testid="section-system-comparison">
-                      <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                    <div className="space-y-4">
+                      <section data-testid="section-system-comparison">
+                        <SystemComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                      </section>
+                      <section data-testid="section-entity-comparison">
+                        <EntityComparisonChart runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
+                      </section>
+                    </div>
+                  </TabsContent>
+                )}
+                {comparisonRuns.length >= 2 && (
+                  <TabsContent value="phase-space" className="mt-4">
+                    <section data-testid="section-phase-space-comparison">
+                      <PhaseSpaceComparison runs={comparisonRuns} onLoadFile={loadComparisonFileContent} />
                     </section>
                   </TabsContent>
                 )}

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, ResponsiveContainer, Brush,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -97,6 +97,7 @@ export default function SystemComparisonChart({ runs, onLoadFile }: SystemCompar
 
   if (fileNames.length === 0) return null;
   const metricUnit = metrics.find(m => m.name === metric)?.unit || '';
+  const rainfallMetric = /rainfall/i.test(metric);
 
   return (
     <Card data-testid="card-system-comparison">
@@ -106,7 +107,7 @@ export default function SystemComparisonChart({ runs, onLoadFile }: SystemCompar
           System Graphs — Engine Overlay
         </CardTitle>
         <p className="text-xs text-muted-foreground">
-          System-wide results from each engine drawn on one chart. Lines that sit on top of each other mean the engines agree.
+          System-wide results from each engine drawn on one chart. Rainfall is shown as bars; other metrics use lines.
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -144,25 +145,36 @@ export default function SystemComparisonChart({ runs, onLoadFile }: SystemCompar
         {chartData.length > 0 && withData.length >= 1 && (
           <div className="h-[320px]" data-testid="chart-system-comparison">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
+              <ComposedChart data={chartData} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="time" tick={{ fontSize: 10 }} minTickGap={48} />
                 <YAxis tick={{ fontSize: 10 }} width={70}
                   label={metricUnit ? { value: metricUnit, angle: -90, position: 'insideLeft', style: { fontSize: 10 } } : undefined} />
                 <Tooltip contentStyle={{ fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                {withData.map((e, i) => (
-                  <Line
-                    key={e.label}
-                    type="monotone"
-                    dataKey={e.label}
-                    stroke={ENGINE_COLORS[i % ENGINE_COLORS.length]}
-                    dot={false}
-                    strokeWidth={1.75}
-                  />
-                ))}
+                {rainfallMetric
+                  ? withData.map((e, i) => (
+                      <Bar
+                        key={e.label}
+                        dataKey={e.label}
+                        fill={ENGINE_COLORS[i % ENGINE_COLORS.length]}
+                        maxBarSize={14}
+                        radius={[2, 2, 0, 0]}
+                        isAnimationActive={false}
+                      />
+                    ))
+                  : withData.map((e, i) => (
+                      <Line
+                        key={e.label}
+                        type="monotone"
+                        dataKey={e.label}
+                        stroke={ENGINE_COLORS[i % ENGINE_COLORS.length]}
+                        dot={false}
+                        strokeWidth={1.75}
+                      />
+                    ))}
                 {chartData.length > 100 && <Brush dataKey="time" height={20} travellerWidth={8} />}
-              </LineChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         )}

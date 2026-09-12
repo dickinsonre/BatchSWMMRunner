@@ -1268,13 +1268,13 @@ export default function Documentation() {
                       </p>
                       <ul className="list-disc pl-5 space-y-1">
                         <li><code className="font-mono bg-muted px-1 rounded">GET /api/samples</code>, <code className="font-mono bg-muted px-1 rounded">GET /api/samples/&#123;filename&#125;</code> — bundled sample models</li>
-                        <li><code className="font-mono bg-muted px-1 rounded">POST /api/batch/&#123;jobId&#125;/start</code> — body accepts <code className="font-mono bg-muted px-1 rounded">engineMode</code>, <code className="font-mono bg-muted px-1 rounded">timeoutMinutes</code>, <code className="font-mono bg-muted px-1 rounded">stopOnError</code>, and <code className="font-mono bg-muted px-1 rounded">overrides</code> (report step, routing method, dates, routing step)</li>
+                        <li><code className="font-mono bg-muted px-1 rounded">POST /api/batch/&#123;jobId&#125;/start</code> — body accepts <code className="font-mono bg-muted px-1 rounded">engineMode</code>, <code className="font-mono bg-muted px-1 rounded">timeoutMinutes</code>, <code className="font-mono bg-muted px-1 rounded">stopOnError</code>, and <code className="font-mono bg-muted px-1 rounded">overrides</code> (report step, routing method, dates, routing step, variable-step factor, and conduit-lengthening step)</li>
                         <li><code className="font-mono bg-muted px-1 rounded">POST /api/batch/&#123;jobId&#125;/cancel</code>, <code className="font-mono bg-muted px-1 rounded">DELETE /api/batch/&#123;jobId&#125;</code>, <code className="font-mono bg-muted px-1 rounded">GET /api/jobs/latest</code></li>
                         <li><code className="font-mono bg-muted px-1 rounded">GET /api/swmm-status</code> — engine availability</li>
                         <li><code className="font-mono bg-muted px-1 rounded">WS /api/ws?jobId=…</code> — live progress stream</li>
                       </ul>
                       <p className="text-muted-foreground mt-2">
-                        The WASM engines (<code className="font-mono bg-muted px-1 rounded">wasm</code>, <code className="font-mono bg-muted px-1 rounded">wasm6</code>, <code className="font-mono bg-muted px-1 rounded">wasm6dev</code>) run entirely in the browser page, so they are only reachable through the UI, not this API.
+                        The WASM engines (<code className="font-mono bg-muted px-1 rounded">wasm</code>, <code className="font-mono bg-muted px-1 rounded">wasm6</code>, <code className="font-mono bg-muted px-1 rounded">wasm6dev</code>, <code className="font-mono bg-muted px-1 rounded">hydra</code>) run entirely in the browser page, so they are only reachable through the UI, not this API.
                       </p>
                     </div>
                   </CardContent>
@@ -1288,7 +1288,7 @@ export default function Documentation() {
                   <CardHeader>
                     <CardTitle className="text-base" data-testid="text-guide-engines-title">Engine Modes</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      BatchSWMM56 can run simulations with five different engines. All of them run the real EPA SWMM engine — the difference is where the computation happens.
+                      BatchSWMM56 can run simulations with six engine modes. The EPA SWMM modes share EPA's solver, OpenSWMM provides the SWMM6 modes, and Hydra is an independent SWMM-compatible engine.
                     </p>
                   </CardHeader>
                   <CardContent>
@@ -1314,21 +1314,41 @@ export default function Documentation() {
                       <div data-testid="guide-engine-swmm6">
                         <p className="font-medium">SWMM6 WASM</p>
                         <p className="text-muted-foreground">
-                          The OpenSWMM 6.0.0-alpha engine (stable <code className="font-mono bg-muted px-1 rounded">swmm6_rel</code> branch) compiled to WebAssembly. Behaves like the WASM mode but supports SWMM6-only solver options (e.g. dynamic-slot surcharge, Anderson acceleration). Useful for cross-checking results against the standard engine.
+                          The OpenSWMM 6.0.0-alpha.4 engine (stable <code className="font-mono bg-muted px-1 rounded">swmm6_rel</code> branch) compiled to WebAssembly. You can independently enable Dynamic Preissmann Slot, semi-implicit node continuity, Anderson acceleration, and virtual junctions. FV settings are never sent to this engine. Bundled snapshot: commit <code className="font-mono bg-muted px-1 rounded">137e65e4e25e9425a489b99d5b7365c8355f8f6b</code> (Sep 10, 2026).
                         </p>
                       </div>
                       <div data-testid="guide-engine-swmm6dev">
                         <p className="font-medium">SWMM6 Dev</p>
                         <p className="text-muted-foreground">
-                          The same OpenSWMM 6 engine built from the bleeding-edge <code className="font-mono bg-muted px-1 rounded">develop</code> branch. Runs in your browser like the other WASM engines. Use it to check whether the latest SWMM6 development changes affect your results compared to the stable SWMM6 build.
+                          The same OpenSWMM 6 engine built from the bleeding-edge <code className="font-mono bg-muted px-1 rounded">develop</code> branch, including the latest finite-volume (FV) routing changes. Turn FV on to write <code className="font-mono bg-muted px-1 rounded">FLOW_ROUTING FV</code> and its mesh/scheme settings, or leave it off to use the normal routing method selected above. FV runs explicitly use <code className="font-mono bg-muted px-1 rounded">FV_MIN_CELLS 2</code> (subgrid discretization) unless you choose another value; this is a practical, lower-cost baseline for many models. Stable-engine advanced settings are never sent to Dev. Bundled snapshot: commit <code className="font-mono bg-muted px-1 rounded">19a1bc42074eac8cdf46e2edafe6fc5849adf6da</code> (Aug 11, 2026).
                         </p>
+                      </div>
+                      <div data-testid="guide-engine-hydra">
+                        <p className="font-medium">Hydra WASM</p>
+                        <p className="text-muted-foreground">
+                          Hydra's independent <code className="font-mono bg-muted px-1 rounded">uds</code> engine imports SWMM <code className="font-mono bg-muted px-1 rounded">.inp</code> models and emits SWMM-compatible <code className="font-mono bg-muted px-1 rounded">.rpt</code> and <code className="font-mono bg-muted px-1 rounded">.out</code> results entirely in your browser. It is useful for cross-engine review, but numerical equivalence with EPA SWMM or OpenSWMM is not guaranteed. This app bundles Hydra <code className="font-mono bg-muted px-1 rounded">v12.1.0</code> from commit <code className="font-mono bg-muted px-1 rounded">2a75372531b981c3a8f6668cbb846a0366cf062d</code>. Hydra is licensed under AGPL-3.0; see <a href="/wasmhydra/LICENSE-AGPL-3.0.txt" className="text-primary hover:underline">the bundled license</a>, <a href="/wasmhydra/README.md" className="text-primary hover:underline">build/provenance details</a>, and <a href="https://github.com/neeraip/hydra/tree/v12.1.0" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">the corresponding upstream source</a>.
+                        </p>
+                      </div>
+                      <div className="rounded-md border p-3" data-testid="guide-engine-licenses">
+                        <p className="font-medium">Credits and licenses</p>
+                        <div className="text-muted-foreground mt-1 space-y-2">
+                          <p>
+                            The bundled SWMM6 engines are modified WebAssembly object-code builds of HydroCouple&apos;s OpenSWMM Engine. The stable <code className="font-mono bg-muted px-1 rounded">swmm6_rel</code> snapshot is Apache-2.0 licensed and includes an upstream NOTICE. The <code className="font-mono bg-muted px-1 rounded">develop</code> snapshot is MIT licensed and had no NOTICE at its recorded commit. EPA-derived portions are United States Government public-domain material.
+                          </p>
+                          <p>
+                            Read the stable snapshot&apos;s <a href="/licenses/openswmm/LICENSE.txt" className="text-primary hover:underline">full Apache-2.0 license</a> and <a href="/licenses/openswmm/NOTICE.txt" className="text-primary hover:underline">verbatim upstream NOTICE</a>, the development snapshot&apos;s <a href="/licenses/openswmm/LICENSE-DEVELOP-MIT.txt" className="text-primary hover:underline">full MIT license</a>, the <a href="/licenses/openswmm/PROVENANCE.md" className="text-primary hover:underline">branch, commit, and local-modification record</a>, and the <a href="/licenses/openswmm/DEPENDENCY_AUDIT.md" className="text-primary hover:underline">browser-build dependency audit</a>. Compiler-runtime notices are bundled for <a href="/licenses/openswmm/EMSCRIPTEN-LICENSE.txt" className="text-primary hover:underline">Emscripten</a> and <a href="/licenses/openswmm/MUSL-COPYRIGHT.txt" className="text-primary hover:underline">musl libc</a>. These OpenSWMM terms do not license BatchSWMM56 as a whole.
+                          </p>
+                          <p>
+                            Neither the United States Environmental Protection Agency, HydroCouple, nor the OpenSWMM authors endorse BatchSWMM56. Their names are used only to identify source and attribution.
+                          </p>
+                        </div>
                       </div>
                       <div className="rounded-md border p-3" data-testid="guide-engine-comparison">
                         <p className="font-medium">Engine Comparison mode — where the per-engine result tabs come from</p>
                         <p className="text-muted-foreground mt-1">
                           When you run a batch in Engine Comparison mode, the app runs your <b>same input files through
                           each selected engine</b>, one engine after another. Each result tab (SWMM5 API results, SWMM5 WASM
-                          results, SWMM6 WASM results, SWMM6 Dev results, Executable results) shows one engine's complete run of the whole
+                          results, SWMM6 WASM results, SWMM6 Dev results, Hydra results, Executable results) shows one engine's complete run of the whole
                           batch — so 17 files produce 17 results in <i>each</i> tab.
                         </p>
                         <p className="text-muted-foreground mt-2">
@@ -1336,8 +1356,7 @@ export default function Documentation() {
                           code</b> — they differ only in how and where they run (command-line program on the server, shared
                           library on the server, or WebAssembly in your browser). Their results should agree almost exactly;
                           any difference between them points at an environment or integration issue, not the model.
-                          SWMM6 WASM and SWMM6 Dev are the <b>newer OpenSWMM 6 engine</b> (stable and develop branches), so genuine engineering differences show up
-                          there — the Comparison, Charts, and Scatter Plots tabs exist to make those differences easy to spot.
+                          SWMM6 WASM and SWMM6 Dev are the <b>newer OpenSWMM 6 engine</b> (stable and develop branches). Hydra is a separate implementation with its own numerical methods. Genuine engineering differences can therefore appear across these families — the Comparison, Charts, Scatter Plots, and Phase Space tabs make those differences visible without implying that one engine must reproduce another exactly.
                         </p>
                         <p className="text-muted-foreground mt-2">
                           If you only need one set of results, pick a single engine mode instead of comparison mode.
@@ -1372,6 +1391,17 @@ export default function Documentation() {
                         <p className="font-medium">Dynamic Wave</p>
                         <p className="text-muted-foreground">
                           Solves the full Saint-Venant equations, capturing backwater, looped networks, entrance/exit losses, pressurized flow, and flooding. The most accurate but slowest method, and it requires small routing steps (often 1–30 seconds) for numerical stability. Use this when nodes surcharge or the network has loops.
+                        </p>
+                      </div>
+                      <div className="rounded-md border p-3" data-testid="guide-routing-time-steps">
+                        <p className="font-medium">Time-step and conduit-lengthening overrides</p>
+                        <p className="text-muted-foreground mt-1">
+                          Simulation Settings can override <code className="font-mono bg-muted px-1 rounded">ROUTING_STEP</code> for
+                          the whole batch. Choose Fixed time step to write <code className="font-mono bg-muted px-1 rounded">VARIABLE_STEP 0</code>,
+                          or choose Variable time step and enter its 0–2 CFL safety factor. The conduit-lengthening field writes
+                          <code className="font-mono bg-muted px-1 rounded ml-1">LENGTHENING_STEP</code>; leave it blank to preserve each
+                          model&apos;s setting or enter 0 to disable lengthening. These choices are included in the modified INP files
+                          available from the results export.
                         </p>
                       </div>
                     </div>
@@ -1703,7 +1733,7 @@ With stride:    swmm_open(f1, f2, f3)
                         <div className="space-y-3">
                           <h4 className="font-medium text-sm">Architecture</h4>
                           <pre className="text-xs font-mono bg-muted/40 p-4 rounded whitespace-pre-wrap">{`BatchSWMM56 API Mode Architecture
-================================
+--------------------------------
 
 Source:   EPA SWMM 5.2.4 (github.com/USEPA/Stormwater-Management-Model)
 Compiled: gcc -shared -fPIC -O2 → libswmm5.so (54 C source files)

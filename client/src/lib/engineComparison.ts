@@ -2,11 +2,20 @@ import type { ProcessResult, ParsedMetrics } from "@shared/schema";
 import type { ParsedTimeSeries } from "./parseTimeSeries";
 
 /** Engine ids the UI can select. */
-export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6' | 'wasm6dev';
+export type EngineId = 'executable' | 'api' | 'wasm' | 'wasm6' | 'wasm6dev' | 'hydra';
+export type BrowserEngineId = Extract<EngineId, 'wasm' | 'wasm6' | 'wasm6dev' | 'hydra'>;
+export type WasmEngineId = 'swmm5' | 'swmm6' | 'swmm6dev' | 'hydra';
+
+export function isBrowserEngine(mode: EngineId): mode is BrowserEngineId {
+  return mode === 'wasm' || mode === 'wasm6' || mode === 'wasm6dev' || mode === 'hydra';
+}
 
 /** WASM engine variant to load for a UI engine mode (browser paths only). */
-export function wasmEngineForMode(mode: EngineId): 'swmm5' | 'swmm6' | 'swmm6dev' {
-  return mode === 'wasm6' ? 'swmm6' : mode === 'wasm6dev' ? 'swmm6dev' : 'swmm5';
+export function wasmEngineForMode(mode: EngineId): WasmEngineId {
+  if (mode === 'wasm6') return 'swmm6';
+  if (mode === 'wasm6dev') return 'swmm6dev';
+  if (mode === 'hydra') return 'hydra';
+  return 'swmm5';
 }
 
 export const ENGINE_LABELS: Record<EngineId, string> = {
@@ -15,6 +24,7 @@ export const ENGINE_LABELS: Record<EngineId, string> = {
   wasm: 'SWMM5 WASM',
   wasm6: 'SWMM6 WASM',
   wasm6dev: 'SWMM6 WASM (develop)',
+  hydra: 'Hydra WASM',
 };
 
 /** One engine's completed batch. */

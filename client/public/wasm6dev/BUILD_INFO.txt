@@ -1,0 +1,26 @@
+OpenSWMM browser engine build manifest
+
+Mode: SWMM6 Dev (wasm6dev)
+Source: https://github.com/HydroCouple/openswmm.engine
+Branch: develop
+Commit: 19a1bc42074eac8cdf46e2edafe6fc5849adf6da
+Commit date: 2026-08-11
+Emscripten: 3.1.51
+Factory: createOswmm6DevModule
+License: MIT (/licenses/openswmm/LICENSE-DEVELOP-MIT.txt)
+Upstream NOTICE: none at recorded commit
+Redistribution provenance: /licenses/openswmm/PROVENANCE.md
+Dependency license audit: /licenses/openswmm/DEPENDENCY_AUDIT.md
+Toolchain runtime notices: /licenses/openswmm/EMSCRIPTEN-LICENSE.txt, /licenses/openswmm/MUSL-COPYRIGHT.txt
+
+Local modifications to upstream source for this WASM build:
+- Allow __EMSCRIPTEN__ in PluginFactory platform detection.
+- Run IOThread output synchronously under __EMSCRIPTEN__.
+- Remove the duplicate non-OpenMP omp_get_max_threads definition.
+
+Required worker export:
+- swmm_get_last_error_msg
+
+SHA-256:
+- openswmm6dev.js: ce8bf2223585c55da1ceb52ea5598ef24dc91519c26ede8571ee56ec5b70f230
+- openswmm6dev.wasm: c0a7d079773399847e65b4d8b0a768d599fc7a026872a12b7a7d815b55cae671

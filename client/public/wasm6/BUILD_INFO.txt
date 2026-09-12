@@ -1,0 +1,40 @@
+OpenSWMM browser engine build manifest
+
+Mode: SWMM6 Stable (wasm6)
+Source: https://github.com/HydroCouple/openswmm.engine
+Branch: swmm6_rel
+Commit: 137e65e4e25e9425a489b99d5b7365c8355f8f6b
+Commit date: 2026-09-10
+Emscripten: 3.1.51
+Factory: createOswmm6Module
+License: Apache-2.0 (/licenses/openswmm/LICENSE.txt)
+Upstream NOTICE: /licenses/openswmm/NOTICE.txt
+Redistribution provenance: /licenses/openswmm/PROVENANCE.md
+Dependency license audit: /licenses/openswmm/DEPENDENCY_AUDIT.md
+Toolchain runtime notices: /licenses/openswmm/EMSCRIPTEN-LICENSE.txt, /licenses/openswmm/MUSL-COPYRIGHT.txt
+
+Source legal-file SHA-256 (verified byte-identical to bundled files):
+- LICENSE.txt: 94fcde3f05aad351a969a65f5c87b25ee3893ee7297549d6a3217bf29ccbc3aa
+- NOTICE.txt: 83a3c0524ba9dd6929a5d5e110f959d318ce142ffbc2cce74616bf5866b1d5cb
+
+WASM compatibility provisions:
+- Upstream 0e3155a provides PluginFactory __EMSCRIPTEN__ loading stubs.
+- Upstream d204ea7 provides synchronous IOThread output under __EMSCRIPTEN__.
+- Local build patch changes project.c's duplicate non-OpenMP
+  omp_get_max_threads definition to an extern declaration; swmm5.c retains it.
+- Local build patch guards a 2-D options dereference so the intentionally
+  no-2-D browser configuration compiles; it is false when 2-D is absent.
+
+Reproduction evidence:
+- Script: scripts/build-swmm6-wasm.sh
+- Full expanded link command: openswmm6.link-command.txt
+- Full linker map: openswmm6.link.map
+
+Required worker export:
+- swmm_get_last_error_msg
+
+SHA-256:
+ - openswmm6.js: e5ae5478689209bf04215aa3afc5616e1fc05bb48d2c07249e26fa1b030f9bc3
+ - openswmm6.wasm: a857f2de88933edb7beb89704fa252e2bd13bf2fc8f35211ce29f161e3bbf463
+ - openswmm6.link-command.txt: 00e49cee48ff2e9bd91559166b7cad9a13994802a15fb59f2fa570df9c2d9f42
+ - openswmm6.link.map: 3830d7c66341652340a96651893d9dae192ac66ef1bd9f248a98cdc6a3173a3b

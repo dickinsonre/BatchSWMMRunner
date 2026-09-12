@@ -36,6 +36,15 @@ describe.skipIf(!present)("SWMM6 develop-branch WASM engine", () => {
     Module.FS.writeFile("/input.inp", inpText);
     const eng = Module.ccall("swmm_engine_create", "number", [], []);
     expect(eng).not.toBe(0);
+    // The browser worker calls this function whenever open/initialize/step
+    // fails. Keep it in the exported WASM API so failures show the real SWMM
+    // message instead of throwing "undefined.apply" from Emscripten ccall.
+    expect(() => Module.ccall(
+      "swmm_get_last_error_msg",
+      "string",
+      ["number"],
+      [eng],
+    )).not.toThrow();
     let err = Module.ccall("swmm_engine_open", "number",
       ["number", "string", "string", "string", "number"],
       [eng, "/input.inp", "/report.rpt", "/output.out", 0]);

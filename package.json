@@ -5,12 +5,16 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && node scripts/validate-dist.mjs",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc",
-    "test": "vitest run",
+    "test": "npm run validate:engines && vitest run",
     "test:watch": "vitest",
     "verify": "npm run check && npm run test",
+    "engines:check": "node scripts/engine-manifest.mjs",
+    "engines:update": "node scripts/engine-manifest.mjs --update",
+    "validate:engines": "node scripts/validate-engines.mjs && npm run engines:check",
+    "validate:dist": "node scripts/validate-dist.mjs",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {

@@ -3,14 +3,17 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip as ChartTooltip, Legend,
   ScatterChart, Scatter, CartesianGrid, ResponsiveContainer, ReferenceLine,
 } from "recharts";
-import { Upload, FileText, Printer, Loader2, Play } from "lucide-react";
+import { Upload, FileText, Printer, Loader2, Play, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppHeader from "@/components/AppHeader";
+import CoherenceDiagnostic from "@/components/CoherenceDiagnostic";
 import { runWasmBatch } from "@/lib/swmmWasmEngine";
+import { downloadPairedEngineZip, pairedExportAvailability } from "@/lib/pairedEngineExport";
 import { parseTimeSeries, type ParsedTimeSeries } from "@/lib/parseTimeSeries";
 import { ensureReportAll, toHours, rSquared, rankPeakDifferences, bareElementName, seriesKind, nashSutcliffe, rmse, type PeakDiffRow } from "@/lib/qaqcReport";
 import type { ProcessResult, ParsedMetrics } from "@shared/schema";
@@ -120,6 +123,9 @@ export default function QaqcReportPage() {
   const [swmm5, setSwmm5] = useState<EngineData | null>(null);
   const [swmm6, setSwmm6] = useState<EngineData | null>(null);
   const [selectedKey, setSelectedKey] = useState<string>("");
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState("");
+  const [exportError, setExportError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const cancelRef = useRef<(() => void) | null>(null);
   // Generation counter: bumping it invalidates callbacks from older runs so a
@@ -146,6 +152,8 @@ export default function QaqcReportPage() {
     setInpText(await f.text());
     setSwmm5(null); setSwmm6(null);
     setSelectedKey("");
+    setExportError("");
+    setExportProgress("");
     setPhase("idle");
     setError("");
   };
@@ -172,6 +180,11 @@ export default function QaqcReportPage() {
         },
         flag,
         engine,
+        undefined,
+        true,
+        undefined,
+        undefined,
+        { retainArtifacts: true },
       );
       cancelRef.current = () => { flag.current = true; cancel(); reject(new Error("cancelled")); };
     });
@@ -317,6 +330,26 @@ export default function QaqcReportPage() {
   const optionRows = useMemo(() => extractOptions(inpText), [inpText]);
   const modelTitle = useMemo(() => extractTitle(inpText), [inpText]);
   const running = phase === "running5" || phase === "running6";
+  const paired = swmm5 && swmm6 ? { swmm5: swmm5.result, swmm6: swmm6.result } : null;
+  const exportStatus = pairedExportAvailability(paired);
+
+  const exportNativePair = async () => {
+    if (!paired || exporting || !exportStatus.ready) return;
+    setExporting(true);
+    setExportError("");
+    setExportProgress("Preparing native files…");
+    try {
+      await downloadPairedEngineZip(paired, {
+        onProgress: update => setExportProgress(update.message),
+      });
+      setExportProgress("Native ZIP downloaded.");
+    } catch (reason) {
+      setExportError(reason instanceof Error ? reason.message : String(reason));
+      setExportProgress("");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const fmt = (v: number | undefined, digits = 3) =>
     v === undefined || !Number.isFinite(v) ? "—" : v.toFixed(digits);
@@ -363,9 +396,22 @@ export default function QaqcReportPage() {
                 </Button>
               )}
               {phase === "done" && (
-                <Button variant="outline" onClick={() => window.print()} data-testid="button-print-pdf">
-                  <Printer className="h-4 w-4 mr-2" /> Save as PDF
-                </Button>
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={exportNativePair}
+                    disabled={exporting || !exportStatus.ready}
+                    data-testid="button-download-qaqc-native-zip"
+                  >
+                    {exporting
+                      ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      : <Download className="h-4 w-4 mr-2" />}
+                    {exporting ? exportProgress || "Preparing ZIP…" : "Download native ZIP"}
+                  </Button>
+                  <Button variant="outline" onClick={() => window.print()} data-testid="button-print-pdf">
+                    <Printer className="h-4 w-4 mr-2" /> Save as PDF
+                  </Button>
+                </>
               )}
             </div>
             {phase === "done" && options.length > 0 && (
@@ -391,14 +437,26 @@ export default function QaqcReportPage() {
               </p>
             )}
             {error && <p className="text-sm text-destructive" data-testid="text-qaqc-error">{error}</p>}
+            {phase === "done" && !exportStatus.ready && (
+              <p className="text-sm text-muted-foreground" data-testid="text-qaqc-native-export-unavailable">
+                Native ZIP export unavailable: {exportStatus.message}
+              </p>
+            )}
+            {exportError && <p className="text-sm text-destructive" data-testid="text-qaqc-native-export-error">{exportError}</p>}
           </CardContent>
         </Card>
       </div>
 
       {/* The report itself */}
       {phase === "done" && swmm5 && swmm6 && (
-        <div className="container max-w-4xl mx-auto px-4 pb-16 qaqc-report" data-testid="section-qaqc-report">
-          <div className="border rounded-lg p-8 print:border-0 print:p-0 bg-card space-y-8">
+        <Tabs defaultValue="comparison" className="container max-w-6xl mx-auto px-4 pb-16">
+          <TabsList className="mb-4 print:hidden">
+            <TabsTrigger value="comparison" data-testid="tab-qaqc-comparison">QA/QC comparison</TabsTrigger>
+            <TabsTrigger value="coherence" data-testid="tab-coherence-diagnostic">Coherence diagnostic</TabsTrigger>
+          </TabsList>
+          <TabsContent value="comparison">
+            <div className="qaqc-report">
+              <div className="border rounded-lg p-8 print:border-0 print:p-0 bg-card space-y-8" data-testid="section-qaqc-report">
             {/* Title block */}
             <div className="text-center space-y-2 border-b pb-6">
               <p className="text-xs tracking-widest uppercase text-muted-foreground">Quality Assurance Comparison Report</p>
@@ -635,8 +693,19 @@ export default function QaqcReportPage() {
                 )}
               </p>
             </section>
-          </div>
-        </div>
+
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="coherence">
+            <CoherenceDiagnostic
+              inpText={inpText}
+              swmm5Report={swmm5.result.reportContent}
+              swmm6Report={swmm6.result.reportContent}
+              fileName={file?.name}
+            />
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   );

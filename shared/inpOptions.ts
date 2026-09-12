@@ -1,5 +1,9 @@
 export interface Swmm6Options {
-  /** Master flag: write the SWMM6-only [OPTIONS] keywords into the .inp. */
+  /**
+   * Transport flag required by the shared INP normalizer. In the UI it is the
+   * SWMM6 Stable advanced-options master switch; the Dev FV adapter sets it
+   * automatically whenever FV routing is selected.
+   */
   enabled?: boolean;
   /** SURCHARGE_METHOD DYNAMIC_SLOT (Dynamic Preissmann Slot). */
   dynamicSlot?: boolean;
@@ -31,13 +35,39 @@ export interface Swmm6Options {
   fvTimeIntegration?: string;
   /** FV_RIEMANN — Riemann solver keyword, transport only (engine default HLLC). */
   fvRiemann?: string;
-  /** FV_CELL_LENGTH — target cell length for the FV mesh, m > 0 (engine default applies when unset). */
+  /**
+   * FV_CELL_LENGTH — target cell length for the FV mesh, > 0, in the
+   * project's display length units (ft for US flow units, m for SI).
+   * When unset, the app injects DEFAULT_FV_CELL_LENGTH: the engine's own
+   * default is a COARSE 4-cells-per-conduit mesh, which badly over-conveys
+   * long conduits (e.g. a 5000 ft, n=0.034 conduit meshed as 1250 ft cells
+   * passed ~2x its Manning capacity, starving a downstream weir ~7x while
+   * still conserving mass — see tests/engine6FvStructures.test.ts).
+   */
   fvCellLength?: number;
-  /** FV_MIN_CELLS — minimum cells per conduit, integer >= 1 (engine default applies when unset). */
+  /** FV_MIN_CELLS — subgrid discretization: minimum cells per conduit, integer >= 1. */
   fvMinCells?: number;
   /** FV_CFL — CFL number, 0 < CFL <= 1 (engine default applies when unset). */
   fvCfl?: number;
 }
+
+/**
+ * Default FV_CELL_LENGTH written when the user leaves the field blank, in the
+ * project's display length units (ft for US units, m for SI). 100 ft cells
+ * bring the Demo_extran4 weir peak within ~6% of DYNWAVE (vs ~7x too low on
+ * the engine's COARSE default) while keeping runs fast; 100 m for SI models
+ * is coarser but still far below the ~400 m cells COARSE produces on long
+ * conduits.
+ */
+export const DEFAULT_FV_CELL_LENGTH = 100;
+
+/**
+ * Explicit minimum subgrid resolution written for every FV run. Two cells per
+ * conduit is a practical baseline for many models and avoids the unnecessary
+ * runtime cost of an unspecified engine default while preserving a real
+ * finite-volume discretization.
+ */
+export const DEFAULT_FV_MIN_CELLS = 2;
 
 export interface InpOverrides {
   reportStepMinutes?: number;
@@ -128,8 +158,15 @@ export function normalizeSwmm6Options(raw: unknown): Swmm6Options | undefined {
     if (rs) out.fvRiemann = rs;
     const cell = Number(s6.fvCellLength);
     if (Number.isFinite(cell) && cell > 0 && cell <= 10000) out.fvCellLength = cell;
+    // Safe-mesh default: without a cell-length target the engine falls back
+    // to a COARSE 4-cells-per-conduit mesh, which over-conveys long conduits
+    // and silently suppresses weir/overflow peaks (mass still balances, so
+    // nothing else flags it). Inject a resolution that reproduces DYNWAVE
+    // peaks on the affected sample models.
+    else out.fvCellLength = DEFAULT_FV_CELL_LENGTH;
     const minCells = Number(s6.fvMinCells);
     if (Number.isInteger(minCells) && minCells >= 1 && minCells <= 1000) out.fvMinCells = minCells;
+    else out.fvMinCells = DEFAULT_FV_MIN_CELLS;
     const cfl = Number(s6.fvCfl);
     if (Number.isFinite(cfl) && cfl > 0 && cfl <= 1) out.fvCfl = cfl;
   }

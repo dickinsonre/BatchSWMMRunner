@@ -10,6 +10,7 @@ import Documentation from "@/pages/Documentation";
 import FolderView from "@/pages/FolderView";
 import ReswmmPage from "@/pages/ReswmmPage";
 import QaqcReportPage from "@/pages/QaqcReportPage";
+import CoherencePage from "@/pages/CoherencePage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/docs" component={Documentation} />
       <Route path="/reswmm" component={ReswmmPage} />
       <Route path="/qaqc" component={QaqcReportPage} />
+      <Route path="/coherence" component={CoherencePage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -33,9 +33,18 @@
       if (i32(0) !== MAGIC) return '';
 
       var fileSize = bytes.length;
+      // The third header integer is the SWMM FlowUnits enum. It is the
+      // authoritative native-unit metadata for values in the binary output:
+      // CFS, GPM, MGD, CMS, LPS, or MLD (in that order).
+      var flowUnitCode = i32(8);
+      var flowUnits = ['CFS', 'GPM', 'MGD', 'CMS', 'LPS', 'MLD'];
+      if (flowUnitCode < 0 || flowUnitCode >= flowUnits.length) return '';
+      var flowUnit = flowUnits[flowUnitCode];
+      var isUS = flowUnitCode <= 2;
       var nSub = i32(12);
       var nNode = i32(16);
       var nLink = i32(20);
+      var nPollut = i32(24);
       var idStart = i32(fileSize - 6 * 4);
       var propStart = i32(fileSize - 5 * 4);
       var resultStart = i32(fileSize - 4 * 4);
@@ -55,11 +64,21 @@
       }
 
       var pos = idStart;
-      var subNames = [], nodeNames = [], linkNames = [];
+      var subNames = [], nodeNames = [], linkNames = [], pollutNames = [];
       var i, len;
       for (i = 0; i < nSub; i++) { len = i32(pos); pos += 4; subNames.push(readStr(pos, len)); pos += len; }
       for (i = 0; i < nNode; i++) { len = i32(pos); pos += 4; nodeNames.push(readStr(pos, len)); pos += len; }
       for (i = 0; i < nLink; i++) { len = i32(pos); pos += 4; linkNames.push(readStr(pos, len)); pos += len; }
+      for (i = 0; i < nPollut; i++) { len = i32(pos); pos += 4; pollutNames.push(readStr(pos, len)); pos += len; }
+
+      // Pollutant unit codes are written directly after the object IDs. They
+      // use SWMM's ConcUnitsType enum: MG, UG, or COUNT (per liter).
+      var pollutUnitLabels = [], pollutUnits = ['mg/L', 'ug/L', 'counts/L'];
+      for (i = 0; i < nPollut; i++) {
+        var pollutUnitCode = i32(pos); pos += 4;
+        if (pollutUnitCode < 0 || pollutUnitCode >= pollutUnits.length) return '';
+        pollutUnitLabels.push(pollutUnits[pollutUnitCode]);
+      }
 
       pos = propStart;
       var nSubProps = i32(pos); pos += 4;
@@ -101,34 +120,46 @@
         return s;
       }
 
+      var lengthUnit = isUS ? 'ft' : 'm';
+      var volumeUnit = isUS ? 'ft3' : 'm3';
+      var velocityUnit = isUS ? 'ft/sec' : 'm/sec';
+      var rainfallRateUnit = isUS ? 'in/hr' : 'mm/hr';
+      var rainfallDepthUnit = isUS ? 'in' : 'mm';
+      var evaporationUnit = isUS ? 'in/day' : 'mm/day';
+      var temperatureUnit = isUS ? 'deg F' : 'deg C';
       var baseSubVarNames = ['Rainfall', 'Snow Depth', 'Evaporation', 'Infiltration', 'Runoff', 'GW Outflow', 'GW Elev', 'Soil Moisture'];
-      var baseSubVarUnits = ['in/hr', 'in', 'in/day', 'in/hr', 'CFS', 'CFS', 'ft', ''];
+      var baseSubVarUnits = [rainfallRateUnit, rainfallDepthUnit, evaporationUnit, rainfallRateUnit, flowUnit, flowUnit, lengthUnit, ''];
       var baseNodeVarNames = ['Depth', 'Head', 'Volume', 'Lat.Inflow', 'Total Inflow', 'Flooding'];
-      var baseNodeVarUnits = ['ft', 'ft', 'ft3', 'CFS', 'CFS', 'CFS'];
+      var baseNodeVarUnits = [lengthUnit, lengthUnit, volumeUnit, flowUnit, flowUnit, flowUnit];
       var baseLinkVarNames = ['Flow', 'Depth', 'Velocity', 'Volume', 'Capacity'];
-      var baseLinkVarUnits = ['CFS', 'ft', 'ft/sec', 'ft3', ''];
-      var baseSysVarNames = ['Temperature', 'Rainfall', 'Snow Depth', 'Evaporation', 'Runoff', 'Dry Weather Inflow', 'GW Inflow', 'RDII Inflow', 'Direct Inflow', 'Total Lateral Inflow', 'Flooding', 'Outflow', 'Storage Volume', 'Evap Rate'];
-      var baseSysVarUnits = ['deg F', 'in/hr', 'in', 'in/day', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'CFS', 'ft3', 'CFS'];
+      var baseLinkVarUnits = [flowUnit, lengthUnit, velocityUnit, volumeUnit, ''];
+      var baseSysVarNames = ['Temperature', 'Rainfall', 'Snow Depth', 'Infiltration', 'Runoff', 'Dry Weather Inflow', 'GW Inflow', 'RDII Inflow', 'Direct Inflow', 'Total Lateral Inflow', 'Flooding', 'Outflow', 'Storage Volume', 'Evaporation', 'Potential Evaporation'];
+      var baseSysVarUnits = [temperatureUnit, rainfallRateUnit, rainfallDepthUnit, rainfallRateUnit, flowUnit, flowUnit, flowUnit, flowUnit, flowUnit, flowUnit, flowUnit, flowUnit, volumeUnit, evaporationUnit, evaporationUnit];
 
-      function makeLabels(count, names, units, extraName, extraUnit) {
+      function makeLabels(count, names, units, extraName, extraUnit, extraNames, extraUnits) {
         var labels = [], unitLabels = [];
         for (var v = 0; v < count; v++) {
-          labels.push(v < names.length ? names[v] : extraName + '_' + (v - names.length + 1));
+          var extraIndex = v - names.length;
+          labels.push(v < names.length ? names[v] : (extraNames[extraIndex] || extraName + '_' + (extraIndex + 1)));
           // Use '-' for unitless columns so the units row keeps one token per
           // column when split on whitespace (keeps units aligned to columns).
-          var u = v < units.length ? units[v] : extraUnit;
+          var u = v < units.length ? units[v] : (extraUnits[extraIndex] || extraUnit);
           unitLabels.push(u || '-');
         }
         return { labels: labels, units: unitLabels };
       }
 
-      var subL = makeLabels(nSubVars, baseSubVarNames, baseSubVarUnits, 'Pollutant', 'mg/L');
-      var nodeL = makeLabels(nNodeVars, baseNodeVarNames, baseNodeVarUnits, 'Pollutant', 'mg/L');
-      var linkL = makeLabels(nLinkVars, baseLinkVarNames, baseLinkVarUnits, 'Pollutant', 'mg/L');
-      var sysL = makeLabels(nSysVars, baseSysVarNames, baseSysVarUnits, 'Var', '');
+      var subL = makeLabels(nSubVars, baseSubVarNames, baseSubVarUnits, 'Pollutant', 'mg/L', pollutNames, pollutUnitLabels);
+      var nodeL = makeLabels(nNodeVars, baseNodeVarNames, baseNodeVarUnits, 'Pollutant', 'mg/L', pollutNames, pollutUnitLabels);
+      var linkL = makeLabels(nLinkVars, baseLinkVarNames, baseLinkVarUnits, 'Pollutant', 'mg/L', pollutNames, pollutUnitLabels);
+      var sysL = makeLabels(nSysVars, baseSysVarNames, baseSysVarUnits, 'Var', '', [], []);
 
       var maxPeriods = Math.min(numPeriods, MAX_PERIODS);
       var lines = [];
+      if (maxPeriods < numPeriods) {
+        lines.push('');
+        lines.push('  ; BATCHSWMM56_TIME_SERIES_TRUNCATED ' + maxPeriods + ' ' + numPeriods);
+      }
 
       function padVal(x) {
         var s = x.toFixed(3);

@@ -11,6 +11,7 @@ const fvInp = baseInp.replace(
   /FLOW_ROUTING\s+KINWAVE/,
   [
     "FLOW_ROUTING         FV",
+      "FV_MIN_CELLS         2",
     "FV_ORDER             2",
     "FV_LIMITER           MINMOD",
     "FV_TIME_INTEGRATION  EULER",

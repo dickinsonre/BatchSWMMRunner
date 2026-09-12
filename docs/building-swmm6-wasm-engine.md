@@ -1,10 +1,13 @@
 # Building a SWMM6 (OpenSWMM 6.0.0-alpha) WebAssembly Engine
 
-How to compile the new C++ OpenSWMM 6 engine to WebAssembly. This is a much rougher ride than SWMM5 (see `building-swmm5-wasm-engine.md`): the codebase is C++ with exceptions, threads, plugins, and OpenMP — all of which need patches or flags to survive in a browser. This is the exact recipe used to produce `client/public/wasm6/openswmm6.js` + `openswmm6.wasm` (engine reports `6.0.0-alpha.3`).
+How to compile the new C++ OpenSWMM 6 engine to WebAssembly. This is a much rougher ride than SWMM5 (see `building-swmm5-wasm-engine.md`): the codebase is C++ with exceptions, threads, plugins, and OpenMP — all of which need browser-specific provisions. The source-pinned stable-only recipe is `scripts/build-swmm6-wasm.sh`; it requires Emscripten 3.1.51, produces `client/public/wasm6/openswmm6.js` + `openswmm6.wasm`, and records the expanded link command and linker map alongside them.
+
+The retained hashes identify this specific build, not a guarantee of byte-identical rebuilds. Link evidence includes original absolute workspace and temporary paths; CMake and the host environment are not fully pinned. Retaining those paths preserves the actual build evidence rather than rewriting it.
 
 ## 1. Source
 
-Clone the OpenSWMM repository, `swmm6_rel` branch. Two engines live in that tree:
+Clone the OpenSWMM repository at the exact `swmm6_rel` commit recorded in
+`client/public/wasm6/BUILD_INFO.txt`. Two engines live in that tree:
 
 - **`src/` (the real SWMM6)** — new C++ engine with the handle-based `swmm_engine_*` API. This is what you want.
 - **`src/legacy/engine`** — the old 5.3.0-era C engine carried along for comparison. It *ignores* all SWMM6-only keywords (`SURCHARGE_METHOD DYNAMIC_SLOT`, `[VIRTUAL_JUNCTIONS]`, …), so building it and thinking you have SWMM6 is a trap. Check your `.rpt` header: the new engine prints a 6.0.0-alpha version, the legacy one prints "OPENSWMM ENGINE" with 5.3.x.
@@ -14,27 +17,29 @@ Clone the OpenSWMM repository, `swmm6_rel` branch. Two engines live in that tree
 - Emscripten (tested with **3.1.51**) with a writable cache: `export EM_CACHE=/tmp/emcache`.
 - CMake (the project is CMake-based; use `emcmake`).
 
-## 3. Required source patches
+## 3. Required WebAssembly compatibility provisions
 
-Three things in the tree do not work under WASM and must be patched before compiling:
+The browser build retains three compatibility provisions:
 
-1. **`PluginFactory.cpp` platform check** — the dlfcn-based plugin loader has an `#if` platform whitelist that errors out on unknown platforms. Add `__EMSCRIPTEN__` to the allowed list (Emscripten ships dlfcn stubs; plugins simply won't load, which is fine).
-2. **`IOThread.cpp`** — the engine writes output on a background `std::thread`. Spawning threads in single-threaded WASM aborts at runtime. Under `#ifdef __EMSCRIPTEN__`, make the IO "thread" run synchronously (execute the queued work inline instead of launching a thread).
-3. **Duplicate `omp_get_max_threads` fallback** — both `project.c` and `swmm5.c` (legacy sources pulled into the build) define a no-OpenMP fallback for `omp_get_max_threads`, which collides at link time. Remove one of the duplicates.
+1. **`PluginFactory.cpp` platform check** — the pinned upstream snapshot includes its `__EMSCRIPTEN__` dynamic-loading stubs (upstream commit `0e3155a`). Built-in plugins remain available; dynamic plugins do not load in this single-file module.
+2. **`IOThread.cpp`** — the pinned upstream snapshot includes its `__EMSCRIPTEN__` synchronous output path (upstream commit `d204ea7`). It avoids spawning a `std::thread` in the single-threaded browser build.
+3. **Duplicate `omp_get_max_threads` fallback** — `project.c` and `swmm5.c` both define the no-OpenMP fallback. The build script changes `project.c` to an `extern` declaration, leaving the `swmm5.c` definition as the one symbol in the combined link.
+
+The script checks that provisions 1 and 2 remain upstream and applies provision
+3 after resetting the pinned source tree, so the build is repeatable without
+carrying a mutable source checkout in this repository.
+
+At this upstream tip the script also carries a narrow build-only guard around a
+2-D options dereference in `SWMMEngine.cpp`: `OPENSWMM_BUILD_2D=OFF` leaves
+`SolverOptions2D` incomplete, otherwise preventing the intended 1-D browser
+configuration from compiling. The guard leaves `as_flooding` false when 2-D is
+not built; a no-2-D model cannot have 1-D-to-2-D coupling. This is separate
+from the three established compatibility provisions above.
 
 ## 4. Configure and build
 
 ```bash
-export EM_CACHE=/tmp/emcache
-cd oswmm
-emcmake cmake -B build-wasm \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DOPENSWMM_WITH_GEOPACKAGE=OFF \
-  -DOPENSWMM_BUILD_2D=OFF \
-  -DOPENSWMM_BUILD_GPU_PLUGIN=OFF \
-  -DCMAKE_C_FLAGS=-fexceptions \
-  -DCMAKE_CXX_FLAGS=-fexceptions
-cmake --build build-wasm --target openswmm.engine -j
+bash scripts/build-swmm6-wasm.sh
 ```
 
 **`-fexceptions` is not optional.** Emscripten disables C++ exceptions by default; the engine throws/catches during normal operation, and without the flag the run aborts right after parsing the input file. It must be on for *every* translation unit (hence the global CMake flags), not just the link step.
@@ -43,12 +48,18 @@ The GeoPackage, 2D, and GPU options pull in heavy native dependencies that don't
 
 ## 5. Link step
 
-Link the CLI entry point plus the static engine library with em++:
+The script configures a Release, dependency-free browser build, builds
+`openswmm_engine`, and links the CLI entry point plus
+`build-wasm/src/engine/libopenswmm.engine.a`.
+
+The expanded command is retained as
+`client/public/wasm6/openswmm6.link-command.txt` and its full linker map as
+`client/public/wasm6/openswmm6.link.map`. Its essential flags are:
 
 ```bash
 em++ -O2 -fexceptions \
-  src/cli/main.cpp build-wasm/libopenswmm.engine.a \
-  -I src -I build-wasm/include \
+  src/cli/main.cpp build-wasm/src/engine/libopenswmm.engine.a \
+  -I include/openswmm/engine -I build-wasm/include \
   -s MODULARIZE=1 \
   -s EXPORT_NAME=createOswmm6Module \
   -s ENVIRONMENT=web,worker \
@@ -101,7 +112,8 @@ On any nonzero return, get the message with `swmm_get_last_error_msg`. Warning c
 
 - [ ] Building `src/`, not `src/legacy/engine` (check the `.rpt` version header).
 - [ ] `-fexceptions` on compile **and** link.
-- [ ] The three source patches (PluginFactory, IOThread, omp fallback dedup).
+- [ ] The three compatibility provisions (upstream PluginFactory and IOThread
+  paths, plus the scripted omp fallback dedup).
 - [ ] GeoPackage/2D/GPU options OFF.
 - [ ] Full `EXPORTED_FUNCTIONS` list including `_malloc,_free`.
 - [ ] Fresh module instance per run; run inside a Web Worker.

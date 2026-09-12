@@ -83,3 +83,14 @@ export async function buildResultsZip(
   }
   return { zip, fileCount };
 }
+
+// Paired browser comparisons use a separate native-artifact path so the
+// augmented report and server-result ZIP behavior above remain unchanged.
+export {
+  buildPairedEngineZip,
+  downloadPairedEngineZip,
+  pairedExportAvailability,
+  sanitizePairedModelName,
+  PairedExportError,
+  MAX_PAIRED_EXPORT_BYTES,
+} from "./pairedEngineExport";

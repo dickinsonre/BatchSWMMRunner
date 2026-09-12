@@ -12,9 +12,10 @@ import type { ProcessResult } from '../shared/schema';
 import { wasmEngineForMode } from '../client/src/lib/engineComparison';
 
 describe('wasmEngineForMode — matrix runs load the selected engine', () => {
-  it('maps wasm6/wasm6dev to their SWMM6 engines, everything else to SWMM5', () => {
+  it('maps each browser mode to its own engine bundle', () => {
     expect(wasmEngineForMode('wasm6')).toBe('swmm6');
     expect(wasmEngineForMode('wasm6dev')).toBe('swmm6dev');
+    expect(wasmEngineForMode('hydra')).toBe('hydra');
     expect(wasmEngineForMode('wasm')).toBe('swmm5');
   });
 });
@@ -50,6 +51,26 @@ describe('applyInpOverrides — solver matrix keywords', () => {
     expect(off).toMatch(/VARIABLE_STEP\s+0\b/);
     const capped = applyInpOverrides(BASE_INP, { variableStep: 5 });
     expect(capped).toMatch(/VARIABLE_STEP\s+2\b/);
+  });
+
+  it('writes the dialog’s fixed or variable time-step and conduit-lengthening choices', () => {
+    const fixed = applyInpOverrides(BASE_INP, {
+      routingStepSeconds: 15,
+      variableStep: 0,
+      lengtheningStep: 0,
+    });
+    expect(fixed).toMatch(/ROUTING_STEP\s+00:00:15/);
+    expect(fixed).toMatch(/VARIABLE_STEP\s+0\b/);
+    expect(fixed).toMatch(/LENGTHENING_STEP\s+0\b/);
+
+    const variable = applyInpOverrides(BASE_INP, {
+      routingStepSeconds: 15,
+      variableStep: 0.75,
+      lengtheningStep: 10,
+    });
+    expect(variable).toMatch(/ROUTING_STEP\s+00:00:15/);
+    expect(variable).toMatch(/VARIABLE_STEP\s+0\.75/);
+    expect(variable).toMatch(/LENGTHENING_STEP\s+10\b/);
   });
 
   it('leaves the file unchanged when no solver overrides are set', () => {

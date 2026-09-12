@@ -15,6 +15,29 @@ export interface ParsedTimeSeries {
   data: TimeSeriesEntry[];
 }
 
+export interface TimeSeriesTruncation {
+  displayedPeriods: number;
+  totalPeriods: number;
+}
+
+export function parseTimeSeriesTruncation(rawContent: string): TimeSeriesTruncation | undefined {
+  const match = rawContent.match(
+    /^\s*;\s*BATCHSWMM56_TIME_SERIES_TRUNCATED\s+(\d+)\s+(\d+)\s*$/m,
+  );
+  if (!match) return undefined;
+  const displayedPeriods = Number(match[1]);
+  const totalPeriods = Number(match[2]);
+  if (
+    !Number.isInteger(displayedPeriods) ||
+    !Number.isInteger(totalPeriods) ||
+    displayedPeriods < 1 ||
+    totalPeriods <= displayedPeriods
+  ) {
+    return undefined;
+  }
+  return { displayedPeriods, totalPeriods };
+}
+
 export function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
   const series: ParsedTimeSeries[] = [];
   const lines = rawContent.split('\n');
@@ -70,8 +93,11 @@ export function parseTimeSeries(rawContent: string): ParsedTimeSeries[] {
                 if (parts.length >= 4 && /^\d{2}\/\d{2}\/\d{4}$/.test(parts[0])) {
                   const date = parts[0];
                   const time = `${date} ${parts[1]}`;
-                  const values = parts.slice(2).map(v => parseFloat(v)).filter(v => !isNaN(v));
-                  if (values.length > 0) {
+                  // Preserve one value slot per reported column. Removing a
+                  // non-numeric cell would shift every later value onto the
+                  // wrong metric; NaN is retained as an explicit gap instead.
+                  const values = parts.slice(2).map(v => parseFloat(v));
+                  if (values.some(Number.isFinite)) {
                     data.push({ time, values });
                   }
                 }

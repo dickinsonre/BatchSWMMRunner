@@ -518,16 +518,16 @@ A real-time visualization panel that appears on the Home page during API mode ba
 ### EPA SWMM 5.2 Release Notes
 
 ```
-=====================================================================
+---------------------------------------------------------------------
 EPA SWMM 5.2 RELEASE NOTES
-=====================================================================
+---------------------------------------------------------------------
 
 This file contains information about the 64-bit edition of version
 5.2 of the EPA Storm Water Management Model (SWMM). A complete Users
 Manual as well as full source code and other updates are available
 at www.epa.gov/water-research/storm-water-management-model-swmm.
 
-=====================================================================
+---------------------------------------------------------------------
 INSTALLATION
 
 To install 64-bit EPA SWMM 5.2 run the setup program named
@@ -549,7 +549,7 @@ The setup program will also create a Start Menu group named
 number. Select the item named "EPA SWMM 5.2" from it to launch
 the program.
 
-=====================================================================
+---------------------------------------------------------------------
 SAMPLE PROJECTS
 
 Several sample projects have been included with this package. They
@@ -558,13 +558,13 @@ Documents folder. Each project consists of a .INP file that holds
 the project's data and a .TXT file that describes the project. The
 Samples folder will not be deleted when SWMM 5.2 is uninstalled.
 
-=====================================================================
+---------------------------------------------------------------------
 TERMS OF USE
 
 EPA SWMM 5 is public domain software that may be freely copied and
 distributed.
 
-=====================================================================
+---------------------------------------------------------------------
 DISCLAIMER
 
 The software product is provided on an "as-is" basis. US EPA makes no
@@ -1760,8 +1760,10 @@ The app ships three in-browser engines, all compiled to WebAssembly with Emscrip
 | Engine | UI mode | Artifacts | Factory name | Worker API | Source |
 |---|---|---|---|---|---|
 | SWMM5 5.2.4 | SWMM5 WASM (`wasm`) | `client/public/wasm/swmm5.js` + `.wasm` | `createSwmmModule` | `swmm5` (global-state API) | `swmm-source/src/solver/*.c` (vendored EPA 5.2.4) |
-| OpenSWMM 6 stable | SWMM6 WASM (`wasm6`) | `client/public/wasm6/openswmm6.js` + `.wasm` | `createOswmm6Module` | `engine6` (handle API) | `github.com/SWMMBobSWMM6/openswmm.engine`, branch `swmm6_rel` |
-| OpenSWMM 6 develop | SWMM6 Dev (`wasm6dev`) | `client/public/wasm6dev/openswmm6dev.js` + `.wasm` | `createOswmm6DevModule` | `engine6` (handle API) | same repo, branch `develop` (the only branch with finite-volume `FLOW_ROUTING FV`) |
+| OpenSWMM 6 stable | SWMM6 WASM (`wasm6`) | `client/public/wasm6/openswmm6.js` + `.wasm` | `createOswmm6Module` | `engine6` (handle API) | `github.com/HydroCouple/openswmm.engine`, branch `swmm6_rel`. Bundled snapshot: commit `71829e1` (2026-08-19). |
+| OpenSWMM 6 develop | SWMM6 Dev (`wasm6dev`) | `client/public/wasm6dev/openswmm6dev.js` + `.wasm` | `createOswmm6DevModule` | `engine6` (handle API) | `github.com/HydroCouple/openswmm.engine`, branch `develop` (carries the newest finite-volume `FLOW_ROUTING FV` changes; `swmm6_rel` also supports FV). Bundled snapshot: commit `19a1bc4` (2026-08-11). |
+
+The application deliberately separates the two branches at the override boundary. SWMM6 Stable can receive any combination of Dynamic Preissmann Slot, semi-implicit node continuity, Anderson acceleration, and virtual junctions, but never receives FV overrides. SWMM6 Dev can receive the FV routing and mesh/scheme options, but never receives the Stable advanced-option set. When Dev's FV switch is off, the normal Routing Method setting is used.
 
 ### 22.1 Environment setup (both engines)
 
@@ -1893,7 +1895,7 @@ Compiling the wasm is half the job. To make a new engine a first-class mode:
 - [ ] GeoPackage/2D/GPU OFF (SWMM6).
 - [ ] Building `src/`, not `src/legacy/engine` — check the `.rpt` version header.
 - [ ] `SURCHARGE_METHOD` is only honored under `FLOW_ROUTING DYNWAVE` — parses silently otherwise; don't conclude the engine is broken.
-- [ ] Finite-volume routing (`FLOW_ROUTING FV`) exists **only on the `develop` branch** — a pre-FV build accepts the keyword and silently routes DYNWAVE.
+- [ ] Finite-volume routing (`FLOW_ROUTING FV`) exists on the HydroCouple `swmm6_rel` and `develop` branches (develop carries the newest FV changes) — a pre-FV build accepts the keyword and silently routes DYNWAVE, so always check the `.rpt` "Flow Routing Method" line.
 - [ ] Never join SWMM5/SWMM6 time series on raw time strings — anchor each engine to its own start time and join on elapsed seconds.
 
 ---

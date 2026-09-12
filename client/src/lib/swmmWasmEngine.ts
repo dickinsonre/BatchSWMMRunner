@@ -1,6 +1,8 @@
 import type { ParsedMetrics, ProcessResult } from "@shared/schema";
 import { applyInpOverrides, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, type InpOverrides } from "@shared/inpOptions";
 import { normalizeInpNameCase } from "@shared/inpCaseNormalize";
+import type { WasmEngineId } from "./engineComparison";
+import { setWasmNativeArtifacts } from "./wasmArtifacts";
 
 export interface WasmProgress {
   fileId: string;
@@ -75,8 +77,8 @@ function validateSwmmReportClient(reportContent: string | undefined): { valid: b
   if (!reportContent || reportContent.trim().length === 0) {
     return { valid: false, reason: 'Report is empty — the engine did not produce output' };
   }
-  if (!/EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE/i.test(reportContent)) {
-    return { valid: false, reason: 'Report is missing the SWMM engine header — output is not a valid SWMM report' };
+  if (!/EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE|HYDRA URBAN DRAINAGE ENGINE/i.test(reportContent)) {
+    return { valid: false, reason: 'Report is missing a recognized SWMM-compatible engine header' };
   }
   const { errors } = extractReportIssuesClient(reportContent);
   if (errors.length > 0) {
@@ -86,9 +88,23 @@ function validateSwmmReportClient(reportContent: string | undefined): { valid: b
 }
 
 function extractEngineVersionClient(reportContent: string): string | undefined {
-  const m = reportContent.match(/(?:EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE) - VERSION\s+([\d.]+(?:-[\w.]+)?)(?:\s*\(Build\s+([\d.]+)\))?/i);
+  const m = reportContent.match(/(?:EPA STORM WATER MANAGEMENT MODEL|OPENSWMM ENGINE|HYDRA URBAN DRAINAGE ENGINE) - VERSION\s+([\d.]+(?:-[\w.]+)?)(?:\s*\(Build\s+([\d.]+)\))?/i);
   if (m) return m[2] || m[1];
   return undefined;
+}
+
+function wasmEngineLabel(engine: WasmEngineId): string {
+  if (engine === 'swmm6') return 'SWMM6';
+  if (engine === 'swmm6dev') return 'SWMM6-dev';
+  if (engine === 'hydra') return 'Hydra';
+  return 'SWMM5';
+}
+
+function provenanceEngineName(engine: WasmEngineId): string {
+  if (engine === 'swmm6') return 'wasm6';
+  if (engine === 'swmm6dev') return 'wasm6dev';
+  if (engine === 'hydra') return 'hydra';
+  return 'wasm';
 }
 
 interface WorkerDoneMsg {
@@ -100,6 +116,16 @@ interface WorkerDoneMsg {
   warnings: number;
   rptText: string;
   elapsedMs: number;
+  nativeRptBytes?: ArrayBuffer;
+  nativeOutBytes?: ArrayBuffer;
+  artifactError?: string;
+}
+
+export interface WasmArtifactRetentionOptions {
+  /** Keep the native report/output for a session-only paired export. */
+  retainArtifacts?: boolean;
+  /** Alias accepted for callers that prefer a more explicit option name. */
+  retainNativeArtifacts?: boolean;
 }
 
 // Files larger than this (bytes) force sequential processing to keep
@@ -126,10 +152,19 @@ export function runWasmBatch(
     onComplete: () => void;
   },
   cancelRef: { current: boolean },
-  engine: 'swmm5' | 'swmm6' | 'swmm6dev' = 'swmm5',
+  engine: WasmEngineId = 'swmm5',
   overrides?: InpOverrides,
   parallel: boolean = true,
+  timeoutMs?: number,
+  /** Per-file limit applied instead of timeoutMs when this batch uses FV routing
+   *  (overrides.swmm6?.fvRouting === true). */
+  fvTimeoutMs?: number,
+  /** Browser-only native artifact retention. Disabled unless explicitly set. */
+  artifactOptions?: WasmArtifactRetentionOptions | boolean,
 ): (() => void) & { skip: (fileId: string) => void } {
+  const retainArtifacts = artifactOptions === true ||
+    (!!artifactOptions && typeof artifactOptions === 'object' &&
+      (artifactOptions.retainArtifacts === true || artifactOptions.retainNativeArtifacts === true));
   const maxFileSize = files.reduce((m, f) => Math.max(m, f.file.size || 0), 0);
   const poolSize = parallel ? computeWasmConcurrency(files.length, maxFileSize) : 1;
   if (!parallel && files.length > 1) {
@@ -150,9 +185,19 @@ export function runWasmBatch(
   let terminated = false;
   let completed = false;
 
+  // Watchdog timer handle — started after `skip` is defined below.
+  let watchdogTimer: ReturnType<typeof setInterval> | null = null;
+  const clearWatchdog = () => {
+    if (watchdogTimer !== null) {
+      clearInterval(watchdogTimer);
+      watchdogTimer = null;
+    }
+  };
+
   // Terminates all workers and closes the batch WITHOUT signaling normal
   // completion. Used for cancellation and fatal worker errors.
   const cancel = () => {
+    clearWatchdog();
     if (!terminated) {
       terminated = true;
       for (const w of workers) w.terminate();
@@ -165,6 +210,7 @@ export function runWasmBatch(
   const finish = () => {
     if (completed || terminated) return;
     completed = true;
+    clearWatchdog();
     cancel();
     callbacks.onComplete();
   };
@@ -200,7 +246,7 @@ export function runWasmBatch(
     startedCount++;
     currentByWorker.set(worker, { id: f.id, name: f.name, startedAt: Date.now() });
     callbacks.onFileStart(startedCount, f.name);
-    callbacks.onLog(`Processing ${f.name} (${engine === 'swmm6' ? 'SWMM6' : engine === 'swmm6dev' ? 'SWMM6-dev' : 'SWMM5'} WASM in-browser engine)...`, 'info');
+    callbacks.onLog(`Processing ${f.name} (${wasmEngineLabel(engine)} WASM in-browser engine)...`, 'info');
     callbacks.onProgress({ fileId: f.id, fileName: f.name, percentage: 0, message: 'Loading model...' });
     let inpText = await f.file.text();
     if (cancelRef.current || terminated) {
@@ -242,15 +288,24 @@ export function runWasmBatch(
     if (needsExtran8Hotstart(f.name, inpText)) {
       const hsf = await fetchHotstartBytes();
       if (hsf) {
-        inpText = rewriteHotstartPath(inpText, '/extran8.hsf');
-        auxFiles = [{ name: '/extran8.hsf', data: hsf }];
+        const hotstartName = engine === 'hydra' ? 'extran8.hsf' : '/extran8.hsf';
+        inpText = rewriteHotstartPath(inpText, hotstartName);
+        auxFiles = [{ name: hotstartName, data: hsf }];
       } else {
         callbacks.onLog(`${f.name}: could not load bundled hot start file — run may fail.`, 'error');
       }
     }
     // Keep the input text so the result can show an INP tab like server runs.
     inpTextById.set(f.id, inpText);
-    worker.postMessage({ type: 'run', id: f.id, fileName: f.name, inpText, engine, auxFiles });
+    worker.postMessage({
+      type: 'run',
+      id: f.id,
+      fileName: f.name,
+      inpText,
+      engine,
+      auxFiles,
+      ...(retainArtifacts ? { retainArtifacts: true } : {}),
+    });
   };
 
   const handleDone = (worker: Worker, d: WorkerDoneMsg) => {
@@ -260,7 +315,7 @@ export function runWasmBatch(
     if (terminated || completed || currentByWorker.get(worker)?.id !== d.id) return;
     currentByWorker.delete(worker);
     const metrics = d.rptText ? parseReportMetricsClient(d.rptText) : undefined;
-    const engineName = engine === 'swmm6' ? 'wasm6' : engine === 'swmm6dev' ? 'wasm6dev' : 'wasm';
+    const engineName = provenanceEngineName(engine);
 
     let ok = d.ok;
     let error = ok ? undefined : (d.errMsg || 'Simulation failed');
@@ -290,6 +345,17 @@ export function runWasmBatch(
         completedAt: new Date().toISOString(),
       },
     };
+    if (retainArtifacts) {
+      setWasmNativeArtifacts(result, {
+        artifacts: d.nativeRptBytes && d.nativeOutBytes
+          ? { report: d.nativeRptBytes, output: d.nativeOutBytes }
+          : undefined,
+        error: d.artifactError ||
+          (!d.nativeRptBytes || !d.nativeOutBytes
+            ? 'The browser engine did not retain both native report and binary output files. Rerun this paired comparison to export them.'
+            : undefined),
+      });
+    }
     callbacks.onResult(result);
     callbacks.onLog(
       ok
@@ -315,7 +381,7 @@ export function runWasmBatch(
   };
 
   const spawnWorker = (): Worker => {
-    const worker = new Worker('/wasm/swmm-worker.js');
+    const worker = new Worker(engine === 'hydra' ? '/wasmhydra/hydra-worker.js' : '/wasm/swmm-worker.js');
     workers.push(worker);
 
     worker.onmessage = (e: MessageEvent) => {
@@ -339,9 +405,15 @@ export function runWasmBatch(
     return worker;
   };
 
-  // Skip a single stuck run: terminate just that file's worker, record the
-  // file as failed, and continue the rest of the batch on a fresh worker.
-  const skip = (fileId: string) => {
+  // Terminate one run while allowing the rest of the batch to continue.
+  // Explicit user skips remain failures; watchdog expirations are reported
+  // as timeouts so exports and UI status preserve the real termination cause.
+  const terminateFile = (
+    fileId: string,
+    cause: 'user' | 'timeout',
+    timeoutLabel?: string,
+    timeoutLimitMs?: number,
+  ) => {
     if (terminated || completed) return;
     let target: Worker | undefined;
     let info: { id: string; name: string; startedAt: number } | undefined;
@@ -360,13 +432,20 @@ export function runWasmBatch(
     if (idx !== -1) workers.splice(idx, 1);
 
     const elapsedMs = Date.now() - info.startedAt;
-    const engineName = engine === 'swmm6' ? 'wasm6' : engine === 'swmm6dev' ? 'wasm6dev' : 'wasm';
+    const engineName = provenanceEngineName(engine);
+    const timeoutDuration = timeoutLimitMs && timeoutLimitMs >= 60_000
+      ? `${Math.round(timeoutLimitMs / 60_000)} min`
+      : `${Math.round((timeoutLimitMs || elapsedMs) / 1_000)} s`;
+    const timedOut = cause === 'timeout';
+    const error = timedOut
+      ? `${timeoutLabel || 'Per-file timeout'} reached after ${timeoutDuration}`
+      : `Terminated by user after ${(elapsedMs / 1000).toFixed(1)}s`;
     callbacks.onResult({
       id: info.id,
       fileName: info.name,
       filePath: info.name,
-      status: 'failed',
-      error: `Terminated by user after ${(elapsedMs / 1000).toFixed(1)}s`,
+      status: timedOut ? 'timeout' : 'failed',
+      error,
       processingTime: elapsedMs / 1000,
       inpContent: inpTextById.get(info.id),
       provenance: {
@@ -376,7 +455,12 @@ export function runWasmBatch(
         completedAt: new Date().toISOString(),
       },
     });
-    callbacks.onLog(`${info.name} -- Terminated by user (skipped after ${(elapsedMs / 1000).toFixed(1)}s)`, 'error');
+    callbacks.onLog(
+      timedOut
+        ? `${info.name} — ${timeoutLabel || 'per-file timeout'} reached (${timeoutDuration}); skipping to continue the batch.`
+        : `${info.name} -- Terminated by user (skipped after ${(elapsedMs / 1000).toFixed(1)}s)`,
+      'error',
+    );
     doneCount++;
     if (doneCount >= files.length) {
       finish();
@@ -384,6 +468,36 @@ export function runWasmBatch(
       runNext(spawnWorker());
     }
   };
+
+  // Public per-file skip control used by the UI.
+  const skip = (fileId: string) => terminateFile(fileId, 'user');
+
+  // Per-file timeout watchdog: started here so `skip` and `currentByWorker`
+  // are already defined. Every 5 s it checks whether any in-flight file has
+  // exceeded the per-run limit and, if so, skips it so the batch continues.
+  //
+  // FV routing is significantly slower than Dynamic Wave, so a separate
+  // (typically higher) limit can be supplied via fvTimeoutMs. When this batch
+  // uses FV routing (overrides.swmm6?.fvRouting), fvTimeoutMs is used instead
+  // of timeoutMs. SWMM6-dev can also run DW/KW, so engine identity alone does
+  // not imply FV routing.
+  const isFvBatch = !!overrides?.swmm6?.fvRouting;
+  const effectiveTimeoutMs = (isFvBatch && fvTimeoutMs && fvTimeoutMs > 0)
+    ? fvTimeoutMs
+    : (timeoutMs && timeoutMs > 0 ? timeoutMs : undefined);
+
+  if (effectiveTimeoutMs) {
+    watchdogTimer = setInterval(() => {
+      if (terminated || completed) return;
+      const now = Date.now();
+      for (const [, cur] of currentByWorker) {
+        if (now - cur.startedAt > effectiveTimeoutMs) {
+          const label = isFvBatch ? 'FV per-file timeout' : 'per-file timeout';
+          terminateFile(cur.id, 'timeout', label, effectiveTimeoutMs);
+        }
+      }
+    }, 5_000);
+  }
 
   for (let i = 0; i < poolSize; i++) spawnWorker();
 

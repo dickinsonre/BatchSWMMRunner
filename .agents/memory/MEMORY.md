@@ -5,3 +5,6 @@
 - [GitHub workflow scope](github-workflow-scope.md) — pushes adding .github/workflows are rejected (token lacks workflow scope); fix is user-side, not a retry.
 - [Deployment request size cap](deploy-request-size-cap.md) — published deployments drop HTTP requests over ~32 MB before they reach the app; uploads must be chunked.
 - [Engine time alignment](engine-time-alignment.md) — never join SWMM5/SWMM6 series on raw time strings; anchor each engine to its own t0 and join on elapsed seconds.
+- [FV vs DYNWAVE verification](fv-vs-dynwave-verification.md) — DW alias trap, broken sample baselines, FV weir divergence; shard long runs with FV_ENGINE.
+- [Hydra WASM build](hydra-wasm-build.md) — Rust 1.95 on Replit needs extra TLS and the exact 64-bit Nix zlib resolved from rustc; first-store zlib may be 32-bit.
+- [Coherence screening scope](coherence-screening.md) — distinguish report-maxima hydraulic screening from concurrent evidence or solver agreement.

@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   applyInpOverrides,
+  DEFAULT_FV_CELL_LENGTH,
+  DEFAULT_FV_MIN_CELLS,
   normalizeSwmm6Options,
   upgradeVirtualJunctions,
   stripVirtualJunctions,
@@ -113,13 +115,25 @@ describe('applyInpOverrides — SWMM6 options', () => {
       enabled: true, fvRouting: true,
       fvCellLength: -5, fvMinCells: 2.5, fvCfl: 1.5,
     });
-    expect(norm).toEqual({ enabled: true, fvRouting: true });
+    // A rejected cell length falls back to the safe default rather than the
+    // engine's COARSE mesh (which over-conveys long conduits).
+    expect(norm).toEqual({
+      enabled: true,
+      fvRouting: true,
+      fvCellLength: DEFAULT_FV_CELL_LENGTH,
+      fvMinCells: DEFAULT_FV_MIN_CELLS,
+    });
   });
 
-  it('omits FV scheme lines when values are not provided (engine defaults apply)', () => {
+  it('omits optional FV scheme lines, but pins mesh and subgrid defaults', () => {
     const out = applyInpOverrides(BASE_INP, { swmm6: { enabled: true, fvRouting: true } });
     expect(out).toMatch(/^FLOW_ROUTING\s+FV$/m);
-    expect(out).not.toMatch(/FV_ORDER|FV_LIMITER|FV_TIME_INTEGRATION|FV_RIEMANN|FV_CELL_LENGTH|FV_MIN_CELLS|FV_CFL/);
+    // The COARSE engine default (4 cells/conduit) silently suppresses
+    // weir/overflow peaks on long conduits, so the app must always pin the
+    // mesh resolution (see tests/engine6FvStructures.test.ts).
+    expect(out).toMatch(new RegExp(`^FV_CELL_LENGTH\\s+${DEFAULT_FV_CELL_LENGTH}$`, 'm'));
+    expect(out).toMatch(new RegExp(`^FV_MIN_CELLS\\s+${DEFAULT_FV_MIN_CELLS}$`, 'm'));
+    expect(out).not.toMatch(/FV_ORDER|FV_LIMITER|FV_TIME_INTEGRATION|FV_RIEMANN|FV_CFL/);
   });
 
   it('normalizeSwmm6Options rejects bad FV values but keeps the routing flag', () => {
@@ -127,7 +141,12 @@ describe('applyInpOverrides — SWMM6 options', () => {
       enabled: true, fvRouting: true,
       fvOrder: 3, fvLimiter: 'not a token!', fvTimeIntegration: '', fvRiemann: 42,
     });
-    expect(norm).toEqual({ enabled: true, fvRouting: true });
+    expect(norm).toEqual({
+      enabled: true,
+      fvRouting: true,
+      fvCellLength: DEFAULT_FV_CELL_LENGTH,
+      fvMinCells: DEFAULT_FV_MIN_CELLS,
+    });
     expect(normalizeSwmm6Options({ enabled: true, fvRouting: false, fvOrder: 2 })).toBeUndefined();
   });
 

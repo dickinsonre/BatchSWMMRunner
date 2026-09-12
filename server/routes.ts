@@ -17,6 +17,7 @@ import * as swmm5api from "./swmm5api";
 import pLimit from "p-limit";
 import { parseReportMetrics, extractReportIssues, extractEngineVersion, validateSwmmReport } from "./reportParser";
 import { applyInpOverrides, normalizeSwmm6Options, hasVirtualJunctions, stripVirtualJunctions, needsExtran8Hotstart, rewriteHotstartPath, MAX_MATRIX_VARIANTS, mergeInpOverrides, type InpOverrides } from "@shared/inpOptions";
+import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 
 /**
  * Validate a client-supplied overrides object into a safe InpOverrides.
@@ -82,7 +83,6 @@ function parseInpOverrides(raw: unknown): { overrides: InpOverrides } | { error:
   }
   return { overrides: out };
 }
-import { parseSwmmOutputBinary, reportHasTimeSeries, reportHasSystemTimeSeries } from "./swmmOutParser";
 import { getGithubModelTree, GithubRateLimitError, GithubRepoValidationError, GithubNotFoundError, validateRepoRef, GITHUB_MODELS_REPO } from "./githubModels";
 
 const MAX_UPLOAD_FILES = 500;
@@ -462,6 +462,15 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
     }
   });
 
+  // Bundled samples with known engine problems, flagged in the sample picker.
+  // Session62_ALLWEIR: the SWMM6 WASM engines produce ~59% continuity error and
+  // all-zero link flows on this all-weir network (engine deficiency, not fixable
+  // via the input file). The classic SWMM5 CLI engine runs it fine.
+  const SAMPLE_KNOWN_ISSUES: Record<string, string> = {
+    'Session62_ALLWEIR.inp':
+      'Known issue: SWMM6 engines fail mass balance on this all-weir model (~59% continuity error, zero link flows). Results are only trustworthy with the classic SWMM5 engine.',
+  };
+
   app.get('/api/samples', async (req, res) => {
     try {
       const samplesDir = path.join(process.cwd(), 'public', 'samples');
@@ -488,6 +497,7 @@ export async function registerRoutes(app: Express, sessionMiddleware?: RequestHa
             name: f,
             size: stat.size,
             title,
+            ...(SAMPLE_KNOWN_ISSUES[f] ? { knownIssue: SAMPLE_KNOWN_ISSUES[f] } : {}),
           };
         });
       res.json(files);

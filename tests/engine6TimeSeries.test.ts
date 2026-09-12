@@ -9,7 +9,7 @@ import { FIXTURES } from "./helpers";
 
 const require = createRequire(import.meta.url);
 
-// Verifies that the new OpenSWMM 6.0.0-alpha.3 engine (plugin I/O) writes a
+// Verifies that the new OpenSWMM 6.0.0-alpha.4 engine (plugin I/O) writes a
 // binary .out that client/public/wasm/swmm-out-parser.js — written for the
 // EPA SWMM 5 binary format — parses correctly, so RPT Graphs and engine
 // comparison charts keep working. Mirrors the swmm6 branch of

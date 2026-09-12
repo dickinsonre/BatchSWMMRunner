@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "engines": {
+    "swmm5": {
+      "id": "swmm5",
+      "displayName": "SWMM5 WASM",
+      "source": {
+        "repositoryUrl": null,
+        "branch": null,
+        "commit": null,
+        "status": "unknown",
+        "evidence": "swmm-source/Readme.txt identifies the vendored archive as SWMM 5.2.2 while swmm-source/src/solver/consts.h identifies the source as build 5.2.4. No source repository URL, branch, or commit was retained with this browser artifact."
+      },
+      "compiler": {
+        "name": "emcc",
+        "version": "3.1.51",
+        "status": "documented",
+        "flags": [
+          "-I swmm-source/src/solver",
+          "-O2",
+          "-s MODULARIZE=1",
+          "-s EXPORT_NAME=createSwmmModule",
+          "-s ENVIRONMENT=web,worker",
+          "-s ALLOW_MEMORY_GROWTH=1",
+          "-s EXPORTED_FUNCTIONS=[\"_swmm_run\",\"_swmm_open\",\"_swmm_start\",\"_swmm_step\",\"_swmm_end\",\"_swmm_report\",\"_swmm_close\",\"_swmm_getError\",\"_swmm_getWarnings\",\"_swmm_getVersion\",\"_swmm_getMassBalErr\",\"_malloc\",\"_free\"]",
+          "-s EXPORTED_RUNTIME_METHODS=[\"FS\",\"ccall\",\"cwrap\",\"getValue\",\"UTF8ToString\",\"stringToUTF8\"]"
+        ],
+        "evidence": "The documented recipe is docs/building-swmm5-wasm-engine.md section 3. Its export list is explicitly described as illustrative, and no historical compiler invocation or source commit is retained."
+      },
+      "buildInfo": null,
+      "artifacts": {
+        "js": {
+          "path": "wasm/swmm5.js",
+          "bytes": 70385,
+          "sha256": "42144c804793e7408bb0acf8a975c33e872f51ee58a5d9af47831d8c3fd32780"
+        },
+        "wasm": {
+          "path": "wasm/swmm5.wasm",
+          "bytes": 461799,
+          "sha256": "caa1a50a93941cf73987f5203fbd90d564efa568c5859712df8ebb6a4e5fbe50"
+        }
+      },
+      "licenseFiles": [],
+      "reportsVersion": "EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)",
+      "fingerprint": {
+        "version": "EPA STORM WATER MANAGEMENT MODEL - VERSION 5.2 (Build 5.2.4)",
+        "present": [
+          "EPA STORM WATER MANAGEMENT MODEL",
+          "Build 5.2.4",
+          "SWMM5 LID Report File"
+        ],
+        "absent": [
+          "VERSION 5.1",
+          "5.2.4-lid1",
+          "DYNAMIC_SLOT"
+        ]
+      }
+    },
+    "swmm5-owa": {
+      "id": "swmm5-owa",
+      "displayName": "OWA SWMM (5.1 lineage)",
+      "source": {
+        "repositoryUrl": "https://github.com/OpenWaterAnalytics/Stormwater-Management-Model",
+        "branch": null,
+        "commit": null,
+        "status": "unknown",
+        "evidence": "The binary reports EPA SWMM 5.1 and the upstream repository is identifiable, but no branch or source commit was retained. The runtime build number is a format argument and cannot identify this build."
+      },
+      "compiler": {
+        "name": "emcc",
+        "version": null,
+        "status": "unknown",
+        "flags": null,
+        "evidence": "No build recipe or compiler invocation was retained with this historical OWA browser artifact."
+      },
+      "buildInfo": null,
+      "artifacts": {
+        "js": {
+          "path": "wasm-owa/swmm-owa.js",
+          "bytes": 68166,
+          "sha256": "08dd83569e8e6720c231eaf362457b8788637d6c5cee44d9f5be37ff5f7c38f0"
+        },
+        "wasm": {
+          "path": "wasm-owa/swmm-owa.wasm",
+          "bytes": 419881,
+          "sha256": "53189574f80e986b6c522ef2e3ef6c85b446ca60fcd204fe6e2dd14bbdad1f4b"
+        }
+      },
+      "licenseFiles": [
+        {
+          "path": "licenses/MIT-OWA-SWMM.txt",
+          "bytes": 2132,
+          "sha256": "dadc02439364fbb190308ea38dea3f5f71ebf5383c54262f2f803bc88240f15c"
+        }
+      ],
+      "reportsVersion": "EPA STORM WATER MANAGEMENT MODEL - VERSION 5.1 (Build %s)",
+      "fingerprint": {
+        "version": "EPA STORM WATER MANAGEMENT MODEL - VERSION 5.1",
+        "present": [
+          "EPA STORM WATER MANAGEMENT MODEL",
+          "VERSION 5.1"
+        ],
+        "absent": [
+          "Build 5.2.4",
+          "DYNAMIC_SLOT"
+        ]
+      }
+    },
+    "wasm6": {
+      "id": "wasm6",
+      "displayName": "SWMM6 WASM (stable)",
+      "source": {
+        "repositoryUrl": "https://github.com/HydroCouple/openswmm.engine",
+        "branch": "swmm6_rel",
+        "commit": "137e65e4e25e9425a489b99d5b7365c8355f8f6b",
+        "status": "recorded",
+        "evidence": "Recorded in client/public/wasm6/BUILD_INFO.txt and client/public/licenses/openswmm/PROVENANCE.md."
+      },
+      "compiler": {
+        "name": "Emscripten emcmake/em++",
+        "version": "3.1.51",
+        "status": "recorded",
+        "flags": [
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DOPENSWMM_INSTALL=OFF",
+          "-DOPENSWMM_BUILD_TESTS=OFF",
+          "-DOPENSWMM_BUILD_BENCHMARKS=OFF",
+          "-DOPENSWMM_WITH_GEOPACKAGE=OFF",
+          "-DOPENSWMM_BUILD_2D=OFF",
+          "-DOPENSWMM_BUILD_GPU_PLUGIN=OFF",
+          "-DCMAKE_C_FLAGS=-fexceptions",
+          "-DCMAKE_CXX_FLAGS=-fexceptions",
+          "-O2",
+          "-fexceptions",
+          "-I <source>/include/openswmm/engine",
+          "-I <build>/include",
+          "-s MODULARIZE=1",
+          "-s EXPORT_NAME=createOswmm6Module",
+          "-s ENVIRONMENT=web,worker",
+          "-s ALLOW_MEMORY_GROWTH=1",
+          "-s EXPORTED_FUNCTIONS=[\"_main\",\"_malloc\",\"_free\",\"_swmm_engine_create\",\"_swmm_engine_open\",\"_swmm_engine_initialize\",\"_swmm_engine_start\",\"_swmm_engine_step\",\"_swmm_engine_end\",\"_swmm_engine_report\",\"_swmm_engine_close\",\"_swmm_engine_destroy\",\"_swmm_get_last_error_msg\"]",
+          "-s EXPORTED_RUNTIME_METHODS=[\"FS\",\"ccall\",\"cwrap\",\"getValue\",\"UTF8ToString\",\"stringToUTF8\"]"
+        ],
+        "evidence": "scripts/build-swmm6-wasm.sh records the CMake configuration and complete link command. Source and build directory placeholders in include flags avoid claiming machine-specific absolute paths."
+      },
+      "buildInfo": {
+        "path": "wasm6/BUILD_INFO.txt",
+        "bytes": 1859,
+        "sha256": "5339ad8115401bd0c4594bffa4d4a5be381c81c23886e150f8f7d1a13fe18e1b"
+      },
+      "artifacts": {
+        "js": {
+          "path": "wasm6/openswmm6.js",
+          "bytes": 96734,
+          "sha256": "e5ae5478689209bf04215aa3afc5616e1fc05bb48d2c07249e26fa1b030f9bc3"
+        },
+        "wasm": {
+          "path": "wasm6/openswmm6.wasm",
+          "bytes": 2588164,
+          "sha256": "a857f2de88933edb7beb89704fa252e2bd13bf2fc8f35211ce29f161e3bbf463"
+        },
+        "linkCommand": {
+          "path": "wasm6/openswmm6.link-command.txt",
+          "bytes": 922,
+          "sha256": "00e49cee48ff2e9bd91559166b7cad9a13994802a15fb59f2fa570df9c2d9f42"
+        },
+        "linkMap": {
+          "path": "wasm6/openswmm6.link.map",
+          "bytes": 1940961,
+          "sha256": "3830d7c66341652340a96651893d9dae192ac66ef1bd9f248a98cdc6a3173a3b"
+        }
+      },
+      "licenseFiles": [
+        {
+          "path": "licenses/openswmm/LICENSE.txt",
+          "bytes": 12214,
+          "sha256": "94fcde3f05aad351a969a65f5c87b25ee3893ee7297549d6a3217bf29ccbc3aa"
+        },
+        {
+          "path": "licenses/openswmm/NOTICE.txt",
+          "bytes": 2078,
+          "sha256": "83a3c0524ba9dd6929a5d5e110f959d318ce142ffbc2cce74616bf5866b1d5cb"
+        },
+        {
+          "path": "licenses/openswmm/PROVENANCE.md",
+          "bytes": 2548,
+          "sha256": "ab9fd0d923ec7e68931c95ed9d09a615f5fecfc63f43965a8ff9c3b699e0c9f3"
+        },
+        {
+          "path": "licenses/openswmm/DEPENDENCY_AUDIT.md",
+          "bytes": 5138,
+          "sha256": "825aaad41bf0c8ecb6579c3a529971aad3f1d8d3383c1a56957a570082b4e709"
+        },
+        {
+          "path": "licenses/openswmm/EMSCRIPTEN-LICENSE.txt",
+          "bytes": 5093,
+          "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+        },
+        {
+          "path": "licenses/openswmm/MUSL-COPYRIGHT.txt",
+          "bytes": 6204,
+          "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+        }
+      ],
+      "reportsVersion": "6.0.0-alpha.4",
+      "fingerprint": {
+        "version": "6.0.0-alpha.4",
+        "present": [
+          "OPENSWMM ENGINE - VERSION",
+          "6.0.0-alpha.4",
+          "SURCHARGE_METHOD",
+          "DYNAMIC_SLOT",
+          "DPS_ALPHA",
+          "VIRTUAL_JUNCTIONS",
+          "ANDERSON_ACCEL",
+          "SEMI_IMPLICIT",
+          "FV_JUNCTION_MODEL",
+          "FV_NODE_CELL_COUPLING",
+          "FV_NODE_DT",
+          "FV_NODE_PICARD",
+          "ADVECTION",
+          "STABILITY",
+          "swmm_engine_create"
+        ],
+        "absent": [
+          "6.0.0-alpha.3",
+          "swmm_engine_run"
+        ]
+      }
+    },
+    "wasm6dev": {
+      "id": "wasm6dev",
+      "displayName": "SWMM6 WASM (develop)",
+      "source": {
+        "repositoryUrl": "https://github.com/HydroCouple/openswmm.engine",
+        "branch": "develop",
+        "commit": "19a1bc42074eac8cdf46e2edafe6fc5849adf6da",
+        "status": "recorded",
+        "evidence": "Recorded in client/public/wasm6dev/BUILD_INFO.txt and client/public/licenses/openswmm/PROVENANCE.md."
+      },
+      "compiler": {
+        "name": "Emscripten",
+        "version": "3.1.51",
+        "status": "unknown",
+        "flags": null,
+        "evidence": "client/public/wasm6dev/BUILD_INFO.txt records Emscripten 3.1.51 but no develop-branch build script, expanded link command, or compiler flag list was retained."
+      },
+      "buildInfo": {
+        "path": "wasm6dev/BUILD_INFO.txt",
+        "bytes": 1068,
+        "sha256": "8e2bf256c81d42499c424e05f5c3bfb94e3ff99f9a7d65ea3e136fc0858898ef"
+      },
+      "artifacts": {
+        "js": {
+          "path": "wasm6dev/openswmm6dev.js",
+          "bytes": 95082,
+          "sha256": "ce8bf2223585c55da1ceb52ea5598ef24dc91519c26ede8571ee56ec5b70f230"
+        },
+        "wasm": {
+          "path": "wasm6dev/openswmm6dev.wasm",
+          "bytes": 1745020,
+          "sha256": "c0a7d079773399847e65b4d8b0a768d599fc7a026872a12b7a7d815b55cae671"
+        }
+      },
+      "licenseFiles": [
+        {
+          "path": "licenses/openswmm/LICENSE-DEVELOP-MIT.txt",
+          "bytes": 1404,
+          "sha256": "d31d6c5482aabe7a72cced9509b0c73b7fd96f401e7cbb86e066c631980f9b33"
+        },
+        {
+          "path": "licenses/openswmm/PROVENANCE.md",
+          "bytes": 2548,
+          "sha256": "ab9fd0d923ec7e68931c95ed9d09a615f5fecfc63f43965a8ff9c3b699e0c9f3"
+        },
+        {
+          "path": "licenses/openswmm/DEPENDENCY_AUDIT.md",
+          "bytes": 5138,
+          "sha256": "825aaad41bf0c8ecb6579c3a529971aad3f1d8d3383c1a56957a570082b4e709"
+        },
+        {
+          "path": "licenses/openswmm/EMSCRIPTEN-LICENSE.txt",
+          "bytes": 5093,
+          "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+        },
+        {
+          "path": "licenses/openswmm/MUSL-COPYRIGHT.txt",
+          "bytes": 6204,
+          "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+        }
+      ],
+      "reportsVersion": "6.0.0-alpha.3",
+      "fingerprint": {
+        "version": "6.0.0-alpha.3",
+        "present": [
+          "OPENSWMM ENGINE - VERSION",
+          "6.0.0-alpha.3",
+          "SURCHARGE_METHOD",
+          "DYNAMIC_SLOT",
+          "DPS_ALPHA",
+          "VIRTUAL_JUNCTIONS",
+          "ANDERSON_ACCEL",
+          "SEMI_IMPLICIT",
+          "FV_JUNCTION_MODEL",
+          "FV_NODE_CELL_COUPLING",
+          "FV_NODE_DT",
+          "FV_NODE_PICARD",
+          "ADVECTION",
+          "STABILITY",
+          "swmm_engine_create"
+        ],
+        "absent": [
+          "6.0.0-alpha.4",
+          "swmm_engine_run"
+        ]
+      }
+    },
+    "hydra": {
+      "id": "hydra",
+      "displayName": "Hydra WASM 12.1.0",
+      "source": {
+        "repositoryUrl": "https://github.com/neeraip/hydra",
+        "branch": "v12.1.0",
+        "commit": "2a75372531b981c3a8f6668cbb846a0366cf062d",
+        "status": "recorded",
+        "evidence": "Recorded in client/public/wasmhydra/README.md and client/public/wasmhydra/LICENSE-AGPL-3.0.txt. The upstream source is unmodified; hydra-worker.js is this application's adapter."
+      },
+      "compiler": {
+        "name": "wasm-pack",
+        "version": "0.12.1 (Rust 1.95.0)",
+        "status": "documented",
+        "flags": [
+          "--target no-modules",
+          "--out-dir /tmp/hydra-wasm",
+          "--out-name hydra",
+          "--release",
+          "CARGO_PROFILE_RELEASE_LTO=false",
+          "CARGO_PROFILE_RELEASE_CODEGEN_UNITS=8"
+        ],
+        "evidence": "The rebuild recipe and release profile overrides are recorded in client/public/wasmhydra/README.md."
+      },
+      "buildInfo": {
+        "path": "wasmhydra/README.md",
+        "bytes": 2219,
+        "sha256": "6d73e7f78885327b85a8deb5614861450b66436f6ba0fa4cd5f4e362e4aa80de"
+      },
+      "artifacts": {
+        "js": {
+          "path": "wasmhydra/hydra.js",
+          "bytes": 24753,
+          "sha256": "5d87a6674843f6f5de9a92b2ae0ed3741e41559da15fdce355a7d8d10408ca84"
+        },
+        "wasm": {
+          "path": "wasmhydra/hydra_bg.wasm",
+          "bytes": 1313584,
+          "sha256": "aca71c11ae71faf138702365db3a8cc09a4b34a1d65b114158a044d4c86acf65"
+        },
+        "worker": {
+          "path": "wasmhydra/hydra-worker.js",
+          "bytes": 3421,
+          "sha256": "dd3bab962b692ed92c43069d467cdfe765ea16cc993a95c1c2497dc56097bfdb"
+        }
+      },
+      "licenseFiles": [
+        {
+          "path": "wasmhydra/LICENSE-AGPL-3.0.txt",
+          "bytes": 34569,
+          "sha256": "17c58edbf7d2c4e805f31f7c093fc26b0af06da14ea48e53ecd697148af14f91"
+        }
+      ],
+      "reportsVersion": "HYDRA URBAN DRAINAGE ENGINE - VERSION 12.1.0",
+      "fingerprint": {
+        "version": "HYDRA URBAN DRAINAGE ENGINE - VERSION 12.1.0",
+        "present": [
+          "HYDRA URBAN DRAINAGE ENGINE - VERSION 12.1.0",
+          "hydra12.1.0",
+          "uds",
+          "wds",
+          "SWMM input file"
+        ],
+        "absent": [
+          "OPENSWMM ENGINE - VERSION",
+          "swmm_engine_create",
+          "DYNAMIC_SLOT"
+        ]
+      }
+    }
+  }
+}

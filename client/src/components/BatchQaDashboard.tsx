@@ -96,7 +96,7 @@ export default function BatchQaDashboard({ results }: { results: ProcessResult[]
     return {
       engineLabel: ENGINE_LABELS[engine as EngineId] ?? engine,
       version: successProv.engineVersion,
-      execution: engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev' ? 'WASM (in browser)' : 'Native (on server)',
+      execution: engine === 'wasm' || engine === 'wasm6' || engine === 'wasm6dev' || engine === 'hydra' ? 'WASM (in browser)' : 'Native (on server)',
       verified: !!successProv.engineVersion,
       mixed: engines.size > 1,
     };
@@ -123,7 +123,7 @@ export default function BatchQaDashboard({ results }: { results: ProcessResult[]
           <div className="rounded-md border p-3 flex items-start gap-3 flex-wrap" data-testid="card-engine-identity">
             <Cpu className="h-4 w-4 mt-0.5 text-muted-foreground" />
             <div className="text-xs space-y-0.5">
-              <p className="font-semibold text-sm">SWMM Engine</p>
+              <p className="font-semibold text-sm">Simulation Engine</p>
               <p>Engine: <b>{identity.engineLabel}</b></p>
               {identity.version && <p>Version: <b data-testid="text-engine-version">{identity.version}</b></p>}
               <p>Execution: {identity.execution}</p>

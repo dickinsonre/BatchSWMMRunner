@@ -141,6 +141,8 @@ function getEngineBadge(actualEngine: string, engineVersion?: string): { label: 
       return { label: `Engine: SWMM6 WASM${v}`, className: 'border-amber-500/50 text-amber-600 dark:text-amber-400' };
     case 'wasm6dev':
       return { label: `Engine: SWMM6 WASM develop${v}`, className: 'border-rose-500/50 text-rose-600 dark:text-rose-400' };
+    case 'hydra':
+      return { label: `Engine: Hydra UDS (Browser)${v}`, className: 'border-cyan-500/50 text-cyan-600 dark:text-cyan-400' };
     default:
       return { label: `Engine: ${actualEngine}${v}`, className: '' };
   }

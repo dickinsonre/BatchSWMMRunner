@@ -78,6 +78,41 @@ afterEach(() => {
 // --- Tests ------------------------------------------------------------------
 
 describe('runWasmBatch worker pool', () => {
+  it('uses the dedicated Hydra worker and preserves Hydra provenance through cancellation', async () => {
+    const cb = makeCallbacks();
+    const cancel = runWasmBatch([makeFile('hydra.inp')], cb, { current: false }, 'hydra');
+    await flush();
+
+    const worker = MockWorker.instances[0];
+    expect(worker.url).toBe('/wasmhydra/hydra-worker.js');
+    expect(worker.posted[0].engine).toBe('hydra');
+
+    worker.onmessage?.({
+      data: {
+        type: 'done',
+        id: 'hydra.inp',
+        fileName: 'hydra.inp',
+        ok: true,
+        errMsg: '',
+        warnings: 0,
+        rptText: 'HYDRA URBAN DRAINAGE ENGINE - VERSION 12.1.0\n',
+        elapsedMs: 10,
+      },
+    });
+    await flush();
+
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onResult.mock.calls[0][0].provenance).toMatchObject({
+      requestedEngine: 'hydra',
+      actualEngine: 'hydra',
+      engineVersion: '12.1.0',
+    });
+    expect(worker.terminated).toBe(true);
+
+    cancel();
+    expect(cb.onComplete).toHaveBeenCalledTimes(1);
+  });
+
   it('spawns a pool and processes files in parallel to completion', async () => {
     const files = [makeFile('a.inp'), makeFile('b.inp'), makeFile('c.inp')];
     const cb = makeCallbacks();
@@ -156,6 +191,7 @@ describe('runWasmBatch worker pool', () => {
     expect(first.posted.length).toBe(0);
     expect(cb.onResult).toHaveBeenCalledTimes(1);
     expect(cb.onResult.mock.calls[0][0].status).toBe('failed');
+    expect(cb.onResult.mock.calls[0][0].error).toMatch(/Terminated by user/);
 
     // Replacement finishes the rest.
     const replacement = MockWorker.instances[1];
@@ -368,5 +404,107 @@ describe('runWasmBatch worker pool', () => {
 
     expect(cb.onResult).toHaveBeenCalledTimes(6);
     expect(cb.onComplete).toHaveBeenCalledTimes(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// FV-aware timeout watchdog: correct limit selection per engine / routing mode
+// ---------------------------------------------------------------------------
+
+describe('runWasmBatch FV-aware timeout watchdog', () => {
+  beforeEach(() => {
+    MockWorker.instances = [];
+    (globalThis as any).Worker = MockWorker;
+    Object.defineProperty(globalThis, 'navigator', {
+      value: { hardwareConcurrency: 2 },
+      configurable: true,
+    });
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    (globalThis as any).Worker = originalWorker;
+    Object.defineProperty(globalThis, 'navigator', { value: originalNavigator, configurable: true });
+  });
+
+  // Advance fake time and resolve any pending microtasks / promise continuations.
+  const tick = (ms: number) => vi.advanceTimersByTimeAsync(ms);
+
+  it('uses fvTimeoutMs for a swmm6dev batch with FV routing enabled in overrides', async () => {
+    const cb = makeCallbacks();
+    const fvOverrides = { swmm6: { enabled: true, fvRouting: true } };
+    // timeoutMs=8 000 ms, fvTimeoutMs=22 000 ms
+    runWasmBatch(
+      [makeFile('a.inp')], cb, { current: false },
+      'swmm6dev', fvOverrides as any, false, 8_000, 22_000,
+    );
+    await tick(1); // let runNext assign startedAt and post the run message
+
+    // Advance past timeoutMs (8 s) but not past fvTimeoutMs (22 s).
+    // The watchdog fires at 5 s and 10 s; neither should trip the FV batch.
+    await tick(10_000);
+    expect(cb.onResult).not.toHaveBeenCalled();
+
+    // Advance past fvTimeoutMs — watchdog at 25 s total should skip the file.
+    await tick(15_000);
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onResult.mock.calls[0][0].status).toBe('timeout');
+    const logs: string[] = (cb.onLog.mock.calls as [string, string][]).map(c => c[0]);
+    expect(logs.some(m => m.includes('FV per-file timeout'))).toBe(true);
+  });
+
+  it('uses timeoutMs for a swmm6dev batch when FV routing is not enabled', async () => {
+    const cb = makeCallbacks();
+    runWasmBatch(
+      [makeFile('a.inp')], cb, { current: false },
+      'swmm6dev', undefined, false, 8_000, 22_000,
+    );
+    await tick(1);
+
+    // Past the DW limit — SWMM6-dev does not imply FV when the override is off.
+    await tick(10_000);
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onResult.mock.calls[0][0].status).toBe('timeout');
+    expect(cb.onResult.mock.calls[0][0].error).not.toMatch(/user/i);
+    const logs: string[] = (cb.onLog.mock.calls as [string, string][]).map(c => c[0]);
+    expect(logs.some(m => m.includes('timeout'))).toBe(true);
+    expect(logs.some(m => m.includes('FV per-file timeout'))).toBe(false);
+  });
+
+  it('uses timeoutMs (not fvTimeoutMs) for a non-FV swmm5 batch', async () => {
+    const cb = makeCallbacks();
+    runWasmBatch(
+      [makeFile('a.inp')], cb, { current: false },
+      'swmm5', undefined, false, 8_000, 22_000,
+    );
+    await tick(1);
+
+    // Advance past timeoutMs (8 s): watchdog at 10 s should trip on DW limit.
+    await tick(10_000);
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onResult.mock.calls[0][0].status).toBe('timeout');
+    // Log says "per-file timeout", not "FV per-file timeout".
+    const logs: string[] = (cb.onLog.mock.calls as [string, string][]).map(c => c[0]);
+    const timeoutLog = logs.find(m => m.includes('timeout')) ?? '';
+    expect(timeoutLog).toMatch(/per-file timeout/);
+    expect(timeoutLog).not.toContain('FV per-file timeout');
+  });
+
+  it('uses timeoutMs for a swmm6 batch without FV routing enabled', async () => {
+    const cb = makeCallbacks();
+    // swmm6 engine, no fvRouting in overrides → isFvBatch = false → use timeoutMs
+    runWasmBatch(
+      [makeFile('a.inp')], cb, { current: false },
+      'swmm6', undefined, false, 8_000, 22_000,
+    );
+    await tick(1);
+
+    await tick(10_000);
+    expect(cb.onResult).toHaveBeenCalledTimes(1);
+    expect(cb.onResult.mock.calls[0][0].status).toBe('timeout');
+    const logs: string[] = (cb.onLog.mock.calls as [string, string][]).map(c => c[0]);
+    expect(logs.some(m => m.includes('timeout'))).toBe(true);
+    expect(logs.some(m => m.includes('FV per-file timeout'))).toBe(false);
   });
 });

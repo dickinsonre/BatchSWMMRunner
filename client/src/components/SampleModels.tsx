@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FileText } from "lucide-react";
+import { FileText, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,7 @@ interface SampleFile {
   name: string;
   size: number;
   title: string;
+  knownIssue?: string;
 }
 
 interface SampleModelsProps {
@@ -32,6 +33,8 @@ function formatFileSize(bytes: number): string {
 export default function SampleModels({ onSamplesLoaded, disabled }: SampleModelsProps) {
   const [selectedName, setSelectedName] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loadError, setLoadError] = useState("");
 
   const { data: samples = [], isLoading } = useQuery<SampleFile[]>({
     queryKey: ['/api/samples'],
@@ -40,14 +43,18 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
   const loadSample = async (name: string) => {
     if (!name) return;
     setLoading(true);
+    setMessage("");
+    setLoadError("");
     try {
-      const response = await fetch(`/api/samples/${name}`);
+      const response = await fetch(`/api/samples/${encodeURIComponent(name)}`);
       if (!response.ok) throw new Error('Failed to fetch sample');
       const blob = await response.blob();
       const file = new File([blob], name, { type: 'application/octet-stream' });
       onSamplesLoaded([file]);
+      setMessage(`${name} added to the batch. Click Run below to start.`);
     } catch (error) {
       console.error('Failed to load sample model:', error);
+      setLoadError(`Could not load ${name}. Check the connection and click Load Selected to retry.`);
     } finally {
       setLoading(false);
     }
@@ -60,17 +67,26 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
 
   const handleLoadAll = async () => {
     setLoading(true);
+    setMessage("");
+    setLoadError("");
     try {
       const files: File[] = [];
+      const failed: string[] = [];
       for (const sample of samples) {
-        const response = await fetch(`/api/samples/${sample.name}`);
-        if (!response.ok) continue;
+        const response = await fetch(`/api/samples/${encodeURIComponent(sample.name)}`);
+        if (!response.ok) {
+          failed.push(sample.name);
+          continue;
+        }
         const blob = await response.blob();
         files.push(new File([blob], sample.name, { type: 'application/octet-stream' }));
       }
       onSamplesLoaded(files);
+      setMessage(`${files.length} sample files loaded. Click Run below to start.`);
+      if (failed.length) setLoadError(`${failed.length} samples could not be loaded: ${failed.join(", ")}. Select a sample and click Load Selected to retry.`);
     } catch (error) {
       console.error('Failed to load sample models:', error);
+      setLoadError("Could not finish loading samples. Check the connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -103,6 +119,9 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
                 <SelectItem key={sample.name} value={sample.name} data-testid={`option-sample-${sample.name}`}>
                   <span className="font-mono text-xs">{sample.name}</span>
                   <span className="text-muted-foreground text-xs ml-2">({formatFileSize(sample.size)})</span>
+                  {sample.knownIssue && (
+                    <AlertTriangle className="inline h-3 w-3 ml-1.5 text-amber-500" aria-label="Known issue" />
+                  )}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -110,6 +129,14 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
           {loading && (
             <span className="text-xs text-muted-foreground" data-testid="text-sample-loading">Loading...</span>
           )}
+          <Button
+            size="sm"
+            onClick={() => void loadSample(selectedName)}
+            disabled={disabled || loading || !selectedName}
+            data-testid="button-load-selected-sample"
+          >
+            Load Selected
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -120,10 +147,21 @@ export default function SampleModels({ onSamplesLoaded, disabled }: SampleModels
             Load All
           </Button>
         </div>
+        {message && <p role="status" className="text-xs text-muted-foreground">{message}</p>}
+        {loadError && <p role="alert" className="text-sm text-destructive">{loadError}</p>}
         {selectedSample && (
           <p className="text-xs text-muted-foreground" data-testid="text-sample-description">
             {selectedSample.title}
           </p>
+        )}
+        {selectedSample?.knownIssue && (
+          <div
+            className="flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-500"
+            data-testid="text-sample-known-issue"
+          >
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+            <span>{selectedSample.knownIssue}</span>
+          </div>
         )}
       </CardContent>
     </Card>

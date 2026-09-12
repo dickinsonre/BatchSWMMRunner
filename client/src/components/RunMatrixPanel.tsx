@@ -160,16 +160,16 @@ export default function RunMatrixPanel({
                 <p className="text-xs text-muted-foreground">FV_CELL_LENGTH; one run per value.</p>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="matrix-fv-min-cells">FV min cells</Label>
+                <Label htmlFor="matrix-fv-min-cells">Subgrid discretization (min cells)</Label>
                 <Input
                   id="matrix-fv-min-cells"
                   value={config.fvMinCellsText}
                   onChange={(e) => set({ fvMinCellsText: e.target.value })}
-                  placeholder="e.g. 2, 4"
+                  placeholder="2 (recommended), 4"
                   disabled={disabled}
                   data-testid="input-matrix-fv-min-cells"
                 />
-                <p className="text-xs text-muted-foreground">FV_MIN_CELLS; integers ≥ 1.</p>
+                <p className="text-xs text-muted-foreground">FV_MIN_CELLS; 2 is the app default when no sweep is entered.</p>
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="matrix-fv-cfl">FV CFL numbers</Label>
