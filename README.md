@@ -333,7 +333,7 @@ Neither the U.S. Environmental Protection Agency, HydroCouple, nor the OpenSWMM 
 6
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/4d151c62-212f-4c82-88ad-3cf44b72c945" />
 7
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f2b8631-8b62-46cb-8cb9-91c1cf869b0b" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/92bbef3d-15d9-4300-b871-aa750501ded2" />
 8
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/51cf318c-ddd0-4d31-96de-cebb9d0d2c43" />
 
