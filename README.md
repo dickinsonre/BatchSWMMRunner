@@ -319,6 +319,13 @@ Neither the U.S. Environmental Protection Agency, HydroCouple, nor the OpenSWMM 
 
 ---
 
+## GPT Astra Doodle Images 
+
+### 1. The Batch Modeling Workshop
+
+![Illustration of a BatchSWMMRunner workflow for loading SWMM models, preflight validation, engine selection, batch launching, and run-status tracking](docs/images/gpt-astra-doodles/01-batch-modeling-workshop.jpg)
+
+
 ## Contributing
 
 Pull requests and issues are welcome. Run `npm run verify` before submitting a PR — CI will reject any build that fails typecheck or tests. See [`HANDOVER.md`](HANDOVER.md) for a detailed technical handover, architecture notes, and known limitations.
