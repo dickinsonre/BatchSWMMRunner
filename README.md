@@ -321,12 +321,19 @@ Neither the U.S. Environmental Protection Agency, HydroCouple, nor the OpenSWMM 
 
 ## GPT Astra Doodle Images 
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/3ba0293e-19fc-402f-aec7-85e1cfb44696" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/533684fe-4c2f-46bd-94e2-da7d4c74afdc" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a4468b49-0433-456d-9d02-4364ed7eb9ab" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/6f779e51-7065-4c9a-af87-3d34a83ed3ff" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a6ec07be-2b70-4a9d-92ab-f76b0dba68fa" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/4d151c62-212f-4c82-88ad-3cf44b72c945" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0f2b8631-8b62-46cb-8cb9-91c1cf869b0b" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/51cf318c-ddd0-4d31-96de-cebb9d0d2c43" />
 
 
